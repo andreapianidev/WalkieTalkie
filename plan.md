@@ -332,6 +332,27 @@ The app already provides a complete and professional Push to Talk implementation
 
 **Result**: App pronta per il caricamento su App Store Connect senza conflitti di naming e con configurazioni valide.
 
+### 11. ITMS-90129 Bundle Name Conflict Resolution ✅
+**Problem**: Errore ITMS-90129 durante submission - nome "WalkieTalkie Pro" già utilizzato
+**Solution**:
+- **Bundle Display Name**: Cambiato da "WalkieTalkie Pro" a "Talky"
+- **Files Modified**: 
+  - `project.pbxproj`: Aggiornato CFBundleDisplayName per Debug e Release configurations
+- **Nome suggerito**: "Talky" raccomandato da Apple Developer Relations
+**Result**: Risolto conflitto di naming, app pronta per nuova submission.
+
+### 12. App Store Description Creation ✅
+**Status**: COMPLETED
+**Description**: Creata descrizione completa e SEO-ottimizzata per App Store
+**Key Components**:
+- Descrizione dettagliata di tutte le funzionalità principali
+- Evidenziate caratteristiche Push-to-Talk, Radio FM, Multipeer Connectivity
+- Inclusi casi d'uso, vantaggi competitivi e keywords SEO
+- Formato ottimizzato per App Store con sezioni strutturate
+- Aggiornata per nuovo nome "Talky - Walkie Talkie, Radio"
+- File: AppStore_Description.md
+**Result**: Descrizione pronta per submission su App Store Connect con contenuto marketing professionale.
+
 ### 11. Notification Button Enhancement ✅
 - **Problem**: Il pulsante delle notifiche nel ContentView non funzionava correttamente
 - **Root Cause**: Il metodo `toggleNotifications()` non faceva effettivamente il toggle della proprietà `notificationsEnabled`
