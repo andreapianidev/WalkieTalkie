@@ -318,7 +318,21 @@
 
 The app already provides a complete and professional Push to Talk implementation that mimics real walkie-talkie behavior.
 
-### 9. Notification Button Enhancement ✅
+### 10. App Store Connect Build Preparation ✅
+**Problem**: Due errori impedivano il caricamento su App Store Connect:
+1. Bundle name "Walkie Talkie" già utilizzato da altre app
+2. Valore UIBackgroundModes non valido: 'background-processing'
+
+**Solution**:
+- **Bundle Display Name**: Cambiato da "Walkie Talkie" a "WalkieTalkie Pro"
+- **UIBackgroundModes**: Rimosso 'background-processing', mantenuto solo 'remote-notification'
+- **Files Modified**: 
+  - `Info.plist`: Aggiornato UIBackgroundModes
+  - `project.pbxproj`: Aggiornato CFBundleDisplayName per Debug e Release
+
+**Result**: App pronta per il caricamento su App Store Connect senza conflitti di naming e con configurazioni valide.
+
+### 11. Notification Button Enhancement ✅
 - **Problem**: Il pulsante delle notifiche nel ContentView non funzionava correttamente
 - **Root Cause**: Il metodo `toggleNotifications()` non faceva effettivamente il toggle della proprietà `notificationsEnabled`
 - **Solution**: 

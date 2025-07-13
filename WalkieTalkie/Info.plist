@@ -8,7 +8,6 @@
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>background-processing</string>
 		<string>remote-notification</string>
 	</array>
 	<key>NSUserNotificationAlertStyle</key>
