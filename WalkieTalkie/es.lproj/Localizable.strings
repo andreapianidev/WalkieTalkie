@@ -1,0 +1,167 @@
+/* 
+   Localizable.strings (Spanish)
+   WalkieTalkie
+   
+   Created by Andrea Piani on 12/07/25.
+*/
+
+// MARK: - General
+"coming_soon" = "Próximamente";
+"ok" = "OK";
+"cancel" = "Cancelar";
+"error" = "Error";
+"accept" = "Aceptar";
+"decline" = "Rechazar";
+"disconnect" = "Desconectar";
+"settings" = "Configuración";
+"retry" = "Reintentar";
+"unknown" = "Desconocido";
+"version" = "Versión";
+"developed_by" = "Desarrollado por";
+"website" = "Sitio Web";
+
+// MARK: - Main Interface
+"frequency_owner" = "Propietario de Frecuencia";
+"radio_fm" = "Radio FM";
+"walkie_talkie" = "WalkieTalkie";
+"device" = "Dispositivo";
+"status" = "Estado";
+"no_error" = "sin error";
+"channel_1" = "Canal 1";
+"en" = "ES";
+"hold" = "MANTÉN";
+"pressed" = "PRESIONADO";
+"to_talk" = "PARA HABLAR";
+"release" = "SUELTA";
+"to_send" = "PARA ENVIAR";
+"radio_mode" = "MODO";
+"radio_fm_caps" = "RADIO FM";
+"active" = "ACTIVA";
+"no_connection" = "Sin conexión";
+"devices_connected" = "dispositivos conectados";
+"transmission_in_progress" = "TRANSMISIÓN EN CURSO";
+"reception_in_progress" = "RECEPCIÓN EN CURSO";
+"no_transmission" = "sin transmisión";
+
+// MARK: - Tab Bar
+"talk" = "Hablar";
+"explore" = "Explorar";
+"connections" = "Conexiones";
+"settings_tab" = "Configuración";
+
+// MARK: - Radio
+"station" = "Estación";
+"no_station" = "Sin estación";
+"buffering" = "Cargando...";
+"genre" = "Género";
+"country" = "País";
+"scanning" = "Escaneando...";
+
+// MARK: - Connections View
+"connections_title" = "Conexiones";
+"manage_connections" = "Gestiona las conexiones del walkie talkie";
+"connected_devices" = "Dispositivos conectados";
+"scanning_in_progress" = "Escaneo en progreso...";
+"offline" = "Desconectado";
+"online" = "Conectado";
+"advertising" = "Anunciando";
+"browsing" = "Navegando";
+"on" = "ENCENDIDO";
+"off" = "APAGADO";
+"connected_devices_count" = "Dispositivos Conectados";
+"no_devices_connected" = "No hay dispositivos conectados";
+"devices_nearby_hint" = "Asegúrate de que otros dispositivos estén cerca y tengan la app abierta";
+"connected" = "Conectado";
+"disconnect_all" = "Desconectar Todo";
+"restart_discovery" = "Reiniciar Búsqueda";
+"disconnect_device" = "Desconectar Dispositivo";
+"disconnect_confirmation" = "¿Estás seguro de que quieres desconectar todos los dispositivos?";
+
+// MARK: - Explore View
+"explore_title" = "Explorar";
+"scan_nearby_devices" = "Escanear dispositivos cercanos";
+"detected_devices" = "Dispositivos Detectados";
+"no_devices_detected" = "Ningún dispositivo detectado";
+"ensure_devices_open" = "Asegúrate de que otros dispositivos tengan la app abierta";
+"available" = "Disponible";
+"strong" = "Fuerte";
+"medium" = "Medio";
+"weak" = "Débil";
+
+// MARK: - Settings View
+"settings_title" = "Configuración";
+"configure_app" = "Configura tu app";
+"audio" = "Audio";
+"white_noise" = "Ruido Blanco";
+"background_audio" = "Audio de Fondo";
+"background_audio_description" = "Audio de fondo durante el uso";
+"noise_volume" = "Volumen del Ruido";
+"adjust_background_volume" = "Ajusta el volumen del ruido de fondo";
+"haptic_feedback" = "Retroalimentación Háptica";
+"vibration_on_buttons" = "Vibración al presionar botones";
+"auto_connect" = "Conexión Automática";
+"auto_connect_description" = "Conectar automáticamente a dispositivos conocidos";
+"voice_activation" = "Activación por Voz";
+"voice_activation_description" = "Transmitir automáticamente al hablar";
+"voice_sensitivity" = "Sensibilidad de Voz";
+"voice_sensitivity_description" = "Ajustar sensibilidad para activación por voz";
+"low_power_mode" = "Modo de Bajo Consumo";
+"low_power_mode_description" = "Reduce el consumo de batería";
+"reset_settings" = "Restablecer Configuración";
+"how_to_use" = "Cómo Usar la App";
+"instruction_1_title" = "Abre la App en Todos los Dispositivos";
+"instruction_1_description" = "Asegúrate de que todos los dispositivos tengan la app WalkieTalkie abierta y activa.";
+"instruction_2_title" = "Ve a Conexiones";
+"instruction_2_description" = "Toca la pestaña 'Conexiones' para ver los dispositivos disponibles cerca.";
+"instruction_3_title" = "Conecta los Dispositivos";
+"instruction_3_description" = "Selecciona un dispositivo de la lista para enviar una solicitud de conexión.";
+"instruction_4_title" = "Selecciona la Frecuencia";
+"instruction_4_description" = "Todos los dispositivos conectados deben usar la misma frecuencia para comunicarse.";
+"instruction_5_title" = "Mantén Presionado para Hablar";
+"instruction_5_description" = "Mantén presionado el botón central para transmitir. Suelta para escuchar.";
+"app_info" = "Información de la App";
+
+// MARK: - Alerts
+"connection_request" = "Solicitud de Conexión";
+"wants_to_connect" = "quiere conectarse";
+"microphone_permission_required" = "Permiso de Micrófono Requerido";
+"microphone_permission_message" = "La aplicación WalkieTalkie necesita acceso al micrófono para funcionar correctamente. Sin este permiso, no podrás transmitir audio.";
+"audio_transmission_error" = "Error de transmisión de audio: La operación no pudo completarse. (com.apple.coreaudio.avfaudio error -10851.)";
+
+// MARK: - Errors
+"no_connected_peers" = "No hay dispositivos conectados";
+
+
+
+// MARK: - Notifications
+"new_device_detected" = "Nuevo Dispositivo Detectado";
+"device_detected_message" = "%@ detectado cerca";
+"connection_established" = "Conexión Establecida";
+"connected_to_device" = "Conectado a %@";
+"connection_lost" = "Conexión Perdida";
+"disconnected_from_device" = "Desconectado de %@";
+"incoming_transmission" = "Transmisión Entrante";
+"receiving_audio_message" = "Recibiendo mensaje de audio";
+"background_scan" = "Escaneo en Segundo Plano";
+"scanning_for_devices" = "Buscando dispositivos cercanos";
+"notifications" = "Notificaciones";
+"enable_notifications" = "Habilitar Notificaciones";
+"disable_notifications" = "Deshabilitar Notificaciones";
+"notification_description" = "Recibe notificaciones cuando se detecten nuevos dispositivos o durante las transmisiones";
+"notifications_enabled" = "Notificaciones Habilitadas";
+"notifications_activated_message" = "Ahora recibirás notificaciones para detección de dispositivos y transmisiones";
+
+// MARK: - Battery Status
+"charging" = "Cargando";
+"full" = "Completa";
+"unplugged" = "Desconectado";
+"notifications" = "Notificaciones";
+"enable_notifications" = "Habilitar Notificaciones";
+"disable_notifications" = "Deshabilitar Notificaciones";
+"notification_description" = "Recibe notificaciones cuando se detecten nuevos dispositivos o durante transmisiones";
+
+// MARK: - Battery Status
+"charging" = "Cargando";
+"full" = "Completa";
+"unplugged" = "Desconectado";
+"unknown" = "Desconocido";

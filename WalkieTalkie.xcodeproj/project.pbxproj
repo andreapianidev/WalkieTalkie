@@ -10,9 +10,22 @@
 		6771A29D2E22DD6A00DF7071 /* WalkieTalkie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WalkieTalkie.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		67D551F02E239E0A008A3248 /* Exceptions for "WalkieTalkie" folder in "WalkieTalkie" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 6771A29C2E22DD6A00DF7071 /* WalkieTalkie */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		6771A29F2E22DD6A00DF7071 /* WalkieTalkie */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				67D551F02E239E0A008A3248 /* Exceptions for "WalkieTalkie" folder in "WalkieTalkie" target */,
+			);
 			path = WalkieTalkie;
 			sourceTree = "<group>";
 		};
@@ -91,6 +104,8 @@
 			knownRegions = (
 				en,
 				Base,
+				it,
+				es,
 			);
 			mainGroup = 6771A2942E22DD6A00DF7071;
 			minimizedProjectReferenceProxies = 1;
@@ -256,11 +271,20 @@
 				DEVELOPMENT_TEAM = ERAK83QBBM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WalkieTalkie/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Walkie Talkie";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Questa app utilizza il Bluetooth per scoprire e connettersi con dispositivi walkie talkie vicini.";
+				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Questa app utilizza il Bluetooth per essere scoperta da altri dispositivi walkie talkie.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Questa app utilizza la rete locale per connettersi con dispositivi vicini per la comunicazione walkie talkie.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Questa app ha bisogno dell'accesso al microfono per trasmettere messaggi vocali tramite walkie talkie.";
+				INFOPLIST_KEY_NSNetworkVolumesUsageDescription = "Questa app accede alla rete per la comunicazione walkie talkie tra dispositivi.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Questa app non traccia gli utenti, ma richiede il permesso per il corretto funzionamento della rete locale.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -288,11 +312,20 @@
 				DEVELOPMENT_TEAM = ERAK83QBBM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WalkieTalkie/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Walkie Talkie";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Questa app utilizza il Bluetooth per scoprire e connettersi con dispositivi walkie talkie vicini.";
+				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Questa app utilizza il Bluetooth per essere scoperta da altri dispositivi walkie talkie.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Questa app utilizza la rete locale per connettersi con dispositivi vicini per la comunicazione walkie talkie.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Questa app ha bisogno dell'accesso al microfono per trasmettere messaggi vocali tramite walkie talkie.";
+				INFOPLIST_KEY_NSNetworkVolumesUsageDescription = "Questa app accede alla rete per la comunicazione walkie talkie tra dispositivi.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Questa app non traccia gli utenti, ma richiede il permesso per il corretto funzionamento della rete locale.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

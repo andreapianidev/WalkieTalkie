@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Questa app ha bisogno dell'accesso al microfono per trasmettere messaggi vocali tramite walkie talkie.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Questa app utilizza la rete locale per connettersi con dispositivi vicini per la comunicazione walkie talkie.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_walkie-talkie._tcp</string>
+	</array>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Questa app utilizza il Bluetooth per scoprire e connettersi con dispositivi walkie talkie vicini.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Questa app utilizza il Bluetooth per essere scoperta da altri dispositivi walkie talkie.</string>
+	<key>NSNetworkVolumesUsageDescription</key>
+	<string>Questa app accede alla rete per la comunicazione walkie talkie tra dispositivi.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Questa app non traccia gli utenti, ma richiede il permesso per il corretto funzionamento della rete locale.</string>
+</dict>
+</plist>

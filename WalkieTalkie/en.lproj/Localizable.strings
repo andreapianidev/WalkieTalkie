@@ -1,0 +1,155 @@
+/* 
+   Localizable.strings (English)
+   WalkieTalkie
+   
+   Created by Andrea Piani on 12/07/25.
+*/
+
+// MARK: - General
+"coming_soon" = "Coming Soon";
+"ok" = "OK";
+"cancel" = "Cancel";
+"error" = "Error";
+"accept" = "Accept";
+"decline" = "Decline";
+"disconnect" = "Disconnect";
+"settings" = "Settings";
+"retry" = "Retry";
+"unknown" = "Unknown";
+"version" = "Version";
+"developed_by" = "Developed by";
+"website" = "Website";
+
+// MARK: - Notifications
+"new_device_detected" = "New Device Detected";
+"device_detected_message" = "%@ detected nearby";
+"connection_established" = "Connection Established";
+"connected_to_device" = "Connected to %@";
+"connection_lost" = "Connection Lost";
+"disconnected_from_device" = "Disconnected from %@";
+"incoming_transmission" = "Incoming Transmission";
+"receiving_audio_message" = "Receiving audio message";
+"background_scan" = "Background Scan";
+"scanning_for_devices" = "Scanning for nearby devices";
+"notifications" = "Notifications";
+"enable_notifications" = "Enable Notifications";
+"disable_notifications" = "Disable Notifications";
+"notification_description" = "Receive notifications when new devices are detected or during transmissions";
+"notifications_enabled" = "Notifications Enabled";
+"notifications_activated_message" = "You will now receive notifications for device detection and transmissions";
+
+// MARK: - Battery Status
+"charging" = "Charging";
+"full" = "Full";
+"unplugged" = "Unplugged";
+
+// MARK: - Main Interface
+"frequency_owner" = "Frequency Owner";
+"radio_fm" = "Radio FM";
+"walkie_talkie" = "WalkieTalkie";
+"device" = "Device";
+"status" = "Status";
+"no_error" = "no error";
+"channel_1" = "Channel 1";
+"en" = "EN";
+"hold" = "HOLD";
+"pressed" = "PRESSED";
+"to_talk" = "TO TALK";
+"release" = "RELEASE";
+"to_send" = "TO SEND";
+"radio_mode" = "RADIO";
+"radio_fm_caps" = "FM MODE";
+"active" = "ACTIVE";
+"no_connection" = "No connection";
+"devices_connected" = "devices connected";
+"transmission_in_progress" = "TRANSMISSION IN PROGRESS";
+"reception_in_progress" = "RECEPTION IN PROGRESS";
+"no_transmission" = "no transmission";
+
+// MARK: - Tab Bar
+"talk" = "Talk";
+"explore" = "Explore";
+"connections" = "Connections";
+"settings_tab" = "Settings";
+
+// MARK: - Radio
+"station" = "Station";
+"no_station" = "No station";
+"buffering" = "Buffering...";
+"genre" = "Genre";
+"country" = "Country";
+"scanning" = "Scanning...";
+
+// MARK: - Connections View
+"connections_title" = "Connections";
+"manage_connections" = "Manage walkie talkie connections";
+"connected_devices" = "Connected devices";
+"scanning_in_progress" = "Scanning in progress...";
+"offline" = "Offline";
+"online" = "Online";
+"advertising" = "Advertising";
+"browsing" = "Browsing";
+"on" = "ON";
+"off" = "OFF";
+"connected_devices_count" = "Connected Devices";
+"no_devices_connected" = "No devices connected";
+"devices_nearby_hint" = "Make sure other devices are nearby and have the app open";
+"connected" = "Connected";
+"disconnect_all" = "Disconnect All";
+"restart_discovery" = "Restart Discovery";
+"disconnect_device" = "Disconnect Device";
+"disconnect_confirmation" = "Are you sure you want to disconnect from all devices?";
+
+// MARK: - Explore View
+"explore_title" = "Explore";
+"scan_nearby_devices" = "Scan nearby devices";
+"detected_devices" = "Detected Devices";
+"no_devices_detected" = "No device detected";
+"ensure_devices_open" = "Make sure other devices have the app open";
+"available" = "Available";
+"strong" = "Strong";
+"medium" = "Medium";
+"weak" = "Weak";
+
+// MARK: - Settings View
+"settings_title" = "Settings";
+"configure_app" = "Configure your app";
+"audio" = "Audio";
+"white_noise" = "White Noise";
+"background_audio" = "Background Audio";
+"background_audio_description" = "Background audio during use";
+"noise_volume" = "Noise Volume";
+"adjust_background_volume" = "Adjust background noise volume";
+"haptic_feedback" = "Haptic Feedback";
+"vibration_on_buttons" = "Vibration when pressing buttons";
+"auto_connect" = "Auto Connect";
+"auto_connect_description" = "Automatically connect to known devices";
+"voice_activation" = "Voice Activation";
+"voice_activation_description" = "Transmit automatically when speaking";
+"voice_sensitivity" = "Voice Sensitivity";
+"voice_sensitivity_description" = "Adjust sensitivity for voice activation";
+"low_power_mode" = "Low Power Mode";
+"low_power_mode_description" = "Reduces battery consumption";
+"reset_settings" = "Reset Settings";
+"how_to_use" = "How to Use the App";
+"instruction_1_title" = "Open App on All Devices";
+"instruction_1_description" = "Make sure all devices have the WalkieTalkie app open and active.";
+"instruction_2_title" = "Go to Connections";
+"instruction_2_description" = "Tap the 'Connections' tab to see available devices nearby.";
+"instruction_3_title" = "Connect Devices";
+"instruction_3_description" = "Select a device from the list to send a connection request.";
+"instruction_4_title" = "Select Frequency";
+"instruction_4_description" = "All connected devices must use the same frequency to communicate.";
+"instruction_5_title" = "Hold to Talk";
+"instruction_5_description" = "Hold the center button to transmit. Release to listen.";
+"app_info" = "App Information";
+
+// MARK: - Alerts
+"connection_request" = "Connection Request";
+"wants_to_connect" = "wants to connect";
+"microphone_permission_required" = "Microphone Permission Required";
+"microphone_permission_message" = "The WalkieTalkie app needs microphone access to function properly. Without this permission, you won't be able to transmit audio.";
+"audio_transmission_error" = "Audio transmission error: The operation couldn't be completed. (com.apple.coreaudio.avfaudio error -10851.)";
+
+// MARK: - Errors
+"no_connected_peers" = "No connected devices";
