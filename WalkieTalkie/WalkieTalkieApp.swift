@@ -23,9 +23,6 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         // Configura il delegate per le notifiche
         UNUserNotificationCenter.current().delegate = self
         
-        // Richiedi i permessi delle notifiche
-        NotificationManager.shared.requestNotificationPermission()
-        
         return true
     }
     

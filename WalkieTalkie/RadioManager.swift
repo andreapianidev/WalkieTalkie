@@ -243,8 +243,8 @@ class RadioManager: NSObject, ObservableObject {
     func previousStation() {
         guard let current = currentStation,
               let currentIndex = radioStations.firstIndex(where: { $0.id == current.id }) else {
-            if !radioStations.isEmpty {
-                playStation(radioStations.last!)
+            if !radioStations.isEmpty, let lastStation = radioStations.last {
+                playStation(lastStation)
             }
             return
         }

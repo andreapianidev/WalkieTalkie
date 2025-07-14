@@ -15,6 +15,10 @@ class NotificationManager: ObservableObject {
     @Published var notificationsEnabled = false
     @Published var hasPermission = false
     
+    private var isTogglingNotifications = false
+    private var lastNotificationTime: [String: Date] = [:]
+    private let notificationCooldown: TimeInterval = 2.0 // 2 secondi di cooldown
+    
     private init() {
         checkNotificationSettings()
         loadNotificationPreference()
@@ -25,14 +29,18 @@ class NotificationManager: ObservableObject {
     func requestNotificationPermission() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { [weak self] granted, error in
             DispatchQueue.main.async {
-                self?.hasPermission = granted
-                if granted {
-                    self?.notificationsEnabled = true
-                    self?.saveNotificationPreference()
-                } else {
-                    // Se l'utente nega i permessi, assicurati che il toggle sia disabilitato
-                    self?.notificationsEnabled = false
-                    self?.saveNotificationPreference()
+                guard let self = self else { return }
+                
+                if let error = error {
+                    print("Errore richiesta permessi notifiche: \(error.localizedDescription)")
+                }
+                
+                self.hasPermission = granted
+                // Non abilitare automaticamente le notifiche, mantieni lo stato corrente
+                // L'utente deve abilitarle manualmente dalle impostazioni
+                if !granted {
+                    self.notificationsEnabled = false
+                    self.saveNotificationPreference()
                 }
             }
         }
@@ -54,19 +62,39 @@ class NotificationManager: ObservableObject {
     // MARK: - Preference Management
     
     func toggleNotifications() {
+        // Evita loop infiniti
+        guard !isTogglingNotifications else { return }
+        isTogglingNotifications = true
+        
+        defer {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.isTogglingNotifications = false
+            }
+        }
+        
         if hasPermission {
             // Fai il toggle della proprietà
             notificationsEnabled.toggle()
             saveNotificationPreference()
             
-            // Invia notifica di conferma se le notifiche sono state attivate
             if notificationsEnabled {
+                // Invia notifica di conferma se le notifiche sono state attivate
                 sendNotificationActivatedConfirmation()
+            } else {
+                // Rimuovi tutte le notifiche pending quando disabilitate
+                clearAllPendingNotifications()
             }
         } else {
-            // Reset del toggle se non abbiamo permessi
-            notificationsEnabled = false
+            // Se non abbiamo permessi, richiedili
             requestNotificationPermission()
+            // Dopo aver richiesto i permessi, se vengono concessi, abilita le notifiche
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                if self.hasPermission {
+                    self.notificationsEnabled = true
+                    self.saveNotificationPreference()
+                    self.sendNotificationActivatedConfirmation()
+                }
+            }
         }
     }
     
@@ -78,10 +106,22 @@ class NotificationManager: ObservableObject {
         notificationsEnabled = UserDefaults.standard.bool(forKey: "notifications_enabled")
     }
     
+    // MARK: - Helper Methods
+    
+    private func canSendNotification(type: String) -> Bool {
+        let now = Date()
+        if let lastTime = lastNotificationTime[type],
+           now.timeIntervalSince(lastTime) < notificationCooldown {
+            return false
+        }
+        lastNotificationTime[type] = now
+        return true
+    }
+    
     // MARK: - Notification Sending
     
     func sendDeviceDetectedNotification(deviceName: String) {
-        guard notificationsEnabled && hasPermission else { return }
+        guard notificationsEnabled && hasPermission && canSendNotification(type: "device_detected") else { return }
         
         let content = UNMutableNotificationContent()
         content.title = "new_device_detected".localized
@@ -99,7 +139,7 @@ class NotificationManager: ObservableObject {
     }
     
     func sendConnectionEstablishedNotification(deviceName: String) {
-        guard notificationsEnabled && hasPermission else { return }
+        guard notificationsEnabled && hasPermission && canSendNotification(type: "connection_established") else { return }
         
         let content = UNMutableNotificationContent()
         content.title = "connection_established".localized
@@ -116,7 +156,7 @@ class NotificationManager: ObservableObject {
     }
     
     func sendConnectionLostNotification(deviceName: String) {
-        guard notificationsEnabled && hasPermission else { return }
+        guard notificationsEnabled && hasPermission && canSendNotification(type: "connection_lost") else { return }
         
         let content = UNMutableNotificationContent()
         content.title = "connection_lost".localized
@@ -133,7 +173,7 @@ class NotificationManager: ObservableObject {
     }
     
     func sendIncomingTransmissionNotification() {
-        guard notificationsEnabled && hasPermission else { return }
+        guard notificationsEnabled && hasPermission && canSendNotification(type: "incoming_transmission") else { return }
         
         let content = UNMutableNotificationContent()
         content.title = "incoming_transmission".localized
@@ -193,6 +233,13 @@ class NotificationManager: ObservableObject {
     
     func cancelBackgroundNotifications() {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["background_scan"])
+    }
+    
+    private func clearAllPendingNotifications() {
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        clearBadge()
+        // Reset del cooldown quando si disabilitano le notifiche
+        lastNotificationTime.removeAll()
     }
     
     // MARK: - Badge Management

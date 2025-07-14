@@ -1,7 +1,7 @@
 //creato da Andrea Piani - Immaginet Srl - 15/01/25 - https://www.andreapiani.com - PowerManager.swift
 //  WalkieTalkie
 //
-//  Created by Andrea Piani on 15/01/25.
+//  Created by Andrea Piani on 15/07/25.
 //
 
 import Foundation

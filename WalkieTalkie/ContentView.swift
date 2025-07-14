@@ -6,6 +6,7 @@
 
 import SwiftUI
 import MultipeerConnectivity
+import AudioToolbox
 
 struct ContentView: View {
     @StateObject private var multipeerManager = MultipeerManager()
@@ -17,6 +18,7 @@ struct ContentView: View {
     @State private var frequency = "428.283"
     @State private var showingPermissionAlert = false
     @State private var isRadioMode = false
+    @State private var frequencyChangeAnimation = false
     
     // Frequenze realistiche per walkie-talkie
     private let availableFrequencies = [
@@ -29,6 +31,7 @@ struct ContentView: View {
     @State private var selectedTab = 0
     @State private var showingConnectionAlert = false
     @State private var showingErrorAlert = false
+    @State private var isPoweredOn = true
     
     var body: some View {
         GeometryReader { geometry in
@@ -119,7 +122,7 @@ struct ContentView: View {
                 }
             }) {
                 HStack(spacing: 4) {
-                    Image(systemName: isRadioMode ? "radio" : "walkie.talkie")
+                    Image(systemName: isRadioMode ? "radio" : "antenna.radiowaves.left.and.right")
                         .foregroundColor(.black)
                         .font(.title3)
                     Text(isRadioMode ? "FM" : "WT")
@@ -261,11 +264,11 @@ struct ContentView: View {
                     
                     Spacer()
                     
-                    Text("10")
+                    Text("\(multipeerManager.connectedPeers.count)")
                         .foregroundColor(.white)
                         .font(.caption)
                     
-                    Image(systemName: "message")
+                    Image(systemName: multipeerManager.connectedPeers.count > 0 ? "antenna.radiowaves.left.and.right" : "antenna.radiowaves.left.and.right.slash")
                         .foregroundColor(.white)
                         .font(.caption)
                 }
@@ -296,10 +299,13 @@ struct ContentView: View {
                     }
                     .padding(.top, 10)
                 } else {
-                    Text(frequency)
-                        .font(.system(size: 36, weight: .bold, design: .monospaced))
-                        .foregroundColor(.yellow)
-                        .padding(.top, 10)
+                    Text(isPoweredOn ? frequency : "OFF")
+                    .font(.system(size: 36, weight: .bold, design: .monospaced))
+                    .foregroundColor(isPoweredOn ? .yellow : .red)
+                    .padding(.top, 10)
+                    .scaleEffect(frequencyChangeAnimation ? 1.1 : 1.0)
+                    .animation(.easeInOut(duration: 0.15), value: frequencyChangeAnimation)
+                    .opacity(isPoweredOn ? 1.0 : 0.7)
                 }
                 
                 // Indicatori inferiori
@@ -416,22 +422,32 @@ struct ContentView: View {
             } else {
                 // Controlli Walkie-Talkie originali
                 
-                // Emoji button
-                Button(action: {}) {
+                // Home frequency button
+                Button(action: {
+                    if isPoweredOn {
+                        hapticManager.mediumTap()
+                        returnToHomeFrequency()
+                    }
+                }) {
                     ZStack {
                         Circle()
-                            .fill(Color.black)
+                            .fill(currentFrequencyIndex == 0 ? Color.green : Color.black)
                             .frame(width: 50, height: 50)
                         
-                        Text("😊")
+                        Image(systemName: "house.fill")
+                            .foregroundColor(.white)
                             .font(.title2)
                     }
                 }
+                .opacity(isPoweredOn ? 1.0 : 0.3)
+                .disabled(!isPoweredOn)
                 
                 // Previous button
                 Button(action: {
-                    hapticManager.mediumTap()
-                    previousFrequency()
+                    if isPoweredOn {
+                        hapticManager.mediumTap()
+                        previousFrequency()
+                    }
                 }) {
                     ZStack {
                         Circle()
@@ -443,11 +459,15 @@ struct ContentView: View {
                             .font(.title2)
                     }
                 }
+                .opacity(isPoweredOn ? 1.0 : 0.3)
+                .disabled(!isPoweredOn)
                 
                 // forward button
                 Button(action: {
-                    hapticManager.mediumTap()
-                    nextFrequency()
+                    if isPoweredOn {
+                        hapticManager.mediumTap()
+                        nextFrequency()
+                    }
                 }) {
                     ZStack {
                         Circle()
@@ -459,18 +479,21 @@ struct ContentView: View {
                             .font(.title2)
                     }
                 }
+                .opacity(isPoweredOn ? 1.0 : 0.3)
+                .disabled(!isPoweredOn)
                 
                 // Power button
                 Button(action: {
                     hapticManager.lightTap()
+                    togglePower()
                 }) {
                     ZStack {
                         Circle()
-                            .fill(Color.white)
+                            .fill(isPoweredOn ? Color.green : Color.red)
                             .frame(width: 50, height: 50)
                         
                         Image(systemName: "power")
-                            .foregroundColor(.black)
+                            .foregroundColor(.white)
                             .font(.title2)
                     }
                 }
@@ -540,11 +563,12 @@ struct ContentView: View {
                 }
                 .scaleEffect(isTransmitting && !isRadioMode ? 0.95 : 1.0)
                 .animation(.easeInOut(duration: 0.1), value: isTransmitting)
+                .opacity(isPoweredOn && currentFrequencyIndex == 0 ? 1.0 : 0.3)
                 .gesture(
-                    // Disabilita gesture in modalità FM
-                    isRadioMode ? nil : DragGesture(minimumDistance: 0)
+                    // Disabilita gesture in modalità FM, quando spento, o su frequenze non-home
+                    (isRadioMode || !isPoweredOn || currentFrequencyIndex != 0) ? nil : DragGesture(minimumDistance: 0)
                         .onChanged { _ in
-                            if !isTransmitting {
+                            if !isTransmitting && isPoweredOn && currentFrequencyIndex == 0 {
                                 // Controlla permessi prima di trasmettere
                                 if !audioManager.hasAudioPermission {
                                     checkMicrophonePermission()
@@ -708,11 +732,104 @@ struct ContentView: View {
     private func previousFrequency() {
         currentFrequencyIndex = (currentFrequencyIndex - 1 + availableFrequencies.count) % availableFrequencies.count
         frequency = availableFrequencies[currentFrequencyIndex]
+        
+        // Feedback realistico per cambio frequenza
+        playFrequencyChangeSound()
+        showFrequencyChangeIndicator()
+        
+        // Gestione audio per frequenze non-home
+        handleFrequencyAudio()
     }
     
     private func nextFrequency() {
         currentFrequencyIndex = (currentFrequencyIndex + 1) % availableFrequencies.count
         frequency = availableFrequencies[currentFrequencyIndex]
+        
+        // Feedback realistico per cambio frequenza
+        playFrequencyChangeSound()
+        showFrequencyChangeIndicator()
+        
+        // Gestione audio per frequenze non-home
+        handleFrequencyAudio()
+    }
+    
+    private func playFrequencyChangeSound() {
+        // Suono di "click" del selettore di frequenza
+        AudioServicesPlaySystemSound(1104) // Suono di "click" del sistema
+    }
+    
+    private func showFrequencyChangeIndicator() {
+        // Breve animazione per indicare il cambio frequenza
+        frequencyChangeAnimation = true
+        
+        // Reset dell'animazione dopo un breve delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+            frequencyChangeAnimation = false
+        }
+    }
+    
+    private func returnToHomeFrequency() {
+        // Torna alla frequenza principale (indice 0) per la comunicazione reale
+        currentFrequencyIndex = 0
+        frequency = availableFrequencies[0]
+        
+        // Feedback visivo
+        showFrequencyChangeIndicator()
+        
+        // Suono di conferma
+        playFrequencyChangeSound()
+        
+        // Gestione audio per frequenze non-home
+        handleFrequencyAudio()
+    }
+    
+    private func handleFrequencyAudio() {
+        if currentFrequencyIndex == 0 {
+            // Frequenza home: ferma l'audio casuale per permettere conversazioni
+            audioManager.stopFrequencyAudio()
+            // Riattiva il rumore bianco se abilitato nelle impostazioni
+            audioManager.startBackgroundAudioIfNeeded()
+        } else {
+            // Frequenze non-home: ferma il rumore bianco e riproduci audio casuale in loop
+            audioManager.stopBackgroundAudio()
+            audioManager.playRandomFrequencyAudio()
+        }
+    }
+    
+    private func togglePower() {
+        isPoweredOn.toggle()
+        
+        if !isPoweredOn {
+            // Spegni tutto quando il walkie-talkie viene spento
+            if isTransmitting {
+                stopTransmitting()
+            }
+            
+            // Disconnetti da tutti i peer
+            multipeerManager.stopBrowsing()
+            multipeerManager.stopAdvertising()
+            
+            // Ferma l'audio se in modalità radio
+            if isRadioMode {
+                radioManager.stopRadio()
+            }
+            
+            // Ferma l'audio delle frequenze
+            audioManager.stopFrequencyAudio()
+            
+            // Ferma il rumore bianco/audio di sottofondo
+            audioManager.stopBackgroundAudio()
+        } else {
+            // Riaccendi le funzionalità quando viene riacceso
+            multipeerManager.startBrowsing()
+            multipeerManager.startAdvertising()
+            
+            // Ripristina il rumore bianco se abilitato nelle impostazioni
+            audioManager.startBackgroundAudioIfNeeded()
+            
+            // Ripristina l'audio delle frequenze se necessario
+            handleFrequencyAudio()
+        }
     }
     
     private func checkMicrophonePermission() {

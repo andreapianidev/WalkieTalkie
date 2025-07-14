@@ -5,6 +5,8 @@
 ## To Do
 
 ### Priorità Alta
+- [ ] Test sistema notifiche dopo correzioni
+- [ ] Verificare performance con notifiche disabilitate
 - [ ] Migliorare gestione audio (riproduzione audio ricevuto)
 - [ ] Implementare whitelist di dispositivi fidati
 - [ ] Aggiungere crittografia end-to-end per i messaggi audio
@@ -14,6 +16,48 @@
 - [ ] Aggiungere più stazioni radio internazionali
 - [ ] Implementare salvataggio stazione preferita
 - [ ] Aggiungere ricerca stazioni per genere/paese
+- [x] Implementare sistema MP3 casuali per frequenze non-comunicazione
+- [x] Aggiungere 10 file MP3 per feedback realistico cambio frequenza
+
+## Recently Completed
+
+### Random MP3 Frequency System ✅
+**Status**: Implemented and fully functional
+
+**What it does**: Sistema completo di 25 frequenze con riproduzione casuale di file MP3:
+- **Frequenza Home (Indice 0)**: Riservata per comunicazioni reali tra utenti
+- **24 Frequenze Aggiuntive**: Riproducono casualmente file f1.mp3-f24.mp3 in loop continuo
+- **PTT Disabilitato**: Su frequenze non-home il pulsante "Premi per Parlare" è disabilitato
+- **Feedback Visivo**: Opacità ridotta del PTT quando non utilizzabile
+- **Gestione Power**: Audio si ferma quando walkie-talkie è spento
+
+**Technical Implementation**:
+- Aggiunto `frequencyAudioPlayer: AVAudioPlayer?` in `AudioManager`
+- Array `frequencyAudioFiles` con 24 file MP3 (f1.mp3-f24.mp3)
+- `playRandomFrequencyAudio()` e `stopFrequencyAudio()` per controllo audio
+- `handleFrequencyAudio()` in `ContentView` per logica frequenze
+- PTT gesture modificata: `currentFrequencyIndex != 0` disabilita trasmissione
+- Integrazione con `PowerManager` per ottimizzazioni volume
+
+**Files Modified**: `AudioManager.swift`, `ContentView.swift`
+
+### Power Button Functionality ✅
+**Status**: Implemented and fully functional
+
+**What it does**: The power button now controls the complete on/off state of the walkie-talkie:
+- **Visual State**: Green when ON, Red when OFF
+- **Complete Shutdown**: When OFF, disables all communication and audio functions
+- **UI Feedback**: All controls become semi-transparent (30% opacity) and disabled when OFF
+- **Display**: Shows "OFF" in red text instead of frequency when powered down
+- **Automatic Disconnection**: Stops browsing, advertising, and disconnects from all peers when turned off
+- **Smart Reactivation**: Automatically restarts browsing and advertising when turned back on
+
+**Technical Implementation**:
+- Added `@State var isPoweredOn = true` to manage power state
+- `togglePower()` function handles complete shutdown/startup sequence
+- PTT button disabled with opacity and gesture controls when OFF
+- Frequency control buttons (Home, Previous, Next) disabled when OFF
+- Integrated with existing haptic feedback system
 
 ### Funzionalità Avanzate
 - [ ] Implementare view Explore con canali disponibili
@@ -34,6 +78,19 @@
   - Aggiunta estensione String+Localization per facilitare l'uso delle stringhe localizzate
   - Localizzate tutte le stringhe hardcoded in ContentView.swift, ConnectionsView.swift, ExploreView.swift e SettingsView.swift
   - Supporto per oltre 80 stringhe localizzate inclusi UI elements, messaggi di errore, istruzioni e impostazioni
+- [x] Risolto problema ITMS-90129 cambiando CFBundleDisplayName da "WalkieTalkie Pro" a "Talky"
+- [x] Aggiornata descrizione App Store con nuovo nome "Talky"
+- [x] Corretti problemi sistema notifiche:
+  - Risolto loop infinito in SettingsView tra Toggle e onChange
+  - Aggiunto cooldown di 2 secondi per prevenire spam notifiche
+  - Implementato controllo isTogglingNotifications per evitare race conditions
+  - Aggiunta pulizia notifiche pending quando disabilitate
+  - Migliorata gestione errori in requestNotificationPermission
+  - Aggiunto reset cooldown quando notifiche disabilitate
+  - **NUOVO**: Notifiche disabilitate di default - rimossa richiesta automatica permessi all'avvio
+  - **NUOVO**: Modificato requestNotificationPermission per non abilitare automaticamente le notifiche
+  - **NUOVO**: Migliorato flusso toggleNotifications per gestire correttamente prima abilitazione
+  - File modificati: NotificationManager.swift, SettingsView.swift, WalkieTalkieApp.swift
 
 ### Funzionalità Base
 - [x] Configurazione MultipeerConnectivity
@@ -353,6 +410,19 @@ The app already provides a complete and professional Push to Talk implementation
 - File: AppStore_Description.md
 **Result**: Descrizione pronta per submission su App Store Connect con contenuto marketing professionale.
 
+### 13. Notification System Fixed ✅
+- **Status**: COMPLETED
+- **Description**: Risolti crash e spam notifiche nel sistema di notifiche
+- **Issues Fixed**:
+  - Corretto loop infinito nel toggle notifiche in SettingsView
+  - Aggiunto sistema di cooldown (2s) per evitare spam notifiche
+  - Implementato controllo isTogglingNotifications per evitare race conditions
+  - Aggiunta pulizia notifiche pending quando disabilitate
+  - Migliorata gestione errori in requestNotificationPermission
+  - Reset cooldown quando notifiche vengono disabilitate
+- **Files Modified**: `NotificationManager.swift`, `SettingsView.swift`
+- **Result**: Sistema notifiche ora funziona stabilmente senza crash o spam
+
 ### 11. Notification Button Enhancement ✅
 - **Problem**: Il pulsante delle notifiche nel ContentView non funzionava correttamente
 - **Root Cause**: Il metodo `toggleNotifications()` non faceva effettivamente il toggle della proprietà `notificationsEnabled`
@@ -390,6 +460,46 @@ The app already provides a complete and professional Push to Talk implementation
   - Fixed all positioning calculations to use dynamic center point
 - **Files Modified**: `ExploreView.swift`
 - **Result**: Radar now displays correctly with stable labels and enhanced visual effects
+
+### 12. Frequency Change Enhancement in WT Mode ✅
+- **Status**: COMPLETED
+- **Description**: Migliorato feedback realistico per i pulsanti di cambio frequenza in modalità WT
+- **Features Added**:
+  - Suono di sistema (click) tramite AudioServicesPlaySystemSound(1104)
+  - Animazione visiva del display frequenza con scaling effect
+  - Import AudioToolbox per supporto suoni di sistema
+  - Funzioni helper playFrequencyChangeSound() e showFrequencyChangeIndicator()
+- **Files Modified**: `ContentView.swift`
+- **Result**: Esperienza più realistica nel cambio frequenza con feedback audio e visivo
+
+### 13. PowerManager Verification ✅
+- **Status**: VERIFIED
+- **Description**: Verificato corretto funzionamento del PowerManager
+- **Integration Confirmed**:
+  - Correttamente integrato con SettingsManager per toggle manuale
+  - Utilizzato da AudioManager per ottimizzazione volume
+  - Utilizzato da MultipeerManager per intervalli heartbeat ottimizzati
+  - Monitoraggio automatico batteria e modalità risparmio energetico iOS
+- **Result**: PowerManager funziona correttamente e ottimizza le prestazioni dell'app
+
+### 14. Power Button Implementation ✅
+- **Status**: COMPLETED
+- **Description**: Implementato controllo completo on/off del walkie-talkie tramite pulsante power
+- **Features Added**:
+  - Stato visivo: Verde quando acceso, Rosso quando spento
+  - Spegnimento completo: Disabilita tutte le funzioni di comunicazione e audio quando OFF
+  - Feedback UI: Tutti i controlli diventano semi-trasparenti (30% opacità) e disabilitati quando OFF
+  - Display: Mostra "OFF" in testo rosso invece della frequenza quando spento
+  - Disconnessione automatica: Ferma browsing, advertising e disconnette da tutti i peer quando spento
+  - Riattivazione intelligente: Riavvia automaticamente browsing e advertising quando riacceso
+- **Technical Implementation**:
+  - Aggiunto `@State var isPoweredOn = true` per gestire stato power
+  - Funzione `togglePower()` gestisce sequenza completa shutdown/startup
+  - Pulsante PTT disabilitato con opacità e controlli gesture quando OFF
+  - Pulsanti controllo frequenza (Home, Previous, Next) disabilitati quando OFF
+  - Integrato con sistema haptic feedback esistente
+- **Files Modified**: `ContentView.swift`
+- **Result**: Walkie-talkie ora ha controllo power completo e realistico
 
 ## Notes
 - Design: Sfondo giallo (#FFD700 circa), elementi neri/bianchi

@@ -219,7 +219,7 @@ class MultipeerManager: NSObject, ObservableObject {
     private func sendHeartbeat() {
         guard !connectedPeers.isEmpty else { return }
         
-        let heartbeatData = "HEARTBEAT".data(using: .utf8)!
+        guard let heartbeatData = "HEARTBEAT".data(using: .utf8) else { return }
         lastHeartbeatSent = Date()
         
         for peer in connectedPeers {
@@ -464,7 +464,11 @@ class MultipeerManager: NSObject, ObservableObject {
     
     private func bufferToData(_ buffer: AVAudioPCMBuffer) -> Data {
         let audioBuffer = buffer.audioBufferList.pointee.mBuffers
-        let data = Data(bytes: audioBuffer.mData!, count: Int(audioBuffer.mDataByteSize))
+        guard let mData = audioBuffer.mData else {
+            logger.logAudioError(WalkieTalkieError.audioTransmissionFailed(underlying: NSError(domain: "AudioBuffer", code: -1, userInfo: [NSLocalizedDescriptionKey: "Audio buffer mData is nil"])), context: "Buffer audio vuoto")
+            return Data()
+        }
+        let data = Data(bytes: mData, count: Int(audioBuffer.mDataByteSize))
         return data
     }
     

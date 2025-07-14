@@ -85,6 +85,9 @@ class SettingsManager: ObservableObject {
         self.isVoiceActivationEnabled = userDefaults.object(forKey: Keys.isVoiceActivationEnabled) as? Bool ?? false
         self.voiceActivationThreshold = userDefaults.object(forKey: Keys.voiceActivationThreshold) as? Float ?? 0.3
         self.isLowPowerModeEnabled = userDefaults.object(forKey: Keys.isLowPowerModeEnabled) as? Bool ?? false
+        
+        // Debug print dopo l'inizializzazione completa
+        print("⚙️ SettingsManager: isHapticFeedbackEnabled inizializzato a \(isHapticFeedbackEnabled)")
     }
     
     // MARK: - Methods

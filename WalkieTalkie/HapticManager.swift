@@ -25,6 +25,16 @@ class HapticManager: ObservableObject {
     private init() {
         setupGenerators()
         observeSettings()
+        checkHapticSupport()
+    }
+    
+    private func checkHapticSupport() {
+        // Verifica se il dispositivo supporta il feedback aptico
+        #if targetEnvironment(simulator)
+        print("⚠️ HapticManager: Il feedback aptico non è supportato nel simulatore")
+        #else
+        print("✅ HapticManager: Feedback aptico disponibile su dispositivo fisico")
+        #endif
     }
     
     private func setupGenerators() {
@@ -49,13 +59,21 @@ class HapticManager: ObservableObject {
     
     /// Feedback leggero per interazioni semplici (tap su pulsanti)
     func lightTap() {
-        guard settingsManager.isHapticFeedbackEnabled else { return }
+        guard settingsManager.isHapticFeedbackEnabled else { 
+            print("🔇 HapticManager: Feedback aptico disabilitato nelle impostazioni")
+            return 
+        }
+        print("📳 HapticManager: Eseguendo lightTap")
         lightImpact.impactOccurred()
     }
     
     /// Feedback medio per azioni importanti (cambio frequenza, toggle)
     func mediumTap() {
-        guard settingsManager.isHapticFeedbackEnabled else { return }
+        guard settingsManager.isHapticFeedbackEnabled else { 
+            print("🔇 HapticManager: Feedback aptico disabilitato nelle impostazioni")
+            return 
+        }
+        print("📳 HapticManager: Eseguendo mediumTap")
         mediumImpact.impactOccurred()
     }
     

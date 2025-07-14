@@ -23,8 +23,11 @@ class AudioManager: ObservableObject {
     
     @Published var hasAudioPermission = false
     @Published var isPlayingBackground = false
+    @Published var isPlayingFrequencyAudio = false
     
     private let backgroundSounds = ["radio2.mp3", "radio3.mp3", "radio4.mp3"]
+    private var frequencyAudioPlayer: AVAudioPlayer?
+    private let frequencyAudioFiles = Array(1...24).map { "f\($0).mp3" }
     
     private init() {
         setupAudioSession()
@@ -95,7 +98,7 @@ class AudioManager: ObservableObject {
     
     // MARK: - Background Audio
     
-    private func startBackgroundAudioIfNeeded() {
+    func startBackgroundAudioIfNeeded() {
         guard hasAudioPermission && settingsManager.isBackgroundAudioEnabled else {
             if !hasAudioPermission {
                 logger.logAudioWarning("Tentativo di avviare audio senza permessi")
@@ -156,8 +159,46 @@ class AudioManager: ObservableObject {
     
     func stopBackgroundAudio() {
         backgroundAudioPlayer?.stop()
+        backgroundAudioPlayer = nil
         isPlayingBackground = false
         logger.logAudioInfo("Audio di sottofondo arrestato")
+    }
+    
+    /// Riproduce un file MP3 casuale per le frequenze non-home
+    func playRandomFrequencyAudio() {
+        guard let randomFile = frequencyAudioFiles.randomElement() else {
+            logger.logAudioError(NSError(domain: "AudioManager", code: -1, userInfo: [NSLocalizedDescriptionKey: "Nessun file audio frequenza disponibile"]), context: "Selezione file frequenza")
+            return
+        }
+        
+        guard let soundURL = Bundle.main.url(forResource: randomFile.replacingOccurrences(of: ".mp3", with: ""), withExtension: "mp3") else {
+            logger.logAudioError(NSError(domain: "AudioManager", code: 404, userInfo: [NSLocalizedDescriptionKey: "File audio frequenza non trovato: \(randomFile)"]), context: "Caricamento audio frequenza")
+            return
+        }
+        
+        do {
+            // Ferma l'audio precedente se in riproduzione
+            stopFrequencyAudio()
+            
+            frequencyAudioPlayer = try AVAudioPlayer(contentsOf: soundURL)
+            frequencyAudioPlayer?.numberOfLoops = -1 // Loop infinito
+            frequencyAudioPlayer?.volume = powerManager.isLowPowerModeActive ? 0.3 : 0.5
+            frequencyAudioPlayer?.play()
+            
+            isPlayingFrequencyAudio = true
+            logger.logAudioInfo("Avviata riproduzione audio frequenza: \(randomFile)")
+            
+        } catch {
+            logger.logAudioError(error, context: "Riproduzione audio frequenza")
+        }
+    }
+    
+    /// Ferma la riproduzione dell'audio delle frequenze
+    func stopFrequencyAudio() {
+        frequencyAudioPlayer?.stop()
+        frequencyAudioPlayer = nil
+        isPlayingFrequencyAudio = false
+        logger.logAudioInfo("Audio frequenza arrestato")
     }
     
     func setBackgroundVolume(_ volume: Float) {

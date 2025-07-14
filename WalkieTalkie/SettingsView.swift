@@ -103,11 +103,15 @@ struct SettingsView: View {
                     
                     Spacer()
                     
-                    Toggle("", isOn: $notificationManager.notificationsEnabled)
-                        .toggleStyle(SwitchToggleStyle(tint: .black))
-                        .onChange(of: notificationManager.notificationsEnabled) { oldValue, newValue in
-                            notificationManager.toggleNotifications()
+                    Toggle("", isOn: Binding(
+                        get: { notificationManager.notificationsEnabled },
+                        set: { newValue in
+                            if newValue != notificationManager.notificationsEnabled {
+                                notificationManager.toggleNotifications()
+                            }
                         }
+                    ))
+                    .toggleStyle(SwitchToggleStyle(tint: .black))
                 }
                 .padding()
                 .background(
