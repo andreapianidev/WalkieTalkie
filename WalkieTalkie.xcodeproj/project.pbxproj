@@ -279,7 +279,6 @@
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Questa app utilizza la rete locale per connettersi con dispositivi vicini per la comunicazione walkie talkie.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Questa app ha bisogno dell'accesso al microfono per trasmettere messaggi vocali tramite walkie talkie.";
 				INFOPLIST_KEY_NSNetworkVolumesUsageDescription = "Questa app accede alla rete per la comunicazione walkie talkie tra dispositivi.";
-
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -321,7 +320,6 @@
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Questa app utilizza la rete locale per connettersi con dispositivi vicini per la comunicazione walkie talkie.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Questa app ha bisogno dell'accesso al microfono per trasmettere messaggi vocali tramite walkie talkie.";
 				INFOPLIST_KEY_NSNetworkVolumesUsageDescription = "Questa app accede alla rete per la comunicazione walkie talkie tra dispositivi.";
-
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

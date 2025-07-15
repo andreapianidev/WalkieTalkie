@@ -1,0 +1,13 @@
+/* 
+   InfoPlist.strings (Spanish)
+   WalkieTalkie
+   
+   Created by Andrea Piani on 12/07/25.
+*/
+
+// MARK: - Permission Descriptions
+"NSMicrophoneUsageDescription" = "Esta aplicación necesita acceso al micrófono para transmitir mensajes de voz a través del walkie talkie.";
+"NSLocalNetworkUsageDescription" = "Esta aplicación utiliza la red local para conectarse con dispositivos cercanos para la comunicación walkie talkie.";
+"NSBluetoothAlwaysUsageDescription" = "Esta aplicación utiliza Bluetooth para descubrir y conectarse con dispositivos walkie talkie cercanos.";
+"NSBluetoothPeripheralUsageDescription" = "Esta aplicación utiliza Bluetooth para ser descubierta por otros dispositivos walkie talkie.";
+"NSNetworkVolumesUsageDescription" = "Esta aplicación accede a la red para la comunicación walkie talkie entre dispositivos.";
