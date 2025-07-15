@@ -16,7 +16,6 @@
 	<string>Questa app utilizza il Bluetooth per essere scoperta da altri dispositivi walkie talkie.</string>
 	<key>NSNetworkVolumesUsageDescription</key>
 	<string>Questa app accede alla rete per la comunicazione walkie talkie tra dispositivi.</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>Questa app non traccia gli utenti, ma richiede il permesso per il corretto funzionamento della rete locale.</string>
+
 </dict>
 </plist>
