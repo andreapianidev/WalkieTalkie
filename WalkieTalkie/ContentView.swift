@@ -865,7 +865,7 @@ struct ContentView: View {
         
         // Verifica permessi audio prima di iniziare la trasmissione
         guard audioManager.hasAudioPermission else {
-            checkMicrophonePermission()
+            audioManager.requestAudioPermission()
             hapticManager.warning()
             return
         }

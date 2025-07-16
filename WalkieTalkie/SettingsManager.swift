@@ -12,6 +12,7 @@ class SettingsManager: ObservableObject {
     static let shared = SettingsManager()
     
     private let userDefaults = UserDefaults.standard
+    private let firebaseManager = FirebaseManager.shared
     
     // MARK: - Settings Keys
     private enum Keys {
@@ -29,18 +30,21 @@ class SettingsManager: ObservableObject {
     @Published var isBackgroundAudioEnabled: Bool {
         didSet {
             userDefaults.set(isBackgroundAudioEnabled, forKey: Keys.isBackgroundAudioEnabled)
+            firebaseManager.trackSettingsChange(setting: "backgroundAudio", value: "\(isBackgroundAudioEnabled)")
         }
     }
     
     @Published var backgroundVolume: Float {
         didSet {
             userDefaults.set(backgroundVolume, forKey: Keys.backgroundVolume)
+            firebaseManager.trackSettingsChange(setting: "backgroundVolume", value: "\(backgroundVolume)")
         }
     }
     
     @Published var isHapticFeedbackEnabled: Bool {
         didSet {
             userDefaults.set(isHapticFeedbackEnabled, forKey: Keys.isHapticFeedbackEnabled)
+            firebaseManager.trackSettingsChange(setting: "hapticFeedback", value: "\(isHapticFeedbackEnabled)")
         }
     }
     
@@ -53,6 +57,7 @@ class SettingsManager: ObservableObject {
     @Published var selectedFrequency: String {
         didSet {
             userDefaults.set(selectedFrequency, forKey: Keys.selectedFrequency)
+            firebaseManager.trackFrequencyChange(frequency: selectedFrequency)
         }
     }
     

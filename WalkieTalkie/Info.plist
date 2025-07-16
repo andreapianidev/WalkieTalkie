@@ -10,6 +10,8 @@
 	<array>
 		<string>remote-notification</string>
 	</array>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>L'app necessita dell'accesso al microfono per poter trasmettere la tua voce agli altri dispositivi collegati.</string>
 	<key>NSUserNotificationAlertStyle</key>
 	<string>alert</string>
 </dict>

@@ -6,6 +6,16 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		679EF8DA2E27FCD4001C7A5E /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 679EF8D92E27FCD4001C7A5E /* FirebaseAnalytics */; };
+		679EF8DC2E27FCD4001C7A5E /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 679EF8DB2E27FCD4001C7A5E /* FirebaseAnalyticsCore */; };
+		679EF8DE2E27FCD4001C7A5E /* FirebaseAppDistribution-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 679EF8DD2E27FCD4001C7A5E /* FirebaseAppDistribution-Beta */; };
+		679EF8E02E27FCD4001C7A5E /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 679EF8DF2E27FCD4001C7A5E /* FirebaseCore */; };
+		679EF8E22E27FCD4001C7A5E /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 679EF8E12E27FCD4001C7A5E /* FirebaseCrashlytics */; };
+		679EF8E42E27FCD4001C7A5E /* FirebaseInstallations in Frameworks */ = {isa = PBXBuildFile; productRef = 679EF8E32E27FCD4001C7A5E /* FirebaseInstallations */; };
+		679EF8E62E27FCD4001C7A5E /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = 679EF8E52E27FCD4001C7A5E /* FirebasePerformance */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		6771A29D2E22DD6A00DF7071 /* Talky.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Talky.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +46,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				679EF8E62E27FCD4001C7A5E /* FirebasePerformance in Frameworks */,
+				679EF8DA2E27FCD4001C7A5E /* FirebaseAnalytics in Frameworks */,
+				679EF8DC2E27FCD4001C7A5E /* FirebaseAnalyticsCore in Frameworks */,
+				679EF8E22E27FCD4001C7A5E /* FirebaseCrashlytics in Frameworks */,
+				679EF8E42E27FCD4001C7A5E /* FirebaseInstallations in Frameworks */,
+				679EF8E02E27FCD4001C7A5E /* FirebaseCore in Frameworks */,
+				679EF8DE2E27FCD4001C7A5E /* FirebaseAppDistribution-Beta in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +95,13 @@
 			);
 			name = WalkieTalkie;
 			packageProductDependencies = (
+				679EF8D92E27FCD4001C7A5E /* FirebaseAnalytics */,
+				679EF8DB2E27FCD4001C7A5E /* FirebaseAnalyticsCore */,
+				679EF8DD2E27FCD4001C7A5E /* FirebaseAppDistribution-Beta */,
+				679EF8DF2E27FCD4001C7A5E /* FirebaseCore */,
+				679EF8E12E27FCD4001C7A5E /* FirebaseCrashlytics */,
+				679EF8E32E27FCD4001C7A5E /* FirebaseInstallations */,
+				679EF8E52E27FCD4001C7A5E /* FirebasePerformance */,
 			);
 			productName = WalkieTalkie;
 			productReference = 6771A29D2E22DD6A00DF7071 /* Talky.app */;
@@ -109,6 +133,9 @@
 			);
 			mainGroup = 6771A2942E22DD6A00DF7071;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				679EF8D82E27FCD4001C7A5E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 6771A29E2E22DD6A00DF7071 /* Products */;
 			projectDirPath = "";
@@ -267,7 +294,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = ERAK83QBBM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -289,7 +316,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Andrea-Piani.WalkieTalkie";
 				PRODUCT_NAME = Talky;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -308,7 +335,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = ERAK83QBBM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -330,7 +357,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Andrea-Piani.WalkieTalkie";
 				PRODUCT_NAME = Talky;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -365,6 +392,55 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		679EF8D82E27FCD4001C7A5E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		679EF8D92E27FCD4001C7A5E /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 679EF8D82E27FCD4001C7A5E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		679EF8DB2E27FCD4001C7A5E /* FirebaseAnalyticsCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 679EF8D82E27FCD4001C7A5E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsCore;
+		};
+		679EF8DD2E27FCD4001C7A5E /* FirebaseAppDistribution-Beta */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 679EF8D82E27FCD4001C7A5E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseAppDistribution-Beta";
+		};
+		679EF8DF2E27FCD4001C7A5E /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 679EF8D82E27FCD4001C7A5E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		679EF8E12E27FCD4001C7A5E /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 679EF8D82E27FCD4001C7A5E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		679EF8E32E27FCD4001C7A5E /* FirebaseInstallations */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 679EF8D82E27FCD4001C7A5E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseInstallations;
+		};
+		679EF8E52E27FCD4001C7A5E /* FirebasePerformance */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 679EF8D82E27FCD4001C7A5E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebasePerformance;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6771A2952E22DD6A00DF7071 /* Project object */;
 }

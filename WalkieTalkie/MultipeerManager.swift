@@ -51,6 +51,7 @@ class MultipeerManager: NSObject, ObservableObject {
     private let notificationManager = NotificationManager.shared
     private let powerManager = PowerManager.shared
     private let hapticManager = HapticManager.shared
+    private let firebaseManager = FirebaseManager.shared
     
     // Audio
     private var audioEngine: AVAudioEngine?
@@ -403,6 +404,8 @@ class MultipeerManager: NSObject, ObservableObject {
         }
     }
     
+    private var transmissionStartTime: Date?
+    
     func startTransmitting() {
         logger.logAudioInfo("Avvio trasmissione audio...")
 
@@ -415,6 +418,9 @@ class MultipeerManager: NSObject, ObservableObject {
             lastError = WalkieTalkieError.audioPermissionDenied
             return
         }
+        
+        // Registra l'inizio della trasmissione per il tracking
+        transmissionStartTime = Date()
 
         // Ferma e resetta l'audio engine se già attivo
         if let audioEngine = audioEngine, audioEngine.isRunning {
@@ -453,6 +459,13 @@ class MultipeerManager: NSObject, ObservableObject {
 
         if !recordedAudioData.isEmpty {
             sendAccumulatedAudio()
+        }
+        
+        // Traccia l'uso del walkie talkie in Firebase
+        if let startTime = transmissionStartTime {
+            let duration = Date().timeIntervalSince(startTime)
+            firebaseManager.trackWalkieTalkieUsage(duration: duration)
+            transmissionStartTime = nil
         }
 
         audioManager.restoreBackgroundVolume()
@@ -527,6 +540,9 @@ extension MultipeerManager: MCSessionDelegate {
                     self.connectedPeers.append(peerID)
                     self.logger.logNetworkInfo("Peer \(peerID.displayName) connesso. Totale connessi: \(self.connectedPeers.count)")
                     
+                    // Traccia connessione in Firebase
+                    self.firebaseManager.trackDeviceConnection(deviceName: peerID.displayName)
+                    
                     // Feedback aptico e notifica per connessione
                     self.hapticManager.connectionEstablished()
                     self.notificationManager.sendConnectionEstablishedNotification(deviceName: peerID.displayName)
@@ -548,6 +564,9 @@ extension MultipeerManager: MCSessionDelegate {
                 
                 // Feedback aptico e notifica per disconnessione solo se era precedentemente connesso
                 if wasConnected {
+                    // Traccia disconnessione in Firebase
+                    self.firebaseManager.trackDeviceDisconnection(deviceName: peerID.displayName)
+                    
                     self.hapticManager.connectionLost()
                     self.notificationManager.sendConnectionLostNotification(deviceName: peerID.displayName)
                 }

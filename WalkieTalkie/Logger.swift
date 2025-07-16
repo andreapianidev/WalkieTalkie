@@ -12,6 +12,7 @@ class Logger {
     static let shared = Logger()
     
     private let subsystem = "com.andreapiani.walkietalkie"
+
     
     // Logger specifici per diverse categorie
     private let networkLogger = OSLog(subsystem: "com.andreapiani.walkietalkie", category: "Network")
@@ -30,6 +31,8 @@ class Logger {
     func logNetworkError(_ error: Error, context: String = "") {
         let errorMessage = context.isEmpty ? "\(error.localizedDescription)" : "\(context): \(error.localizedDescription)"
         os_log("%@", log: networkLogger, type: .error, errorMessage)
+        
+
     }
     
     func logNetworkDebug(_ message: String) {
@@ -49,6 +52,8 @@ class Logger {
     func logAudioError(_ error: Error, context: String = "") {
         let errorMessage = context.isEmpty ? "\(error.localizedDescription)" : "\(context): \(error.localizedDescription)"
         os_log("%@", log: audioLogger, type: .error, errorMessage)
+        
+
     }
     
     func logAudioDebug(_ message: String) {
@@ -68,6 +73,8 @@ class Logger {
     func logUIError(_ error: Error, context: String = "") {
         let errorMessage = context.isEmpty ? "\(error.localizedDescription)" : "\(context): \(error.localizedDescription)"
         os_log("%@", log: uiLogger, type: .error, errorMessage)
+        
+
     }
     
     // MARK: - General Logging
@@ -79,6 +86,8 @@ class Logger {
     func logError(_ error: Error, context: String = "") {
         let errorMessage = context.isEmpty ? "\(error.localizedDescription)" : "\(context): \(error.localizedDescription)"
         os_log("%@", log: generalLogger, type: .error, errorMessage)
+        
+
     }
     
     func logDebug(_ message: String) {

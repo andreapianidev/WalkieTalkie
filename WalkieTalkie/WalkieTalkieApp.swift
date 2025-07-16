@@ -6,6 +6,9 @@
 
 import SwiftUI
 import UserNotifications
+import FirebaseCore
+import FirebaseAnalytics
+import FirebaseCrashlytics
 
 @main
 struct WalkieTalkieApp: App {
@@ -20,6 +23,24 @@ struct WalkieTalkieApp: App {
 
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // Inizializza Firebase
+        FirebaseApp.configure()
+        
+        // Abilita Analytics
+        Analytics.setAnalyticsCollectionEnabled(true)
+        
+        // Configura Crashlytics
+        Crashlytics.crashlytics().setCrashlyticsCollectionEnabled(true)
+        
+        // Configura Firebase Manager e traccia l'avvio dell'app
+        let firebaseManager = FirebaseManager.shared
+        firebaseManager.trackAppLaunch()
+        
+        // Imposta proprietà utente di base
+        firebaseManager.setUserProperty(UIDevice.current.model, forName: FirebaseManager.UserProperties.deviceType)
+        firebaseManager.setUserProperty(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String, forName: FirebaseManager.UserProperties.appVersion)
+        firebaseManager.setUserProperty(Locale.current.languageCode, forName: FirebaseManager.UserProperties.preferredLanguage)
+        
         // Configura il delegate per le notifiche
         UNUserNotificationCenter.current().delegate = self
         
