@@ -325,7 +325,7 @@ This project is now open source and available for community contributions. See t
 - 💬 Use GitHub Discussions for questions and community support
 - 📧 Contact developer for business inquiries
 
-👉 If you want say me thank you ...buy me a coffee! 🤗❤️ buymeacoffee.com/andreapianidev
+👉 If you want say me thank you ...buy me a coffee! 🤗❤️ [buymeacoffee.com/andreapianidev](https://buymeacoffee.com/andreapianidev)
 ---
 
 **Note**: This project is actively maintained and developed. Check `plan.md` for current development status and upcoming features. Contributions and feedback are always welcome!
