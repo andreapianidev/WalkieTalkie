@@ -138,7 +138,7 @@ WalkieTalkie/
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/your-username/talky-walkie-talkie.git
+   git clone https://github.com/andreapianidev/WalkieTalkie.git
    cd WalkieTalkie
    ```
 
