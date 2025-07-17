@@ -67,10 +67,34 @@
 "no_transmission" = "nessuna trasmissione";
 
 // MARK: - Tab Bar
-"talk" = "Talk";
-"explore" = "Explore";
-"connections" = "Connections";
+"talk" = "Parla";
+"explore" = "Esplora";
+"connections" = "Connessioni";
 "settings_tab" = "Impostazioni";
+"performance" = "Performance";
+
+// MARK: - Performance
+"performance_title" = "Performance";
+"high_traffic" = "Traffico Elevato";
+"normal_performance" = "Performance Normale";
+"memory_usage" = "Memoria";
+"network_latency" = "Latenza Media";
+"connection_time" = "Tempo Connessione";
+"active_connections" = "Connessioni";
+"performance_trends" = "Andamento Performance";
+"recommendations" = "Raccomandazioni";
+"connections_active" = "connessioni attive";
+"updated_now" = "Aggiornato ora";
+"optimized_mode" = "Modalità Ottimizzata";
+"audio_cache" = "Cache Audio";
+"current_recommendations" = "Raccomandazioni Attuali";
+"no_recommendations" = "Nessuna raccomandazione al momento. Le performance sono ottimali!";
+"full_report" = "Report Completo";
+"close" = "Chiudi";
+"high_memory_warning" = "Utilizzo memoria elevato (%.1f%%) - Considera di ridurre le connessioni";
+"high_latency_warning" = "Latenza elevata (%.2fs) - Verifica la connessione di rete";
+"too_many_connections_warning" = "Troppe connessioni (%d) - Considera di limitare a 6-8 per prestazioni ottimali";
+"slow_connection_warning" = "Tempo di connessione lento (%.1fs) - Verifica la stabilità della rete";
 
 // MARK: - Radio
 "station" = "Stazione";
@@ -81,14 +105,14 @@
 "scanning" = "Scansione...";
 
 // MARK: - Connections View
-"connections_title" = "Connections";
+"connections_title" = "Connessioni";
 "manage_connections" = "Gestisci le connessioni del walkie talkie";
 "connected_devices" = "Dispositivi connessi";
 "scanning_in_progress" = "Scansione in corso...";
 "offline" = "Offline";
 "online" = "Online";
-"advertising" = "Advertising";
-"browsing" = "Browsing";
+"advertising" = "In pubblicazione";
+"browsing" = "In ricerca";
 "on" = "ON";
 "off" = "OFF";
 "connected_devices_count" = "Dispositivi Connessi";
@@ -101,7 +125,7 @@
 "disconnect_confirmation" = "Sei sicuro di voler disconnettere tutti i dispositivi?";
 
 // MARK: - Explore View
-"explore_title" = "Explore";
+"explore_title" = "Esplora";
 "scan_nearby_devices" = "Scansiona dispositivi nelle vicinanze";
 "detected_devices" = "Dispositivi Rilevati";
 "no_devices_detected" = "Nessun dispositivo rilevato";
@@ -134,8 +158,8 @@
 "how_to_use" = "Come Usare l'App";
 "instruction_1_title" = "Apri l'App su Tutti i Dispositivi";
 "instruction_1_description" = "Assicurati che tutti i dispositivi abbiano l'app WalkieTalkie aperta e attiva.";
-"instruction_2_title" = "Vai su Connections";
-"instruction_2_description" = "Tocca il tab 'Connections' per vedere i dispositivi disponibili nelle vicinanze.";
+"instruction_2_title" = "Vai su Connessioni";
+"instruction_2_description" = "Tocca il tab 'Connessioni' per vedere i dispositivi disponibili nelle vicinanze.";
 "instruction_3_title" = "Connetti i Dispositivi";
 "instruction_3_description" = "Seleziona un dispositivo dalla lista per inviare una richiesta di connessione.";
 "instruction_4_title" = "Seleziona la Frequenza";
@@ -143,6 +167,10 @@
 "instruction_5_title" = "Tieni Premuto per Parlare";
 "instruction_5_description" = "Tieni premuto il pulsante centrale per trasmettere. Rilascia per ascoltare.";
 "app_info" = "Informazioni App";
+"support_development" = "Supporta lo sviluppo";
+"buy_me_coffee" = "Offrimi un caffè";
+"support_description" = "Se ti piace questa app, considera di supportare lo sviluppatore";
+"view_performance" = "Visualizza Statistiche Performance";
 
 // MARK: - Alerts
 "connection_request" = "Richiesta di Connessione";
@@ -150,9 +178,6 @@
 "microphone_permission_required" = "Permesso Microfono Richiesto";
 "microphone_permission_message" = "L'app WalkieTalkie ha bisogno del permesso per accedere al microfono per funzionare correttamente. Senza questo permesso, non potrai trasmettere audio.";
 "audio_transmission_error" = "Errore trasmissione audio: The operation couldn't be completed. (com.apple.coreaudio.avfaudio error -10851.)";
-"disconnect_confirmation" = "Sei sicuro di voler disconnettere tutti i dispositivi?";
-
-
 
 // MARK: - Errors
 "no_connected_peers" = "Nessun dispositivo connesso";

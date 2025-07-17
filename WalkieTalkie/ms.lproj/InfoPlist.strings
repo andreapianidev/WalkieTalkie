@@ -1,0 +1,12 @@
+/* 
+   InfoPlist.strings (Malay)
+   WalkieTalkie
+   
+   Created by Andrea Piani on 12/07/25.
+*/
+
+"CFBundleDisplayName" = "Walkie Talkie";
+"CFBundleName" = "Walkie Talkie";
+"NSMicrophoneUsageDescription" = "Aplikasi ini memerlukan akses mikrofon untuk menghantar mesej audio kepada peranti lain.";
+"NSLocalNetworkUsageDescription" = "Aplikasi ini menggunakan rangkaian tempatan untuk menemui dan menyambung ke peranti walkie talkie berdekatan.";
+"NSBonjourServices" = "Aplikasi ini menggunakan perkhidmatan Bonjour untuk menemui peranti walkie talkie berdekatan.";

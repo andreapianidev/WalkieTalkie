@@ -1,0 +1,178 @@
+/* 
+   Localizable.strings (Traditional Chinese)
+   WalkieTalkie
+   
+   Created by Andrea Piani on 12/07/25.
+*/
+
+// MARK: - General
+"coming_soon" = "即將推出";
+"ok" = "確定";
+"cancel" = "取消";
+"error" = "錯誤";
+"accept" = "接受";
+"decline" = "拒絕";
+"disconnect" = "斷開連接";
+"settings" = "設定";
+"retry" = "重試";
+"unknown" = "未知";
+"version" = "版本";
+"developed_by" = "開發者";
+"website" = "網站";
+
+// MARK: - Notifications
+"new_device_detected" = "偵測到新裝置";
+"device_detected_message" = "偵測到附近的 %@";
+"connection_established" = "連接已建立";
+"connected_to_device" = "已連接到 %@";
+"connection_lost" = "連接中斷";
+"disconnected_from_device" = "已與 %@ 斷開連接";
+"incoming_transmission" = "接收傳輸";
+"receiving_audio_message" = "正在接收音訊訊息";
+"background_scan" = "背景掃描";
+"scanning_for_devices" = "正在掃描附近的裝置";
+"notifications" = "通知";
+"enable_notifications" = "啟用通知";
+"disable_notifications" = "停用通知";
+"notification_description" = "當偵測到新裝置或傳輸時接收通知";
+"notifications_enabled" = "通知已啟用";
+"notifications_activated_message" = "您現在將收到裝置偵測和傳輸的通知";
+
+// MARK: - Battery Status
+"charging" = "充電中";
+"full" = "已充滿";
+"unplugged" = "未插電";
+
+// MARK: - Main Interface
+"frequency_owner" = "頻率擁有者";
+"radio_fm" = "FM 收音機";
+"walkie_talkie" = "對講機";
+"device" = "裝置";
+"status" = "狀態";
+"no_error" = "無錯誤";
+"channel_1" = "頻道 1";
+"en" = "中文";
+"hold" = "按住";
+"pressed" = "已按下";
+"to_talk" = "說話";
+"release" = "放開";
+"to_send" = "發送";
+"radio_mode" = "收音機";
+"radio_fm_caps" = "FM 模式";
+"active" = "啟用";
+"no_connection" = "無連接";
+"devices_connected" = "裝置已連接";
+"transmission_in_progress" = "傳輸進行中";
+"reception_in_progress" = "接收進行中";
+"no_transmission" = "無傳輸";
+
+// MARK: - Tab Bar
+"talk" = "通話";
+"explore" = "探索";
+"connections" = "連接";
+"settings_tab" = "設定";
+"performance" = "性能";
+
+// MARK: - Performance
+"performance_title" = "性能";
+"high_traffic" = "高流量";
+"normal_performance" = "正常性能";
+"connections_active" = "個連接活躍";
+"memory_usage" = "記憶體使用量";
+"network_latency" = "網路延遲";
+"performance_trends" = "性能趨勢";
+"connection_time" = "連接時間";
+"active_connections" = "活躍連接";
+"performance_recommendations" = "性能建議";
+"no_recommendations" = "目前沒有建議。性能是最佳的！";
+"reduce_connections" = "考慮減少連接數量以提高性能";
+"check_network" = "檢查您的網路連接以減少延遲";
+"restart_app" = "考慮重新啟動應用程式以釋放記憶體";
+"close_apps" = "關閉其他應用程式以釋放系統記憶體";
+"too_many_connections_warning" = "連接過多 (%d) - 考慮限制在 6-8 個以獲得最佳性能";
+
+// MARK: - Radio
+"station" = "電台";
+"no_station" = "無電台";
+"buffering" = "緩衝中...";
+"genre" = "類型";
+"country" = "國家";
+"scanning" = "掃描中...";
+
+// MARK: - Connections View
+"connections_title" = "連接";
+"manage_connections" = "管理對講機連接";
+"connected_devices" = "已連接的裝置";
+"scanning_in_progress" = "掃描進行中...";
+"offline" = "離線";
+"online" = "線上";
+"advertising" = "廣播中";
+"browsing" = "瀏覽中";
+"on" = "開啟";
+"off" = "關閉";
+"connected_devices_count" = "已連接裝置";
+"no_devices_connected" = "無裝置連接";
+"devices_nearby_hint" = "確保其他裝置在附近且已開啟應用程式";
+"connected" = "已連接";
+"disconnect_all" = "全部斷開";
+"restart_discovery" = "重新搜尋";
+"disconnect_device" = "斷開裝置";
+"disconnect_confirmation" = "您確定要斷開所有裝置的連接嗎？";
+
+// MARK: - Explore View
+"explore_title" = "探索";
+"scan_nearby_devices" = "掃描附近裝置";
+"detected_devices" = "偵測到的裝置";
+"no_devices_detected" = "未偵測到裝置";
+"ensure_devices_open" = "確保其他裝置已開啟應用程式";
+"available" = "可用";
+"strong" = "強";
+"medium" = "中等";
+"weak" = "弱";
+
+// MARK: - Settings View
+"settings_title" = "設定";
+"configure_app" = "配置您的應用程式";
+"audio" = "音訊";
+"white_noise" = "白噪音";
+"background_audio" = "背景音訊";
+"background_audio_description" = "使用期間的背景音訊";
+"noise_volume" = "噪音音量";
+"adjust_background_volume" = "調整背景噪音音量";
+"haptic_feedback" = "觸覺回饋";
+"vibration_on_buttons" = "按下按鈕時震動";
+"auto_connect" = "自動連接";
+"auto_connect_description" = "自動連接到已知裝置";
+"voice_activation" = "語音啟動";
+"voice_activation_description" = "說話時自動傳輸";
+"voice_sensitivity" = "語音靈敏度";
+"voice_sensitivity_description" = "調整語音啟動的靈敏度";
+"low_power_mode" = "低功耗模式";
+"low_power_mode_description" = "減少電池消耗";
+"reset_settings" = "重設設定";
+"how_to_use" = "如何使用應用程式";
+"instruction_1_title" = "在所有裝置上開啟應用程式";
+"instruction_1_description" = "確保所有裝置都已開啟並啟用 WalkieTalkie 應用程式。";
+"instruction_2_title" = "前往連接";
+"instruction_2_description" = "點擊「連接」標籤查看附近的可用裝置。";
+"instruction_3_title" = "連接裝置";
+"instruction_3_description" = "從列表中選擇一個裝置以發送連接請求。";
+"instruction_4_title" = "選擇頻率";
+"instruction_4_description" = "所有連接的裝置必須使用相同的頻率才能通信。";
+"instruction_5_title" = "按住說話";
+"instruction_5_description" = "按住中央按鈕進行傳輸。放開以聆聽。";
+"app_info" = "應用程式資訊";
+"support_development" = "支持開發";
+"buy_me_coffee" = "請我喝咖啡";
+"support_description" = "如果您喜歡這個應用程式，請考慮支持開發者";
+"view_performance" = "查看性能統計";
+
+// MARK: - Alerts
+"connection_request" = "連接請求";
+"wants_to_connect" = "想要連接";
+"microphone_permission_required" = "需要麥克風權限";
+"microphone_permission_message" = "WalkieTalkie 應用程式需要麥克風存取權限才能正常運作。沒有此權限，您將無法傳輸音訊。";
+"audio_transmission_error" = "音訊傳輸錯誤：操作無法完成。(com.apple.coreaudio.avfaudio error -10851.)";
+
+// MARK: - Errors
+"no_connected_peers" = "無連接的裝置";

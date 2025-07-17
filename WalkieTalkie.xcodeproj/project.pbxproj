@@ -130,6 +130,8 @@
 				Base,
 				it,
 				es,
+				ms,
+				"zh-Hant",
 			);
 			mainGroup = 6771A2942E22DD6A00DF7071;
 			minimizedProjectReferenceProxies = 1;
@@ -294,7 +296,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = ERAK83QBBM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -316,7 +318,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Andrea-Piani.WalkieTalkie";
 				PRODUCT_NAME = Talky;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -335,7 +337,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = ERAK83QBBM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -357,7 +359,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Andrea-Piani.WalkieTalkie";
 				PRODUCT_NAME = Talky;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;

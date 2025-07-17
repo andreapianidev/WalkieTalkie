@@ -48,6 +48,25 @@
 "explore" = "Explorar";
 "connections" = "Conexiones";
 "settings_tab" = "Configuración";
+"performance" = "Rendimiento";
+
+// MARK: - Performance
+"performance_title" = "Rendimiento";
+"high_traffic" = "Tráfico Alto";
+"normal_performance" = "Rendimiento Normal";
+"connections_active" = "conexiones activas";
+"memory_usage" = "Uso de Memoria";
+"network_latency" = "Latencia de Red";
+"performance_trends" = "Tendencias de Rendimiento";
+"connection_time" = "Tiempo de Conexión";
+"active_connections" = "Conexiones Activas";
+"performance_recommendations" = "Recomendaciones de Rendimiento";
+"no_recommendations" = "No hay recomendaciones en este momento. ¡El rendimiento es óptimo!";
+"reduce_connections" = "Considera reducir el número de conexiones para mejorar el rendimiento";
+"check_network" = "Verifica tu conexión de red para reducir la latencia";
+"restart_app" = "Considera reiniciar la aplicación para liberar memoria";
+"close_apps" = "Cierra otras aplicaciones para liberar memoria del sistema";
+"too_many_connections_warning" = "Demasiadas conexiones (%d) - Considera limitarlas a 6-8 para un rendimiento óptimo";
 
 // MARK: - Radio
 "station" = "Estación";
@@ -120,6 +139,10 @@
 "instruction_5_title" = "Mantén Presionado para Hablar";
 "instruction_5_description" = "Mantén presionado el botón central para transmitir. Suelta para escuchar.";
 "app_info" = "Información de la App";
+"support_development" = "Apoyar el Desarrollo";
+"buy_me_coffee" = "Cómprame un Café";
+"support_description" = "Si te gusta esta app, considera apoyar al desarrollador";
+"view_performance" = "Ver Estadísticas de Rendimiento";
 
 // MARK: - Alerts
 "connection_request" = "Solicitud de Conexión";

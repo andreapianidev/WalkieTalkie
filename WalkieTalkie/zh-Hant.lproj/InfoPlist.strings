@@ -1,0 +1,12 @@
+/* 
+   InfoPlist.strings (Traditional Chinese)
+   WalkieTalkie
+   
+   Created by Andrea Piani on 12/07/25.
+*/
+
+"CFBundleDisplayName" = "對講機";
+"CFBundleName" = "對講機";
+"NSMicrophoneUsageDescription" = "此應用程式需要使用麥克風來傳輸音訊訊息給其他裝置。";
+"NSLocalNetworkUsageDescription" = "此應用程式使用本地網路來發現和連接附近的對講機裝置。";
+"NSBonjourServices" = "此應用程式使用 Bonjour 服務來發現附近的對講機裝置。";

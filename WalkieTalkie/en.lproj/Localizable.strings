@@ -71,6 +71,30 @@
 "explore" = "Explore";
 "connections" = "Connections";
 "settings_tab" = "Settings";
+"performance" = "Performance";
+
+// MARK: - Performance
+"performance_title" = "Performance";
+"high_traffic" = "High Traffic";
+"normal_performance" = "Normal Performance";
+"memory_usage" = "Memory";
+"network_latency" = "Avg Latency";
+"connection_time" = "Connection Time";
+"active_connections" = "Connections";
+"performance_trends" = "Performance Trends";
+"recommendations" = "Recommendations";
+"connections_active" = "active connections";
+"updated_now" = "Updated now";
+"optimized_mode" = "Optimized Mode";
+"audio_cache" = "Audio Cache";
+"current_recommendations" = "Current Recommendations";
+"no_recommendations" = "No recommendations at the moment. Performance is optimal!";
+"full_report" = "Full Report";
+"close" = "Close";
+"high_memory_warning" = "High memory usage (%.1f%%) - Consider reducing connections";
+"high_latency_warning" = "High latency (%.2fs) - Check network connection";
+"too_many_connections_warning" = "Too many connections (%d) - Consider limiting to 6-8 for optimal performance";
+"slow_connection_warning" = "Slow connection time (%.1fs) - Check network stability";
 
 // MARK: - Radio
 "station" = "Station";
@@ -143,6 +167,10 @@
 "instruction_5_title" = "Hold to Talk";
 "instruction_5_description" = "Hold the center button to transmit. Release to listen.";
 "app_info" = "App Information";
+"support_development" = "Support Development";
+"buy_me_coffee" = "Buy me a coffee";
+"support_description" = "If you like this app, consider supporting the developer";
+"view_performance" = "View Performance Stats";
 
 // MARK: - Alerts
 "connection_request" = "Connection Request";

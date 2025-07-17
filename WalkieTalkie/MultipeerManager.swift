@@ -42,6 +42,18 @@ class MultipeerManager: NSObject, ObservableObject {
     private var disconnectedPeers: Set<MCPeerID> = []
     private var lastHeartbeatSent: Date = Date()
     
+    // MARK: - High Traffic Optimization Properties
+    private var connectionThrottle: [MCPeerID: Date] = [:]
+    private let throttleInterval: TimeInterval = 2.0 // Minimum time between connection attempts
+    private var maxConcurrentConnections = 8 // Limit for high traffic scenarios
+    private var connectionQueue = DispatchQueue(label: "connection.queue", qos: .userInitiated)
+    private var audioDataCache = NSCache<NSString, NSData>()
+    private var lastMemoryWarning: Date?
+    private let memoryWarningCooldown: TimeInterval = 30.0
+    
+    // MARK: - Performance Monitoring
+    private let performanceMonitor = PerformanceMonitor.shared
+    
     private var heartbeatInterval: TimeInterval {
         return powerManager.getOptimizedHeartbeatInterval()
     }
@@ -77,6 +89,7 @@ class MultipeerManager: NSObject, ObservableObject {
         audioManager.requestAudioPermission()
         
         setupAudio()
+        setupHighTrafficOptimizations()
     }
     
     deinit {
@@ -161,23 +174,53 @@ class MultipeerManager: NSObject, ObservableObject {
     }
     
     func invitePeer(_ peerID: MCPeerID) {
+        // High traffic optimization: Check connection limits
+        guard connectedPeers.count < maxConcurrentConnections else {
+            logger.logNetworkWarning("Limite massimo connessioni raggiunto (\(maxConcurrentConnections))")
+            return
+        }
+        
+        // Throttling: Check if enough time has passed since last attempt
+        if let lastAttempt = connectionThrottle[peerID] {
+            let timeSinceLastAttempt = Date().timeIntervalSince(lastAttempt)
+            guard timeSinceLastAttempt >= throttleInterval else {
+                logger.logNetworkDebug("Throttling connessione a \(peerID.displayName) - attesa \(String(format: "%.1f", throttleInterval - timeSinceLastAttempt))s")
+                return
+            }
+        }
+        
         let currentAttempts = retryAttempts[peerID] ?? 0
         guard currentAttempts < maxRetryAttempts else {
             logger.logNetworkError(WalkieTalkieError.peerInvitationFailed(peerName: peerID.displayName), context: "Massimo numero di tentativi raggiunto")
             retryAttempts.removeValue(forKey: peerID)
+            connectionThrottle.removeValue(forKey: peerID)
             return
         }
         
-        browser.invitePeer(peerID, to: session, withContext: nil, timeout: connectionTimeout)
-        retryAttempts[peerID] = currentAttempts + 1
-        logger.logNetworkInfo("Invito inviato a: \(peerID.displayName) (tentativo \(currentAttempts + 1)/\(maxRetryAttempts))")
-        
-        // Retry automatico in caso di fallimento
-        DispatchQueue.main.asyncAfter(deadline: .now() + connectionTimeout + 2.0) { [weak self] in
+        // Use connection queue for high traffic scenarios
+        connectionQueue.async { [weak self] in
             guard let self = self else { return }
-            if !self.connectedPeers.contains(peerID) && self.discoveredPeers.contains(peerID) {
-                self.logger.logNetworkInfo("Retry invito per \(peerID.displayName)")
-                self.invitePeer(peerID)
+            
+            let inviteStartTime = Date()
+            self.connectionThrottle[peerID] = inviteStartTime
+            self.browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: self.connectionTimeout)
+            self.retryAttempts[peerID] = currentAttempts + 1
+            
+            DispatchQueue.main.async {
+                let connectionTime = Date().timeIntervalSince(inviteStartTime)
+                self.performanceMonitor.recordConnectionTime(connectionTime)
+                self.performanceMonitor.startLatencyTest(to: peerID.displayName)
+                
+                self.logger.logNetworkInfo("Invito inviato a: \(peerID.displayName) (tentativo \(currentAttempts + 1)/\(self.maxRetryAttempts), tempo: \(String(format: "%.2f", connectionTime))s)")
+            }
+            
+            // Retry automatico in caso di fallimento
+            DispatchQueue.main.asyncAfter(deadline: .now() + self.connectionTimeout + 2.0) { [weak self] in
+                guard let self = self else { return }
+                if !self.connectedPeers.contains(peerID) && self.discoveredPeers.contains(peerID) {
+                    self.logger.logNetworkInfo("Retry invito per \(peerID.displayName)")
+                    self.invitePeer(peerID)
+                }
             }
         }
     }
@@ -277,8 +320,17 @@ class MultipeerManager: NSObject, ObservableObject {
     // MARK: - Performance Optimization
     
     func optimizeBandwidth(for audioData: Data) -> Data {
-        // Compressione semplice per ridurre bandwidth
-        let compressionRatio: Float = 0.8
+        // High traffic optimization: Enhanced compression with caching
+        let cacheKey = NSString(string: "audio_\(audioData.hashValue)")
+        
+        // Check cache first
+        if let cachedData = audioDataCache.object(forKey: cacheKey) {
+            logger.logNetworkDebug("Audio recuperato da cache (\(cachedData.length) bytes)")
+            return cachedData as Data
+        }
+        
+        // Dynamic compression based on connection count
+        let compressionRatio: Float = connectedPeers.count > 4 ? 0.6 : 0.8
         let targetSize = Int(Float(audioData.count) * compressionRatio)
         
         if audioData.count > targetSize {
@@ -292,7 +344,10 @@ class MultipeerManager: NSObject, ObservableObject {
                 }
             }
             
-            logger.logNetworkDebug("Audio compresso da \(audioData.count) a \(compressedData.count) bytes")
+            // Cache the compressed data
+            audioDataCache.setObject(compressedData as NSData, forKey: cacheKey)
+            
+            logger.logNetworkDebug("Audio compresso da \(audioData.count) a \(compressedData.count) bytes (ratio: \(compressionRatio))")
             return compressedData
         }
         
@@ -522,10 +577,94 @@ class MultipeerManager: NSObject, ObservableObject {
         }
         
         // Reset dei dati dopo l'invio
-        recordedAudioData = Data()
+         recordedAudioData = Data()
+    }
+    
+    
+    // MARK: - High Traffic Optimization Methods
+    
+    private func setupHighTrafficOptimizations() {
+        // Configure cache for audio data
+        audioDataCache.countLimit = 50 // Limit cache size
+        audioDataCache.totalCostLimit = 10 * 1024 * 1024 // 10MB limit
+        
+        // Setup memory warning observer
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleMemoryWarning),
+            name: UIApplication.didReceiveMemoryWarningNotification,
+            object: nil
+        )
+        
+        logger.logNetworkInfo("Ottimizzazioni traffico elevato configurate")
+    }
+    
+    @objc private func handleMemoryWarning() {
+        let now = Date()
+        
+        // Throttle memory warning handling
+        if let lastWarning = lastMemoryWarning,
+           now.timeIntervalSince(lastWarning) < memoryWarningCooldown {
+            return
+        }
+        
+        lastMemoryWarning = now
+        logger.logNetworkWarning("Memory warning ricevuto - pulizia cache")
+        
+        // Clear audio cache
+        audioDataCache.removeAllObjects()
+        
+        // Clear connection throttle for old entries
+        let cutoffTime = now.addingTimeInterval(-throttleInterval * 5)
+        connectionThrottle = connectionThrottle.filter { $0.value > cutoffTime }
+        
+        // Reduce max connections temporarily
+        let originalMax = maxConcurrentConnections
+        maxConcurrentConnections = max(2, maxConcurrentConnections / 2)
+        
+        // Restore after 30 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 30.0) { [weak self] in
+            self?.maxConcurrentConnections = originalMax
+            self?.logger.logNetworkInfo("Limite connessioni ripristinato a \(originalMax)")
+        }
+    }
+    
+    func setMaxConcurrentConnections(_ limit: Int) {
+        maxConcurrentConnections = max(1, min(limit, 20)) // Between 1 and 20
+        logger.logNetworkInfo("Limite massimo connessioni impostato a \(maxConcurrentConnections)")
+    }
+    
+    func getHighTrafficStatistics() -> [String: Any] {
+        return [
+            "maxConcurrentConnections": maxConcurrentConnections,
+            "currentConnections": connectedPeers.count,
+            "throttledPeers": connectionThrottle.count,
+            "cacheSize": audioDataCache.countLimit,
+            "cacheUsage": audioDataCache.totalCostLimit,
+            "lastMemoryWarning": lastMemoryWarning?.timeIntervalSinceNow ?? 0
+        ]
+    }
+    
+    func optimizeForHighTraffic() {
+        logger.logNetworkInfo("Attivazione modalità traffico elevato")
+        
+        // Reduce connection timeout for faster cycling
+        setConnectionTimeout(8.0)
+        
+        // Reduce max connections to ensure stability
+        setMaxConcurrentConnections(6)
+        
+        // Clear old throttle entries
+        let cutoffTime = Date().addingTimeInterval(-throttleInterval * 2)
+        connectionThrottle = connectionThrottle.filter { $0.value > cutoffTime }
+        
+        // Optimize audio cache
+        audioDataCache.countLimit = 30
+        audioDataCache.totalCostLimit = 5 * 1024 * 1024 // 5MB
+        
+        logger.logNetworkInfo("Ottimizzazioni traffico elevato applicate")
     }
 }
-
 
 // MARK: - MCSessionDelegate
 
@@ -539,6 +678,9 @@ extension MultipeerManager: MCSessionDelegate {
                 if !self.connectedPeers.contains(peerID) {
                     self.connectedPeers.append(peerID)
                     self.logger.logNetworkInfo("Peer \(peerID.displayName) connesso. Totale connessi: \(self.connectedPeers.count)")
+                    
+                    // Aggiorna il monitoraggio delle performance
+                    self.performanceMonitor.updateConnectionCount(self.connectedPeers.count)
                     
                     // Traccia connessione in Firebase
                     self.firebaseManager.trackDeviceConnection(deviceName: peerID.displayName)
@@ -561,6 +703,9 @@ extension MultipeerManager: MCSessionDelegate {
                 self.connectedPeers.removeAll { $0 == peerID }
                 self.logger.logNetworkInfo("Peer \(peerID.displayName) disconnesso. Totale connessi: \(self.connectedPeers.count)")
                 self.connectionStatus = self.connectedPeers.isEmpty ? "Disconnesso" : "Connesso (\(self.connectedPeers.count))"
+                
+                // Aggiorna il monitoraggio delle performance
+                self.performanceMonitor.updateConnectionCount(self.connectedPeers.count)
                 
                 // Feedback aptico e notifica per disconnessione solo se era precedentemente connesso
                 if wasConnected {

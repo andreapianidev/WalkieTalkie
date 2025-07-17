@@ -1,0 +1,178 @@
+/* 
+   Localizable.strings (Malay)
+   WalkieTalkie
+   
+   Created by Andrea Piani on 12/07/25.
+*/
+
+// MARK: - General
+"coming_soon" = "Akan Datang";
+"ok" = "OK";
+"cancel" = "Batal";
+"error" = "Ralat";
+"accept" = "Terima";
+"decline" = "Tolak";
+"disconnect" = "Putuskan";
+"settings" = "Tetapan";
+"retry" = "Cuba Lagi";
+"unknown" = "Tidak Diketahui";
+"version" = "Versi";
+"developed_by" = "Dibangunkan oleh";
+"website" = "Laman Web";
+
+// MARK: - Notifications
+"new_device_detected" = "Peranti Baru Dikesan";
+"device_detected_message" = "%@ dikesan berdekatan";
+"connection_established" = "Sambungan Diwujudkan";
+"connected_to_device" = "Disambung ke %@";
+"connection_lost" = "Sambungan Terputus";
+"disconnected_from_device" = "Diputuskan dari %@";
+"incoming_transmission" = "Penghantaran Masuk";
+"receiving_audio_message" = "Menerima mesej audio";
+"background_scan" = "Imbasan Latar Belakang";
+"scanning_for_devices" = "Mengimbas peranti berdekatan";
+"notifications" = "Pemberitahuan";
+"enable_notifications" = "Dayakan Pemberitahuan";
+"disable_notifications" = "Lumpuhkan Pemberitahuan";
+"notification_description" = "Terima pemberitahuan apabila peranti baru dikesan atau semasa penghantaran";
+"notifications_enabled" = "Pemberitahuan Didayakan";
+"notifications_activated_message" = "Anda kini akan menerima pemberitahuan untuk pengesanan peranti dan penghantaran";
+
+// MARK: - Battery Status
+"charging" = "Mengecas";
+"full" = "Penuh";
+"unplugged" = "Tidak Dipasang";
+
+// MARK: - Main Interface
+"frequency_owner" = "Pemilik Frekuensi";
+"radio_fm" = "Radio FM";
+"walkie_talkie" = "Walkie Talkie";
+"device" = "Peranti";
+"status" = "Status";
+"no_error" = "tiada ralat";
+"channel_1" = "Saluran 1";
+"en" = "MS";
+"hold" = "TAHAN";
+"pressed" = "DITEKAN";
+"to_talk" = "UNTUK BERCAKAP";
+"release" = "LEPASKAN";
+"to_send" = "UNTUK HANTAR";
+"radio_mode" = "RADIO";
+"radio_fm_caps" = "MOD FM";
+"active" = "AKTIF";
+"no_connection" = "Tiada sambungan";
+"devices_connected" = "peranti disambung";
+"transmission_in_progress" = "PENGHANTARAN SEDANG BERLANGSUNG";
+"reception_in_progress" = "PENERIMAAN SEDANG BERLANGSUNG";
+"no_transmission" = "tiada penghantaran";
+
+// MARK: - Tab Bar
+"talk" = "Bercakap";
+"explore" = "Terokai";
+"connections" = "Sambungan";
+"settings_tab" = "Tetapan";
+"performance" = "Prestasi";
+
+// MARK: - Performance
+"performance_title" = "Prestasi";
+"high_traffic" = "Trafik Tinggi";
+"normal_performance" = "Prestasi Normal";
+"connections_active" = "sambungan aktif";
+"memory_usage" = "Penggunaan Memori";
+"network_latency" = "Kelewatan Rangkaian";
+"performance_trends" = "Trend Prestasi";
+"connection_time" = "Masa Sambungan";
+"active_connections" = "Sambungan Aktif";
+"performance_recommendations" = "Cadangan Prestasi";
+"no_recommendations" = "Tiada cadangan pada masa ini. Prestasi adalah optimum!";
+"reduce_connections" = "Pertimbangkan untuk mengurangkan bilangan sambungan untuk meningkatkan prestasi";
+"check_network" = "Periksa sambungan rangkaian anda untuk mengurangkan kelewatan";
+"restart_app" = "Pertimbangkan untuk memulakan semula aplikasi untuk membebaskan memori";
+"close_apps" = "Tutup aplikasi lain untuk membebaskan memori sistem";
+"too_many_connections_warning" = "Terlalu banyak sambungan (%d) - Pertimbangkan untuk mengehadkan kepada 6-8 untuk prestasi optimum";
+
+// MARK: - Radio
+"station" = "Stesen";
+"no_station" = "Tiada stesen";
+"buffering" = "Menimbal...";
+"genre" = "Genre";
+"country" = "Negara";
+"scanning" = "Mengimbas...";
+
+// MARK: - Connections View
+"connections_title" = "Sambungan";
+"manage_connections" = "Urus sambungan walkie talkie";
+"connected_devices" = "Peranti yang disambung";
+"scanning_in_progress" = "Imbasan sedang berlangsung...";
+"offline" = "Luar Talian";
+"online" = "Dalam Talian";
+"advertising" = "Mengiklan";
+"browsing" = "Melayari";
+"on" = "HIDUP";
+"off" = "MATI";
+"connected_devices_count" = "Peranti Disambung";
+"no_devices_connected" = "Tiada peranti disambung";
+"devices_nearby_hint" = "Pastikan peranti lain berdekatan dan mempunyai aplikasi terbuka";
+"connected" = "Disambung";
+"disconnect_all" = "Putuskan Semua";
+"restart_discovery" = "Mula Semula Penemuan";
+"disconnect_device" = "Putuskan Peranti";
+"disconnect_confirmation" = "Adakah anda pasti mahu memutuskan sambungan dari semua peranti?";
+
+// MARK: - Explore View
+"explore_title" = "Terokai";
+"scan_nearby_devices" = "Imbas peranti berdekatan";
+"detected_devices" = "Peranti Dikesan";
+"no_devices_detected" = "Tiada peranti dikesan";
+"ensure_devices_open" = "Pastikan peranti lain mempunyai aplikasi terbuka";
+"available" = "Tersedia";
+"strong" = "Kuat";
+"medium" = "Sederhana";
+"weak" = "Lemah";
+
+// MARK: - Settings View
+"settings_title" = "Tetapan";
+"configure_app" = "Konfigurasi aplikasi anda";
+"audio" = "Audio";
+"white_noise" = "Bunyi Putih";
+"background_audio" = "Audio Latar Belakang";
+"background_audio_description" = "Audio latar belakang semasa penggunaan";
+"noise_volume" = "Volum Bunyi";
+"adjust_background_volume" = "Laraskan volum bunyi latar belakang";
+"haptic_feedback" = "Maklum Balas Haptik";
+"vibration_on_buttons" = "Getaran apabila menekan butang";
+"auto_connect" = "Sambung Auto";
+"auto_connect_description" = "Sambung secara automatik ke peranti yang dikenali";
+"voice_activation" = "Pengaktifan Suara";
+"voice_activation_description" = "Hantar secara automatik apabila bercakap";
+"voice_sensitivity" = "Kepekaan Suara";
+"voice_sensitivity_description" = "Laraskan kepekaan untuk pengaktifan suara";
+"low_power_mode" = "Mod Kuasa Rendah";
+"low_power_mode_description" = "Mengurangkan penggunaan bateri";
+"reset_settings" = "Set Semula Tetapan";
+"how_to_use" = "Cara Menggunakan Aplikasi";
+"instruction_1_title" = "Buka Aplikasi di Semua Peranti";
+"instruction_1_description" = "Pastikan semua peranti mempunyai aplikasi WalkieTalkie terbuka dan aktif.";
+"instruction_2_title" = "Pergi ke Sambungan";
+"instruction_2_description" = "Ketik tab 'Sambungan' untuk melihat peranti yang tersedia berdekatan.";
+"instruction_3_title" = "Sambung Peranti";
+"instruction_3_description" = "Pilih peranti dari senarai untuk menghantar permintaan sambungan.";
+"instruction_4_title" = "Pilih Frekuensi";
+"instruction_4_description" = "Semua peranti yang disambung mesti menggunakan frekuensi yang sama untuk berkomunikasi.";
+"instruction_5_title" = "Tahan untuk Bercakap";
+"instruction_5_description" = "Tahan butang tengah untuk menghantar. Lepaskan untuk mendengar.";
+"app_info" = "Maklumat Aplikasi";
+"support_development" = "Sokong Pembangunan";
+"buy_me_coffee" = "Belikan Saya Kopi";
+"support_description" = "Jika anda suka aplikasi ini, pertimbangkan untuk menyokong pembangun";
+"view_performance" = "Lihat Statistik Prestasi";
+
+// MARK: - Alerts
+"connection_request" = "Permintaan Sambungan";
+"wants_to_connect" = "mahu menyambung";
+"microphone_permission_required" = "Kebenaran Mikrofon Diperlukan";
+"microphone_permission_message" = "Aplikasi WalkieTalkie memerlukan akses mikrofon untuk berfungsi dengan betul. Tanpa kebenaran ini, anda tidak akan dapat menghantar audio.";
+"audio_transmission_error" = "Ralat penghantaran audio: Operasi tidak dapat diselesaikan. (com.apple.coreaudio.avfaudio error -10851.)";
+
+// MARK: - Errors
+"no_connected_peers" = "Tiada peranti disambung";
