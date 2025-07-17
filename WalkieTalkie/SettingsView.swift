@@ -34,6 +34,9 @@ struct SettingsView: View {
                     // Support Section
                     supportSection
                     
+                    // Peak App Section
+                    peakAppSection
+                    
                     Spacer(minLength: 100)
                 }
                 .padding(.horizontal, 20)
@@ -599,6 +602,62 @@ struct SettingsView: View {
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color.black.opacity(0.1))
+        )
+    }
+    
+    private var peakAppSection: some View {
+        VStack(alignment: .leading, spacing: 15) {
+            HStack {
+                Image(systemName: "mountain.2.fill")
+                    .foregroundColor(.black)
+                Text("peak_app_title".localized)
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(.black)
+                Spacer()
+            }
+            
+            VStack(spacing: 12) {
+                HStack {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("peak_app_description".localized)
+                            .font(.body)
+                            .foregroundColor(.black)
+                    }
+                    Spacer()
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.black.opacity(0.1))
+                )
+                
+                Button(action: {
+                    if let url = URL(string: "https://apps.apple.com/it/app/peak-altimetro-gps-barometro/id6477742031") {
+                        UIApplication.shared.open(url)
+                    }
+                }) {
+                    HStack {
+                        Image(systemName: "arrow.down.app.fill")
+                            .foregroundColor(.white)
+                        Text("download_peak_app".localized)
+                            .font(.body)
+                            .fontWeight(.medium)
+                            .foregroundColor(.white)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.green.opacity(0.8))
+                    )
+                }
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 15)
+                .fill(Color.white.opacity(0.9))
         )
     }
 }

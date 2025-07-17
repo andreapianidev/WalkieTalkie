@@ -172,6 +172,11 @@
 "support_description" = "If you like this app, consider supporting the developer";
 "view_performance" = "View Performance Stats";
 
+// MARK: - Peak App
+"peak_app_title" = "Peak: Altimeter for Hikers";
+"peak_app_description" = "Free altimeter for hikers with AI and integrated walkie talkie";
+"download_peak_app" = "Download Peak App";
+
 // MARK: - Alerts
 "connection_request" = "Connection Request";
 "wants_to_connect" = "wants to connect";

@@ -167,6 +167,11 @@
 "support_description" = "Jika anda suka aplikasi ini, pertimbangkan untuk menyokong pembangun";
 "view_performance" = "Lihat Statistik Prestasi";
 
+// MARK: - Peak App
+"peak_app_title" = "Peak: Altimeter untuk Pendaki";
+"peak_app_description" = "Altimeter percuma untuk pendaki dengan AI dan walkie talkie bersepadu";
+"download_peak_app" = "Muat Turun Aplikasi Peak";
+
 // MARK: - Alerts
 "connection_request" = "Permintaan Sambungan";
 "wants_to_connect" = "mahu menyambung";

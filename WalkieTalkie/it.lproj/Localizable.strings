@@ -172,6 +172,11 @@
 "support_description" = "Se ti piace questa app, considera di supportare lo sviluppatore";
 "view_performance" = "Visualizza Statistiche Performance";
 
+// MARK: - Peak App
+"peak_app_title" = "Peak: Altimetro per Escursionisti";
+"peak_app_description" = "Altimetro gratuito per escursionisti con AI e walkie talkie integrato";
+"download_peak_app" = "Scarica App Peak";
+
 // MARK: - Alerts
 "connection_request" = "Richiesta di Connessione";
 "wants_to_connect" = "vuole connettersi";

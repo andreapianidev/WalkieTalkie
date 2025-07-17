@@ -167,6 +167,11 @@
 "support_description" = "如果您喜歡這個應用程式，請考慮支持開發者";
 "view_performance" = "查看性能統計";
 
+// MARK: - Peak App
+"peak_app_title" = "Peak：登山者高度計";
+"peak_app_description" = "免費登山者高度計，具備AI和整合對講機功能";
+"download_peak_app" = "下載Peak應用程式";
+
 // MARK: - Alerts
 "connection_request" = "連接請求";
 "wants_to_connect" = "想要連接";
