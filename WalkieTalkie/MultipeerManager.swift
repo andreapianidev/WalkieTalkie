@@ -63,7 +63,6 @@ class MultipeerManager: NSObject, ObservableObject {
     private let notificationManager = NotificationManager.shared
     private let powerManager = PowerManager.shared
     private let hapticManager = HapticManager.shared
-    private let firebaseManager = FirebaseManager.shared
     
     // Audio
     private var audioEngine: AVAudioEngine?
@@ -516,12 +515,8 @@ class MultipeerManager: NSObject, ObservableObject {
             sendAccumulatedAudio()
         }
         
-        // Traccia l'uso del walkie talkie in Firebase
-        if let startTime = transmissionStartTime {
-            let duration = Date().timeIntervalSince(startTime)
-            firebaseManager.trackWalkieTalkieUsage(duration: duration)
-            transmissionStartTime = nil
-        }
+        // Reset transmission start time
+        transmissionStartTime = nil
 
         audioManager.restoreBackgroundVolume()
         logger.logAudioInfo("Trasmissione audio arrestata.")
@@ -664,6 +659,57 @@ class MultipeerManager: NSObject, ObservableObject {
         
         logger.logNetworkInfo("Ottimizzazioni traffico elevato applicate")
     }
+    
+    // MARK: - Background Handling
+    
+    func handleAppDidEnterBackground() {
+        logger.logNetworkInfo("App entrata in background - mantenimento connessioni")
+        
+        // Non fermare advertising e browsing per mantenere le connessioni
+        // MultipeerConnectivity può continuare in background se l'app ha i permessi giusti
+        
+        // Ferma l'heartbeat timer per risparmiare batteria
+        stopHeartbeat()
+        
+        // Invia notifica ai peer che siamo in background
+        let backgroundNotification = ["status": "background"]
+        if let data = try? JSONSerialization.data(withJSONObject: backgroundNotification, options: []) {
+            do {
+                try session.send(data, toPeers: connectedPeers, with: .reliable)
+            } catch {
+                logger.logNetworkError(error, context: "Invio notifica background")
+            }
+        }
+    }
+    
+    func handleAppWillEnterForeground() {
+        logger.logNetworkInfo("App tornata in foreground - ripristino connessioni")
+        
+        // Riavvia l'heartbeat
+        startHeartbeat()
+        
+        // Invia notifica ai peer che siamo tornati in foreground
+        let foregroundNotification = ["status": "foreground"]
+        if let data = try? JSONSerialization.data(withJSONObject: foregroundNotification, options: []) {
+            do {
+                try session.send(data, toPeers: connectedPeers, with: .reliable)
+            } catch {
+                logger.logNetworkError(error, context: "Invio notifica foreground")
+            }
+        }
+        
+        // Verifica lo stato delle connessioni
+        if connectedPeers.isEmpty && (isAdvertising || isBrowsing) {
+            logger.logNetworkInfo("Nessun peer connesso, riavvio ricerca")
+            // Riavvia advertising e browsing se necessario
+            stopAdvertising()
+            stopBrowsing()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                self?.startAdvertising()
+                self?.startBrowsing()
+            }
+        }
+    }
 }
 
 // MARK: - MCSessionDelegate
@@ -682,8 +728,6 @@ extension MultipeerManager: MCSessionDelegate {
                     // Aggiorna il monitoraggio delle performance
                     self.performanceMonitor.updateConnectionCount(self.connectedPeers.count)
                     
-                    // Traccia connessione in Firebase
-                    self.firebaseManager.trackDeviceConnection(deviceName: peerID.displayName)
                     
                     // Feedback aptico e notifica per connessione
                     self.hapticManager.connectionEstablished()
@@ -709,8 +753,6 @@ extension MultipeerManager: MCSessionDelegate {
                 
                 // Feedback aptico e notifica per disconnessione solo se era precedentemente connesso
                 if wasConnected {
-                    // Traccia disconnessione in Firebase
-                    self.firebaseManager.trackDeviceDisconnection(deviceName: peerID.displayName)
                     
                     self.hapticManager.connectionLost()
                     self.notificationManager.sendConnectionLostNotification(deviceName: peerID.displayName)

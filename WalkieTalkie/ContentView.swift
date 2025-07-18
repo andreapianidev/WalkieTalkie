@@ -725,6 +725,12 @@ struct ContentView: View {
             // Controlla i permessi all'avvio
             checkMicrophonePermission()
         }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("AppDidEnterBackground"))) { _ in
+            multipeerManager.handleAppDidEnterBackground()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("AppWillEnterForeground"))) { _ in
+            multipeerManager.handleAppWillEnterForeground()
+        }
     }
     
     // MARK: - Helper Functions
