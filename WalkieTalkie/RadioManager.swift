@@ -23,7 +23,6 @@ class RadioManager: NSObject, ObservableObject {
     
     private var radioPlayer: AVPlayer?
     private let logger = Logger.shared
-    private let firebaseManager = FirebaseManager.shared
     
     @Published var isPlaying = false
     @Published var currentStation: RadioStation?
@@ -181,8 +180,6 @@ class RadioManager: NSObject, ObservableObject {
         radioPlayer?.play()
         isPlaying = true
         
-        // Traccia l'uso della radio in Firebase
-        firebaseManager.trackRadioUsage(station: "\(station.name) - \(station.country)")
         
         logger.logAudioInfo("Avviata riproduzione: \(station.name) - \(station.country)")
     }

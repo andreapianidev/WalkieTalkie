@@ -63,7 +63,6 @@ class MultipeerManager: NSObject, ObservableObject {
     private let notificationManager = NotificationManager.shared
     private let powerManager = PowerManager.shared
     private let hapticManager = HapticManager.shared
-    private let firebaseManager = FirebaseManager.shared
     
     // Audio
     private var audioEngine: AVAudioEngine?
@@ -516,12 +515,8 @@ class MultipeerManager: NSObject, ObservableObject {
             sendAccumulatedAudio()
         }
         
-        // Traccia l'uso del walkie talkie in Firebase
-        if let startTime = transmissionStartTime {
-            let duration = Date().timeIntervalSince(startTime)
-            firebaseManager.trackWalkieTalkieUsage(duration: duration)
-            transmissionStartTime = nil
-        }
+        // Reset transmission start time
+        transmissionStartTime = nil
 
         audioManager.restoreBackgroundVolume()
         logger.logAudioInfo("Trasmissione audio arrestata.")
@@ -733,8 +728,6 @@ extension MultipeerManager: MCSessionDelegate {
                     // Aggiorna il monitoraggio delle performance
                     self.performanceMonitor.updateConnectionCount(self.connectedPeers.count)
                     
-                    // Traccia connessione in Firebase
-                    self.firebaseManager.trackDeviceConnection(deviceName: peerID.displayName)
                     
                     // Feedback aptico e notifica per connessione
                     self.hapticManager.connectionEstablished()
@@ -760,8 +753,6 @@ extension MultipeerManager: MCSessionDelegate {
                 
                 // Feedback aptico e notifica per disconnessione solo se era precedentemente connesso
                 if wasConnected {
-                    // Traccia disconnessione in Firebase
-                    self.firebaseManager.trackDeviceDisconnection(deviceName: peerID.displayName)
                     
                     self.hapticManager.connectionLost()
                     self.notificationManager.sendConnectionLostNotification(deviceName: peerID.displayName)

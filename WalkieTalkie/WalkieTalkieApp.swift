@@ -6,9 +6,6 @@
 
 import SwiftUI
 import UserNotifications
-import FirebaseCore
-import FirebaseAnalytics
-import FirebaseCrashlytics
 import BackgroundTasks
 
 @main
@@ -26,24 +23,6 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     private var backgroundTask: UIBackgroundTaskIdentifier = .invalid
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Inizializza Firebase
-        FirebaseApp.configure()
-        
-        // Abilita Analytics
-        Analytics.setAnalyticsCollectionEnabled(true)
-        
-        // Configura Crashlytics
-        Crashlytics.crashlytics().setCrashlyticsCollectionEnabled(true)
-        
-        // Configura Firebase Manager e traccia l'avvio dell'app
-        let firebaseManager = FirebaseManager.shared
-        firebaseManager.trackAppLaunch()
-        
-        // Imposta proprietà utente di base
-        firebaseManager.setUserProperty(UIDevice.current.model, forName: FirebaseManager.UserProperties.deviceType)
-        firebaseManager.setUserProperty(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String, forName: FirebaseManager.UserProperties.appVersion)
-        firebaseManager.setUserProperty(Locale.current.languageCode, forName: FirebaseManager.UserProperties.preferredLanguage)
-        
         // Configura il delegate per le notifiche
         UNUserNotificationCenter.current().delegate = self
         
@@ -82,8 +61,6 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
             NotificationCenter.default.post(name: NSNotification.Name("AppDidEnterBackground"), object: nil)
         }
         
-        // Log per Firebase
-        FirebaseManager.shared.trackAnalyticsEvent(.appBackgrounded, parameters: nil)
         
         // Avvia un timer per monitorare il tempo rimanente in background
         DispatchQueue.global(qos: .background).async { [weak self] in
@@ -107,8 +84,6 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         // Notifica il MultipeerManager
         NotificationCenter.default.post(name: NSNotification.Name("AppWillEnterForeground"), object: nil)
         
-        // Log per Firebase
-        FirebaseManager.shared.trackAnalyticsEvent(.appForegrounded, parameters: nil)
     }
     
     // MARK: - Background Task Management
