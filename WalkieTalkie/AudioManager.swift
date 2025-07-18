@@ -33,6 +33,7 @@ class AudioManager: ObservableObject {
         setupAudioSession()
         checkAudioPermission()
         setupSettingsObservers()
+        setupNotificationObservers()
     }
     
     private func setupSettingsObservers() {
@@ -57,14 +58,24 @@ class AudioManager: ObservableObject {
             .store(in: &cancellables)
     }
     
+    private func setupNotificationObservers() {
+        // Osserva le interruzioni audio
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleAudioInterruption),
+            name: AVAudioSession.interruptionNotification,
+            object: AVAudioSession.sharedInstance()
+        )
+    }
+    
     // MARK: - Audio Session Setup
     
     private func setupAudioSession() {
         do {
             let audioSession = AVAudioSession.sharedInstance()
             try audioSession.setCategory(.playAndRecord, 
-                                       mode: .default, 
-                                       options: [.defaultToSpeaker, .allowBluetooth])
+                                       mode: .voiceChat, 
+                                       options: [.defaultToSpeaker, .allowBluetooth, .mixWithOthers])
             try audioSession.setActive(true)
             logger.logAudioInfo("Audio session configurata correttamente")
         } catch {
@@ -308,9 +319,64 @@ class AudioManager: ObservableObject {
         playbackPlayerNode = nil
     }
     
+    // MARK: - Background Handling
+    
+    func handleAppDidEnterBackground() {
+        // Mantieni la sessione audio attiva in background
+        do {
+            try AVAudioSession.sharedInstance().setActive(true)
+            logger.logAudioInfo("Sessione audio mantenuta attiva in background")
+        } catch {
+            logger.logAudioError(error, context: "Mantenimento sessione audio in background")
+        }
+    }
+    
+    func handleAppWillEnterForeground() {
+        // Riattiva la sessione audio quando l'app torna in primo piano
+        setupAudioSession()
+        
+        // Riavvia l'audio di sottofondo se era attivo
+        if settingsManager.isBackgroundAudioEnabled && !isPlayingBackground {
+            startBackgroundAudioIfNeeded()
+        }
+    }
+    
+    @objc private func handleAudioInterruption(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let typeValue = userInfo[AVAudioSession.interruptionTypeKey] as? UInt,
+              let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
+            return
+        }
+        
+        switch type {
+        case .began:
+            logger.logAudioInfo("Interruzione audio iniziata")
+            // L'interruzione è iniziata (es. chiamata in arrivo)
+            backgroundAudioPlayer?.pause()
+            frequencyAudioPlayer?.pause()
+            
+        case .ended:
+            logger.logAudioInfo("Interruzione audio terminata")
+            // L'interruzione è terminata
+            if let optionsValue = userInfo[AVAudioSession.interruptionOptionKey] as? UInt {
+                let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
+                if options.contains(.shouldResume) {
+                    // Riprendi la riproduzione
+                    backgroundAudioPlayer?.play()
+                    frequencyAudioPlayer?.play()
+                    try? AVAudioSession.sharedInstance().setActive(true)
+                }
+            }
+            
+        @unknown default:
+            break
+        }
+    }
+    
     // MARK: - Cleanup
     
     deinit {
         stopBackgroundAudio()
+        NotificationCenter.default.removeObserver(self)
     }
 }
