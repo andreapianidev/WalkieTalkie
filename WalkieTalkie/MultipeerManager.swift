@@ -51,8 +51,6 @@ class MultipeerManager: NSObject, ObservableObject {
     private var lastMemoryWarning: Date?
     private let memoryWarningCooldown: TimeInterval = 30.0
     
-    // MARK: - Performance Monitoring
-    private let performanceMonitor = PerformanceMonitor.shared
     
     private var heartbeatInterval: TimeInterval {
         return powerManager.getOptimizedHeartbeatInterval()
@@ -207,8 +205,6 @@ class MultipeerManager: NSObject, ObservableObject {
             
             DispatchQueue.main.async {
                 let connectionTime = Date().timeIntervalSince(inviteStartTime)
-                self.performanceMonitor.recordConnectionTime(connectionTime)
-                self.performanceMonitor.startLatencyTest(to: peerID.displayName)
                 
                 self.logger.logNetworkInfo("Invito inviato a: \(peerID.displayName) (tentativo \(currentAttempts + 1)/\(self.maxRetryAttempts), tempo: \(String(format: "%.2f", connectionTime))s)")
             }
@@ -725,8 +721,6 @@ extension MultipeerManager: MCSessionDelegate {
                     self.connectedPeers.append(peerID)
                     self.logger.logNetworkInfo("Peer \(peerID.displayName) connesso. Totale connessi: \(self.connectedPeers.count)")
                     
-                    // Aggiorna il monitoraggio delle performance
-                    self.performanceMonitor.updateConnectionCount(self.connectedPeers.count)
                     
                     
                     // Feedback aptico e notifica per connessione
@@ -748,8 +742,6 @@ extension MultipeerManager: MCSessionDelegate {
                 self.logger.logNetworkInfo("Peer \(peerID.displayName) disconnesso. Totale connessi: \(self.connectedPeers.count)")
                 self.connectionStatus = self.connectedPeers.isEmpty ? "Disconnesso" : "Connesso (\(self.connectedPeers.count))"
                 
-                // Aggiorna il monitoraggio delle performance
-                self.performanceMonitor.updateConnectionCount(self.connectedPeers.count)
                 
                 // Feedback aptico e notifica per disconnessione solo se era precedentemente connesso
                 if wasConnected {

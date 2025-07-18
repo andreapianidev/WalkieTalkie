@@ -7,7 +7,6 @@ struct SettingsView: View {
     @StateObject private var settingsManager = SettingsManager.shared
     @StateObject private var notificationManager = NotificationManager.shared
     @State private var showingInstructions = false
-    @State private var showingPerformance = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -21,9 +20,6 @@ struct SettingsView: View {
                     
                     // Audio Settings Section
                     audioSettingsSection
-                    
-                    // Performance Section
-                    performanceSection
                     
                     // Instructions Section
                     instructionsSection
@@ -363,52 +359,6 @@ struct SettingsView: View {
          )
      }
     
-    private var performanceSection: some View {
-        VStack(alignment: .leading, spacing: 15) {
-            HStack {
-                Image(systemName: "chart.line.uptrend.xyaxis")
-                    .foregroundColor(.black)
-                Text("performance".localized)
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .foregroundColor(.black)
-                Spacer()
-            }
-            
-            VStack(spacing: 12) {
-                Button(action: {
-                    showingPerformance = true
-                }) {
-                    HStack {
-                        Image(systemName: "speedometer")
-                            .foregroundColor(.white)
-                        Text("view_performance".localized)
-                            .font(.body)
-                            .fontWeight(.medium)
-                            .foregroundColor(.white)
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.white)
-                            .font(.caption)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.blue.opacity(0.8))
-                    )
-                }
-            }
-        }
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 15)
-                .fill(Color.white.opacity(0.9))
-        )
-        .sheet(isPresented: $showingPerformance) {
-            PerformanceStatsView()
-        }
-    }
     
     private var instructionsSection: some View {
         VStack(alignment: .leading, spacing: 15) {
