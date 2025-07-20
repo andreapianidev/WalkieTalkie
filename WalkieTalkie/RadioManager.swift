@@ -7,6 +7,7 @@
 import Foundation
 import AVFoundation
 import Combine
+import MediaPlayer
 import os.log
 
 struct RadioStation {
@@ -142,14 +143,15 @@ class RadioManager: NSObject, ObservableObject {
     private override init() {
         super.init()
         setupAudioSession()
+        setupRemoteCommandCenter()
     }
     
     private func setupAudioSession() {
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .default, options: [.allowBluetoothA2DP])
+            try audioSession.setCategory(.playback, mode: .default, options: [.allowBluetoothA2DP, .mixWithOthers])
             try audioSession.setActive(true)
-            logger.logAudioInfo("Radio audio session configurata")
+            logger.logAudioInfo("Radio audio session configurata per background playback")
         } catch {
             logger.logAudioError(error, context: "Configurazione radio audio session")
         }
@@ -181,6 +183,9 @@ class RadioManager: NSObject, ObservableObject {
         radioPlayer?.play()
         isPlaying = true
         
+        // Configura Now Playing Info per Control Center
+        setupNowPlayingInfo(for: station)
+        
         // Traccia l'uso della radio in Firebase
         firebaseManager.trackRadioUsage(station: "\(station.name) - \(station.country)")
         
@@ -197,18 +202,33 @@ class RadioManager: NSObject, ObservableObject {
         currentStation = nil
         lastError = nil
         
+        // Cancella Now Playing Info
+        clearNowPlayingInfo()
+        
         logger.logAudioInfo("Radio fermata")
     }
     
     func pauseRadio() {
         radioPlayer?.pause()
         isPlaying = false
+        
+        // Aggiorna Now Playing Info
+        if let station = currentStation {
+            setupNowPlayingInfo(for: station)
+        }
+        
         logger.logAudioInfo("Radio in pausa")
     }
     
     func resumeRadio() {
         radioPlayer?.play()
         isPlaying = true
+        
+        // Aggiorna Now Playing Info
+        if let station = currentStation {
+            setupNowPlayingInfo(for: station)
+        }
+        
         logger.logAudioInfo("Radio ripresa")
     }
     
@@ -255,6 +275,56 @@ class RadioManager: NSObject, ObservableObject {
         
         let previousIndex = currentIndex == 0 ? radioStations.count - 1 : currentIndex - 1
         playStation(radioStations[previousIndex])
+    }
+    
+    // MARK: - Now Playing Info
+    
+    private func setupNowPlayingInfo(for station: RadioStation) {
+        var nowPlayingInfo = [String: Any]()
+        nowPlayingInfo[MPMediaItemPropertyTitle] = station.name
+        nowPlayingInfo[MPMediaItemPropertyArtist] = "\(station.country) - \(station.frequency) FM"
+        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = "Talky Radio"
+        nowPlayingInfo[MPMediaItemPropertyGenre] = station.genre
+        nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = true
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isPlaying ? 1.0 : 0.0
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+        logger.logAudioInfo("Now Playing Info configurato per \(station.name)")
+    }
+    
+    private func clearNowPlayingInfo() {
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+        logger.logAudioInfo("Now Playing Info cancellato")
+    }
+    
+    private func setupRemoteCommandCenter() {
+        let commandCenter = MPRemoteCommandCenter.shared()
+        
+        // Play command
+        commandCenter.playCommand.addTarget { [weak self] _ in
+            self?.resumeRadio()
+            return .success
+        }
+        
+        // Pause command
+        commandCenter.pauseCommand.addTarget { [weak self] _ in
+            self?.pauseRadio()
+            return .success
+        }
+        
+        // Next track command
+        commandCenter.nextTrackCommand.addTarget { [weak self] _ in
+            self?.nextStation()
+            return .success
+        }
+        
+        // Previous track command
+        commandCenter.previousTrackCommand.addTarget { [weak self] _ in
+            self?.previousStation()
+            return .success
+        }
+        
+        logger.logAudioInfo("Remote Command Center configurato")
     }
     
     // MARK: - Error Handling

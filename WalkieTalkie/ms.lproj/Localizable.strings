@@ -167,6 +167,17 @@
 "support_description" = "Jika anda suka aplikasi ini, pertimbangkan untuk menyokong pembangun";
 "view_performance" = "Lihat Statistik Prestasi";
 
+// MARK: - Background Audio
+"background_playback" = "Main Latar Belakang";
+"background_playback_description" = "Teruskan main radio apabila aplikasi di latar belakang";
+"now_playing" = "Sedang Dimainkan";
+"control_center_info" = "Kawal main dari Pusat Kawalan dan skrin kunci";
+
+// MARK: - Appearance
+"appearance" = "Penampilan";
+"dark_mode" = "Mod Gelap";
+"dark_mode_description" = "Gunakan tema gelap untuk antara muka aplikasi";
+
 // MARK: - Peak App
 "peak_app_title" = "Peak: Altimeter untuk Pendaki";
 "peak_app_description" = "Altimeter percuma untuk pendaki dengan AI dan walkie talkie bersepadu";
@@ -181,3 +192,31 @@
 
 // MARK: - Errors
 "no_connected_peers" = "Tiada peranti disambung";
+
+// MARK: - Onboarding
+"onboarding_welcome_title" = "Selamat Datang ke WalkieTalkie";
+"onboarding_welcome_subtitle" = "Komunikasi walkie-talkie profesional untuk pengembaraan anda";
+"onboarding_how_it_works_title" = "Bagaimana Ia Berfungsi";
+"onboarding_how_it_works_description" = "WalkieTalkie mengubah iPhone anda menjadi peranti walkie-talkie profesional untuk komunikasi lancar dengan peranti berdekatan.";
+"onboarding_connectivity_title" = "Sambungan Canggih";
+"onboarding_connectivity_description" = "Pelbagai kaedah sambungan memastikan komunikasi yang boleh dipercayai:";
+"onboarding_bluetooth_feature" = "• Bluetooth untuk komunikasi jarak dekat";
+"onboarding_wifi_feature" = "• Wi-Fi untuk prestasi yang dipertingkatkan";
+"onboarding_multipeer_feature" = "• Multipeer Connectivity Apple untuk rangkaian mesh";
+"onboarding_range_feature" = "• Sehingga 1km jangkauan dalam keadaan optimum";
+"onboarding_frequency_title" = "Sistem Frekuensi";
+"onboarding_frequency_description" = "Semua peranti mesti ditetapkan pada frekuensi yang sama untuk berkomunikasi. Frekuensi rumah lalai ialah 428.283 MHz.";
+"onboarding_home_frequency" = "Frekuensi Rumah: 428.283 MHz";
+"onboarding_permissions_title" = "Kebenaran Diperlukan";
+"onboarding_permissions_description" = "Untuk memberikan pengalaman terbaik, WalkieTalkie memerlukan akses kepada:";
+"onboarding_microphone_permission" = "• Mikrofon - Penting untuk penghantaran suara";
+"onboarding_network_permission" = "• Rangkaian Tempatan - Diperlukan untuk penemuan peranti";
+"onboarding_bluetooth_permission" = "• Bluetooth - Untuk sambungan peranti";
+"onboarding_notification_permission" = "• Pemberitahuan - Untuk panggilan masuk dan amaran";
+"onboarding_continue" = "Teruskan";
+"onboarding_get_started" = "Mula";
+"onboarding_allow_permissions" = "Benarkan Kebenaran";
+"onboarding_skip" = "Langkau";
+"onboarding_up_to_eight_devices" = "Sambung sehingga 8 peranti serentak";
+"onboarding_mountain_use" = "Sempurna untuk ekspedisi gunung";
+"onboarding_excursion_use" = "Sesuai untuk mendaki dan aktiviti luar";}]}}

@@ -19,7 +19,7 @@ class NotificationManager: ObservableObject {
     private var lastNotificationTime: [String: Date] = [:]
     private let notificationCooldown: TimeInterval = 2.0 // 2 secondi di cooldown
     
-    private init() {
+    init() {
         checkNotificationSettings()
         loadNotificationPreference()
     }

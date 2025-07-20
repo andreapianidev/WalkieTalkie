@@ -36,8 +36,8 @@ struct ContentView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Sfondo giallo
-                Color(red: 1.0, green: 0.84, blue: 0.0)
+                // Sfondo adattivo
+                Color("BackgroundColor")
                     .ignoresSafeArea()
                 
                 // Contenuto principale
@@ -123,12 +123,12 @@ struct ContentView: View {
             }) {
                 HStack(spacing: 4) {
                     Image(systemName: isRadioMode ? "radio" : "antenna.radiowaves.left.and.right")
-                        .foregroundColor(.black)
+                        .foregroundColor(Color("PrimaryTextColor"))
                         .font(.title3)
                     Text(isRadioMode ? "FM" : "WT")
                         .font(.caption)
                         .fontWeight(.bold)
-                        .foregroundColor(.black)
+                        .foregroundColor(Color("PrimaryTextColor"))
                 }
                 .padding(.horizontal, 8)
                 .padding(.vertical, 4)
@@ -141,11 +141,11 @@ struct ContentView: View {
             VStack {
                 Text(isRadioMode ? "radio_fm".localized : "frequency_owner".localized)
                     .font(.caption)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                 Text(isRadioMode ? (radioManager.currentStation?.name ?? "radio_fm".localized) : "walkie_talkie".localized)
                     .font(.headline)
                     .fontWeight(.bold)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
             }
             
             Spacer()
@@ -171,7 +171,7 @@ struct ContentView: View {
                         Text("station".localized + ": \(radioManager.currentStation?.name ?? "no_station".localized)")
                         .font(.subheadline)
                         .fontWeight(.medium)
-                        .foregroundColor(.black)
+                        .foregroundColor(Color("PrimaryTextColor"))
                         
                         if radioManager.isBuffering {
                             HStack(spacing: 4) {
@@ -186,18 +186,18 @@ struct ContentView: View {
                     
                     Text("genre".localized + ": \(radioManager.currentStation?.genre ?? "--")")
                         .font(.caption)
-                        .foregroundColor(.black.opacity(0.8))
+                        .foregroundColor(Color("PrimaryTextColor").opacity(0.8))
                     
                     Text("country".localized + ": \(radioManager.currentStation?.country ?? "--")")
                         .font(.caption2)
-                        .foregroundColor(.black.opacity(0.6))
+                        .foregroundColor(Color("PrimaryTextColor").opacity(0.6))
                 } else {
                     // Modalità Walkie-Talkie - Mostra info connessione
                     HStack {
                         Text("device".localized + ": \(multipeerManager.localPeerID.displayName)")
                         .font(.subheadline)
                         .fontWeight(.medium)
-                        .foregroundColor(.black)
+                        .foregroundColor(Color("PrimaryTextColor"))
                         
                         if multipeerManager.isBrowsing {
                             HStack(spacing: 4) {
@@ -238,7 +238,7 @@ struct ContentView: View {
         .padding(.vertical, 12)
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color.white.opacity(0.3))
+                .fill(Color("SurfaceColor"))
         )
         .padding(.horizontal, 20)
         .padding(.top, 10)

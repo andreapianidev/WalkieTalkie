@@ -167,6 +167,17 @@
 "support_description" = "如果您喜歡這個應用程式，請考慮支持開發者";
 "view_performance" = "查看性能統計";
 
+// MARK: - Background Audio
+"background_playback" = "背景播放";
+"background_playback_description" = "當應用程式在背景時繼續播放電台";
+"now_playing" = "正在播放";
+"control_center_info" = "從控制中心和鎖定畫面控制播放";
+
+// MARK: - Appearance
+"appearance" = "外觀";
+"dark_mode" = "深色模式";
+"dark_mode_description" = "為應用程式介面使用深色主題";
+
 // MARK: - Peak App
 "peak_app_title" = "Peak：登山者高度計";
 "peak_app_description" = "免費登山者高度計，具備AI和整合對講機功能";
@@ -181,3 +192,31 @@
 
 // MARK: - Errors
 "no_connected_peers" = "無連接的裝置";
+
+// MARK: - Onboarding
+"onboarding_welcome_title" = "歡迎使用 WalkieTalkie";
+"onboarding_welcome_subtitle" = "專業對講機通訊，為您的冒險之旅";
+"onboarding_how_it_works_title" = "運作原理";
+"onboarding_how_it_works_description" = "WalkieTalkie 將您的 iPhone 轉換為專業對講機裝置，與附近裝置進行無縫通訊。";
+"onboarding_connectivity_title" = "先進連接技術";
+"onboarding_connectivity_description" = "多種連接方式確保可靠的通訊：";
+"onboarding_bluetooth_feature" = "• 藍牙 - 近距離通訊";
+"onboarding_wifi_feature" = "• Wi-Fi - 增強性能";
+"onboarding_multipeer_feature" = "• Apple Multipeer Connectivity - 網狀網路";
+"onboarding_range_feature" = "• 最佳條件下可達 1 公里範圍";
+"onboarding_frequency_title" = "頻率系統";
+"onboarding_frequency_description" = "所有裝置必須設定為相同頻率才能通訊。預設家用頻率為 428.283 MHz。";
+"onboarding_home_frequency" = "家用頻率：428.283 MHz";
+"onboarding_permissions_title" = "所需權限";
+"onboarding_permissions_description" = "為提供最佳體驗，WalkieTalkie 需要存取：";
+"onboarding_microphone_permission" = "• 麥克風 - 語音傳輸必需";
+"onboarding_network_permission" = "• 本地網路 - 裝置發現必需";
+"onboarding_bluetooth_permission" = "• 藍牙 - 裝置連接";
+"onboarding_notification_permission" = "• 通知 - 來電和警報";
+"onboarding_continue" = "繼續";
+"onboarding_get_started" = "開始使用";
+"onboarding_allow_permissions" = "允許權限";
+"onboarding_skip" = "跳過";
+"onboarding_up_to_eight_devices" = "同時連接最多 8 個裝置";
+"onboarding_mountain_use" = "完美適用於登山探險";
+"onboarding_excursion_use" = "理想的徒步和戶外活動";}]}}

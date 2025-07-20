@@ -6,13 +6,12 @@
 	<array>
 		<string>_walkie-talkie._tcp</string>
 	</array>
+	<key>NSUserNotificationAlertStyle</key>
+	<string>alert</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
+		<string>audio</string>
 	</array>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>L'app necessita dell'accesso al microfono per poter trasmettere la tua voce agli altri dispositivi collegati.</string>
-	<key>NSUserNotificationAlertStyle</key>
-	<string>alert</string>
 </dict>
 </plist>

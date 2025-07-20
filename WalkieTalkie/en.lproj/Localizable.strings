@@ -172,6 +172,17 @@
 "support_description" = "If you like this app, consider supporting the developer";
 "view_performance" = "View Performance Stats";
 
+// MARK: - Background Audio
+"background_playback" = "Background Playback";
+"background_playback_description" = "Continue radio playback when app is in background";
+"now_playing" = "Now Playing";
+"control_center_info" = "Control playback from Control Center and Lock Screen";
+
+// MARK: - Appearance
+"appearance" = "Appearance";
+"dark_mode" = "Dark Mode";
+"dark_mode_description" = "Use dark theme for the app interface";
+
 // MARK: - Peak App
 "peak_app_title" = "Peak: Altimeter for Hikers";
 "peak_app_description" = "Free altimeter for hikers with AI and integrated walkie talkie";
@@ -186,3 +197,31 @@
 
 // MARK: - Errors
 "no_connected_peers" = "No connected devices";
+
+// MARK: - Onboarding
+"onboarding_welcome_title" = "Welcome to WalkieTalkie";
+"onboarding_welcome_subtitle" = "Professional walkie-talkie communication for your adventures";
+"onboarding_how_it_works_title" = "How It Works";
+"onboarding_how_it_works_description" = "WalkieTalkie transforms your iPhone into a professional walkie-talkie device for seamless communication with nearby devices.";
+"onboarding_connectivity_title" = "Advanced Connectivity";
+"onboarding_connectivity_description" = "Multiple connection methods ensure reliable communication:";
+"onboarding_bluetooth_feature" = "• Bluetooth for close-range communication";
+"onboarding_wifi_feature" = "• Wi-Fi for enhanced performance";
+"onboarding_multipeer_feature" = "• Apple's Multipeer Connectivity for mesh networking";
+"onboarding_range_feature" = "• Up to 1km range in optimal conditions";
+"onboarding_frequency_title" = "Frequency System";
+"onboarding_frequency_description" = "All devices must be set to the same frequency to communicate. The default home frequency is 428.283 MHz.";
+"onboarding_home_frequency" = "Home Frequency: 428.283 MHz";
+"onboarding_permissions_title" = "Required Permissions";
+"onboarding_permissions_description" = "To provide the best experience, WalkieTalkie needs access to:";
+"onboarding_microphone_permission" = "• Microphone - Essential for voice transmission";
+"onboarding_network_permission" = "• Local Network - Required for device discovery";
+"onboarding_bluetooth_permission" = "• Bluetooth - For device connectivity";
+"onboarding_notification_permission" = "• Notifications - For incoming calls and alerts";
+"onboarding_continue" = "Continue";
+"onboarding_get_started" = "Get Started";
+"onboarding_allow_permissions" = "Allow Permissions";
+"onboarding_skip" = "Skip";
+"onboarding_up_to_eight_devices" = "Connect up to 8 devices simultaneously";
+"onboarding_mountain_use" = "Perfect for mountain expeditions";
+"onboarding_excursion_use" = "Ideal for hiking and outdoor activities";}]}}

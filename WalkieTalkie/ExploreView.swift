@@ -30,7 +30,7 @@ struct ExploreView: View {
             
             Spacer(minLength: 100)
         }
-        .background(Color.yellow)
+        .background(Color("BackgroundColor"))
         .onAppear {
             startRadarAnimation()
             updateDetectedDevices()
@@ -46,7 +46,7 @@ struct ExploreView: View {
     private var headerView: some View {
         HStack {
             Image(systemName: "magnifyingglass")
-                .foregroundColor(.black)
+                .foregroundColor(Color("PrimaryTextColor"))
                 .font(.title2)
             
             Spacer()
@@ -55,10 +55,10 @@ struct ExploreView: View {
                 Text("explore".localized)
                     .font(.title2)
                     .fontWeight(.bold)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                 Text("scan_nearby_devices".localized)
                     .font(.caption)
-                    .foregroundColor(.black.opacity(0.7))
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
             }
             
             Spacer()
@@ -68,7 +68,7 @@ struct ExploreView: View {
                 multipeerManager.startBrowsing()
             }) {
                 Image(systemName: "arrow.clockwise")
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                     .font(.title2)
             }
         }
@@ -196,7 +196,7 @@ struct ExploreView: View {
                 Text("\(Int(maxRange * Double(ring) / 4))m")
                     .font(.caption2)
                     .fontWeight(.medium)
-                    .foregroundColor(.black.opacity(0.7))
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
                     .background(
                         RoundedRectangle(cornerRadius: 4)
                             .fill(Color.white.opacity(0.8))
@@ -244,10 +244,10 @@ struct ExploreView: View {
             Text(device.name)
                 .font(.caption2)
                 .fontWeight(.medium)
-                .foregroundColor(.black)
+                .foregroundColor(Color("PrimaryTextColor"))
                 .background(
                     RoundedRectangle(cornerRadius: 6)
-                        .fill(Color.white.opacity(0.9))
+                        .fill(Color("SurfaceColor"))
                         .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
                         .padding(.horizontal, -6)
                         .padding(.vertical, -2)
@@ -271,7 +271,7 @@ struct ExploreView: View {
                 Spacer()
                 Text("\(detectedDevices.count)")
                     .font(.caption)
-                    .foregroundColor(.black.opacity(0.7))
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
                     .background(
@@ -284,13 +284,13 @@ struct ExploreView: View {
                 VStack(spacing: 8) {
                     Image(systemName: "antenna.radiowaves.left.and.right.slash")
                         .font(.title2)
-                        .foregroundColor(.black.opacity(0.5))
+                        .foregroundColor(Color("PrimaryTextColor").opacity(0.5))
                     Text("no_devices_detected".localized)
                         .font(.body)
-                        .foregroundColor(.black.opacity(0.7))
+                        .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
                     Text("ensure_devices_open".localized)
                         .font(.caption)
-                        .foregroundColor(.black.opacity(0.5))
+                        .foregroundColor(Color("PrimaryTextColor").opacity(0.5))
                         .multilineTextAlignment(.center)
                 }
                 .frame(maxWidth: .infinity)
@@ -305,9 +305,9 @@ struct ExploreView: View {
         }
         .padding()
         .background(
-            RoundedRectangle(cornerRadius: 15)
-                .fill(Color.white.opacity(0.9))
-        )
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(Color("SurfaceColor"))
+            )
         .padding(.horizontal, 20)
     }
     
@@ -325,7 +325,7 @@ struct ExploreView: View {
                 
                 Text(device.isConnected ? "connected".localized : "available".localized)
                     .font(.caption)
-                    .foregroundColor(.black.opacity(0.7))
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
             }
             
             Spacer()
@@ -338,7 +338,7 @@ struct ExploreView: View {
                 
                 Text(device.signalStrength)
                     .font(.caption2)
-                    .foregroundColor(.black.opacity(0.5))
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.5))
             }
             
             if !device.isConnected {

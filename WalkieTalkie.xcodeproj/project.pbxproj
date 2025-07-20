@@ -296,7 +296,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = ERAK83QBBM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -306,7 +306,7 @@
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Questa app utilizza il Bluetooth per scoprire e connettersi con dispositivi walkie talkie vicini.";
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Questa app utilizza il Bluetooth per essere scoperta da altri dispositivi walkie talkie.";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Questa app utilizza la rete locale per connettersi con dispositivi vicini per la comunicazione walkie talkie.";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Questa app ha bisogno dell'accesso al microfono per trasmettere messaggi vocali tramite walkie talkie.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "L'app necessita dell'accesso al microfono per poter trasmettere la tua voce agli altri dispositivi collegati.";
 				INFOPLIST_KEY_NSNetworkVolumesUsageDescription = "Questa app accede alla rete per la comunicazione walkie talkie tra dispositivi.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -318,7 +318,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Andrea-Piani.WalkieTalkie";
 				PRODUCT_NAME = Talky;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -337,7 +337,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = ERAK83QBBM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -347,7 +347,7 @@
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Questa app utilizza il Bluetooth per scoprire e connettersi con dispositivi walkie talkie vicini.";
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Questa app utilizza il Bluetooth per essere scoperta da altri dispositivi walkie talkie.";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Questa app utilizza la rete locale per connettersi con dispositivi vicini per la comunicazione walkie talkie.";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Questa app ha bisogno dell'accesso al microfono per trasmettere messaggi vocali tramite walkie talkie.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "L'app necessita dell'accesso al microfono per poter trasmettere la tua voce agli altri dispositivi collegati.";
 				INFOPLIST_KEY_NSNetworkVolumesUsageDescription = "Questa app accede alla rete per la comunicazione walkie talkie tra dispositivi.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -359,7 +359,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Andrea-Piani.WalkieTalkie";
 				PRODUCT_NAME = Talky;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;

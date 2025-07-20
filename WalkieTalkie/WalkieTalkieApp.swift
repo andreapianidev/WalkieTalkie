@@ -13,10 +13,22 @@ import FirebaseCrashlytics
 @main
 struct WalkieTalkieApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @StateObject private var settingsManager = SettingsManager.shared
+    @StateObject private var notificationManager = NotificationManager()
+    @AppStorage("isOnboardingComplete") private var isOnboardingComplete = false
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            if isOnboardingComplete {
+                ContentView()
+                    .preferredColorScheme(settingsManager.isDarkModeEnabled ? .dark : .light)
+            } else {
+                OnboardingView(
+                    isOnboardingComplete: $isOnboardingComplete,
+                    notificationManager: notificationManager
+                )
+                .preferredColorScheme(settingsManager.isDarkModeEnabled ? .dark : .light)
+            }
         }
     }
 }

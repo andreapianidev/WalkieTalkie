@@ -22,6 +22,9 @@ struct SettingsView: View {
                     // Audio Settings Section
                     audioSettingsSection
                     
+                    // Appearance Section
+                    appearanceSection
+                    
                     // Performance Section
                     performanceSection
                     
@@ -43,7 +46,7 @@ struct SettingsView: View {
                 .padding(.top, 20)
             }
         }
-        .background(Color.yellow)
+        .background(Color("BackgroundColor"))
         .onAppear {
             // Sync audio manager with settings manager
             if settingsManager.isBackgroundAudioEnabled {
@@ -57,7 +60,7 @@ struct SettingsView: View {
     private var headerView: some View {
         HStack {
             Image(systemName: "gearshape.fill")
-                .foregroundColor(.black)
+                .foregroundColor(Color("PrimaryTextColor"))
                 .font(.title2)
             
             Spacer()
@@ -66,10 +69,10 @@ struct SettingsView: View {
                 Text("settings".localized)
                     .font(.title2)
                     .fontWeight(.bold)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                 Text("configure_app".localized)
                     .font(.caption)
-                    .foregroundColor(.black.opacity(0.7))
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
             }
             
             Spacer()
@@ -78,7 +81,7 @@ struct SettingsView: View {
                 showingInstructions.toggle()
             }) {
                 Image(systemName: "questionmark.circle")
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                     .font(.title2)
             }
         }
@@ -91,11 +94,11 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 15) {
             HStack {
                 Image(systemName: "bell")
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                 Text("notifications".localized)
                     .font(.headline)
                     .fontWeight(.bold)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                 Spacer()
             }
             
@@ -105,10 +108,10 @@ struct SettingsView: View {
                         Text(notificationManager.notificationsEnabled ? "disable_notifications".localized : "enable_notifications".localized)
                             .font(.body)
                             .fontWeight(.medium)
-                            .foregroundColor(.black)
+                            .foregroundColor(Color("PrimaryTextColor"))
                         Text("notification_description".localized)
                             .font(.caption)
-                            .foregroundColor(.black.opacity(0.7))
+                            .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
                     }
                     
                     Spacer()
@@ -121,19 +124,19 @@ struct SettingsView: View {
                             }
                         }
                     ))
-                    .toggleStyle(SwitchToggleStyle(tint: .black))
+                    .toggleStyle(SwitchToggleStyle(tint: Color("ToggleAccentColor")))
                 }
                 .padding()
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.black.opacity(0.1))
+                        .fill(Color("SurfaceColor"))
                 )
             }
         }
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 15)
-                .fill(Color.white.opacity(0.9))
+                .fill(Color("SurfaceColor"))
         )
     }
     
@@ -141,11 +144,11 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 15) {
             HStack {
                 Image(systemName: "speaker.wave.2")
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                 Text("audio".localized)
                     .font(.headline)
                     .fontWeight(.bold)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                 Spacer()
             }
             
@@ -156,21 +159,21 @@ struct SettingsView: View {
                         Text("white_noise".localized)
                             .font(.body)
                             .fontWeight(.medium)
-                            .foregroundColor(.black)
+                            .foregroundColor(Color("PrimaryTextColor"))
                         Text("background_audio".localized)
                             .font(.caption)
-                            .foregroundColor(.black.opacity(0.7))
+                            .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
                     }
                     
                     Spacer()
                     
                     Toggle("", isOn: $settingsManager.isBackgroundAudioEnabled)
-                        .toggleStyle(SwitchToggleStyle(tint: .black))
+                        .toggleStyle(SwitchToggleStyle(tint: Color("ToggleAccentColor")))
                 }
                 .padding()
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.black.opacity(0.1))
+                        .fill(Color("SurfaceColor"))
                 )
                 
                 // Volume Slider (only when background audio is enabled)
@@ -180,28 +183,28 @@ struct SettingsView: View {
                             Text("noise_volume".localized)
                                 .font(.body)
                                 .fontWeight(.medium)
-                                .foregroundColor(.black)
+                                .foregroundColor(Color("PrimaryTextColor"))
                             Text("adjust_background_volume".localized)
                                 .font(.caption)
-                                .foregroundColor(.black.opacity(0.7))
+                                .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
                         }
                         
                         Spacer()
                         
                         VStack {
                             Slider(value: $settingsManager.backgroundVolume, in: 0.05...0.5, step: 0.05)
-                            .accentColor(.black)
+                            .accentColor(Color("PrimaryTextColor"))
                             
                             Text("\(Int(settingsManager.backgroundVolume * 100))%")
                                 .font(.caption2)
-                                .foregroundColor(.black.opacity(0.7))
+                                .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
                         }
                         .frame(width: 100)
                     }
                     .padding()
                     .background(
                         RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.black.opacity(0.1))
+                            .fill(Color("SurfaceColor"))
                     )
                 }
                 
@@ -211,21 +214,21 @@ struct SettingsView: View {
                         Text("haptic_feedback".localized)
                             .font(.body)
                             .fontWeight(.medium)
-                            .foregroundColor(.black)
+                            .foregroundColor(Color("PrimaryTextColor"))
                         Text("vibration_on_buttons".localized)
                             .font(.caption)
-                            .foregroundColor(.black.opacity(0.7))
+                            .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
                     }
                     
                     Spacer()
                     
                     Toggle("", isOn: $settingsManager.isHapticFeedbackEnabled)
-                        .toggleStyle(SwitchToggleStyle(tint: .black))
+                        .toggleStyle(SwitchToggleStyle(tint: Color("ToggleAccentColor")))
                 }
                 .padding()
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.black.opacity(0.1))
+                         .fill(Color("SurfaceColor"))
                 )
                 
                 // Auto Connect Setting
@@ -234,22 +237,22 @@ struct SettingsView: View {
                         Text("auto_connect".localized)
                             .font(.body)
                             .fontWeight(.medium)
-                            .foregroundColor(.black)
+                            .foregroundColor(Color("PrimaryTextColor"))
                         Text("auto_connect_description".localized)
                             .font(.caption)
-                            .foregroundColor(.black.opacity(0.7))
+                            .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
                     }
                     
                     Spacer()
                     
                     Toggle("", isOn: $settingsManager.isAutoConnectEnabled)
-                        .toggleStyle(SwitchToggleStyle(tint: .black))
+                        .toggleStyle(SwitchToggleStyle(tint: Color("ToggleAccentColor")))
                 }
                 .padding()
                 .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.black.opacity(0.1))
-                )
+                     RoundedRectangle(cornerRadius: 12)
+                         .fill(Color("SurfaceColor"))
+                 )
                 
                 // Voice Activation Setting
                 HStack {
@@ -257,21 +260,21 @@ struct SettingsView: View {
                         Text("voice_activation".localized)
                             .font(.body)
                             .fontWeight(.medium)
-                            .foregroundColor(.black)
+                            .foregroundColor(Color("PrimaryTextColor"))
                         Text("voice_activation_description".localized)
                             .font(.caption)
-                            .foregroundColor(.black.opacity(0.7))
+                            .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
                     }
                     
                     Spacer()
                     
                     Toggle("", isOn: $settingsManager.isVoiceActivationEnabled)
-                        .toggleStyle(SwitchToggleStyle(tint: .black))
+                        .toggleStyle(SwitchToggleStyle(tint: Color("ToggleAccentColor")))
                 }
                 .padding()
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.black.opacity(0.1))
+                        .fill(Color("SurfaceColor"))
                 )
                 
                 // Voice Activation Threshold (only when voice activation is enabled)
@@ -281,28 +284,28 @@ struct SettingsView: View {
                             Text("voice_sensitivity".localized)
                                 .font(.body)
                                 .fontWeight(.medium)
-                                .foregroundColor(.black)
+                                .foregroundColor(Color("PrimaryTextColor"))
                             Text("voice_sensitivity_description".localized)
                                 .font(.caption)
-                                .foregroundColor(.black.opacity(0.7))
+                                .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
                         }
                         
                         Spacer()
                         
                         VStack {
                             Slider(value: $settingsManager.voiceActivationThreshold, in: 0.1...0.8, step: 0.1)
-                                .accentColor(.black)
+                                .accentColor(Color("PrimaryTextColor"))
                             
                             Text("\(Int(settingsManager.voiceActivationThreshold * 100))%")
                                 .font(.caption2)
-                                .foregroundColor(.black.opacity(0.7))
+                                .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
                         }
                         .frame(width: 100)
                     }
                     .padding()
                     .background(
                         RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.black.opacity(0.1))
+                            .fill(Color("SurfaceColor"))
                     )
                 }
                 
@@ -312,21 +315,21 @@ struct SettingsView: View {
                         Text("low_power_mode".localized)
                             .font(.body)
                             .fontWeight(.medium)
-                            .foregroundColor(.black)
+                            .foregroundColor(Color("PrimaryTextColor"))
                         Text("low_power_mode_description".localized)
                             .font(.caption)
-                            .foregroundColor(.black.opacity(0.7))
+                            .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
                     }
                     
                     Spacer()
                     
                     Toggle("", isOn: $settingsManager.isLowPowerModeEnabled)
-                        .toggleStyle(SwitchToggleStyle(tint: .black))
+                        .toggleStyle(SwitchToggleStyle(tint: Color("ToggleAccentColor")))
                 }
                 .padding()
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                         .fill(Color.black.opacity(0.1))
+                          .fill(Color("SurfaceColor"))
                  )
                  
                  // Reset Settings Button
@@ -359,7 +362,7 @@ struct SettingsView: View {
          .padding()
          .background(
              RoundedRectangle(cornerRadius: 15)
-                 .fill(Color.white.opacity(0.9))
+                 .fill(Color("SurfaceColor"))
          )
      }
     
@@ -367,11 +370,11 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 15) {
             HStack {
                 Image(systemName: "chart.line.uptrend.xyaxis")
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                 Text("performance".localized)
                     .font(.headline)
                     .fontWeight(.bold)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                 Spacer()
             }
             
@@ -402,9 +405,9 @@ struct SettingsView: View {
         }
         .padding()
         .background(
-            RoundedRectangle(cornerRadius: 15)
-                .fill(Color.white.opacity(0.9))
-        )
+                 RoundedRectangle(cornerRadius: 15)
+                     .fill(Color("SurfaceColor"))
+             )
         .sheet(isPresented: $showingPerformance) {
             PerformanceStatsView()
         }
@@ -414,11 +417,11 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 15) {
             HStack {
                 Image(systemName: "info.circle")
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                 Text("how_to_use".localized)
                     .font(.headline)
                     .fontWeight(.bold)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                 Spacer()
             }
             
@@ -456,20 +459,20 @@ struct SettingsView: View {
         }
         .padding()
         .background(
-            RoundedRectangle(cornerRadius: 15)
-                .fill(Color.white.opacity(0.9))
-        )
+             RoundedRectangle(cornerRadius: 15)
+                 .fill(Color("SurfaceColor"))
+         )
     }
     
     private var appInfoSection: some View {
         VStack(alignment: .leading, spacing: 15) {
             HStack {
                 Image(systemName: "app.badge")
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                 Text("app_info".localized)
                     .font(.headline)
                     .fontWeight(.bold)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                 Spacer()
             }
             
@@ -477,11 +480,11 @@ struct SettingsView: View {
                 HStack {
                     Text("version".localized)
                         .font(.body)
-                        .foregroundColor(.black)
+                        .foregroundColor(Color("PrimaryTextColor"))
                     Spacer()
                     Text("1.0.0")
                         .font(.body)
-                        .foregroundColor(.black.opacity(0.7))
+                        .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
                 }
                 
                 Divider()
@@ -489,11 +492,11 @@ struct SettingsView: View {
                 HStack {
                     Text("developed_by".localized)
                         .font(.body)
-                        .foregroundColor(.black)
+                        .foregroundColor(Color("PrimaryTextColor"))
                     Spacer()
                     Text("Andrea Piani - Immaginet Srl")
                         .font(.body)
-                        .foregroundColor(.black.opacity(0.7))
+                        .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
                 }
                 
                 Divider()
@@ -501,7 +504,7 @@ struct SettingsView: View {
                 HStack {
                     Text("website".localized)
                         .font(.body)
-                        .foregroundColor(.black)
+                        .foregroundColor(Color("PrimaryTextColor"))
                     Spacer()
                     Text("www.andreapiani.com")
                         .font(.body)
@@ -511,13 +514,13 @@ struct SettingsView: View {
             .padding()
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(Color.black.opacity(0.1))
+                    .fill(Color("SurfaceColor"))
             )
         }
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 15)
-                .fill(Color.white.opacity(0.9))
+                .fill(Color("SurfaceColor"))
         )
     }
     
@@ -525,11 +528,11 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 15) {
             HStack {
                 Image(systemName: "heart.fill")
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                 Text("support_development".localized)
                     .font(.headline)
                     .fontWeight(.bold)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                 Spacer()
             }
             
@@ -538,14 +541,14 @@ struct SettingsView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("support_description".localized)
                             .font(.body)
-                            .foregroundColor(.black)
+                            .foregroundColor(Color("PrimaryTextColor"))
                     }
                     Spacer()
                 }
                 .padding()
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.black.opacity(0.1))
+                        .fill(Color("SurfaceColor"))
                 )
                 
                 Button(action: {
@@ -572,15 +575,15 @@ struct SettingsView: View {
         }
         .padding()
         .background(
-            RoundedRectangle(cornerRadius: 15)
-                .fill(Color.white.opacity(0.9))
-        )
+             RoundedRectangle(cornerRadius: 15)
+                 .fill(Color("SurfaceColor"))
+         )
     }
     
     private func instructionItem(icon: String, title: String, description: String) -> some View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: icon)
-                .foregroundColor(.black)
+                .foregroundColor(Color("PrimaryTextColor"))
                 .font(.title3)
                 .frame(width: 24)
             
@@ -588,11 +591,11 @@ struct SettingsView: View {
                 Text(title)
                     .font(.body)
                     .fontWeight(.semibold)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                 
                 Text(description)
                     .font(.caption)
-                    .foregroundColor(.black.opacity(0.7))
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
                     .fixedSize(horizontal: false, vertical: true)
             }
             
@@ -601,7 +604,51 @@ struct SettingsView: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color.black.opacity(0.1))
+                .fill(Color("SurfaceColor"))
+        )
+    }
+    
+    private var appearanceSection: some View {
+        VStack(alignment: .leading, spacing: 15) {
+            HStack {
+                Image(systemName: "paintbrush.fill")
+                    .foregroundColor(Color("PrimaryTextColor"))
+                Text("appearance".localized)
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(Color("PrimaryTextColor"))
+                Spacer()
+            }
+            
+            VStack(spacing: 12) {
+                // Dark Mode Toggle
+                HStack {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("dark_mode".localized)
+                            .font(.body)
+                            .fontWeight(.medium)
+                            .foregroundColor(Color("PrimaryTextColor"))
+                        Text("dark_mode_description".localized)
+                            .font(.caption)
+                            .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
+                    }
+                    
+                    Spacer()
+                    
+                    Toggle("", isOn: $settingsManager.isDarkModeEnabled)
+                        .toggleStyle(SwitchToggleStyle(tint: Color("ToggleAccentColor")))
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color("SurfaceColor"))
+                )
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 15)
+                .fill(Color("SurfaceColor"))
         )
     }
     
@@ -609,11 +656,11 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 15) {
             HStack {
                 Image(systemName: "mountain.2.fill")
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                 Text("peak_app_title".localized)
                     .font(.headline)
                     .fontWeight(.bold)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                 Spacer()
             }
             
@@ -622,14 +669,14 @@ struct SettingsView: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("peak_app_description".localized)
                             .font(.body)
-                            .foregroundColor(.black)
+                            .foregroundColor(Color("PrimaryTextColor"))
                     }
                     Spacer()
                 }
                 .padding()
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.black.opacity(0.1))
+                        .fill(Color("SurfaceColor"))
                 )
                 
                 Button(action: {
@@ -657,7 +704,7 @@ struct SettingsView: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 15)
-                .fill(Color.white.opacity(0.9))
+                .fill(Color("SurfaceColor"))
         )
     }
 }

@@ -24,6 +24,7 @@ class SettingsManager: ObservableObject {
         static let isVoiceActivationEnabled = "isVoiceActivationEnabled"
         static let voiceActivationThreshold = "voiceActivationThreshold"
         static let isLowPowerModeEnabled = "isLowPowerModeEnabled"
+        static let isDarkModeEnabled = "isDarkModeEnabled"
     }
     
     // MARK: - Published Properties
@@ -79,6 +80,13 @@ class SettingsManager: ObservableObject {
         }
     }
     
+    @Published var isDarkModeEnabled: Bool {
+        didSet {
+            userDefaults.set(isDarkModeEnabled, forKey: Keys.isDarkModeEnabled)
+            firebaseManager.trackSettingsChange(setting: "darkMode", value: "\(isDarkModeEnabled)")
+        }
+    }
+    
     // MARK: - Initialization
     private init() {
         // Carica le impostazioni salvate o usa i valori di default
@@ -90,6 +98,7 @@ class SettingsManager: ObservableObject {
         self.isVoiceActivationEnabled = userDefaults.object(forKey: Keys.isVoiceActivationEnabled) as? Bool ?? false
         self.voiceActivationThreshold = userDefaults.object(forKey: Keys.voiceActivationThreshold) as? Float ?? 0.3
         self.isLowPowerModeEnabled = userDefaults.object(forKey: Keys.isLowPowerModeEnabled) as? Bool ?? false
+        self.isDarkModeEnabled = userDefaults.object(forKey: Keys.isDarkModeEnabled) as? Bool ?? false
         
         // Debug print dopo l'inizializzazione completa
         print("⚙️ SettingsManager: isHapticFeedbackEnabled inizializzato a \(isHapticFeedbackEnabled)")
@@ -107,6 +116,7 @@ class SettingsManager: ObservableObject {
         isVoiceActivationEnabled = false
         voiceActivationThreshold = 0.3
         isLowPowerModeEnabled = false
+        isDarkModeEnabled = false
     }
     
     /// Sincronizza le impostazioni con UserDefaults

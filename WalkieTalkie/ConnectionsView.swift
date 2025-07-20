@@ -46,16 +46,16 @@ struct ConnectionsView: View {
         VStack(spacing: 8) {
             Image(systemName: "antenna.radiowaves.left.and.right")
                 .font(.system(size: 40))
-                .foregroundColor(.black)
+                .foregroundColor(Color("PrimaryTextColor"))
             
             Text("connections".localized)
                 .font(.largeTitle)
                 .fontWeight(.bold)
-                .foregroundColor(.black)
+                .foregroundColor(Color("PrimaryTextColor"))
             
             Text("manage_connections".localized)
                 .font(.caption)
-                .foregroundColor(.black.opacity(0.7))
+                .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
         }
     }
     
@@ -65,7 +65,7 @@ struct ConnectionsView: View {
                 Text("device".localized + ": \(multipeerManager.localPeerID.displayName)")
                     .font(.subheadline)
                     .fontWeight(.medium)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                 
                 HStack {
                     Text("connected_devices".localized + ": \(multipeerManager.connectedPeers.count)")
@@ -99,7 +99,7 @@ struct ConnectionsView: View {
         .padding(.vertical, 12)
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color.white.opacity(0.4))
+                .fill(Color("SurfaceColor"))
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
                         .stroke(Color.black.opacity(0.1), lineWidth: 1)
@@ -116,7 +116,7 @@ struct ConnectionsView: View {
                 
                 Text("advertising".localized + ": \(multipeerManager.isAdvertising ? "on".localized : "off".localized)")
                     .font(.subheadline)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                 
                 Spacer()
             }
@@ -128,7 +128,7 @@ struct ConnectionsView: View {
                 
                 Text("browsing".localized + ": \(multipeerManager.isBrowsing ? "on".localized : "off".localized)")
                     .font(.subheadline)
-                    .foregroundColor(.black)
+                    .foregroundColor(Color("PrimaryTextColor"))
                 
                 Spacer()
             }
@@ -136,7 +136,7 @@ struct ConnectionsView: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color.white.opacity(0.3))
+                .fill(Color("SurfaceColor"))
         )
     }
     
@@ -144,22 +144,22 @@ struct ConnectionsView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("connected_devices".localized + " (\(multipeerManager.connectedPeers.count))")
                 .font(.headline)
-                .foregroundColor(.black)
+                .foregroundColor(Color("PrimaryTextColor"))
             
             if multipeerManager.connectedPeers.isEmpty {
                 VStack {
                     Image(systemName: "antenna.radiowaves.left.and.right.slash")
                         .font(.system(size: 40))
-                        .foregroundColor(.black.opacity(0.5))
+                        .foregroundColor(Color("PrimaryTextColor").opacity(0.5))
                     
                     Text("no_devices_connected".localized)
-                        .font(.subheadline)
-                        .foregroundColor(.black.opacity(0.7))
+                    .font(.subheadline)
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
                     
                     Text("devices_nearby_hint".localized)
-                        .font(.caption)
-                        .foregroundColor(.black.opacity(0.5))
-                        .multilineTextAlignment(.center)
+                    .font(.caption)
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.5))
+                    .multilineTextAlignment(.center)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 30)
@@ -167,13 +167,13 @@ struct ConnectionsView: View {
                 ForEach(multipeerManager.connectedPeers, id: \.self) { peer in
                     HStack {
                         Image(systemName: "iphone")
-                            .foregroundColor(.black)
+                            .foregroundColor(Color("PrimaryTextColor"))
                         
                         VStack(alignment: .leading) {
                             Text(peer.displayName)
                                 .font(.subheadline)
                                 .fontWeight(.medium)
-                                .foregroundColor(.black)
+                                .foregroundColor(Color("PrimaryTextColor"))
                             
                             Text("connected".localized)
                                 .font(.caption)
@@ -189,7 +189,7 @@ struct ConnectionsView: View {
                     .padding()
                     .background(
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(Color.white.opacity(0.3))
+                            .fill(Color("SurfaceColor"))
                     )
                 }
             }
@@ -235,12 +235,12 @@ struct ConnectionsView: View {
                     Image(systemName: "arrow.clockwise")
                     Text("restart_discovery".localized)
                 }
-                .foregroundColor(.black)
+                .foregroundColor(Color("PrimaryTextColor"))
                 .padding()
                 .frame(maxWidth: .infinity)
                 .background(
                     RoundedRectangle(cornerRadius: 10)
-                        .fill(Color.white.opacity(0.8))
+                        .fill(Color("SurfaceColor"))
                 )
             }
         }

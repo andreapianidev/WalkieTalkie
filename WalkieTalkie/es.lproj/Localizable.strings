@@ -144,6 +144,17 @@
 "support_description" = "Si te gusta esta app, considera apoyar al desarrollador";
 "view_performance" = "Ver Estadísticas de Rendimiento";
 
+// MARK: - Background Audio
+"background_playback" = "Reproducción en Segundo Plano";
+"background_playback_description" = "Continuar reproducción de radio cuando la app está en segundo plano";
+"now_playing" = "Reproduciendo Ahora";
+"control_center_info" = "Controla la reproducción desde el Centro de Control y la pantalla de bloqueo";
+
+// MARK: - Appearance
+"appearance" = "Apariencia";
+"dark_mode" = "Modo Oscuro";
+"dark_mode_description" = "Usar tema oscuro para la interfaz de la app";
+
 // MARK: - Peak App
 "peak_app_title" = "Peak: Altímetro para Excursionistas";
 "peak_app_description" = "Altímetro gratuito para excursionistas con IA y walkie talkie integrado";
@@ -158,6 +169,34 @@
 
 // MARK: - Errors
 "no_connected_peers" = "No hay dispositivos conectados";
+
+// MARK: - Onboarding
+"onboarding_welcome_title" = "Bienvenido a WalkieTalkie";
+"onboarding_welcome_subtitle" = "Comunicación walkie-talkie profesional para tus aventuras";
+"onboarding_how_it_works_title" = "Cómo Funciona";
+"onboarding_how_it_works_description" = "WalkieTalkie transforma tu iPhone en un dispositivo walkie-talkie profesional para comunicación fluida con dispositivos cercanos.";
+"onboarding_connectivity_title" = "Conectividad Avanzada";
+"onboarding_connectivity_description" = "Múltiples métodos de conexión aseguran comunicación confiable:";
+"onboarding_bluetooth_feature" = "• Bluetooth para comunicación de corto alcance";
+"onboarding_wifi_feature" = "• Wi-Fi para rendimiento mejorado";
+"onboarding_multipeer_feature" = "• Multipeer Connectivity de Apple para red mesh";
+"onboarding_range_feature" = "• Hasta 1km de alcance en condiciones óptimas";
+"onboarding_frequency_title" = "Sistema de Frecuencias";
+"onboarding_frequency_description" = "Todos los dispositivos deben estar configurados en la misma frecuencia para comunicarse. La frecuencia home predeterminada es 428.283 MHz.";
+"onboarding_home_frequency" = "Frecuencia Home: 428.283 MHz";
+"onboarding_permissions_title" = "Permisos Requeridos";
+"onboarding_permissions_description" = "Para brindar la mejor experiencia, WalkieTalkie necesita acceso a:";
+"onboarding_microphone_permission" = "• Micrófono - Esencial para transmisión de voz";
+"onboarding_network_permission" = "• Red Local - Requerida para descubrimiento de dispositivos";
+"onboarding_bluetooth_permission" = "• Bluetooth - Para conectividad de dispositivos";
+"onboarding_notification_permission" = "• Notificaciones - Para llamadas entrantes y alertas";
+"onboarding_continue" = "Continuar";
+"onboarding_get_started" = "Comenzar";
+"onboarding_allow_permissions" = "Permitir Permisos";
+"onboarding_skip" = "Omitir";
+"onboarding_up_to_eight_devices" = "Conecta hasta 8 dispositivos simultáneamente";
+"onboarding_mountain_use" = "Perfecto para expediciones de montaña";
+"onboarding_excursion_use" = "Ideal para senderismo y actividades al aire libre";}]}}
 
 
 
