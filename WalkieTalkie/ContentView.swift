@@ -739,32 +739,33 @@ struct ContentView: View {
         Button(action: {
             openPeakApp()
         }) {
-            HStack(spacing: 10) {
+            HStack(spacing: 8) {
                 Text("⛰️")
-                    .font(.title3)
+                    .font(.caption)
 
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("peak_altimeter_free".localized)
-                        .font(.caption)
-                        .fontWeight(.medium)
-                        .foregroundColor(.primary)
+                Text("peak_altimeter_free".localized)
+                    .font(.caption2)
+                    .foregroundColor(.gray)
 
-                    Text("peak_walkie_ai_description".localized)
-                        .font(.caption2)
-                        .foregroundColor(.secondary)
-                }
+                Text("•")
+                    .font(.caption2)
+                    .foregroundColor(.gray)
+
+                Text("peak_walkie_ai_description".localized)
+                    .font(.caption2)
+                    .foregroundColor(.gray)
 
                 Spacer()
 
-                Image(systemName: "arrow.up.right")
+                Image(systemName: "arrow.up.right.circle.fill")
                     .font(.caption)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.gray)
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 6)
             .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color("SurfaceColor").opacity(0.7))
+                RoundedRectangle(cornerRadius: 15)
+                    .fill(Color.black.opacity(0.8))
             )
         }
         .buttonStyle(.plain)
