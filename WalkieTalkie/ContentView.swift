@@ -87,9 +87,6 @@ struct ContentView: View {
                         }
                     }
 
-                    // Promotional banner for Peak app
-                    peakAppPromotionBanner
-
                     // Spazio per la tab bar
                     Spacer()
                         .frame(height: 100)
@@ -645,32 +642,39 @@ struct ContentView: View {
     }
     
     private var tabBarView: some View {
-        HStack {
-            // Tab buttons
-            TabButton(icon: "grid.circle.fill", title: "talk".localized, isSelected: selectedTab == 0) {
-                selectedTab = 0
+        VStack(spacing: 0) {
+            // Peak promotion button integrated with tab bar
+            peakAppPromotionBanner
+                .padding(.horizontal, 20)
+                .padding(.bottom, 8)
+
+            HStack {
+                // Tab buttons
+                TabButton(icon: "grid.circle.fill", title: "talk".localized, isSelected: selectedTab == 0) {
+                    selectedTab = 0
+                }
+
+                TabButton(icon: "magnifyingglass", title: "explore".localized, isSelected: selectedTab == 1) {
+                    selectedTab = 1
+                }
+
+                TabButton(icon: "antenna.radiowaves.left.and.right", title: "connections".localized, isSelected: selectedTab == 2) {
+                    selectedTab = 2
+                }
+
+                TabButton(icon: "gearshape.fill", title: "settings_tab".localized, isSelected: selectedTab == 3) {
+                    selectedTab = 3
+                }
             }
-            
-            TabButton(icon: "magnifyingglass", title: "explore".localized, isSelected: selectedTab == 1) {
-                selectedTab = 1
-            }
-            
-            TabButton(icon: "antenna.radiowaves.left.and.right", title: "connections".localized, isSelected: selectedTab == 2) {
-                selectedTab = 2
-            }
-            
-            TabButton(icon: "gearshape.fill", title: "settings_tab".localized, isSelected: selectedTab == 3) {
-                selectedTab = 3
-            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 15)
+            .background(
+                RoundedRectangle(cornerRadius: 25)
+                    .fill(Color.black)
+            )
+            .padding(.horizontal, 20)
+            .padding(.bottom, 30)
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 15)
-        .background(
-            RoundedRectangle(cornerRadius: 25)
-                .fill(Color.black)
-        )
-        .padding(.horizontal, 20)
-         .padding(.bottom, 30)
         .onAppear {
             setupMultipeerConnection()
         }
