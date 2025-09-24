@@ -86,7 +86,10 @@ struct ContentView: View {
                             Spacer()
                         }
                     }
-                    
+
+                    // Promotional banner for Peak app
+                    peakAppPromotionBanner
+
                     // Spazio per la tab bar
                     Spacer()
                         .frame(height: 100)
@@ -727,6 +730,51 @@ struct ContentView: View {
         }
     }
     
+    // MARK: - Peak App Promotion Button
+    private var peakAppPromotionBanner: some View {
+        Button(action: {
+            openPeakApp()
+        }) {
+            HStack(spacing: 10) {
+                Text("⛰️")
+                    .font(.title3)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("peak_altimeter_free".localized)
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundColor(.primary)
+
+                    Text("peak_walkie_ai_description".localized)
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                }
+
+                Spacer()
+
+                Image(systemName: "arrow.up.right")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color("SurfaceColor").opacity(0.7))
+            )
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func openPeakApp() {
+        // Universal App Store link (works for all countries)
+        let peakAppURL = "https://apps.apple.com/us/app/peak-altimeter-gps-barometer/id6477742031"
+
+        if let url = URL(string: peakAppURL) {
+            UIApplication.shared.open(url)
+        }
+    }
+
     // MARK: - Helper Functions
     
     private func previousFrequency() {

@@ -239,6 +239,16 @@ class MultipeerManager: NSObject, ObservableObject {
         pendingInvitationHandler = nil
     }
     
+    // MARK: - Simulator Detection
+
+    private var isRunningOnSimulator: Bool {
+        #if targetEnvironment(simulator)
+        return true
+        #else
+        return false
+        #endif
+    }
+
     // MARK: - Connection Management Methods
     
     func setConnectionTimeout(_ timeout: TimeInterval) {
@@ -464,6 +474,7 @@ class MultipeerManager: NSObject, ObservableObject {
     func startTransmitting() {
         logger.logAudioInfo("Avvio trasmissione audio...")
 
+
         guard !connectedPeers.isEmpty else {
             lastError = WalkieTalkieError.noConnectedPeers
             return
@@ -492,6 +503,17 @@ class MultipeerManager: NSObject, ObservableObject {
 
         do {
             recordedAudioData = Data()
+
+            // Validazione formato prima di installare tap
+            guard audioFormat.sampleRate > 0 && audioFormat.channelCount > 0 else {
+                let error = WalkieTalkieError.invalidAudioFormat
+                logger.logAudioError(error, context: "Formato audio non valido: SR=\(audioFormat.sampleRate), CH=\(audioFormat.channelCount)")
+                DispatchQueue.main.async {
+                    self.lastError = error
+                }
+                return
+            }
+
             inputNode.installTap(onBus: 0, bufferSize: 1024, format: audioFormat) { [weak self] buffer, _ in
                 self?.accumulateAudioData(buffer)
             }

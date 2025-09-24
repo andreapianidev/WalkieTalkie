@@ -311,6 +311,25 @@ WalkieTalkie/
 
 This project is now open source and available for community contributions. See the LICENSE file for full details.
 
+## 🏔️ Peak - Complete Altimetry App
+
+**🎉 Exciting News!** The walkie-talkie functionality is now also available in our comprehensive altimetry app:
+
+### 📱 [Peak - GPS Altimeter Barometer](https://apps.apple.com/app/peak-altimetro-gps-barometro/id6477742031)
+
+**Why choose Peak?**
+- 🏔️ **Professional Altimetry**: Accurate GPS and barometric altitude measurements
+- 🧭 **Advanced Navigation**: Comprehensive GPS tools and compass functionality
+- 🌦️ **Weather Monitoring**: Real-time barometric pressure and weather tracking
+- 📡 **Built-in Walkie-Talkie**: All the communication features you love from this app
+- 🎯 **All-in-One Solution**: Complete outdoor adventure toolkit in one app
+
+**Peak combines the best of both worlds** - professional altimetry tools with the reliable walkie-talkie communication system you're already familiar with.
+
+[![Download Peak](https://img.shields.io/badge/Download-Peak%20App-blue?style=for-the-badge&logo=apple&logoColor=white)](https://apps.apple.com/app/peak-altimetro-gps-barometro/id6477742031)
+
+---
+
 ## 📞 Support & Community
 
 - **Developer**: Andrea Piani

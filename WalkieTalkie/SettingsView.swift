@@ -680,7 +680,8 @@ struct SettingsView: View {
                 )
                 
                 Button(action: {
-                    if let url = URL(string: "https://apps.apple.com/it/app/peak-altimetro-gps-barometro/id6477742031") {
+                    // Universal App Store link (works for all countries)
+                    if let url = URL(string: "https://apps.apple.com/app/peak-altimetro-gps-barometro/id6477742031") {
                         UIApplication.shared.open(url)
                     }
                 }) {

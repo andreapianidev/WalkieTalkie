@@ -20,6 +20,12 @@
 "developed_by" = "開發者";
 "website" = "網站";
 
+// MARK: - Peak App Promotion
+"peak_app_title" = "🏔️ Peak - GPS海拔儀";
+"peak_app_description" = "Walkie Talkie也可在Peak - GPS海拔氣壓計中使用";
+"download_peak" = "免費下載Peak";
+"peak_app_subtitle" = "具有整合對講機功能的完整海拔測量應用程式";
+
 // MARK: - Notifications
 "new_device_detected" = "偵測到新裝置";
 "device_detected_message" = "偵測到附近的 %@";

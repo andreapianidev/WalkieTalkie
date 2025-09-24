@@ -20,6 +20,12 @@
 "developed_by" = "Dibangunkan oleh";
 "website" = "Laman Web";
 
+// MARK: - Peak App Promotion
+"peak_app_title" = "🏔️ Peak - Altimeter GPS";
+"peak_app_description" = "Walkie Talkie juga tersedia dalam Peak - Altimeter GPS Barometer";
+"download_peak" = "Muat Turun Peak Percuma";
+"peak_app_subtitle" = "Aplikasi altimetri lengkap dengan ciri-ciri walkie-talkie yang terintegrasi";
+
 // MARK: - Notifications
 "new_device_detected" = "Peranti Baru Dikesan";
 "device_detected_message" = "%@ dikesan berdekatan";

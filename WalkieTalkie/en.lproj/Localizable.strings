@@ -20,6 +20,12 @@
 "developed_by" = "Developed by";
 "website" = "Website";
 
+// MARK: - Peak App Promotion
+"peak_app_title" = "📱 Peak - GPS Altimeter";
+"peak_app_description" = "Walkie Talkie is also available in Peak - GPS Altimeter Barometer";
+"download_peak" = "Download Peak Free";
+"peak_app_subtitle" = "Complete altimetry app with integrated walkie-talkie features";
+
 // MARK: - Notifications
 "new_device_detected" = "New Device Detected";
 "device_detected_message" = "%@ detected nearby";
@@ -187,6 +193,8 @@
 "peak_app_title" = "Peak: Altimeter for Hikers";
 "peak_app_description" = "Free altimeter for hikers with AI and integrated walkie talkie";
 "download_peak_app" = "Download Peak App";
+"peak_altimeter_free" = "Free Altimeter";
+"peak_walkie_ai_description" = "with Walkie Talkie & AI";
 
 // MARK: - Alerts
 "connection_request" = "Connection Request";
