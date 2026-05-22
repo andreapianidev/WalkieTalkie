@@ -49,6 +49,9 @@ struct StationBrowserSheet: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("close".localized) { dismiss() }
+                        .foregroundColor(Color("PrimaryTextColor"))
+                        .padding(.vertical, 6)
+                        .padding(.horizontal, 4)
                 }
             }
         }
@@ -292,14 +295,16 @@ struct StationBrowserSheet: View {
                             .background(Capsule().fill(Color.yellow))
                     }
                     HStack(spacing: 6) {
-                        Text(station.quality.rawValue)
-                            .font(.caption2.monospaced())
-                            .foregroundColor(.secondary)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(
-                                Capsule().stroke(Color.secondary.opacity(0.4), lineWidth: 1)
-                            )
+                        if station.quality != .unknown {
+                            Text(station.quality.rawValue)
+                                .font(.caption2.monospaced())
+                                .foregroundColor(.secondary)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(
+                                    Capsule().stroke(Color.secondary.opacity(0.4), lineWidth: 1)
+                                )
+                        }
 
                         Button {
                             HapticManager.shared.lightTap()

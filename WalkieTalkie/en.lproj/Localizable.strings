@@ -129,7 +129,7 @@
 "explore_title" = "Explore";
 "scan_nearby_devices" = "Scan nearby devices";
 "detected_devices" = "Detected Devices";
-"no_devices_detected" = "No device detected";
+"no_devices_detected" = "No devices detected";
 "ensure_devices_open" = "Make sure other devices have the app open";
 "available" = "Available";
 "strong" = "Strong";
@@ -196,7 +196,7 @@
 "wants_to_connect" = "wants to connect";
 "microphone_permission_required" = "Microphone Permission Required";
 "microphone_permission_message" = "The WalkieTalkie app needs microphone access to function properly. Without this permission, you won't be able to transmit audio.";
-"audio_transmission_error" = "Audio transmission error: The operation couldn't be completed. (com.apple.coreaudio.avfaudio error -10851.)";
+"audio_transmission_error" = "Audio transmission error. Please try again.";
 
 // MARK: - Errors
 "no_connected_peers" = "No connected devices";
@@ -407,3 +407,10 @@
 "now_playing_short" = "NOW";
 "pro_badge" = "PRO";
 "sleep_timer" = "Sleep Timer";
+
+// MARK: - Mode Switch & Onboarding Radio
+"mode_switch_hint" = "Tap the top-left button to switch between Walkie Talkie and FM Radio";
+"got_it" = "Got it";
+"onboarding.radio_mode.title" = "Walkie-Talkie + FM Radio";
+"onboarding.radio_mode.subtitle" = "Switch between modes with one tap";
+"onboarding.radio_mode.body" = "The top-left button lets you switch between Walkie-Talkie to chat with friends and FM Radio with 135 international stations.";

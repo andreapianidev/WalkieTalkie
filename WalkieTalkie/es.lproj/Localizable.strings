@@ -21,8 +21,8 @@
 "website" = "Sitio Web";
 
 // MARK: - Peak App Promotion
-"peak_app_title" = "📱 Peak - Altímetro GPS";
-"peak_app_description" = "Walkie Talkie también está disponible en Peak - Altímetro GPS Barómetro";
+"peak_app_title" = "Peak: Altímetro para Excursionistas";
+"peak_app_description" = "Altímetro gratuito para excursionistas con IA y walkie talkie integrado";
 "download_peak" = "Descargar Peak Gratis";
 "peak_app_subtitle" = "App completa de altimetría con funciones walkie-talkie integradas";
 
@@ -166,7 +166,7 @@
 "wants_to_connect" = "quiere conectarse";
 "microphone_permission_required" = "Permiso de Micrófono Requerido";
 "microphone_permission_message" = "La aplicación WalkieTalkie necesita acceso al micrófono para funcionar correctamente. Sin este permiso, no podrás transmitir audio.";
-"audio_transmission_error" = "Error de transmisión de audio: La operación no pudo completarse. (com.apple.coreaudio.avfaudio error -10851.)";
+"audio_transmission_error" = "Error de transmisión de audio. Inténtalo de nuevo.";
 
 // MARK: - Errors
 "no_connected_peers" = "No hay dispositivos conectados";
@@ -412,4 +412,11 @@
 "no_search_results" = "No se encontraron emisoras.";
 "now_playing_short" = "AHORA";
 "pro_badge" = "PRO";
-"sleep_timer" = "Temporizador";
+"sleep_timer" = "Temporizador de apagado";
+
+// MARK: - Mode Switch & Onboarding Radio
+"mode_switch_hint" = "Toca el botón superior izquierdo para cambiar entre Walkie Talkie y Radio FM";
+"got_it" = "Entendido";
+"onboarding.radio_mode.title" = "Walkie-Talkie + Radio FM";
+"onboarding.radio_mode.subtitle" = "Cambia entre los dos modos con un toque";
+"onboarding.radio_mode.body" = "El botón superior izquierdo te permite alternar entre Walkie-Talkie para hablar con amigos y Radio FM con 135 emisoras internacionales.";

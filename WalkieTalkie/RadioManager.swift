@@ -440,6 +440,15 @@ class RadioManager: NSObject, ObservableObject {
         radioStations.filter { $0.id > 30 }
     }
 
+    /// Pool di stazioni effettivamente navigabili dall'utente:
+    /// - utente Pro → tutte le 135
+    /// - utente Free → solo le 30 free
+    /// Usata da next/prev/jump/resume per evitare di sbattere sul paywall a ogni tap.
+    var availableStations: [RadioStation] {
+        let isProUser = UserDefaults.standard.bool(forKey: "fastboot_isProUser")
+        return isProUser ? radioStations : freeStations
+    }
+
     // MARK: - Favorites
 
     /// Stazioni preferite ordinate alfabeticamente per nome.
@@ -477,13 +486,22 @@ class RadioManager: NSObject, ObservableObject {
         return v == 0 ? nil : v
     }
 
-    /// Restituisce l'ultima stazione riprodotta, o la prima della lista se non c'è.
+    /// Restituisce l'ultima stazione riprodotta filtrata in base ai diritti utente.
+    /// Per gli utenti Free, se l'ultima stazione era Pro si effettua fallback alla prima Free
+    /// (evita di sbattere sul paywall ad ogni ingresso in modalità FM).
     /// Usata da ContentView per auto-resume all'apertura della modalità FM.
     var resumeStation: RadioStation {
-        if let id = lastStationId, let s = radioStations.first(where: { $0.id == id }) {
+        let pool = availableStations
+        if let id = lastStationId, let s = pool.first(where: { $0.id == id }) {
             return s
         }
-        return radioStations[0]
+        // Fallback sicuro: prima stazione disponibile, altrimenti prima free (RTL 102.5).
+        // freeStations è derivata da radioStations (let) che contiene sempre gli id 1...30,
+        // quindi `freeStations.first` non può essere nil. Se mai dovesse esserlo (catastrofe
+        // di build con array vuoto), restituiamo una stazione stub invece di crashare.
+        return pool.first
+            ?? freeStations.first
+            ?? RadioStation(id: 1, name: "RTL 102.5", country: "Italia", frequency: "102.5", streamURL: "https://streamingv2.shoutcast.com/rtl-1025", genre: "Pop")
     }
 
     // MARK: - Locale-based grouping
@@ -506,7 +524,14 @@ class RadioManager: NSObject, ObservableObject {
     }
 
     /// Tutte le coppie (paese, stazioni) ordinate: paese locale per primo, poi alfabetico.
+    /// Cache lazy: `radioStations` è `let` e `deviceCountry` è derivato dal Locale (immutabile
+    /// a runtime), quindi è sicuro calcolare una sola volta ed evitare il re-bucket
+    /// di 135 record su ogni keystroke della search bar.
     var stationsGroupedByCountry: [(country: String, stations: [RadioStation])] {
+        _stationsGroupedByCountry
+    }
+
+    private lazy var _stationsGroupedByCountry: [(country: String, stations: [RadioStation])] = {
         let local = deviceCountry
         let grouped = Dictionary(grouping: radioStations) { $0.country }
         return grouped
@@ -516,25 +541,34 @@ class RadioManager: NSObject, ObservableObject {
                 if b.country == local { return false }
                 return a.country < b.country
             }
-    }
+    }()
 
     /// Tutte le coppie (genere, stazioni) ordinate alfabeticamente.
+    /// Cache lazy: i dati sono statici, calcoliamo una sola volta.
     var stationsGroupedByGenre: [(genre: String, stations: [RadioStation])] {
+        _stationsGroupedByGenre
+    }
+
+    private lazy var _stationsGroupedByGenre: [(genre: String, stations: [RadioStation])] = {
         let grouped = Dictionary(grouping: radioStations) { $0.genre }
         return grouped
             .map { (genre: $0.key, stations: $0.value.sorted { $0.name < $1.name }) }
             .sorted { $0.genre < $1.genre }
-    }
+    }()
 
     // MARK: - Jump navigation (long-press +10/-10)
 
     /// Salta avanti di N stazioni (con wrap-around).
+    /// Naviga solo tra le stazioni accessibili all'utente (free per Free, tutte per Pro)
+    /// così un long-press +10 non finisce mai su una stazione Pro per un utente Free.
     func jumpStations(by offset: Int) {
-        guard !radioStations.isEmpty else { return }
-        let currentIndex = currentStation.flatMap { c in radioStations.firstIndex { $0.id == c.id } } ?? 0
-        let count = radioStations.count
+        let pool = availableStations
+        guard !pool.isEmpty else { return }
+        // Se la stazione corrente non è nel pool (es. Pro scaduto mid-sessione) si parte da 0.
+        let currentIndex = currentStation.flatMap { c in pool.firstIndex { $0.id == c.id } } ?? 0
+        let count = pool.count
         let newIndex = ((currentIndex + offset) % count + count) % count
-        playStation(radioStations[newIndex])
+        playStation(pool[newIndex])
     }
 
     private static let regionToCountry: [String: String] = [
@@ -569,29 +603,33 @@ class RadioManager: NSObject, ObservableObject {
     }
     
     func nextStation() {
+        // Naviga solo tra le stazioni effettivamente disponibili per evitare paywall storm.
+        let pool = availableStations
         guard let current = currentStation,
-              let currentIndex = radioStations.firstIndex(where: { $0.id == current.id }) else {
-            if !radioStations.isEmpty {
-                playStation(radioStations[0])
+              let currentIndex = pool.firstIndex(where: { $0.id == current.id }) else {
+            if let first = pool.first {
+                playStation(first)
             }
             return
         }
-        
-        let nextIndex = (currentIndex + 1) % radioStations.count
-        playStation(radioStations[nextIndex])
+
+        let nextIndex = (currentIndex + 1) % pool.count
+        playStation(pool[nextIndex])
     }
-    
+
     func previousStation() {
+        // Naviga solo tra le stazioni effettivamente disponibili per evitare paywall storm.
+        let pool = availableStations
         guard let current = currentStation,
-              let currentIndex = radioStations.firstIndex(where: { $0.id == current.id }) else {
-            if !radioStations.isEmpty, let lastStation = radioStations.last {
+              let currentIndex = pool.firstIndex(where: { $0.id == current.id }) else {
+            if let lastStation = pool.last {
                 playStation(lastStation)
             }
             return
         }
-        
-        let previousIndex = currentIndex == 0 ? radioStations.count - 1 : currentIndex - 1
-        playStation(radioStations[previousIndex])
+
+        let previousIndex = currentIndex == 0 ? pool.count - 1 : currentIndex - 1
+        playStation(pool[previousIndex])
     }
     
     // MARK: - Now Playing Info
@@ -616,31 +654,36 @@ class RadioManager: NSObject, ObservableObject {
     
     private func setupRemoteCommandCenter() {
         let commandCenter = MPRemoteCommandCenter.shared()
-        
+
+        // I callback di MPRemoteCommandCenter sono invocati off-main da MediaPlayer.
+        // La classe non è @MainActor per evitare ripple negli altri call site
+        // (ContentView, AudioManager etc), quindi marshal-iamo esplicitamente sul main
+        // dentro ogni handler. Tutte le mutazioni di @Published avvengono su main.
+
         // Play command
         commandCenter.playCommand.addTarget { [weak self] _ in
-            self?.resumeRadio()
+            DispatchQueue.main.async { self?.resumeRadio() }
             return .success
         }
-        
+
         // Pause command
         commandCenter.pauseCommand.addTarget { [weak self] _ in
-            self?.pauseRadio()
+            DispatchQueue.main.async { self?.pauseRadio() }
             return .success
         }
-        
+
         // Next track command
         commandCenter.nextTrackCommand.addTarget { [weak self] _ in
-            self?.nextStation()
+            DispatchQueue.main.async { self?.nextStation() }
             return .success
         }
-        
+
         // Previous track command
         commandCenter.previousTrackCommand.addTarget { [weak self] _ in
-            self?.previousStation()
+            DispatchQueue.main.async { self?.previousStation() }
             return .success
         }
-        
+
         logger.logAudioInfo("Remote Command Center configurato")
     }
     

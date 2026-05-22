@@ -93,16 +93,16 @@
 // MARK: - Radio
 "station" = "電台";
 "no_station" = "無電台";
-"buffering" = "緩衝中...";
+"buffering" = "緩衝中…";
 "genre" = "類型";
 "country" = "國家";
-"scanning" = "掃描中...";
+"scanning" = "掃描中…";
 
 // MARK: - Connections View
 "connections_title" = "連接";
 "manage_connections" = "管理對講機連接";
 "connected_devices" = "已連接的裝置";
-"scanning_in_progress" = "掃描進行中...";
+"scanning_in_progress" = "掃描進行中…";
 "offline" = "離線";
 "online" = "線上";
 "advertising" = "廣播中";
@@ -187,7 +187,7 @@
 "wants_to_connect" = "想要連接";
 "microphone_permission_required" = "需要麥克風權限";
 "microphone_permission_message" = "WalkieTalkie 應用程式需要麥克風存取權限才能正常運作。沒有此權限，您將無法傳輸音訊。";
-"audio_transmission_error" = "音訊傳輸錯誤：操作無法完成。(com.apple.coreaudio.avfaudio error -10851.)";
+"audio_transmission_error" = "音訊傳輸錯誤，請再試一次。";
 
 // MARK: - Errors
 "no_connected_peers" = "無連接的裝置";
@@ -235,10 +235,10 @@
 "coach_press_ptt_body" = "按住中央按鈕說話，放開後聆聽。";
 "coach_dismiss" = "我知道了";
 "ads_section_title" = "廣告與隱私";
-"watch_ad_remove_ads" = "觀看影片,無廣告";
+"watch_ad_remove_ads" = "觀看影片，無廣告";
 "watch_ad_remove_ads_subtitle" = "1 小時無廣告";
 "ads_removed_active" = "廣告已停用";
-"ads_removed_remaining" = "剩餘:%d 分鐘";
+"ads_removed_remaining" = "剩餘：%d 分鐘";
 "manage_privacy" = "管理隱私偏好設定";
 
 /* MARK: - Talky Pro features (added 2026-05) */
@@ -298,7 +298,7 @@
 "theme.name.aurora" = "極光";
 "theme.name.submarine" = "潛艇";
 "theme.name.hamRadio" = "業餘無線電";
-"theme.name.festival" = "慶典";
+"theme.name.festival" = "音樂祭";
 "theme.name.blackHole" = "黑洞";
 "theme.name.galaxy" = "銀河";
 
@@ -406,6 +406,13 @@
 "no_favorites_hint" = "尚無最愛。長按電台即可加入。";
 "no_recents" = "尚無最近播放的電台。";
 "no_search_results" = "找不到電台。";
-"now_playing_short" = "正在播放";
+"now_playing_short" = "播放";
 "pro_badge" = "PRO";
 "sleep_timer" = "睡眠定時器";
+
+// MARK: - Mode Switch & Onboarding Radio
+"mode_switch_hint" = "點擊左上角按鈕在對講機與 FM 電台之間切換";
+"got_it" = "明白";
+"onboarding.radio_mode.title" = "對講機 + FM 電台";
+"onboarding.radio_mode.subtitle" = "一鍵切換兩種模式";
+"onboarding.radio_mode.body" = "左上角的按鈕讓您在與朋友通話的對講機模式和擁有 135 個國際電台的 FM 電台之間切換。";

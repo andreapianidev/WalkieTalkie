@@ -119,9 +119,9 @@ struct ThemePurchaseSheet: View {
             } label: {
                 Image(systemName: "xmark")
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(.white.opacity(0.7))
-                    .frame(width: 32, height: 32)
-                    .background(Circle().fill(Color.white.opacity(0.1)))
+                    .foregroundColor(.white)
+                    .frame(width: 36, height: 36)
+                    .background(Circle().fill(Color.white.opacity(0.18)))
             }
             .accessibilityLabel("paywall.close".localized)
         }

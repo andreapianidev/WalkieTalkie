@@ -56,6 +56,9 @@ struct PrivateChannelSheet: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("private_channels.close".localized) { dismiss() }
+                        .foregroundColor(Color("PrimaryTextColor"))
+                        .padding(.vertical, 6)
+                        .padding(.horizontal, 4)
                 }
             }
         }

@@ -44,7 +44,9 @@ struct SleepTimerSheet: View {
                     Button("sleep_timer.close".localized) {
                         dismiss()
                     }
-                    .foregroundColor(accent)
+                    .foregroundColor(Color("PrimaryTextColor"))
+                    .padding(.vertical, 6)
+                    .padding(.horizontal, 4)
                 }
             }
         }

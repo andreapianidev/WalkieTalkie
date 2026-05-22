@@ -93,7 +93,7 @@
 // MARK: - Radio
 "station" = "Stesen";
 "no_station" = "Tiada stesen";
-"buffering" = "Menimbal...";
+"buffering" = "Menimbal…";
 "genre" = "Genre";
 "country" = "Negara";
 "scanning" = "Mengimbas...";
@@ -187,7 +187,7 @@
 "wants_to_connect" = "mahu menyambung";
 "microphone_permission_required" = "Kebenaran Mikrofon Diperlukan";
 "microphone_permission_message" = "Aplikasi WalkieTalkie memerlukan akses mikrofon untuk berfungsi dengan betul. Tanpa kebenaran ini, anda tidak akan dapat menghantar audio.";
-"audio_transmission_error" = "Ralat penghantaran audio: Operasi tidak dapat diselesaikan. (com.apple.coreaudio.avfaudio error -10851.)";
+"audio_transmission_error" = "Ralat penghantaran audio. Sila cuba lagi.";
 
 // MARK: - Errors
 "no_connected_peers" = "Tiada peranti disambung";
@@ -409,3 +409,10 @@
 "now_playing_short" = "KINI";
 "pro_badge" = "PRO";
 "sleep_timer" = "Pemasa Tidur";
+
+// MARK: - Mode Switch & Onboarding Radio
+"mode_switch_hint" = "Ketuk butang kiri atas untuk bertukar antara Walkie Talkie dan Radio FM";
+"got_it" = "Faham";
+"onboarding.radio_mode.title" = "Walkie-Talkie + Radio FM";
+"onboarding.radio_mode.subtitle" = "Bertukar mod dengan satu ketukan";
+"onboarding.radio_mode.body" = "Butang kiri atas membolehkan anda bertukar antara Walkie-Talkie untuk berbual dengan rakan dan Radio FM dengan 135 stesen antarabangsa.";

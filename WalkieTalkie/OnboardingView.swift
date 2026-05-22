@@ -17,7 +17,7 @@ struct OnboardingView: View {
     @Binding var isOnboardingComplete: Bool
     @ObservedObject var notificationManager: NotificationManager
 
-    private let totalPages = 5
+    private let totalPages = 6
 
     var body: some View {
         ZStack {
@@ -42,7 +42,8 @@ struct OnboardingView: View {
                     OnboardingNoInternetPage().tag(1)
                     OnboardingPTTPage().tag(2)
                     OnboardingFrequencyPage().tag(3)
-                    OnboardingStepsPage().tag(4)
+                    OnboardingRadioModePage().tag(4)
+                    OnboardingStepsPage().tag(5)
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                 .animation(.easeInOut, value: currentPage)
@@ -274,7 +275,71 @@ private struct OnboardingFrequencyPage: View {
     }
 }
 
-// MARK: - Page 5: Steps
+// MARK: - Page 5: Radio Mode (WT <-> FM toggle)
+
+private struct OnboardingRadioModePage: View {
+    @State private var showFM = false
+
+    var body: some View {
+        VStack(spacing: 28) {
+            Image(systemName: "antenna.radiowaves.left.and.right.circle")
+                .font(.system(size: 84, weight: .light))
+                .foregroundColor(Color("PrimaryTextColor"))
+                .symbolRenderingMode(.hierarchical)
+
+            VStack(spacing: 14) {
+                Text(OnboardingStrings.radioModeTitle)
+                    .font(.title.bold())
+                    .foregroundColor(Color("PrimaryTextColor"))
+                    .multilineTextAlignment(.center)
+
+                Text(OnboardingStrings.radioModeSubtitle)
+                    .font(.title3)
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.75))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 24)
+
+                // Mock toggle illustration (larger than the real one for emphasis)
+                HStack(spacing: 8) {
+                    Image(systemName: showFM ? "radio" : "antenna.radiowaves.left.and.right")
+                        .foregroundColor(Color("PrimaryTextColor"))
+                        .font(.title2)
+                    Text(showFM ? "FM" : "WT")
+                        .font(.headline)
+                        .fontWeight(.bold)
+                        .foregroundColor(Color("PrimaryTextColor"))
+                }
+                .padding(.horizontal, 18)
+                .padding(.vertical, 10)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color("PrimaryTextColor").opacity(0.12))
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(Color("PrimaryTextColor").opacity(0.25), lineWidth: 1)
+                )
+                .padding(.top, 8)
+
+                Text(OnboardingStrings.radioModeBody)
+                    .font(.footnote)
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 24)
+                    .padding(.top, 4)
+            }
+        }
+        .padding()
+        .onAppear {
+            // Gentle illustrative toggle animation to communicate the switch action.
+            withAnimation(.easeInOut(duration: 1.4).repeatForever(autoreverses: true)) {
+                showFM = true
+            }
+        }
+    }
+}
+
+// MARK: - Page 6: Steps
 
 private struct OnboardingStepsPage: View {
     var body: some View {

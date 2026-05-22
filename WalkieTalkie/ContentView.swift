@@ -26,6 +26,8 @@ struct ContentView: View {
     @State private var showBrowser = false
     @State private var showSleepTimer = false
     @State private var showPaywall = false
+    @State private var showModeSwitchHint = false
+    @AppStorage("isOnboardingComplete") private var isOnboardingComplete = false
     
     // Frequenze realistiche per walkie-talkie
     private let availableFrequencies = [
@@ -117,6 +119,26 @@ struct ContentView: View {
                     )
                     .allowsHitTesting(true)
                 }
+
+                // Mode switch discovery hint (one-time, after onboarding)
+                if showModeSwitchHint {
+                    ModeSwitchHintOverlay(isShown: $showModeSwitchHint)
+                        .zIndex(100)
+                        .transition(.opacity)
+                }
+            }
+            .onAppear { maybeShowModeSwitchHint() }
+        }
+    }
+
+    /// Shows the WT/FM toggle discovery hint once, only after onboarding is done.
+    private func maybeShowModeSwitchHint() {
+        guard isOnboardingComplete else { return }
+        guard !UserDefaults.standard.bool(forKey: "talky_seen_mode_switch_hint") else { return }
+        guard !showModeSwitchHint else { return }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            withAnimation(.easeOut(duration: 0.25)) {
+                showModeSwitchHint = true
             }
         }
     }
@@ -131,6 +153,12 @@ struct ContentView: View {
         HStack {
             // Toggle modalità Walkie/Radio
             Button(action: {
+                if showModeSwitchHint {
+                    UserDefaults.standard.set(true, forKey: "talky_seen_mode_switch_hint")
+                    withAnimation(.easeIn(duration: 0.2)) {
+                        showModeSwitchHint = false
+                    }
+                }
                 isRadioMode.toggle()
                 if isRadioMode {
                     // Ferma walkie-talkie e avvia radio
@@ -404,11 +432,11 @@ struct ContentView: View {
                 ZStack {
                     Circle()
                         .fill(Color.black)
-                        .frame(width: 40, height: 40)
+                        .frame(width: 44, height: 44)
 
                     Image(systemName: "list.bullet")
                         .foregroundColor(.white)
-                        .font(.body)
+                        .font(.title3)
                 }
             }
             .accessibilityLabel("browse_stations".localized)
@@ -424,11 +452,11 @@ struct ContentView: View {
                     ZStack {
                         Circle()
                             .fill(Color.black)
-                            .frame(width: 40, height: 40)
+                            .frame(width: 44, height: 44)
 
                         Image(systemName: radioManager.isFavorite(station) ? "star.fill" : "star")
                             .foregroundColor(radioManager.isFavorite(station) ? .yellow : .white)
-                            .font(.body)
+                            .font(.title3)
                     }
                 }
                 .accessibilityLabel("favorites".localized)
@@ -445,11 +473,11 @@ struct ContentView: View {
                     ZStack {
                         Circle()
                             .fill(Color.black)
-                            .frame(width: 40, height: 40)
+                            .frame(width: 44, height: 44)
 
                         Image(systemName: sleepTimerManager.isActive ? "moon.zzz.fill" : "moon.zzz")
                             .foregroundColor(sleepTimerManager.isActive ? .yellow : .white)
-                            .font(.body)
+                            .font(.title3)
                     }
 
                     if sleepTimerManager.isActive {
@@ -460,6 +488,7 @@ struct ContentView: View {
                 }
             }
             .accessibilityLabel("sleep_timer".localized)
+            .accessibilityValue(sleepTimerManager.isActive ? sleepTimerManager.formattedRemaining : "")
         }
         .padding(.horizontal, 30)
     }

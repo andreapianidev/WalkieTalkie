@@ -297,6 +297,9 @@ struct RecommendationsView: View {
                     Button("close".localized) {
                         dismiss()
                     }
+                    .foregroundColor(Color("PrimaryTextColor"))
+                    .padding(.vertical, 6)
+                    .padding(.horizontal, 4)
                 }
             }
         }

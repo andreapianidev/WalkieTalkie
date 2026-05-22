@@ -196,7 +196,7 @@
 "wants_to_connect" = "vuole connettersi";
 "microphone_permission_required" = "Permesso Microfono Richiesto";
 "microphone_permission_message" = "L'app WalkieTalkie ha bisogno del permesso per accedere al microfono per funzionare correttamente. Senza questo permesso, non potrai trasmettere audio.";
-"audio_transmission_error" = "Errore trasmissione audio: The operation couldn't be completed. (com.apple.coreaudio.avfaudio error -10851.)";
+"audio_transmission_error" = "Errore di trasmissione audio. Riprova.";
 
 // MARK: - Errors
 "no_connected_peers" = "Nessun dispositivo connesso";
@@ -407,3 +407,10 @@
 "now_playing_short" = "ORA";
 "pro_badge" = "PRO";
 "sleep_timer" = "Timer di spegnimento";
+
+// MARK: - Mode Switch & Onboarding Radio
+"mode_switch_hint" = "Tocca il pulsante in alto a sinistra per passare tra Walkie Talkie e Radio FM";
+"got_it" = "Capito";
+"onboarding.radio_mode.title" = "Walkie-Talkie + Radio FM";
+"onboarding.radio_mode.subtitle" = "Passa tra le due modalità con un tap";
+"onboarding.radio_mode.body" = "Il pulsante in alto a sinistra ti permette di switchare tra Walkie-Talkie per parlare con gli amici e Radio FM per ascoltare 135 stazioni internazionali.";
