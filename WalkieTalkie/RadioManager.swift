@@ -360,10 +360,13 @@ class RadioManager: NSObject, ObservableObject {
         
         radioPlayer?.play()
         isPlaying = true
-        
+
         // Configura Now Playing Info per Control Center
         setupNowPlayingInfo(for: station)
-        
+
+        // Avvia / aggiorna Live Activity (Dynamic Island + Lock Screen banner).
+        startOrUpdateLiveActivity(for: station)
+
         // Traccia l'uso della radio in Firebase
         firebaseManager.trackRadioUsage(station: "\(station.name) - \(station.country)")
 
@@ -392,35 +395,62 @@ class RadioManager: NSObject, ObservableObject {
         isBuffering = false
         currentStation = nil
         lastError = nil
-        
+
         // Cancella Now Playing Info
         clearNowPlayingInfo()
-        
+
+        // Termina la Live Activity radio se attiva.
+        if #available(iOS 16.2, *) {
+            LiveActivityManager.shared.endRadio()
+        }
+
         logger.logAudioInfo("Radio fermata")
     }
-    
+
     func pauseRadio() {
         radioPlayer?.pause()
         isPlaying = false
-        
+
         // Aggiorna Now Playing Info
         if let station = currentStation {
             setupNowPlayingInfo(for: station)
+            startOrUpdateLiveActivity(for: station)
         }
-        
+
         logger.logAudioInfo("Radio in pausa")
     }
-    
+
     func resumeRadio() {
         radioPlayer?.play()
         isPlaying = true
-        
+
         // Aggiorna Now Playing Info
         if let station = currentStation {
             setupNowPlayingInfo(for: station)
+            startOrUpdateLiveActivity(for: station)
         }
-        
+
         logger.logAudioInfo("Radio ripresa")
+    }
+
+    // MARK: - Live Activity glue
+
+    /// Avvia la LA radio se non esiste, altrimenti la aggiorna.
+    /// Chiamato dai punti che già aggiornano `MPNowPlayingInfoCenter`.
+    private func startOrUpdateLiveActivity(for station: RadioStation) {
+        guard #available(iOS 16.2, *) else { return }
+        let manager = LiveActivityManager.shared
+        // Il manager gestisce internamente start vs update: end+request se non c'è già
+        // un'activity, update altrimenti. La logica "esiste già?" è incapsulata lì.
+        manager.startOrUpdateRadio(
+            stationName: station.name,
+            country: station.country,
+            flag: station.flagEmoji,
+            frequency: station.frequency,
+            genre: station.genre,
+            isPlaying: isPlaying,
+            isBuffering: isBuffering
+        )
     }
     
     func setVolume(_ newVolume: Float) {

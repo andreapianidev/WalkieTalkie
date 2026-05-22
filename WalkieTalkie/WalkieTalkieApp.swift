@@ -46,6 +46,14 @@ struct WalkieTalkieApp: App {
                 if isOnboardingComplete {
                     adManager.showAppOpenIfAllowed()
                 }
+                // Bootstrap Live Activity observers (no-op pre-iOS-16.2).
+                if #available(iOS 16.2, *) {
+                    LiveActivityManager.shared.bootstrap()
+                }
+            }
+            .onOpenURL { url in
+                // Live Activity (iOS 16.x fallback) deep links: talky://radio/<action>.
+                LiveActivityDeepLink.handle(url)
             }
             .onChange(of: scenePhase) { newPhase in
                 if newPhase == .active {

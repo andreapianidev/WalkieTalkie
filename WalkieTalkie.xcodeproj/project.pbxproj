@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		075B298FE0620E65197509C4 /* RadioActivityIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C551762A4B3B4876D1D82D9 /* RadioActivityIntents.swift */; };
+		23EB805AC99AC312EDE7C734 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF9362EF68DFA63C12B35B2E /* Foundation.framework */; };
+		3139482DCE76045CD0086042 /* LiveActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60175A0DECAEE66CF00A380D /* LiveActivityAttributes.swift */; };
+		3AF5C4F2D0E51505C9D3AD3B /* LiveActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60175A0DECAEE66CF00A380D /* LiveActivityAttributes.swift */; };
+		40624DB39A06ADD6E82323DD /* RadioActivityWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD542FBD3C82F0AF714480DA /* RadioActivityWidget.swift */; };
+		49C2C2519EDE1F14DD81B235 /* TalkyLiveActivities.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C1B26E212D5F5CBF3E80262D /* TalkyLiveActivities.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		5BFF09C136B0F61FE9FF08E7 /* TalkyLiveActivitiesBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D9515E1F90B36B55033938 /* TalkyLiveActivitiesBundle.swift */; };
 		6754C1632FBFD301003037AA /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 6754C1622FBFD301003037AA /* GoogleMobileAds */; };
 		679EF8DA2E27FCD4001C7A5E /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 679EF8D92E27FCD4001C7A5E /* FirebaseAnalytics */; };
 		679EF8DC2E27FCD4001C7A5E /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 679EF8DB2E27FCD4001C7A5E /* FirebaseAnalyticsCore */; };
@@ -15,10 +22,44 @@
 		679EF8E22E27FCD4001C7A5E /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 679EF8E12E27FCD4001C7A5E /* FirebaseCrashlytics */; };
 		679EF8E42E27FCD4001C7A5E /* FirebaseInstallations in Frameworks */ = {isa = PBXBuildFile; productRef = 679EF8E32E27FCD4001C7A5E /* FirebaseInstallations */; };
 		679EF8E62E27FCD4001C7A5E /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = 679EF8E52E27FCD4001C7A5E /* FirebasePerformance */; };
+		78E2FE5CEAED4CDB2B108449 /* RadioActivityIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C551762A4B3B4876D1D82D9 /* RadioActivityIntents.swift */; };
+		F0CDD5A6615BC718E37E644C /* WalkieActivityWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F075F67B33A8227815C8701 /* WalkieActivityWidget.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		3764C8D4B1EE39A1E8131E75 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6771A2952E22DD6A00DF7071 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B2DE79FAE6614815D779D5E1;
+			remoteInfo = TalkyLiveActivities;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FBF2AE0A62C658D295AD608E /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				49C2C2519EDE1F14DD81B235 /* TalkyLiveActivities.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		1C551762A4B3B4876D1D82D9 /* RadioActivityIntents.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RadioActivityIntents.swift; sourceTree = "<group>"; };
+		60175A0DECAEE66CF00A380D /* LiveActivityAttributes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LiveActivityAttributes.swift; sourceTree = "<group>"; };
+		62D9515E1F90B36B55033938 /* TalkyLiveActivitiesBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TalkyLiveActivitiesBundle.swift; sourceTree = "<group>"; };
 		6771A29D2E22DD6A00DF7071 /* Talky.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Talky.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7F075F67B33A8227815C8701 /* WalkieActivityWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WalkieActivityWidget.swift; sourceTree = "<group>"; };
+		C1B26E212D5F5CBF3E80262D /* TalkyLiveActivities.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TalkyLiveActivities.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD542FBD3C82F0AF714480DA /* RadioActivityWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RadioActivityWidget.swift; sourceTree = "<group>"; };
+		FEA9A59E537C6C2D442F316F /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FF9362EF68DFA63C12B35B2E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -58,14 +99,45 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6C589643056CB89D3A8ADC30 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				23EB805AC99AC312EDE7C734 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		161CBD6E3BFEBCD2B210530B /* TalkyLiveActivities */ = {
+			isa = PBXGroup;
+			children = (
+				62D9515E1F90B36B55033938 /* TalkyLiveActivitiesBundle.swift */,
+				DD542FBD3C82F0AF714480DA /* RadioActivityWidget.swift */,
+				7F075F67B33A8227815C8701 /* WalkieActivityWidget.swift */,
+				FEA9A59E537C6C2D442F316F /* Info.plist */,
+			);
+			name = TalkyLiveActivities;
+			path = TalkyLiveActivities;
+			sourceTree = "<group>";
+		};
+		5D7BA13A1E1D86D4A5B681B5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8F73F59EA4DB694A17141C6B /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		6771A2942E22DD6A00DF7071 = {
 			isa = PBXGroup;
 			children = (
 				6771A29F2E22DD6A00DF7071 /* WalkieTalkie */,
 				6771A29E2E22DD6A00DF7071 /* Products */,
+				5D7BA13A1E1D86D4A5B681B5 /* Frameworks */,
+				161CBD6E3BFEBCD2B210530B /* TalkyLiveActivities */,
+				6F64EBA271BFD1824B2D7622 /* Shared */,
 			);
 			sourceTree = "<group>";
 		};
@@ -73,8 +145,27 @@
 			isa = PBXGroup;
 			children = (
 				6771A29D2E22DD6A00DF7071 /* Talky.app */,
+				C1B26E212D5F5CBF3E80262D /* TalkyLiveActivities.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		6F64EBA271BFD1824B2D7622 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				60175A0DECAEE66CF00A380D /* LiveActivityAttributes.swift */,
+				1C551762A4B3B4876D1D82D9 /* RadioActivityIntents.swift */,
+			);
+			name = Shared;
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		8F73F59EA4DB694A17141C6B /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				FF9362EF68DFA63C12B35B2E /* Foundation.framework */,
+			);
+			name = iOS;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -87,10 +178,12 @@
 				6771A2992E22DD6A00DF7071 /* Sources */,
 				6771A29A2E22DD6A00DF7071 /* Frameworks */,
 				6771A29B2E22DD6A00DF7071 /* Resources */,
+				FBF2AE0A62C658D295AD608E /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B10625AA6B239CA3F97A8FA4 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				6771A29F2E22DD6A00DF7071 /* WalkieTalkie */,
@@ -109,6 +202,23 @@
 			productName = WalkieTalkie;
 			productReference = 6771A29D2E22DD6A00DF7071 /* Talky.app */;
 			productType = "com.apple.product-type.application";
+		};
+		B2DE79FAE6614815D779D5E1 /* TalkyLiveActivities */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ED625056BCFC2B254C7CE825 /* Build configuration list for PBXNativeTarget "TalkyLiveActivities" */;
+			buildPhases = (
+				D8BB2ECB824C0EA99CDEE124 /* Sources */,
+				6C589643056CB89D3A8ADC30 /* Frameworks */,
+				16B52280FC203C8CF9A10BCB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TalkyLiveActivities;
+			productName = TalkyLiveActivities;
+			productReference = C1B26E212D5F5CBF3E80262D /* TalkyLiveActivities.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -148,11 +258,19 @@
 			projectRoot = "";
 			targets = (
 				6771A29C2E22DD6A00DF7071 /* WalkieTalkie */,
+				B2DE79FAE6614815D779D5E1 /* TalkyLiveActivities */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		16B52280FC203C8CF9A10BCB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6771A29B2E22DD6A00DF7071 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -167,12 +285,67 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3139482DCE76045CD0086042 /* LiveActivityAttributes.swift in Sources */,
+				075B298FE0620E65197509C4 /* RadioActivityIntents.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D8BB2ECB824C0EA99CDEE124 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5BFF09C136B0F61FE9FF08E7 /* TalkyLiveActivitiesBundle.swift in Sources */,
+				40624DB39A06ADD6E82323DD /* RadioActivityWidget.swift in Sources */,
+				F0CDD5A6615BC718E37E644C /* WalkieActivityWidget.swift in Sources */,
+				3AF5C4F2D0E51505C9D3AD3B /* LiveActivityAttributes.swift in Sources */,
+				78E2FE5CEAED4CDB2B108449 /* RadioActivityIntents.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		B10625AA6B239CA3F97A8FA4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TalkyLiveActivities;
+			target = B2DE79FAE6614815D779D5E1 /* TalkyLiveActivities */;
+			targetProxy = 3764C8D4B1EE39A1E8131E75 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		60D4265A49DCF2EB3D265715 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 21;
+				DEVELOPMENT_TEAM = ERAK83QBBM;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = TalkyLiveActivities/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Talky Live Activities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Andrea Piani";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Andrea-Piani.WalkieTalkie.LiveActivities";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		6771A2A62E22DD6D00DF7071 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -376,6 +549,37 @@
 			};
 			name = Release;
 		};
+		A320001418872860C4792CFC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 21;
+				DEVELOPMENT_TEAM = ERAK83QBBM;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = TalkyLiveActivities/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Talky Live Activities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Andrea Piani";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Andrea-Piani.WalkieTalkie.LiveActivities";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -393,6 +597,15 @@
 			buildConfigurations = (
 				6771A2A92E22DD6D00DF7071 /* Debug */,
 				6771A2AA2E22DD6D00DF7071 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		ED625056BCFC2B254C7CE825 /* Build configuration list for PBXNativeTarget "TalkyLiveActivities" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				60D4265A49DCF2EB3D265715 /* Release */,
+				A320001418872860C4792CFC /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

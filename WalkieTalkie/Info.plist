@@ -19,6 +19,21 @@
 		<string>remote-notification</string>
 		<string>audio</string>
 	</array>
+	<key>NSSupportsLiveActivities</key>
+	<true/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.Andrea-Piani.WalkieTalkie</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>talky</string>
+			</array>
+		</dict>
+	</array>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-1193280742171051~5179465988</string>
 	<key>NSUserTrackingUsageDescription</key>

@@ -33,6 +33,9 @@ class MultipeerManager: NSObject, ObservableObject {
     @Published var isAdvertising = false
     @Published var isBrowsing = false
     @Published var isReceiving = false
+    /// Nome (peer displayName) di chi sta trasmettendo in questo momento.
+    /// `nil` quando nessuno parla. Mostrato nella Live Activity walkie.
+    @Published var currentTalkerName: String?
     @Published var receivedInvitation: (MCPeerID, MCSession)?
     private var pendingInvitationHandler: ((Bool, MCSession?) -> Void)?
     @Published var lastError: WalkieTalkieError?
@@ -378,6 +381,33 @@ class MultipeerManager: NSObject, ObservableObject {
         logger.logNetworkInfo("Multipeer riavviato (advertising: \(isAdvertising), browsing: \(isBrowsing))")
     }
 
+    // MARK: - Live Activity glue
+
+    /// Mantiene la Live Activity walkie allineata allo stato corrente.
+    /// Chiamato da peer connect/disconnect e dalle transizioni di trasmissione.
+    /// Sicuro da chiamare ovunque — gated a iOS 16.2+ e no-op se LA disabilitato.
+    func syncWalkieLiveActivity() {
+        guard #available(iOS 16.2, *) else { return }
+        let manager = LiveActivityManager.shared
+        if connectedPeers.isEmpty {
+            manager.endWalkie()
+            return
+        }
+        let names = connectedPeers.map { $0.displayName }
+        manager.startOrUpdateWalkie(
+            connectedPeerCount: connectedPeers.count,
+            peerNames: names,
+            channelName: liveActivityChannelDisplayName,
+            talkerName: currentTalkerName
+        )
+    }
+
+    /// Etichetta canale leggibile dall'utente, usata nella Live Activity.
+    private var liveActivityChannelDisplayName: String {
+        let raw = UserDefaults.standard.string(forKey: "private_channel_id") ?? "public"
+        return raw == "public" ? "Pubblico" : "Privato"
+    }
+
     func disconnect() {
         session.disconnect()
         browser.stopBrowsingForPeers()
@@ -392,8 +422,11 @@ class MultipeerManager: NSObject, ObservableObject {
         discoveredPeers.removeAll()
         disconnectedPeers.removeAll()
         retryAttempts.removeAll()
+        currentTalkerName = nil
         connectionStatus = "Disconnesso"
-        
+
+        syncWalkieLiveActivity()
+
         logger.logNetworkInfo("Disconnesso da tutti i peer")
     }
     
@@ -779,13 +812,13 @@ extension MultipeerManager: MCSessionDelegate {
                 if !self.connectedPeers.contains(peerID) {
                     self.connectedPeers.append(peerID)
                     self.logger.logNetworkInfo("Peer \(peerID.displayName) connesso. Totale connessi: \(self.connectedPeers.count)")
-                    
+
                     // Aggiorna il monitoraggio delle performance
                     self.performanceMonitor.updateConnectionCount(self.connectedPeers.count)
-                    
+
                     // Traccia connessione in Firebase
                     self.firebaseManager.trackDeviceConnection(deviceName: peerID.displayName)
-                    
+
                     // Feedback aptico e notifica per connessione
                     self.hapticManager.connectionEstablished()
                     self.notificationManager.sendConnectionEstablishedNotification(deviceName: peerID.displayName)
@@ -793,12 +826,14 @@ extension MultipeerManager: MCSessionDelegate {
                 self.disconnectedPeers.remove(peerID)
                 self.retryAttempts.removeValue(forKey: peerID) // Reset retry counter on successful connection
                 self.connectionStatus = "Connesso (\(self.connectedPeers.count))"
-                
+
                 // Avvia heartbeat quando si connette il primo peer
                 if self.connectedPeers.count == 1 {
                     self.startHeartbeat()
                 }
-                
+
+                self.syncWalkieLiveActivity()
+
             case .notConnected:
                 let wasConnected = self.connectedPeers.contains(peerID)
                 self.connectedPeers.removeAll { $0 == peerID }
@@ -826,7 +861,9 @@ extension MultipeerManager: MCSessionDelegate {
                 if self.connectedPeers.isEmpty {
                     self.stopHeartbeat()
                 }
-                
+
+                self.syncWalkieLiveActivity()
+
             case .connecting:
                 self.logger.logNetworkDebug("Connessione in corso con \(peerID.displayName)")
                 self.connectionStatus = "Connessione in corso..."
@@ -853,6 +890,8 @@ extension MultipeerManager: MCSessionDelegate {
                 // Aggiorna stato ricezione
                 DispatchQueue.main.async {
                     self.isReceiving = true
+                    self.currentTalkerName = peerID.displayName
+                    self.syncWalkieLiveActivity()
                     FirstTimeEventTracker.shared.fireOnce(
                         FirstTimeEventTracker.Events.reception,
                         parameters: ["peer_name": peerID.displayName]
@@ -865,14 +904,16 @@ extension MultipeerManager: MCSessionDelegate {
 
                 // Invia notifica di trasmissione in arrivo
                 self.notificationManager.sendIncomingTransmissionNotification()
-                
+
                 // Ottimizzazione memoria: processa audio in background
                 DispatchQueue.global(qos: .userInitiated).async {
                     self.audioManager.playReceivedAudio(data)
-                    
+
                     // Reset stato ricezione dopo un delay per mostrare l'indicatore
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                         self.isReceiving = false
+                        self.currentTalkerName = nil
+                        self.syncWalkieLiveActivity()
                     }
                 }
             } else {
