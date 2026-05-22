@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>TalkyLiveActivities.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>0</integer>
+		</dict>
 		<key>WalkieTalkie.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>

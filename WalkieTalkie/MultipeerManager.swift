@@ -404,6 +404,15 @@ class MultipeerManager: NSObject, ObservableObject {
 
     /// Etichetta canale leggibile dall'utente, usata nella Live Activity.
     private var liveActivityChannelDisplayName: String {
+        Self.makeLiveActivityChannelDisplayName()
+    }
+
+    /// Versione esposta per altri moduli (LiveActivityManager) — stessa logica.
+    var liveActivityChannelDisplayNamePublic: String {
+        Self.makeLiveActivityChannelDisplayName()
+    }
+
+    private static func makeLiveActivityChannelDisplayName() -> String {
         let raw = UserDefaults.standard.string(forKey: "private_channel_id") ?? "public"
         return raw == "public" ? "Pubblico" : "Privato"
     }

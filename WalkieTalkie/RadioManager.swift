@@ -399,9 +399,11 @@ class RadioManager: NSObject, ObservableObject {
         // Cancella Now Playing Info
         clearNowPlayingInfo()
 
-        // Termina la Live Activity radio se attiva.
+        // Termina la Live Activity radio se attiva, poi lascia che il walkie
+        // riconquisti la Dynamic Island se ci sono ancora peer connessi.
         if #available(iOS 16.2, *) {
             LiveActivityManager.shared.endRadio()
+            LiveActivityManager.shared.resyncWalkieFromCurrentState()
         }
 
         logger.logAudioInfo("Radio fermata")

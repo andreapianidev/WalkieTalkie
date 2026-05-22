@@ -9,6 +9,7 @@
 
 import Foundation
 import ActivityKit
+import MultipeerConnectivity
 import os.log
 
 @available(iOS 16.2, *)
@@ -29,21 +30,38 @@ final class LiveActivityManager {
     }
 
     /// Wires the NotificationCenter observers for interactive intent broadcasts
-    /// (iOS 17+) and reconnects to any in-flight activity (e.g., app relaunched
-    /// while LA still on screen).
+    /// (iOS 17+) and reconciles in-flight activities with the current app state.
+    /// Idempotent — safe to call from AppDelegate as well as scene `.task`.
     func bootstrap() {
         guard !didBootstrap else { return }
         didBootstrap = true
 
         Logger.shared.logInfo("LiveActivityManager bootstrap")
 
-        // Recover any live activity that may already exist (app was killed and
-        // relaunched while the LA was still on screen, system kept it alive).
-        radioActivity = Activity<RadioActivityAttributes>.activities.first
-        walkieActivity = Activity<WalkieActivityAttributes>.activities.first
+        // Reconcile system-known activities with app state. If the OS still has
+        // an activity in flight but our managers report no matching session,
+        // end the stale one — otherwise the user sees a frozen LA from a past
+        // run with no way to dismiss it through normal UI.
+        let inFlightRadio = Activity<RadioActivityAttributes>.activities.first
+        let inFlightWalkie = Activity<WalkieActivityAttributes>.activities.first
+
+        if let radio = inFlightRadio, RadioManager.shared.currentStation == nil {
+            Task { await radio.end(nil, dismissalPolicy: .immediate) }
+            radioActivity = nil
+        } else {
+            radioActivity = inFlightRadio
+        }
+        if let walkie = inFlightWalkie, MultipeerManager.shared?.connectedPeers.isEmpty ?? true {
+            Task { await walkie.end(nil, dismissalPolicy: .immediate) }
+            walkieActivity = nil
+        } else {
+            walkieActivity = inFlightWalkie
+        }
 
         // Observe interactive intent broadcasts. These come from
         // LiveActivityIntent.perform() in the widget UI on iOS 17+.
+        // Registering BEFORE the scene processes any deep-link URL is critical:
+        // a cold launch from a talky:// URL must find observers ready.
         NotificationCenter.default.addObserver(
             forName: .talkyRadioTogglePlayPause,
             object: nil,
@@ -167,7 +185,16 @@ final class LiveActivityManager {
     }
 
     /// Convenience for the walkie side — start if no activity, update otherwise.
+    /// **Precedence rule:** if a radio Live Activity is currently visible, walkie
+    /// updates are silently ignored. The user's active radio session must not be
+    /// hijacked by a peer's incoming audio when the MC connection happens to
+    /// still be alive from before the mode switch.
     func startOrUpdateWalkie(connectedPeerCount: Int, peerNames: [String], channelName: String, talkerName: String?) {
+        if radioActivity != nil {
+            // Defensive: also ensure no orphan walkie activity is showing.
+            if walkieActivity != nil { endWalkie() }
+            return
+        }
         if walkieActivity == nil {
             startWalkie(connectedPeerCount: connectedPeerCount, peerNames: peerNames, channelName: channelName)
             if talkerName != nil {
@@ -224,6 +251,9 @@ final class LiveActivityManager {
     }
 
     /// Tap on ⏮ — moves through favorites if any, else through the full available pool.
+    /// When `currentStation` isn't in favorites (or is nil), we wrap from the
+    /// "before the list" position → last favorite. Consistent with Next which
+    /// treats the same situation as wrapping forward → first favorite.
     private static func handleRadioPrevious() {
         let radio = RadioManager.shared
         let favs = radio.favoriteStations
@@ -235,5 +265,26 @@ final class LiveActivityManager {
         let idx = current.flatMap { c in favs.firstIndex { $0.id == c.id } } ?? 0
         let prev = favs[(idx - 1 + favs.count) % favs.count]
         radio.playStation(prev)
+    }
+}
+
+@available(iOS 16.2, *)
+extension LiveActivityManager {
+    /// Public entry point: re-sync walkie LA from current MultipeerManager state.
+    /// Called after the radio is stopped so a still-connected walkie session can
+    /// reclaim the Dynamic Island.
+    func resyncWalkieFromCurrentState() {
+        guard let mp = MultipeerManager.shared else { return }
+        if mp.connectedPeers.isEmpty {
+            endWalkie()
+            return
+        }
+        let names = mp.connectedPeers.map { $0.displayName }
+        startOrUpdateWalkie(
+            connectedPeerCount: mp.connectedPeers.count,
+            peerNames: names,
+            channelName: mp.liveActivityChannelDisplayNamePublic,
+            talkerName: mp.currentTalkerName
+        )
     }
 }
