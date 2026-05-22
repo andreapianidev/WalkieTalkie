@@ -7,10 +7,13 @@
 [![iOS](https://img.shields.io/badge/iOS-15.6+-blue.svg)](https://developer.apple.com/ios/)
 [![Swift](https://img.shields.io/badge/Swift-5.9+-orange.svg)](https://swift.org/)
 [![Xcode](https://img.shields.io/badge/Xcode-16.0+-blue.svg)](https://developer.apple.com/xcode/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](#-license)
-[![Open Source](https://img.shields.io/badge/Open-Source-brightgreen.svg)]()
+[![License: PolyForm NC 1.0.0](https://img.shields.io/badge/License-PolyForm%20Noncommercial%201.0.0-red.svg)](LICENSE)
+[![Commercial use: NOT permitted](https://img.shields.io/badge/Commercial%20use-NOT%20permitted-critical.svg)](#-license)
+[![Source available](https://img.shields.io/badge/Source-Available-brightgreen.svg)]()
 
-> **Talky** is a SwiftUI iOS app that combines **offline peer-to-peer push-to-talk** (Multipeer Connectivity) with a **global FM/internet radio browser** (135 stations across 50+ countries) plus a complete **Pro tier** (themes, animated backgrounds, equalizer, recording, sleep timer) and a production-grade **AdMob monetization stack** for the free tier.
+> **Talky** is a SwiftUI iOS app that combines **offline peer-to-peer push-to-talk** (Multipeer Connectivity) with a **global FM/internet radio browser** (135 stations across 50+ countries), **Live Activities + Dynamic Island** controls (iOS 16.2+), a complete **Pro tier** (themes, animated backgrounds, equalizer, recording, sleep timer) and a production-grade **AdMob monetization stack** for the free tier.
+
+> ⚠️ **This project is source-available, NOT MIT/Apache/BSD/GPL.** It is distributed under the **[PolyForm Noncommercial License 1.0.0](LICENSE)** — you may read, fork, modify and run it for personal/educational/non-profit purposes, but **commercial use (including shipping a derived app on any app store, paid services, ad-supported services and consulting deliverables) is strictly prohibited without a separate written commercial license.** See [License](#-license) for details and commercial-license contact.
 
 **App Store**: search for **Talky — Walkie & Radio** · Bundle ID `com.immaginet.talky`
 **Repository**: <https://github.com/andreapianidev/WalkieTalkie>
@@ -23,6 +26,7 @@
 - [Feature Matrix (Free vs Pro)](#-feature-matrix-free-vs-pro)
 - [Walkie-Talkie Engine](#-walkie-talkie-engine)
 - [Radio Browser (135 stations)](#-radio-browser-135-stations)
+- [Live Activities & Dynamic Island](#-live-activities--dynamic-island)
 - [Theme System (16 themes)](#-theme-system-16-themes)
 - [Pro Tier — IAP & Paywall](#-pro-tier--iap--paywall)
 - [AdMob Monetization](#-admob-monetization)
@@ -44,6 +48,7 @@
 
 - 🎙️ **Push-to-Talk** over peer-to-peer (no internet, no servers) — up to 8 simultaneous peers
 - 📻 **135 verified live radio stations** across **50+ countries**, with favorites, recents, nearby, search and grouping by country/genre
+- 🏝️ **Live Activities + Dynamic Island** (iOS 16.2+) for both radio and walkie modes — with iOS 17+ interactive controls (play/pause, next/previous from the lock screen and Dynamic Island)
 - 🎨 **16 themes** (5 free + 11 paid/Pro) including 2 fully-animated GPU backgrounds (Black Hole, Galaxy)
 - 🔊 **5-band EQ**, **sleep timer**, **session recording** and **transmission history**
 - 💎 **Talky Pro** subscription (weekly/yearly) with paywall, restore purchases and StoreKit 2
@@ -51,6 +56,7 @@
 - 🌍 **5 localizations**: 🇮🇹 Italian · 🇬🇧 English · 🇪🇸 Spanish · 🇲🇾 Malay · 🇹🇼 Traditional Chinese
 - 🔒 **Privacy-first**: walkie-talkie audio never leaves the device, no accounts, no cloud
 - 🧱 **Clean MVVM + SwiftUI + Combine**, singleton managers, Swift 6 strict concurrency-ready
+- ⚖️ **Source-available** under PolyForm Noncommercial 1.0.0 — fork it, study it, learn from it; commercial reuse requires a separate license
 
 ---
 
@@ -109,6 +115,45 @@ The radio side is a full streaming client (`RadioManager` + `StationBrowserSheet
 - **Background playback** (radio keeps streaming when app is backgrounded)
 - **Sleep timer** (`SleepTimerSheet` + `SleepTimerManager`) — 5/10/15/30/45/60 min or end-of-track
 - **Pro paywall trigger** when a free user taps a locked station
+
+---
+
+## 🏝️ Live Activities & Dynamic Island
+
+Shipped in commit [`4c0f54e`](https://github.com/andreapianidev/WalkieTalkie/commit/4c0f54e) — a full **ActivityKit** widget extension (`TalkyLiveActivities/`) plus a main-app **LiveActivityManager** that surfaces both modes on the Lock Screen and the Dynamic Island.
+
+### Targets & files
+| Component | Path |
+|---|---|
+| Shared attributes (radio + walkie content state) | [`Shared/LiveActivityAttributes.swift`](Shared/LiveActivityAttributes.swift) |
+| Interactive intents (iOS 17+) | [`Shared/RadioActivityIntents.swift`](Shared/RadioActivityIntents.swift) |
+| Widget extension bundle | [`TalkyLiveActivities/TalkyLiveActivitiesBundle.swift`](TalkyLiveActivities/TalkyLiveActivitiesBundle.swift) |
+| Radio widget UI (Lock Screen + Dynamic Island) | [`TalkyLiveActivities/RadioActivityWidget.swift`](TalkyLiveActivities/RadioActivityWidget.swift) |
+| Walkie widget UI | [`TalkyLiveActivities/WalkieActivityWidget.swift`](TalkyLiveActivities/WalkieActivityWidget.swift) |
+| App-side orchestrator (start / update / end) | [`WalkieTalkie/LiveActivity/LiveActivityManager.swift`](WalkieTalkie/LiveActivity/LiveActivityManager.swift) |
+| Deep-link routing from LA → app | [`WalkieTalkie/LiveActivity/LiveActivityDeepLink.swift`](WalkieTalkie/LiveActivity/LiveActivityDeepLink.swift) |
+
+### Radio Live Activity — content state
+- Station name, country, flag emoji, frequency, genre
+- `isPlaying` and `isBuffering` flags driving the play/pause glyph
+- **Interactive controls (iOS 17+)**: ⏮ previous · ⏯ play/pause · ⏭ next — wired via `LiveActivityIntent` and broadcast back to the app through `NotificationCenter` (`talkyRadioTogglePlayPause`, `talkyRadioNextStation`, `talkyRadioPreviousStation`)
+- "Next/previous" prioritises **favorites** when the user has any, otherwise walks the full available station pool
+
+### Walkie Live Activity — content state
+- Connected peer count (badge in Dynamic Island compact view)
+- First 3 peer names (Lock Screen expanded view)
+- Current channel name
+- Optional **`talkerName`** — surfaced live when a peer is transmitting, so the user can see who's on the air without opening the app
+
+### Lifecycle & safety
+- `@MainActor`-isolated singleton (`LiveActivityManager.shared`), gated to **iOS 16.2+**
+- One-at-a-time semantics: starting a radio LA ends any walkie LA and vice-versa (modes are mutually exclusive in the UI)
+- Bootstrap on app launch reconnects to any in-flight Activity (e.g. app killed while LA is still on screen)
+- Respects user toggle in iOS Settings → Talky → Live Activities (`ActivityAuthorizationInfo().areActivitiesEnabled`)
+- Mirrors the data already pushed into `MPNowPlayingInfoCenter`, so older devices (< iOS 16.2) keep the existing Now-Playing behaviour
+- No push token / no `pushType: nil` — pure local updates from the app
+
+> Design spec lives in [`docs/`](docs/) (see commit [`23e97ac`](https://github.com/andreapianidev/WalkieTalkie/commit/23e97ac)). The two widget files contain the full SwiftUI layout for the Lock Screen card, the compact/minimal/expanded Dynamic Island regions, and the iOS 17 interactive button rows.
 
 ---
 
@@ -246,13 +291,15 @@ All UI strings flow through `String+Localization.swift` (`.localized`). i18n key
 │  HapticManager · FirebaseManager · ThemeManager           │
 │  IAPManager · AdManager · ConsentManager                  │
 │  EqualizerManager · RecordingsManager · SleepTimerManager │
+│  LiveActivityManager (iOS 16.2+ · ActivityKit)            │
 └──────────────────────────┬────────────────────────────────┘
                            │
 ┌──────────────────────────▼────────────────────────────────┐
 │ Apple frameworks                                          │
 │  MultipeerConnectivity · AVFoundation · StoreKit 2        │
 │  UserNotifications · Combine · CoreHaptics                │
-│  AppTrackingTransparency                                  │
+│  AppTrackingTransparency · ActivityKit · WidgetKit        │
+│  AppIntents (iOS 17+ Live Activity controls)              │
 └──────────────────────────┬────────────────────────────────┘
                            │
 ┌──────────────────────────▼────────────────────────────────┐
@@ -269,6 +316,18 @@ All UI strings flow through `String+Localization.swift` (`.localized`). i18n key
 ```
 WalkieTalkie/                            ← Xcode project root
 ├── WalkieTalkie.xcodeproj/
+├── LICENSE                              ← PolyForm Noncommercial 1.0.0
+├── README.md
+├── Shared/                              ← Code shared between app + widget extension
+│   ├── LiveActivityAttributes.swift     ← ActivityAttributes for radio + walkie
+│   └── RadioActivityIntents.swift       ← Interactive intents (iOS 17+)
+│
+├── TalkyLiveActivities/                 ← Widget extension target
+│   ├── TalkyLiveActivitiesBundle.swift  ← @main WidgetBundle
+│   ├── RadioActivityWidget.swift        ← Lock Screen + Dynamic Island UI (radio)
+│   ├── WalkieActivityWidget.swift       ← Lock Screen + Dynamic Island UI (walkie)
+│   └── Info.plist
+│
 ├── WalkieTalkie/                        ← App source
 │   ├── WalkieTalkieApp.swift            ← @main + AppDelegate (Firebase, ad bootstrap)
 │   ├── ContentView.swift                ← Main UI: radio/walkie tabs
@@ -276,6 +335,10 @@ WalkieTalkie/                            ← Xcode project root
 │   ├── ExploreView.swift                ← Peer discovery
 │   ├── ConnectionsView.swift            ← Active peer list
 │   ├── SettingsView.swift               ← Preferences + Pro upsell
+│   │
+│   ├── LiveActivity/                    ← App-side orchestration
+│   │   ├── LiveActivityManager.swift    ← Start/update/end + intent handling
+│   │   └── LiveActivityDeepLink.swift   ← LA tap → app deep-link routing
 │   │
 │   ├── Ads/                             ← AdMob stack (5 files)
 │   │   ├── AdConfig.swift               ← Ad unit IDs (DEBUG/Release split)
@@ -473,22 +536,59 @@ Contributions are welcome! Please:
 
 Conventional-commit prefixes are appreciated: `feat:`, `fix:`, `chore:`, `refactor:`, `docs:`, `style:`.
 
+### Contributor license agreement
+
+By opening a pull request you agree that **your contribution is licensed under the same [PolyForm Noncommercial License 1.0.0](LICENSE)** as the rest of the project, and that you grant Andrea Piani / Immaginet Srl a perpetual, worldwide, royalty-free right to relicense your contribution under **any other license (including commercial)** as part of the official Talky distribution. This is the standard inbound=outbound model used by most source-available projects and is required to keep the commercial-license path viable.
+
 ### Good first issues
 - Add more radio stations (extend `RadioManager.radioStations`)
 - Add additional language translations (clone an existing `.lproj` folder)
 - New themes — add a new file under `Theme/` and register into `ThemeRegistry`
 - Apple Watch companion app
-- iOS Widgets for quick PTT
+- Home Screen / Lock Screen widgets for quick PTT (separate from the Live Activity)
+- StandBy mode large-radio widget (iOS 17+)
 
 ---
 
 ## 📄 License
 
-**MIT License** © 2025–2026 Andrea Piani / Immaginet Srl.
+**[PolyForm Noncommercial License 1.0.0](LICENSE)** — © 2025–2026 Andrea Piani / Immaginet Srl. All rights reserved.
 
-Free for personal, educational and commercial use. You can fork, modify, ship your own version on the App Store — just keep the copyright notice. Ad networks, Firebase keys and StoreKit product IDs must be replaced with your own.
+> 🚫 **This is NOT an MIT/Apache/BSD/GPL project.** It is **source-available**, not "open-source" in the OSI sense. Commercial use is **strictly prohibited** without a separate written license signed by the copyright holder.
 
-See the `LICENSE` file for the full text.
+### ✅ What you ARE allowed to do (free of charge)
+- **Read, study and learn** from the code — this repo exists primarily as an educational reference for production-grade SwiftUI / Multipeer / StoreKit / AdMob / ActivityKit integration.
+- **Fork and modify** for personal, academic, research, journalism, hobby or non-profit purposes.
+- **Run** your modified copy on your own devices.
+- **Share** the source or your patches, as long as the [`LICENSE`](LICENSE) file and the copyright notice stay intact.
+- **Use by educational institutions, public-research organisations, NGOs, charities and government bodies** is explicitly permitted (see PolyForm §"Noncommercial Organizations").
+
+### 🚫 What you ARE NOT allowed to do without a commercial license
+- ❌ **Publish, distribute or sell** this app — or any app substantially derived from this codebase — on the **Apple App Store, Google Play, AltStore, Setapp, or any other paid or ad-supported channel**.
+- ❌ Use this code, in whole or in part, in any **product, service, SaaS, enterprise deployment, paid app, ad-supported service, sponsored build, consulting deliverable** or any activity primarily directed toward **commercial advantage or monetary compensation**.
+- ❌ Train **commercial machine-learning models** on this codebase.
+- ❌ **Re-license** the code under more permissive terms (MIT, Apache-2.0, BSD, GPL, …) — this is explicitly forbidden.
+- ❌ Remove, alter, or obscure the **copyright notice**, the [`LICENSE`](LICENSE) file, the in-app "About" attribution, the project name, or the identifying branding from any distributed copy.
+- ❌ Pretend the code is yours.
+
+### 💼 Commercial license
+
+If you want to use Talky (or a derivative) in any commercial context — including shipping it on an app store, bundling it inside another paid product, or offering it as a service — you must obtain a **separate written commercial license** from the copyright holder.
+
+📧 **Commercial licensing contact**: **andreapiani.dev@gmail.com**
+🌐 https://www.andreapiani.com
+
+Reasonable commercial terms are available for individuals, startups and enterprises. Just write — we'll work it out.
+
+### 🛡️ Enforcement & DMCA
+
+Violations of this license — including unauthorised App Store submissions, paid-app derivatives and trademark-passing-off — will be enforced through **App Store / Play Store DMCA take-down requests**, **GitHub DMCA**, and where appropriate **legal action under Italian and EU copyright law (Law 633/1941 as amended) and the Berne Convention**. Please don't make us do that — just email instead.
+
+### 📜 Full legal text
+
+The authoritative legal terms are in the **[`LICENSE`](LICENSE)** file at the root of this repository (PolyForm Noncommercial License 1.0.0, verbatim text). The license is hosted at <https://polyformproject.org/licenses/noncommercial/1.0.0/>.
+
+The plain-language summary above is informational only and does not replace the legal text.
 
 ---
 
