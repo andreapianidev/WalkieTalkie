@@ -397,3 +397,19 @@
 "optimized_mode" = "Modo Optimizado";
 "recommendations" = "Recomendaciones";
 "updated_now" = "Actualizado ahora";
+
+// MARK: - Station Browser & Sleep Timer
+"browse_stations" = "Explorar Emisoras";
+"search_stations" = "Buscar emisoras…";
+"all_stations" = "Todas";
+"favorites" = "Favoritas";
+"recents" = "Recientes";
+"nearby" = "Cerca de ti";
+"by_country" = "Por país";
+"by_genre" = "Por género";
+"no_favorites_hint" = "Aún no hay favoritas. Mantén pulsada una emisora para añadirla.";
+"no_recents" = "No hay emisoras escuchadas recientemente.";
+"no_search_results" = "No se encontraron emisoras.";
+"now_playing_short" = "AHORA";
+"pro_badge" = "PRO";
+"sleep_timer" = "Temporizador";

@@ -21,8 +21,6 @@
 "website" = "Website";
 
 // MARK: - Peak App Promotion
-"peak_app_title" = "📱 Peak - GPS Altimeter";
-"peak_app_description" = "Walkie Talkie is also available in Peak - GPS Altimeter Barometer";
 "download_peak" = "Download Peak Free";
 "peak_app_subtitle" = "Complete altimetry app with integrated walkie-talkie features";
 
@@ -393,3 +391,19 @@
 "settings.personalization.recordings.subtitle" = "Replay your transmissions";
 "settings.personalization.private_channels.title" = "Private channels";
 "settings.personalization.private_channels.subtitle" = "Password-protected walkie talkie";
+
+// MARK: - Station Browser & Sleep Timer
+"browse_stations" = "Browse Stations";
+"search_stations" = "Search stations…";
+"all_stations" = "All";
+"favorites" = "Favorites";
+"recents" = "Recent";
+"nearby" = "Nearby";
+"by_country" = "By Country";
+"by_genre" = "By Genre";
+"no_favorites_hint" = "No favorites yet. Long-press a station to add it.";
+"no_recents" = "No recently played stations.";
+"no_search_results" = "No stations found.";
+"now_playing_short" = "NOW";
+"pro_badge" = "PRO";
+"sleep_timer" = "Sleep Timer";

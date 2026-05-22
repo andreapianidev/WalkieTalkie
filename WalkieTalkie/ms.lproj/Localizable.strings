@@ -21,8 +21,6 @@
 "website" = "Laman Web";
 
 // MARK: - Peak App Promotion
-"peak_app_title" = "🏔️ Peak - Altimeter GPS";
-"peak_app_description" = "Walkie Talkie juga tersedia dalam Peak - Altimeter GPS Barometer";
 "download_peak" = "Muat Turun Peak Percuma";
 "peak_app_subtitle" = "Aplikasi altimetri lengkap dengan ciri-ciri walkie-talkie yang terintegrasi";
 
@@ -395,3 +393,19 @@
 "peak_walkie_ai_description" = "dengan Walkie Talkie & AI";
 "recommendations" = "Cadangan";
 "updated_now" = "Dikemas kini sekarang";
+
+// MARK: - Station Browser & Sleep Timer
+"browse_stations" = "Layari Stesen";
+"search_stations" = "Cari stesen…";
+"all_stations" = "Semua";
+"favorites" = "Kegemaran";
+"recents" = "Terkini";
+"nearby" = "Berdekatan";
+"by_country" = "Mengikut Negara";
+"by_genre" = "Mengikut Genre";
+"no_favorites_hint" = "Tiada kegemaran lagi. Tekan dan tahan stesen untuk menambah.";
+"no_recents" = "Tiada stesen yang didengar baru-baru ini.";
+"no_search_results" = "Tiada stesen dijumpai.";
+"now_playing_short" = "KINI";
+"pro_badge" = "PRO";
+"sleep_timer" = "Pemasa Tidur";

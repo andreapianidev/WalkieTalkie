@@ -15,6 +15,7 @@ struct ContentView: View {
     @StateObject private var notificationManager = NotificationManager.shared
     @StateObject private var hapticManager = HapticManager.shared
     @StateObject private var settingsManager = SettingsManager.shared
+    @StateObject private var sleepTimerManager = SleepTimerManager.shared
     @EnvironmentObject private var adManager: AdManager
     @State private var frequencyChangeCount = 0
     @State private var isTransmitting = false
@@ -22,6 +23,9 @@ struct ContentView: View {
     @State private var showingPermissionAlert = false
     @State private var isRadioMode = false
     @State private var frequencyChangeAnimation = false
+    @State private var showBrowser = false
+    @State private var showSleepTimer = false
+    @State private var showPaywall = false
     
     // Frequenze realistiche per walkie-talkie
     private let availableFrequencies = [
@@ -131,9 +135,8 @@ struct ContentView: View {
                 if isRadioMode {
                     // Ferma walkie-talkie e avvia radio
                     multipeerManager.stopTransmitting()
-                    if let firstStation = radioManager.radioStations.first {
-                        radioManager.playStation(firstStation)
-                    }
+                    // Riprende l'ultima stazione ascoltata (o la prima come fallback).
+                    radioManager.playStation(radioManager.resumeStation)
                     // Ferma il rumore bianco in modalità FM
                     audioManager.updateBackgroundAudioForMode(isRadioMode: true)
                 } else {
@@ -210,9 +213,21 @@ struct ContentView: View {
                         .font(.caption)
                         .foregroundColor(Color("PrimaryTextColor").opacity(0.8))
                     
-                    Text("country".localized + ": \(radioManager.currentStation?.country ?? "--")")
-                        .font(.caption2)
-                        .foregroundColor(Color("PrimaryTextColor").opacity(0.6))
+                    HStack(spacing: 6) {
+                        Text("country".localized + ": \(radioManager.currentStation?.country ?? "--")")
+                            .font(.caption2)
+                            .foregroundColor(Color("PrimaryTextColor").opacity(0.6))
+
+                        if let station = radioManager.currentStation {
+                            HStack(spacing: 2) {
+                                Image(systemName: "wave.3.right")
+                                    .font(.caption2)
+                                Text(station.quality.rawValue)
+                                    .font(.caption2.monospaced())
+                            }
+                            .foregroundColor(Color("PrimaryTextColor").opacity(0.6))
+                        }
+                    }
                 } else {
                     // Modalità Walkie-Talkie - Mostra info connessione
                     HStack {
@@ -300,7 +315,7 @@ struct ContentView: View {
                 // Frequenza principale o info radio
                 if isRadioMode {
                     VStack(spacing: 4) {
-                        Text(radioManager.currentStation?.frequency ?? "---.--")
+                        Text(radioManager.currentStation?.displayLabel ?? "---.--")
                             .font(.system(size: 36, weight: .bold, design: .monospaced))
                             .foregroundColor(.yellow)
                         
@@ -351,15 +366,110 @@ struct ContentView: View {
                 .padding(.top, 25)
             }
             .padding(.horizontal, 20)
+            .simultaneousGesture(
+                // Swipe orizzontale: solo in modalità radio, prev/next stazione.
+                DragGesture(minimumDistance: 30)
+                    .onEnded { value in
+                        guard isRadioMode else { return }
+                        if value.translation.width < -30 {
+                            radioManager.nextStation()
+                        } else if value.translation.width > 30 {
+                            radioManager.previousStation()
+                        }
+                    }
+            )
         }
         .padding(.top, 20)
     }
-    
+
     private var playbackControlsView: some View {
+        VStack(spacing: 16) {
+            if isRadioMode {
+                radioSecondaryControlsRow
+            }
+
+            mainPlaybackRow
+        }
+        .padding(.top, 20)
+    }
+
+    /// Riga superiore (solo radio): Browse, Preferito, Sleep Timer.
+    private var radioSecondaryControlsRow: some View {
+        HStack(spacing: 24) {
+            // Browse stations
+            Button(action: {
+                HapticManager.shared.lightTap()
+                showBrowser = true
+            }) {
+                ZStack {
+                    Circle()
+                        .fill(Color.black)
+                        .frame(width: 40, height: 40)
+
+                    Image(systemName: "list.bullet")
+                        .foregroundColor(.white)
+                        .font(.body)
+                }
+            }
+            .accessibilityLabel("browse_stations".localized)
+
+            Spacer()
+
+            // Favorite toggle per la stazione corrente
+            if let station = radioManager.currentStation {
+                Button(action: {
+                    HapticManager.shared.lightTap()
+                    radioManager.toggleFavorite(station)
+                }) {
+                    ZStack {
+                        Circle()
+                            .fill(Color.black)
+                            .frame(width: 40, height: 40)
+
+                        Image(systemName: radioManager.isFavorite(station) ? "star.fill" : "star")
+                            .foregroundColor(radioManager.isFavorite(station) ? .yellow : .white)
+                            .font(.body)
+                    }
+                }
+                .accessibilityLabel("favorites".localized)
+            }
+
+            Spacer()
+
+            // Sleep timer
+            Button(action: {
+                HapticManager.shared.lightTap()
+                showSleepTimer = true
+            }) {
+                HStack(spacing: 4) {
+                    ZStack {
+                        Circle()
+                            .fill(Color.black)
+                            .frame(width: 40, height: 40)
+
+                        Image(systemName: sleepTimerManager.isActive ? "moon.zzz.fill" : "moon.zzz")
+                            .foregroundColor(sleepTimerManager.isActive ? .yellow : .white)
+                            .font(.body)
+                    }
+
+                    if sleepTimerManager.isActive {
+                        Text(sleepTimerManager.formattedRemaining)
+                            .font(.caption2.monospaced())
+                            .foregroundColor(.yellow)
+                    }
+                }
+            }
+            .accessibilityLabel("sleep_timer".localized)
+        }
+        .padding(.horizontal, 30)
+    }
+
+    /// Riga principale dei controlli (radio o walkie talkie).
+    private var mainPlaybackRow: some View {
         HStack(spacing: 20) {
             if isRadioMode {
                 // Controlli Radio FM
-                
+
                 // Volume down
                 Button(action: {
                     let newVolume = max(0.0, radioManager.volume - 0.1)
@@ -369,14 +479,14 @@ struct ContentView: View {
                         Circle()
                             .fill(Color.black)
                             .frame(width: 50, height: 50)
-                        
+
                         Image(systemName: "speaker.minus")
                             .foregroundColor(.white)
                             .font(.title2)
                     }
                 }
-                
-                // Previous station
+
+                // Previous station (tap: previous, long press: jump -10)
                 Button(action: {
                     radioManager.previousStation()
                 }) {
@@ -384,13 +494,19 @@ struct ContentView: View {
                         Circle()
                             .fill(Color.black)
                             .frame(width: 50, height: 50)
-                        
+
                         Image(systemName: "backward.fill")
                             .foregroundColor(.white)
                             .font(.title2)
                     }
                 }
-                
+                .simultaneousGesture(
+                    LongPressGesture(minimumDuration: 0.5).onEnded { _ in
+                        radioManager.jumpStations(by: -10)
+                        HapticManager.shared.lightTap()
+                    }
+                )
+
                 // Play/Pause
                 Button(action: {
                     if radioManager.isPlaying {
@@ -403,14 +519,14 @@ struct ContentView: View {
                         Circle()
                             .fill(radioManager.isPlaying ? Color.red : Color.green)
                             .frame(width: 60, height: 60)
-                        
+
                         Image(systemName: radioManager.isPlaying ? "pause.fill" : "play.fill")
                             .foregroundColor(.white)
                             .font(.title)
                     }
                 }
-                
-                // Next station
+
+                // Next station (tap: next, long press: jump +10)
                 Button(action: {
                     radioManager.nextStation()
                 }) {
@@ -418,13 +534,19 @@ struct ContentView: View {
                         Circle()
                             .fill(Color.black)
                             .frame(width: 50, height: 50)
-                        
+
                         Image(systemName: "forward.fill")
                             .foregroundColor(.white)
                             .font(.title2)
                     }
                 }
-                
+                .simultaneousGesture(
+                    LongPressGesture(minimumDuration: 0.5).onEnded { _ in
+                        radioManager.jumpStations(by: 10)
+                        HapticManager.shared.lightTap()
+                    }
+                )
+
                 // Volume up
                 Button(action: {
                     let newVolume = min(1.0, radioManager.volume + 0.1)
@@ -434,13 +556,13 @@ struct ContentView: View {
                         Circle()
                             .fill(Color.black)
                             .frame(width: 50, height: 50)
-                        
+
                         Image(systemName: "speaker.plus")
                             .foregroundColor(.white)
                             .font(.title2)
                     }
                 }
-                
+
             } else {
                 // Controlli Walkie-Talkie originali
                 
@@ -513,7 +635,7 @@ struct ContentView: View {
                         Circle()
                             .fill(isPoweredOn ? Color.green : Color.red)
                             .frame(width: 50, height: 50)
-                        
+
                         Image(systemName: "power")
                             .foregroundColor(.white)
                             .font(.title2)
@@ -521,9 +643,8 @@ struct ContentView: View {
                 }
             }
         }
-        .padding(.top, 20)
     }
-    
+
     private var speakerAreaView: some View {
         VStack(spacing: 30) {
             // Griglia di punti per simulare speaker - aumentata
@@ -745,17 +866,40 @@ struct ContentView: View {
                 showingPermissionAlert = true
             }
         }
+        .sheet(isPresented: $showBrowser) {
+            StationBrowserSheet()
+        }
+        .sheet(isPresented: $showSleepTimer) {
+            SleepTimerSheet(onUnlockTap: {
+                showSleepTimer = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                    showPaywall = true
+                }
+            })
+        }
+        .fullScreenCover(isPresented: $showPaywall, onDismiss: {
+            radioManager.blockedByPaywall = false
+        }) {
+            PaywallView(trigger: "radio_pro_station")
+        }
+        .onReceive(radioManager.$blockedByPaywall) { blocked in
+            // Se la radio segnala paywall e il browser non è in primo piano, mostralo qui.
+            if blocked && !showBrowser {
+                showPaywall = true
+            }
+        }
         .onAppear {
             // Inizializza l'indice della frequenza corrente
             if let index = availableFrequencies.firstIndex(of: frequency) {
                 currentFrequencyIndex = index
             }
-            
+
             // Controlla i permessi all'avvio
             checkMicrophonePermission()
         }
     }
-    
+
+
     // MARK: - Peak App Promotion Button
     private var peakAppPromotionBanner: some View {
         Button(action: {

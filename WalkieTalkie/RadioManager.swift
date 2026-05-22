@@ -10,7 +10,15 @@ import Combine
 import MediaPlayer
 import os.log
 
-struct RadioStation {
+/// Qualità nominale dello stream — derivata dall'URL.
+enum StreamQuality: String {
+    case hls = "HLS"
+    case aac = "AAC"
+    case mp3 = "MP3"
+    case unknown = "—"
+}
+
+struct RadioStation: Identifiable {
     let id: Int
     let name: String
     let country: String
@@ -21,6 +29,45 @@ struct RadioStation {
     /// Le stazioni con id > 30 sono internazionali premium e richiedono Talky Pro.
     /// Le prime 30 (italiane + grandi broadcaster europei) sono Free.
     var isPro: Bool { id > 30 }
+
+    /// Qualità inferita dall'URL (HLS > AAC > MP3 in affidabilità su iOS).
+    var quality: StreamQuality {
+        let lower = streamURL.lowercased()
+        if lower.contains(".m3u8") || lower.contains("/playlist") { return .hls }
+        if lower.contains(".aac") || lower.contains("aac") { return .aac }
+        if lower.contains(".mp3") || lower.contains("mp3") { return .mp3 }
+        return .unknown
+    }
+
+    /// Etichetta da mostrare quando la frequenza è "—" (stazioni internet senza FM reale).
+    /// Mostra il genere in uppercase per riempire il display vintage.
+    var displayLabel: String {
+        if frequency == "—" || frequency.isEmpty {
+            return genre.uppercased()
+        }
+        return frequency
+    }
+
+    /// Emoji bandiera del paese, derivata dal nome paese italiano.
+    var flagEmoji: String { RadioStation.flagMap[country] ?? "🌍" }
+
+    private static let flagMap: [String: String] = [
+        "Italia": "🇮🇹", "Francia": "🇫🇷", "Germania": "🇩🇪", "UK": "🇬🇧",
+        "Spagna": "🇪🇸", "USA": "🇺🇸", "Olanda": "🇳🇱", "Belgio": "🇧🇪",
+        "Svizzera": "🇨🇭", "Austria": "🇦🇹", "Norvegia": "🇳🇴", "Danimarca": "🇩🇰",
+        "Svezia": "🇸🇪", "Finlandia": "🇫🇮", "Islanda": "🇮🇸", "Polonia": "🇵🇱",
+        "Rep. Ceca": "🇨🇿", "Slovacchia": "🇸🇰", "Slovenia": "🇸🇮", "Croazia": "🇭🇷",
+        "Serbia": "🇷🇸", "Bulgaria": "🇧🇬", "Estonia": "🇪🇪", "Lettonia": "🇱🇻",
+        "Lituania": "🇱🇹", "Ungheria": "🇭🇺", "Romania": "🇷🇴", "Ucraina": "🇺🇦",
+        "Russia": "🇷🇺", "Grecia": "🇬🇷", "Turchia": "🇹🇷", "Israele": "🇮🇱",
+        "Portogallo": "🇵🇹", "Sud Africa": "🇿🇦", "Marocco": "🇲🇦", "Egitto": "🇪🇬",
+        "Kenya": "🇰🇪", "Nigeria": "🇳🇬", "India": "🇮🇳", "Pakistan": "🇵🇰",
+        "Giappone": "🇯🇵", "Thailandia": "🇹🇭", "Indonesia": "🇮🇩", "Malesia": "🇲🇾",
+        "Filippine": "🇵🇭", "Singapore": "🇸🇬", "Vietnam": "🇻🇳", "Nuova Zelanda": "🇳🇿",
+        "Australia": "🇦🇺", "Messico": "🇲🇽", "Argentina": "🇦🇷", "Brasile": "🇧🇷",
+        "Cile": "🇨🇱", "Colombia": "🇨🇴", "Perù": "🇵🇪", "Uruguay": "🇺🇾",
+        "Cuba": "🇨🇺", "Internet": "🌐"
+    ]
 }
 
 class RadioManager: NSObject, ObservableObject {
@@ -37,6 +84,15 @@ class RadioManager: NSObject, ObservableObject {
     /// Diventa `true` quando l'utente tenta di riprodurre una stazione Pro senza essere Pro.
     /// La UI dovrebbe osservare questo flag, mostrare il paywall e poi resettarlo a `false`.
     @Published var blockedByPaywall: Bool = false
+
+    // MARK: - Favorites & Recents (persisted in UserDefaults)
+    @Published private(set) var favoriteStationIds: Set<Int> = []
+    @Published private(set) var recentStationIds: [Int] = []
+
+    private let favoritesKey = "talky_favorite_station_ids"
+    private let recentsKey = "talky_recent_station_ids"
+    private let lastStationKey = "talky_last_station_id"
+    private let maxRecents = 10
     
     // Lista di stazioni radio internazionali — URL verificati live (maggio 2026).
     // Le prime 30 (id 1-30) sono Free; dalla 31 in poi sono Pro.
@@ -245,8 +301,19 @@ class RadioManager: NSObject, ObservableObject {
     
     private override init() {
         super.init()
+        loadPersistedState()
         setupAudioSession()
         setupRemoteCommandCenter()
+    }
+
+    private func loadPersistedState() {
+        let defaults = UserDefaults.standard
+        if let favs = defaults.array(forKey: favoritesKey) as? [Int] {
+            favoriteStationIds = Set(favs)
+        }
+        if let rec = defaults.array(forKey: recentsKey) as? [Int] {
+            recentStationIds = rec
+        }
     }
     
     private func setupAudioSession() {
@@ -299,8 +366,21 @@ class RadioManager: NSObject, ObservableObject {
         
         // Traccia l'uso della radio in Firebase
         firebaseManager.trackRadioUsage(station: "\(station.name) - \(station.country)")
-        
+
+        // Registra come ultima stazione e nei recenti
+        recordPlayedStation(station)
+
         logger.logAudioInfo("Avviata riproduzione: \(station.name) - \(station.country)")
+    }
+
+    private func recordPlayedStation(_ station: RadioStation) {
+        UserDefaults.standard.set(station.id, forKey: lastStationKey)
+        // Sposta in cima ai recenti (rimuovi duplicato precedente)
+        var rec = recentStationIds.filter { $0 != station.id }
+        rec.insert(station.id, at: 0)
+        if rec.count > maxRecents { rec = Array(rec.prefix(maxRecents)) }
+        recentStationIds = rec
+        UserDefaults.standard.set(rec, forKey: recentsKey)
     }
     
     func stopRadio() {
@@ -359,6 +439,120 @@ class RadioManager: NSObject, ObservableObject {
     var proStations: [RadioStation] {
         radioStations.filter { $0.id > 30 }
     }
+
+    // MARK: - Favorites
+
+    /// Stazioni preferite ordinate alfabeticamente per nome.
+    var favoriteStations: [RadioStation] {
+        favoriteStationIds.compactMap { id in radioStations.first { $0.id == id } }
+            .sorted { $0.name < $1.name }
+    }
+
+    func isFavorite(_ station: RadioStation) -> Bool {
+        favoriteStationIds.contains(station.id)
+    }
+
+    func toggleFavorite(_ station: RadioStation) {
+        if favoriteStationIds.contains(station.id) {
+            favoriteStationIds.remove(station.id)
+        } else {
+            favoriteStationIds.insert(station.id)
+        }
+        UserDefaults.standard.set(Array(favoriteStationIds), forKey: favoritesKey)
+        logger.logInfo("Favorites: toggled \(station.name) → \(favoriteStationIds.contains(station.id) ? "ON" : "OFF")")
+    }
+
+    // MARK: - Recents
+
+    /// Ultime stazioni riprodotte (più recenti prima, max 10).
+    var recentStations: [RadioStation] {
+        recentStationIds.compactMap { id in radioStations.first { $0.id == id } }
+    }
+
+    // MARK: - Last Station (auto-resume)
+
+    /// ID dell'ultima stazione riprodotta, persistito tra sessioni.
+    var lastStationId: Int? {
+        let v = UserDefaults.standard.integer(forKey: lastStationKey)
+        return v == 0 ? nil : v
+    }
+
+    /// Restituisce l'ultima stazione riprodotta, o la prima della lista se non c'è.
+    /// Usata da ContentView per auto-resume all'apertura della modalità FM.
+    var resumeStation: RadioStation {
+        if let id = lastStationId, let s = radioStations.first(where: { $0.id == id }) {
+            return s
+        }
+        return radioStations[0]
+    }
+
+    // MARK: - Locale-based grouping
+
+    /// Paese del dispositivo mappato in italiano (es. "IT" → "Italia").
+    /// Usato per mostrare la sezione "Vicino a te" in cima al browser.
+    var deviceCountry: String {
+        let code: String
+        if #available(iOS 16, *) {
+            code = Locale.current.region?.identifier ?? "IT"
+        } else {
+            code = Locale.current.regionCode ?? "IT"
+        }
+        return RadioManager.regionToCountry[code] ?? "Italia"
+    }
+
+    /// Stazioni del paese dell'utente (sezione "Vicino a te").
+    var localStations: [RadioStation] {
+        radioStations.filter { $0.country == deviceCountry }
+    }
+
+    /// Tutte le coppie (paese, stazioni) ordinate: paese locale per primo, poi alfabetico.
+    var stationsGroupedByCountry: [(country: String, stations: [RadioStation])] {
+        let local = deviceCountry
+        let grouped = Dictionary(grouping: radioStations) { $0.country }
+        return grouped
+            .map { (country: $0.key, stations: $0.value.sorted { $0.name < $1.name }) }
+            .sorted { a, b in
+                if a.country == local { return true }
+                if b.country == local { return false }
+                return a.country < b.country
+            }
+    }
+
+    /// Tutte le coppie (genere, stazioni) ordinate alfabeticamente.
+    var stationsGroupedByGenre: [(genre: String, stations: [RadioStation])] {
+        let grouped = Dictionary(grouping: radioStations) { $0.genre }
+        return grouped
+            .map { (genre: $0.key, stations: $0.value.sorted { $0.name < $1.name }) }
+            .sorted { $0.genre < $1.genre }
+    }
+
+    // MARK: - Jump navigation (long-press +10/-10)
+
+    /// Salta avanti di N stazioni (con wrap-around).
+    func jumpStations(by offset: Int) {
+        guard !radioStations.isEmpty else { return }
+        let currentIndex = currentStation.flatMap { c in radioStations.firstIndex { $0.id == c.id } } ?? 0
+        let count = radioStations.count
+        let newIndex = ((currentIndex + offset) % count + count) % count
+        playStation(radioStations[newIndex])
+    }
+
+    private static let regionToCountry: [String: String] = [
+        "IT": "Italia", "FR": "Francia", "DE": "Germania", "GB": "UK", "UK": "UK",
+        "ES": "Spagna", "US": "USA", "NL": "Olanda", "BE": "Belgio",
+        "CH": "Svizzera", "AT": "Austria", "NO": "Norvegia", "DK": "Danimarca",
+        "SE": "Svezia", "FI": "Finlandia", "IS": "Islanda", "PL": "Polonia",
+        "CZ": "Rep. Ceca", "SK": "Slovacchia", "SI": "Slovenia", "HR": "Croazia",
+        "RS": "Serbia", "BG": "Bulgaria", "EE": "Estonia", "LV": "Lettonia",
+        "LT": "Lituania", "HU": "Ungheria", "RO": "Romania", "UA": "Ucraina",
+        "RU": "Russia", "GR": "Grecia", "TR": "Turchia", "IL": "Israele",
+        "PT": "Portogallo", "ZA": "Sud Africa", "MA": "Marocco", "EG": "Egitto",
+        "KE": "Kenya", "NG": "Nigeria", "IN": "India", "PK": "Pakistan",
+        "JP": "Giappone", "TH": "Thailandia", "ID": "Indonesia", "MY": "Malesia",
+        "PH": "Filippine", "SG": "Singapore", "VN": "Vietnam", "NZ": "Nuova Zelanda",
+        "AU": "Australia", "MX": "Messico", "AR": "Argentina", "BR": "Brasile",
+        "CL": "Cile", "CO": "Colombia", "PE": "Perù", "UY": "Uruguay", "CU": "Cuba"
+    ]
 
     // MARK: - Station Selection
 
