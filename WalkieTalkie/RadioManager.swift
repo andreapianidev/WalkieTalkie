@@ -25,10 +25,22 @@ struct RadioStation: Identifiable {
     let frequency: String
     let streamURL: String
     let genre: String
+    /// `true` se la stazione richiede Talky Pro. Stored (non computed) per consentire
+    /// di aggiungere stazioni Free anche con id > 30 senza dover renumerare la lista
+    /// (i preferiti utente sono memorizzati per id, renumerare li romperebbe).
+    let isPro: Bool
 
-    /// Le stazioni con id > 30 sono internazionali premium e richiedono Talky Pro.
-    /// Le prime 30 (italiane + grandi broadcaster europei) sono Free.
-    var isPro: Bool { id > 30 }
+    /// Init pubblico: se `isPro` è nil applica la regola storica `id > 30`,
+    /// preservando il comportamento delle stazioni 1-135 esistenti.
+    init(id: Int, name: String, country: String, frequency: String, streamURL: String, genre: String, isPro: Bool? = nil) {
+        self.id = id
+        self.name = name
+        self.country = country
+        self.frequency = frequency
+        self.streamURL = streamURL
+        self.genre = genre
+        self.isPro = isPro ?? (id > 30)
+    }
 
     /// Qualità inferita dall'URL (HLS > AAC > MP3 in affidabilità su iOS).
     var quality: StreamQuality {
@@ -66,7 +78,7 @@ struct RadioStation: Identifiable {
         "Filippine": "🇵🇭", "Singapore": "🇸🇬", "Vietnam": "🇻🇳", "Nuova Zelanda": "🇳🇿",
         "Australia": "🇦🇺", "Messico": "🇲🇽", "Argentina": "🇦🇷", "Brasile": "🇧🇷",
         "Cile": "🇨🇱", "Colombia": "🇨🇴", "Perù": "🇵🇪", "Uruguay": "🇺🇾",
-        "Cuba": "🇨🇺", "Internet": "🌐"
+        "Cuba": "🇨🇺", "Hong Kong": "🇭🇰", "Internet": "🌐"
     ]
 }
 
@@ -95,9 +107,10 @@ class RadioManager: NSObject, ObservableObject {
     private let maxRecents = 10
     
     // Lista di stazioni radio internazionali — URL verificati live (maggio 2026).
-    // Le prime 30 (id 1-30) sono Free; dalla 31 in poi sono Pro.
+    // Il flag Pro è esplicito per ogni stazione; la regola storica `id > 30` vale
+    // come default per le prime 135 stazioni, le nuove specificano `isPro` esplicito.
     let radioStations: [RadioStation] = [
-        // MARK: - Free (Italia + grandi broadcaster europei) — 30 stazioni
+        // MARK: - Free (Italia + grandi broadcaster europei)
         // Italia
         RadioStation(id: 1, name: "RTL 102.5", country: "Italia", frequency: "102.5", streamURL: "https://streamingv2.shoutcast.com/rtl-1025", genre: "Pop"),
         RadioStation(id: 2, name: "Radio Deejay", country: "Italia", frequency: "106.2", streamURL: "https://4c4b867c89244861ac216426883d1ad0.msvdn.net/radiodeejay/radiodeejay/master_ma.m3u8", genre: "Pop"),
@@ -296,7 +309,45 @@ class RadioManager: NSObject, ObservableObject {
         RadioStation(id: 132, name: "Frisky", country: "Internet", frequency: "—", streamURL: "http://stream2.friskyradio.com/frisky_mp3_hi", genre: "Electronic"),
         RadioStation(id: 133, name: "Dance Wave!", country: "Internet", frequency: "—", streamURL: "https://dancewave.online/dance.mp3", genre: "Dance"),
         RadioStation(id: 134, name: "Rock Antenne Heavy Metal", country: "Internet", frequency: "—", streamURL: "http://mp3channels.webradio.rockantenne.de/heavy-metal", genre: "Metal"),
-        RadioStation(id: 135, name: "Deep House Lounge", country: "Internet", frequency: "—", streamURL: "http://198.15.94.34:8006/stream", genre: "Electronic")
+        RadioStation(id: 135, name: "Deep House Lounge", country: "Internet", frequency: "—", streamURL: "http://198.15.94.34:8006/stream", genre: "Electronic"),
+
+        // MARK: - Free aggiuntive (verificate maggio 2026) — isPro: false esplicito
+        RadioStation(id: 136, name: "RTL 102.5 Best", country: "Italia", frequency: "—", streamURL: "https://streamingv2.shoutcast.com/rtl-1025-best", genre: "Pop", isPro: false),
+        RadioStation(id: 137, name: "Skyrock", country: "Francia", frequency: "96.0", streamURL: "http://icecast.skyrock.net/s/natio_mp3_128k", genre: "Hip-Hop", isPro: false),
+        RadioStation(id: 138, name: "RFI Monde", country: "Francia", frequency: "89.0", streamURL: "http://live02.rfi.fr/rfimonde-64.mp3", genre: "News", isPro: false),
+        RadioStation(id: 139, name: "NDR 2", country: "Germania", frequency: "87.6", streamURL: "https://icecast.ndr.de/ndr/ndr2/niedersachsen/mp3/128/stream.mp3", genre: "Pop", isPro: false),
+        RadioStation(id: 140, name: "Heart London", country: "UK", frequency: "106.2", streamURL: "https://media-ssl.musicradio.com/HeartLondon", genre: "Pop", isPro: false),
+        RadioStation(id: 141, name: "Smooth Radio", country: "UK", frequency: "100.0", streamURL: "https://media-ssl.musicradio.com/SmoothUK", genre: "Easy", isPro: false),
+        RadioStation(id: 142, name: "talkSPORT", country: "UK", frequency: "1089", streamURL: "https://radio.talksport.com/stream", genre: "Sport", isPro: false),
+        RadioStation(id: 143, name: "NPO Radio 1", country: "Olanda", frequency: "97.5", streamURL: "https://icecast.omroep.nl/radio1-bb-mp3", genre: "News", isPro: false),
+
+        // MARK: - Pro aggiuntive (verificate maggio 2026) — espansione USA / UK / Asia / NL / Oceania
+        // Olanda + Polonia
+        RadioStation(id: 144, name: "NPO 3FM", country: "Olanda", frequency: "96.5", streamURL: "https://icecast.omroep.nl/3fm-bb-mp3", genre: "Pop"),
+        RadioStation(id: 145, name: "Sky Radio NL", country: "Olanda", frequency: "101.2", streamURL: "https://22343.live.streamtheworld.com/SKYRADIO.mp3", genre: "Pop"),
+        RadioStation(id: 146, name: "Antyradio", country: "Polonia", frequency: "94.0", streamURL: "https://an.cdn.eurozet.pl/ant-waw.mp3", genre: "Rock"),
+        // UK extra
+        RadioStation(id: 147, name: "talkRADIO", country: "UK", frequency: "—", streamURL: "https://radio.talkradio.co.uk/stream", genre: "Talk"),
+        RadioStation(id: 148, name: "Times Radio", country: "UK", frequency: "—", streamURL: "https://timesradio.wireless.radio/stream", genre: "News"),
+        RadioStation(id: 149, name: "Heart 80s", country: "UK", frequency: "—", streamURL: "https://media-ssl.musicradio.com/Heart80s", genre: "Oldies"),
+        // USA extra
+        RadioStation(id: 150, name: "KEXP 90.3", country: "USA", frequency: "90.3", streamURL: "https://kexp.streamguys1.com/kexp160.aac", genre: "Alternative"),
+        RadioStation(id: 151, name: "WNYC FM", country: "USA", frequency: "93.9", streamURL: "https://fm939.wnyc.org/wnycfm", genre: "News"),
+        RadioStation(id: 152, name: "WBEZ Chicago", country: "USA", frequency: "91.5", streamURL: "https://stream.wbez.org/wbez128.mp3", genre: "News"),
+        RadioStation(id: 153, name: "KQED FM", country: "USA", frequency: "88.5", streamURL: "https://streams.kqed.org/kqedradio", genre: "News"),
+        RadioStation(id: 154, name: "WFMU", country: "USA", frequency: "91.1", streamURL: "https://stream0.wfmu.org/freeform-128k", genre: "Eclectic"),
+        RadioStation(id: 155, name: "NPR News", country: "USA", frequency: "—", streamURL: "https://npr-ice.streamguys1.com/live.mp3", genre: "News"),
+        RadioStation(id: 156, name: "WBLS", country: "USA", frequency: "107.5", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/WBLSFMAAC.aac", genre: "Urban"),
+        RadioStation(id: 157, name: "Hot 97", country: "USA", frequency: "97.1", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/WQHTFMAAC.aac", genre: "Hip-Hop"),
+        RadioStation(id: 158, name: "Bloomberg Radio", country: "USA", frequency: "1130", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/WBBRAMAAC.aac", genre: "News"),
+        // Messico
+        RadioStation(id: 159, name: "W Radio", country: "Messico", frequency: "96.9", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/WRADIO_MEXICOAAC.aac", genre: "News"),
+        // Australia extra
+        RadioStation(id: 160, name: "ABC Classic FM", country: "Australia", frequency: "92.9", streamURL: "https://live-radio01.mediahubaustralia.com/2FMW/mp3/", genre: "Classical"),
+        // Hong Kong
+        RadioStation(id: 161, name: "RTHK Radio 1", country: "Hong Kong", frequency: "92.6", streamURL: "http://stm.rthk.hk/radio1", genre: "Talk"),
+        RadioStation(id: 162, name: "RTHK Radio 2", country: "Hong Kong", frequency: "94.8", streamURL: "http://stm.rthk.hk/radio2", genre: "Pop"),
+        RadioStation(id: 163, name: "RTHK Radio 3", country: "Hong Kong", frequency: "97.9", streamURL: "http://stm.rthk.hk/radio3", genre: "Talk")
     ]
     
     private override init() {
@@ -543,19 +594,19 @@ class RadioManager: NSObject, ObservableObject {
     
     // MARK: - Free / Pro Stations
 
-    /// Prime 30 stazioni (id 1...30) disponibili a tutti gli utenti.
+    /// Stazioni disponibili a tutti gli utenti (italiane + grandi broadcaster europei).
     var freeStations: [RadioStation] {
-        radioStations.filter { $0.id <= 30 }
+        radioStations.filter { !$0.isPro }
     }
 
-    /// Stazioni internazionali premium (id > 30) sbloccabili con Talky Pro.
+    /// Stazioni internazionali premium sbloccabili con Talky Pro.
     var proStations: [RadioStation] {
-        radioStations.filter { $0.id > 30 }
+        radioStations.filter { $0.isPro }
     }
 
     /// Pool di stazioni effettivamente navigabili dall'utente:
-    /// - utente Pro → tutte le 135
-    /// - utente Free → solo le 30 free
+    /// - utente Pro → tutte
+    /// - utente Free → solo le free
     /// Usata da next/prev/jump/resume per evitare di sbattere sul paywall a ogni tap.
     var availableStations: [RadioStation] {
         let isProUser = UserDefaults.standard.bool(forKey: "fastboot_isProUser")
