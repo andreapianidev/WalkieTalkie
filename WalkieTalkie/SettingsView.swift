@@ -1,45 +1,66 @@
 //creato da Andrea Piani - Immaginet Srl - 2024 - https://www.andreapiani.com - SettingsView.swift
 
 import SwiftUI
+import Combine
 
 struct SettingsView: View {
     @ObservedObject var audioManager: AudioManager
     @StateObject private var settingsManager = SettingsManager.shared
     @StateObject private var notificationManager = NotificationManager.shared
+    @EnvironmentObject private var adManager: AdManager
+    @EnvironmentObject private var iapManager: IAPManager
+    @EnvironmentObject private var themeManager: ThemeManager
     @State private var showingInstructions = false
     @State private var showingPerformance = false
-    
+    @State private var showPaywall = false
+    @State private var showThemeSelector = false
+    @State private var showHistory = false
+    @State private var showSleepTimer = false
+    @State private var showEqualizer = false
+    @State private var showRecordings = false
+    @State private var showPrivateChannels = false
+    @State private var rewardClock = Date()
+
     var body: some View {
         VStack(spacing: 0) {
             // Header
             headerView
-            
+
             ScrollView {
                 VStack(spacing: 20) {
+                    // Pro Section (paywall / status)
+                    proSection
+
+                    // Personalization Section (themes + history)
+                    personalizationSection
+
                     // Notifications Section
                     notificationsSection
-                    
+
                     // Audio Settings Section
                     audioSettingsSection
-                    
+
                     // Appearance Section
                     appearanceSection
-                    
+
                     // Performance Section
                     performanceSection
-                    
+
                     // Instructions Section
                     instructionsSection
-                    
+
                     // App Info Section
                     appInfoSection
-                    
+
                     // Support Section
                     supportSection
-                    
+
                     // Peak App Section
                     peakAppSection
-                    
+
+                    // Ads / Privacy section
+                    adsSection
+
                     Spacer(minLength: 100)
                 }
                 .padding(.horizontal, 20)
@@ -47,6 +68,58 @@ struct SettingsView: View {
             }
         }
         .background(Color("BackgroundColor"))
+        .fullScreenCover(isPresented: $showPaywall) {
+            PaywallView(trigger: "settings_manual")
+        }
+        .sheet(isPresented: $showThemeSelector) {
+            ThemeSelectorView(onLockedTap: {
+                showThemeSelector = false
+                // Piccolo delay per evitare conflitto di animazioni tra sheet e fullScreenCover.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                    showPaywall = true
+                }
+            })
+        }
+        .sheet(isPresented: $showHistory) {
+            TransmissionHistoryView(onUnlockTap: {
+                showHistory = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                    showPaywall = true
+                }
+            })
+        }
+        .sheet(isPresented: $showSleepTimer) {
+            SleepTimerSheet(onUnlockTap: {
+                showSleepTimer = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                    showPaywall = true
+                }
+            })
+        }
+        .sheet(isPresented: $showEqualizer) {
+            EqualizerView(onLockedTap: {
+                showEqualizer = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                    showPaywall = true
+                }
+            })
+        }
+        .sheet(isPresented: $showRecordings) {
+            RecordingsListView(onUnlockTap: {
+                showRecordings = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                    showPaywall = true
+                }
+            })
+        }
+        .sheet(isPresented: $showPrivateChannels) {
+            PrivateChannelSheet(onLockedTap: {
+                showPrivateChannels = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                    showPaywall = true
+                }
+            })
+        }
         .onAppear {
             // Sync audio manager with settings manager
             if settingsManager.isBackgroundAudioEnabled {
@@ -55,6 +128,252 @@ struct SettingsView: View {
                 audioManager.setBackgroundVolume(0.0)
             }
         }
+    }
+
+    // MARK: - Pro Section
+
+    private var proSection: some View {
+        VStack(alignment: .leading, spacing: 15) {
+            HStack {
+                Image(systemName: iapManager.isProUser ? "checkmark.seal.fill" : "crown.fill")
+                    .foregroundColor(iapManager.isProUser ? .green : .yellow)
+                Text(iapManager.isProUser ? "settings.pro.title_active".localized : "settings.pro.title".localized)
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(Color("PrimaryTextColor"))
+                Spacer()
+            }
+
+            if iapManager.isProUser {
+                // Stato Pro attivo: link per gestire la sub su Apple ID Settings.
+                Button(action: openManageSubscriptions) {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("settings.pro.manage_subscription".localized)
+                                .font(.body)
+                                .fontWeight(.medium)
+                                .foregroundColor(Color("PrimaryTextColor"))
+                            Text("settings.pro.manage_subscription_subtitle".localized)
+                                .font(.caption)
+                                .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
+                        }
+                        Spacer()
+                        Image(systemName: "arrow.up.right.square")
+                            .foregroundColor(Color("PrimaryTextColor").opacity(0.5))
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color("SurfaceColor"))
+                    )
+                }
+            } else {
+                // CTA principale per sbloccare Pro.
+                Button(action: { showPaywall = true }) {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("settings.pro.unlock".localized)
+                                .font(.body)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.black)
+                            Text("settings.pro.unlock_subtitle".localized)
+                                .font(.caption)
+                                .foregroundColor(.black.opacity(0.7))
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.black.opacity(0.5))
+                            .font(.caption)
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.yellow)
+                    )
+                }
+            }
+
+            // Restore acquisti sempre accessibile (richiesto da Apple review).
+            Button(action: restorePurchases) {
+                HStack {
+                    Image(systemName: "arrow.clockwise")
+                        .foregroundColor(Color("PrimaryTextColor"))
+                    Text("settings.pro.restore_purchases".localized)
+                        .font(.body)
+                        .fontWeight(.medium)
+                        .foregroundColor(Color("PrimaryTextColor"))
+                    Spacer()
+                    if iapManager.isLoading {
+                        ProgressView()
+                            .scaleEffect(0.8)
+                    }
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color("SurfaceColor"))
+                )
+            }
+            .disabled(iapManager.isLoading)
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 15)
+                .fill(Color("SurfaceColor"))
+        )
+    }
+
+    // MARK: - Personalization Section
+
+    private var personalizationSection: some View {
+        VStack(alignment: .leading, spacing: 15) {
+            HStack {
+                Image(systemName: "sparkles")
+                    .foregroundColor(Color("PrimaryTextColor"))
+                Text("settings.personalization.title".localized)
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(Color("PrimaryTextColor"))
+                Spacer()
+            }
+
+            VStack(spacing: 12) {
+                // Temi
+                Button(action: { showThemeSelector = true }) {
+                    HStack {
+                        Circle()
+                            .fill(themeManager.currentTheme.accentColor)
+                            .frame(width: 24, height: 24)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("settings.personalization.themes".localized)
+                                .font(.body)
+                                .fontWeight(.medium)
+                                .foregroundColor(Color("PrimaryTextColor"))
+                            Text(themeManager.currentTheme.displayName)
+                                .font(.caption)
+                                .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
+                        }
+                        Spacer()
+                        if !iapManager.isProUser {
+                            proBadge
+                        }
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(Color("PrimaryTextColor").opacity(0.5))
+                            .font(.caption)
+                    }
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color("SurfaceColor"))
+                    )
+                }
+
+                // Cronologia trasmissioni
+                proRow(
+                    icon: "clock.arrow.circlepath",
+                    title: "settings.personalization.history.title".localized,
+                    subtitle: "settings.personalization.history.subtitle".localized,
+                    action: { showHistory = true }
+                )
+
+                // Sleep Timer Radio
+                proRow(
+                    icon: "moon.zzz.fill",
+                    title: "settings.personalization.sleep_timer.title".localized,
+                    subtitle: "settings.personalization.sleep_timer.subtitle".localized,
+                    action: { showSleepTimer = true }
+                )
+
+                // Equalizer
+                proRow(
+                    icon: "slider.horizontal.3",
+                    title: "settings.personalization.equalizer.title".localized,
+                    subtitle: "settings.personalization.equalizer.subtitle".localized,
+                    action: { showEqualizer = true }
+                )
+
+                // Registrazioni
+                proRow(
+                    icon: "mic.circle.fill",
+                    title: "settings.personalization.recordings.title".localized,
+                    subtitle: "settings.personalization.recordings.subtitle".localized,
+                    action: { showRecordings = true }
+                )
+
+                // Canali privati
+                proRow(
+                    icon: "lock.shield.fill",
+                    title: "settings.personalization.private_channels.title".localized,
+                    subtitle: "settings.personalization.private_channels.subtitle".localized,
+                    action: { showPrivateChannels = true }
+                )
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 15)
+                .fill(Color("SurfaceColor"))
+        )
+    }
+
+    /// Riga riutilizzabile per feature Pro nella sezione Personalizzazione.
+    /// Mostra il badge "PRO" se l'utente non è abbonato.
+    private func proRow(icon: String, title: String, subtitle: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack {
+                Image(systemName: icon)
+                    .foregroundColor(Color("PrimaryTextColor"))
+                    .frame(width: 24, height: 24)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.body)
+                        .fontWeight(.medium)
+                        .foregroundColor(Color("PrimaryTextColor"))
+                    Text(subtitle)
+                        .font(.caption)
+                        .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
+                }
+                Spacer()
+                if !iapManager.isProUser {
+                    proBadge
+                }
+                Image(systemName: "chevron.right")
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.5))
+                    .font(.caption)
+            }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color("SurfaceColor"))
+            )
+        }
+    }
+
+    private var proBadge: some View {
+        Text("PRO")
+            .font(.caption2)
+            .fontWeight(.bold)
+            .foregroundColor(.black)
+            .padding(.horizontal, 6)
+            .padding(.vertical, 2)
+            .background(
+                Capsule().fill(Color.yellow)
+            )
+    }
+
+    private func restorePurchases() {
+        Task {
+            do {
+                try await iapManager.restorePurchases()
+            } catch {
+                // Errore già loggato a livello manager.
+            }
+        }
+    }
+
+    private func openManageSubscriptions() {
+        guard let url = URL(string: "https://apps.apple.com/account/subscriptions") else { return }
+        UIApplication.shared.open(url)
     }
     
     private var headerView: some View {
@@ -708,8 +1027,127 @@ struct SettingsView: View {
                 .fill(Color("SurfaceColor"))
         )
     }
+
+    private var adsSection: some View {
+        VStack(alignment: .leading, spacing: 15) {
+            HStack {
+                Image(systemName: "hand.raised.fill")
+                    .foregroundColor(Color("PrimaryTextColor"))
+                Text("ads_section_title".localized)
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(Color("PrimaryTextColor"))
+                Spacer()
+            }
+
+            VStack(spacing: 12) {
+                rewardRow
+
+                if adManager.consent.isPrivacyOptionsRequired {
+                    Button(action: {
+                        Task { await adManager.consent.presentPrivacyOptions() }
+                    }) {
+                        HStack {
+                            Image(systemName: "shield.lefthalf.filled")
+                                .foregroundColor(Color("PrimaryTextColor"))
+                            Text("manage_privacy".localized)
+                                .font(.body)
+                                .fontWeight(.medium)
+                                .foregroundColor(Color("PrimaryTextColor"))
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(Color("PrimaryTextColor").opacity(0.5))
+                                .font(.caption)
+                        }
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color("SurfaceColor"))
+                        )
+                    }
+                }
+            }
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 15)
+                .fill(Color("SurfaceColor"))
+        )
+        .onReceive(Timer.publish(every: 30, on: .main, in: .common).autoconnect()) { _ in
+            rewardClock = Date()
+        }
+    }
+
+    @ViewBuilder
+    private var rewardRow: some View {
+        if adManager.adsRemoved {
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("ads_removed_active".localized)
+                        .font(.body)
+                        .fontWeight(.medium)
+                        .foregroundColor(Color("PrimaryTextColor"))
+                    Text(remainingText)
+                        .font(.caption)
+                        .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
+                }
+                Spacer()
+                Image(systemName: "checkmark.seal.fill")
+                    .foregroundColor(.green)
+            }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color("SurfaceColor"))
+            )
+        } else {
+            Button(action: {
+                adManager.rewarded.showAd {
+                    adManager.grantRemoveAdsReward()
+                    HapticManager.shared.success()
+                }
+            }) {
+                HStack {
+                    Image(systemName: "play.rectangle.fill")
+                        .foregroundColor(.white)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("watch_ad_remove_ads".localized)
+                            .font(.body)
+                            .fontWeight(.medium)
+                            .foregroundColor(.white)
+                        Text("watch_ad_remove_ads_subtitle".localized)
+                            .font(.caption)
+                            .foregroundColor(.white.opacity(0.8))
+                    }
+                    Spacer()
+                    if !adManager.rewarded.isAdReady {
+                        ProgressView()
+                            .tint(.white)
+                    }
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.blue.opacity(0.85))
+                )
+            }
+            .disabled(!adManager.rewarded.isAdReady)
+            .opacity(adManager.rewarded.isAdReady ? 1.0 : 0.6)
+        }
+    }
+
+    private var remainingText: String {
+        _ = rewardClock // re-render on timer tick
+        guard let remaining = adManager.removeAdsRemaining else {
+            return ""
+        }
+        let minutes = Int(ceil(remaining / 60))
+        let template = "ads_removed_remaining".localized
+        return String(format: template, minutes)
+    }
 }
 
 #Preview {
     SettingsView(audioManager: AudioManager.shared)
+        .environmentObject(AdManager.shared)
 }

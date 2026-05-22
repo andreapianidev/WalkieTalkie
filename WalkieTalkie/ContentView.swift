@@ -14,6 +14,9 @@ struct ContentView: View {
     @StateObject private var radioManager = RadioManager.shared
     @StateObject private var notificationManager = NotificationManager.shared
     @StateObject private var hapticManager = HapticManager.shared
+    @StateObject private var settingsManager = SettingsManager.shared
+    @EnvironmentObject private var adManager: AdManager
+    @State private var frequencyChangeCount = 0
     @State private var isTransmitting = false
     @State private var frequency = "428.283"
     @State private var showingPermissionAlert = false
@@ -36,8 +39,8 @@ struct ContentView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Sfondo adattivo
-                Color("BackgroundColor")
+                // Sfondo adattivo (animato per i temi blackHole/galaxy)
+                AnimatedBackgroundView()
                     .ignoresSafeArea()
                 
                 // Contenuto principale
@@ -97,8 +100,27 @@ struct ContentView: View {
                     Spacer()
                     tabBarView
                 }
+
+                // First-run coach overlay (non-blocking)
+                if !settingsManager.hasSeenFirstRunCoach && selectedTab == 0 && !isRadioMode {
+                    FirstRunCoachView(
+                        connectedPeersCount: multipeerManager.connectedPeers.count,
+                        isTransmitting: isTransmitting,
+                        onGoToConnections: {
+                            withAnimation { selectedTab = 2 }
+                        },
+                        onDismiss: dismissFirstRunCoach
+                    )
+                    .allowsHitTesting(true)
+                }
             }
         }
+    }
+
+    private func dismissFirstRunCoach() {
+        guard !settingsManager.hasSeenFirstRunCoach else { return }
+        settingsManager.hasSeenFirstRunCoach = true
+        FirstTimeEventTracker.shared.fireOnce(FirstTimeEventTracker.Events.firstRunCoachDismissed)
     }
     
     private var headerView: some View {
@@ -785,25 +807,50 @@ struct ContentView: View {
     private func previousFrequency() {
         currentFrequencyIndex = (currentFrequencyIndex - 1 + availableFrequencies.count) % availableFrequencies.count
         frequency = availableFrequencies[currentFrequencyIndex]
-        
+
         // Feedback realistico per cambio frequenza
         playFrequencyChangeSound()
         showFrequencyChangeIndicator()
-        
+
         // Gestione audio per frequenze non-home
         handleFrequencyAudio()
+
+        FirstTimeEventTracker.shared.fireOnce(
+            FirstTimeEventTracker.Events.channelChange,
+            parameters: ["direction": "prev"]
+        )
+
+        maybeShowInterstitialOnChannelChange()
+        ThemeSoundManager.shared.play(.channelChange)
     }
-    
+
     private func nextFrequency() {
         currentFrequencyIndex = (currentFrequencyIndex + 1) % availableFrequencies.count
         frequency = availableFrequencies[currentFrequencyIndex]
-        
+
         // Feedback realistico per cambio frequenza
         playFrequencyChangeSound()
         showFrequencyChangeIndicator()
-        
+
         // Gestione audio per frequenze non-home
         handleFrequencyAudio()
+
+        FirstTimeEventTracker.shared.fireOnce(
+            FirstTimeEventTracker.Events.channelChange,
+            parameters: ["direction": "next"]
+        )
+
+        maybeShowInterstitialOnChannelChange()
+        ThemeSoundManager.shared.play(.channelChange)
+    }
+
+    private func maybeShowInterstitialOnChannelChange() {
+        // Never interrupt a live transmission or reception.
+        guard !isTransmitting, !multipeerManager.isReceiving else { return }
+        frequencyChangeCount += 1
+        // Skip the very first change after launch.
+        guard frequencyChangeCount > 1 else { return }
+        adManager.showInterstitialIfAllowed()
     }
     
     private func playFrequencyChangeSound() {
@@ -910,22 +957,28 @@ struct ContentView: View {
     }
     
     private func startTransmitting() {
+        FirstTimeEventTracker.shared.fireOnce(FirstTimeEventTracker.Events.pttPress)
+
         guard !multipeerManager.connectedPeers.isEmpty else {
             multipeerManager.lastError = WalkieTalkieError.noConnectedPeers
             hapticManager.error()
             return
         }
-        
+
         // Verifica permessi audio prima di iniziare la trasmissione
         guard audioManager.hasAudioPermission else {
             audioManager.requestAudioPermission()
             hapticManager.warning()
             return
         }
-        
+
         hapticManager.transmissionStarted()
         isTransmitting = true
+        // Avoid showing the app-open ad if the user backgrounds the app
+        // while still pressing the PTT button.
+        adManager.appOpen.suppressNextResume = true
         multipeerManager.startTransmitting()
+        ThemeSoundManager.shared.play(.transmitStart)
     }
     
     private func stopTransmitting() {
@@ -974,5 +1027,6 @@ struct TabButton: View {
 
 #Preview {
     ContentView()
+        .environmentObject(AdManager.shared)
 }
 

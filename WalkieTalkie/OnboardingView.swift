@@ -8,303 +8,374 @@
 import SwiftUI
 import AVFoundation
 import UserNotifications
+import FirebaseAnalytics
 
 struct OnboardingView: View {
     @State private var currentPage = 0
     @State private var showingPermissions = false
+    @State private var lastTrackedPage = -1
     @Binding var isOnboardingComplete: Bool
     @ObservedObject var notificationManager: NotificationManager
-    
-    private let totalPages = 4
-    
+
+    private let totalPages = 5
+
     var body: some View {
         ZStack {
             Color("BackgroundColor")
                 .ignoresSafeArea()
-            
-            VStack {
-                // Progress indicator
-                HStack {
+
+            VStack(spacing: 0) {
+                HStack(spacing: 8) {
                     ForEach(0..<totalPages, id: \.self) { index in
-                        Circle()
-                            .fill(index <= currentPage ? Color("PrimaryTextColor") : Color("PrimaryTextColor").opacity(0.3))
-                            .frame(width: 8, height: 8)
+                        Capsule()
+                            .fill(index <= currentPage ? Color("PrimaryTextColor") : Color("PrimaryTextColor").opacity(0.25))
+                            .frame(width: index == currentPage ? 24 : 8, height: 8)
+                            .animation(.easeInOut(duration: 0.2), value: currentPage)
                     }
                 }
                 .padding(.top, 20)
-                
-                Spacer()
-                
-                // Content
+
+                Spacer(minLength: 12)
+
                 TabView(selection: $currentPage) {
-                    WelcomePageView()
-                        .tag(0)
-                    
-                    HowItWorksPageView()
-                        .tag(1)
-                    
-                    ConnectivityPageView()
-                        .tag(2)
-                    
-                    FrequencyPageView()
-                        .tag(3)
+                    OnboardingHookPage().tag(0)
+                    OnboardingNoInternetPage().tag(1)
+                    OnboardingPTTPage().tag(2)
+                    OnboardingFrequencyPage().tag(3)
+                    OnboardingStepsPage().tag(4)
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                 .animation(.easeInOut, value: currentPage)
-                
-                Spacer()
-                
-                // Navigation buttons
+
+                Spacer(minLength: 12)
+
                 HStack {
                     if currentPage > 0 {
-                        Button(action: {
-                            withAnimation {
-                                currentPage -= 1
-                            }
-                        }) {
-                            Text(OnboardingStrings.skipButton)
+                        Button {
+                            withAnimation { currentPage -= 1 }
+                        } label: {
+                            Text(OnboardingStrings.backButton)
                                 .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
-                                .padding()
+                                .padding(.vertical, 12)
+                                .padding(.horizontal, 16)
+                        }
+                    } else {
+                        Button {
+                            Analytics.logEvent("onboarding_skip", parameters: ["page_index": currentPage])
+                            showingPermissions = true
+                        } label: {
+                            Text(OnboardingStrings.skipButton)
+                                .foregroundColor(Color("PrimaryTextColor").opacity(0.5))
+                                .padding(.vertical, 12)
+                                .padding(.horizontal, 16)
                         }
                     }
-                    
+
                     Spacer()
-                    
-                    Button(action: {
+
+                    Button {
                         if currentPage < totalPages - 1 {
-                            withAnimation {
-                                currentPage += 1
-                            }
+                            withAnimation { currentPage += 1 }
                         } else {
                             showingPermissions = true
                         }
-                    }) {
+                    } label: {
                         Text(currentPage < totalPages - 1 ? OnboardingStrings.continueButton : OnboardingStrings.getStartedButton)
+                            .fontWeight(.semibold)
                             .foregroundColor(.white)
-                            .padding(.horizontal, 30)
-                            .padding(.vertical, 12)
+                            .padding(.horizontal, 32)
+                            .padding(.vertical, 14)
                             .background(Color("PrimaryTextColor"))
-                            .cornerRadius(25)
+                            .cornerRadius(28)
                     }
                 }
-                .padding(.horizontal, 30)
-                .padding(.bottom, 30)
+                .padding(.horizontal, 24)
+                .padding(.bottom, 24)
             }
+        }
+        .onAppear { trackPageView(0) }
+        .onChange(of: currentPage) { newValue in
+            trackPageView(newValue)
         }
         .sheet(isPresented: $showingPermissions) {
             PermissionsView(isOnboardingComplete: $isOnboardingComplete, notificationManager: notificationManager)
         }
     }
+
+    private func trackPageView(_ index: Int) {
+        guard index != lastTrackedPage else { return }
+        lastTrackedPage = index
+        Analytics.logEvent("onboarding_page_view", parameters: ["page_index": index])
+    }
 }
 
-struct WelcomePageView: View {
+// MARK: - Page 1: Hook
+
+private struct OnboardingHookPage: View {
     var body: some View {
-        VStack(spacing: 30) {
-            Image(systemName: "radio")
-                .font(.system(size: 80))
+        VStack(spacing: 28) {
+            Image(systemName: "antenna.radiowaves.left.and.right")
+                .font(.system(size: 84, weight: .light))
                 .foregroundColor(Color("PrimaryTextColor"))
-            
-            VStack(spacing: 15) {
-                Text(OnboardingStrings.welcomeTitle)
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+                .symbolRenderingMode(.hierarchical)
+
+            VStack(spacing: 14) {
+                Text(OnboardingStrings.p1Title)
+                    .font(.largeTitle.bold())
                     .foregroundColor(Color("PrimaryTextColor"))
                     .multilineTextAlignment(.center)
-                
-                Text(OnboardingStrings.welcomeSubtitle)
+
+                Text(OnboardingStrings.p1Subtitle)
                     .font(.title3)
-                    .foregroundColor(Color("PrimaryTextColor").opacity(0.8))
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.75))
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, 24)
             }
         }
         .padding()
     }
 }
 
-struct HowItWorksPageView: View {
-    var body: some View {
-        VStack(spacing: 30) {
-            Image(systemName: "iphone.radiowaves.left.and.right")
-                .font(.system(size: 80))
-                .foregroundColor(Color("PrimaryTextColor"))
-            
-            VStack(spacing: 15) {
-                Text(OnboardingStrings.howItWorksTitle)
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .foregroundColor(Color("PrimaryTextColor"))
-                    .multilineTextAlignment(.center)
-                
-                Text(OnboardingStrings.howItWorksDescription)
-                    .font(.body)
-                    .foregroundColor(Color("PrimaryTextColor").opacity(0.8))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 20)
-            }
-        }
-        .padding()
-    }
-}
+// MARK: - Page 2: No internet
 
-struct ConnectivityPageView: View {
+private struct OnboardingNoInternetPage: View {
     var body: some View {
-        VStack(spacing: 30) {
-            Image(systemName: "network")
-                .font(.system(size: 80))
-                .foregroundColor(Color("PrimaryTextColor"))
-            
-            VStack(spacing: 15) {
-                Text(OnboardingStrings.connectivityTitle)
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .foregroundColor(Color("PrimaryTextColor"))
-                    .multilineTextAlignment(.center)
-                
-                Text(OnboardingStrings.connectivityDescription)
-                    .font(.body)
-                    .foregroundColor(Color("PrimaryTextColor").opacity(0.8))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 20)
-                
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(OnboardingStrings.bluetoothFeature)
-                        .font(.body)
-                        .foregroundColor(Color("PrimaryTextColor").opacity(0.9))
-                    
-                    Text(OnboardingStrings.wifiFeature)
-                        .font(.body)
-                        .foregroundColor(Color("PrimaryTextColor").opacity(0.9))
-                    
-                    Text(OnboardingStrings.multipeerFeature)
-                        .font(.body)
-                        .foregroundColor(Color("PrimaryTextColor").opacity(0.9))
-                    
-                    Text(OnboardingStrings.rangeFeature)
-                        .font(.body)
-                        .foregroundColor(Color("PrimaryTextColor").opacity(0.9))
+        VStack(spacing: 28) {
+            ZStack {
+                HStack(spacing: 28) {
+                    Image(systemName: "iphone")
+                        .font(.system(size: 56, weight: .light))
+                    Image(systemName: "dot.radiowaves.left.and.right")
+                        .font(.system(size: 36, weight: .light))
+                        .foregroundColor(Color("PrimaryTextColor").opacity(0.6))
+                    Image(systemName: "iphone")
+                        .font(.system(size: 56, weight: .light))
                 }
-                .padding(.horizontal, 20)
-                
-                VStack(spacing: 8) {
-                    Text(OnboardingStrings.upToEightDevices)
-                        .font(.callout)
-                        .fontWeight(.semibold)
-                        .foregroundColor(Color("PrimaryTextColor"))
-                    
-                    Text(OnboardingStrings.mountainUse)
-                        .font(.callout)
-                        .foregroundColor(Color("PrimaryTextColor").opacity(0.8))
-                    
-                    Text(OnboardingStrings.excursionUse)
-                        .font(.callout)
-                        .foregroundColor(Color("PrimaryTextColor").opacity(0.8))
+                .foregroundColor(Color("PrimaryTextColor"))
+            }
+
+            VStack(spacing: 14) {
+                Text(OnboardingStrings.p2Title)
+                    .font(.title.bold())
+                    .foregroundColor(Color("PrimaryTextColor"))
+                    .multilineTextAlignment(.center)
+
+                Text(OnboardingStrings.p2Body)
+                    .font(.body)
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.8))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 24)
+
+                HStack(spacing: 8) {
+                    Image(systemName: "exclamationmark.triangle")
+                        .font(.footnote)
+                    Text(OnboardingStrings.p2RangeCaveat)
+                        .font(.footnote)
                 }
-                .padding(.top, 10)
+                .foregroundColor(Color("PrimaryTextColor").opacity(0.6))
+                .padding(.top, 6)
             }
         }
         .padding()
     }
 }
 
-struct FrequencyPageView: View {
+// MARK: - Page 3: Push to Talk
+
+private struct OnboardingPTTPage: View {
+    @State private var isPulsing = false
+
     var body: some View {
-        VStack(spacing: 30) {
-            Image(systemName: "waveform")
-                .font(.system(size: 80))
-                .foregroundColor(Color("PrimaryTextColor"))
-            
-            VStack(spacing: 15) {
-                Text(OnboardingStrings.frequencyTitle)
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+        VStack(spacing: 28) {
+            ZStack {
+                Circle()
+                    .stroke(Color("PrimaryTextColor").opacity(0.2), lineWidth: 2)
+                    .frame(width: 140, height: 140)
+                    .scaleEffect(isPulsing ? 1.15 : 1.0)
+                    .opacity(isPulsing ? 0 : 0.8)
+
+                Circle()
+                    .fill(Color("PrimaryTextColor"))
+                    .frame(width: 110, height: 110)
+
+                Image(systemName: "mic.fill")
+                    .font(.system(size: 44))
+                    .foregroundColor(Color("BackgroundColor"))
+            }
+            .onAppear {
+                withAnimation(.easeOut(duration: 1.2).repeatForever(autoreverses: false)) {
+                    isPulsing = true
+                }
+            }
+
+            VStack(spacing: 14) {
+                Text(OnboardingStrings.p3Title)
+                    .font(.title.bold())
                     .foregroundColor(Color("PrimaryTextColor"))
                     .multilineTextAlignment(.center)
-                
-                Text(OnboardingStrings.frequencyDescription)
+
+                Text(OnboardingStrings.p3Body)
                     .font(.body)
                     .foregroundColor(Color("PrimaryTextColor").opacity(0.8))
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal, 20)
-                
-                Text(OnboardingStrings.homeFrequency)
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                    .foregroundColor(Color("PrimaryTextColor"))
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 10)
-                    .background(Color("SurfaceColor"))
-                    .cornerRadius(10)
+                    .padding(.horizontal, 24)
+
+                Text(OnboardingStrings.p3Rule)
+                    .font(.callout.weight(.medium))
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
+                    .padding(.top, 6)
             }
         }
         .padding()
     }
 }
+
+// MARK: - Page 4: Frequency
+
+private struct OnboardingFrequencyPage: View {
+    var body: some View {
+        VStack(spacing: 24) {
+            Image(systemName: "dial.medium")
+                .font(.system(size: 72, weight: .light))
+                .foregroundColor(Color("PrimaryTextColor"))
+
+            VStack(spacing: 14) {
+                Text(OnboardingStrings.p4Title)
+                    .font(.title.bold())
+                    .foregroundColor(Color("PrimaryTextColor"))
+                    .multilineTextAlignment(.center)
+
+                Text(OnboardingStrings.p4Analogy)
+                    .font(.body)
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.8))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 24)
+
+                HStack(spacing: 10) {
+                    Image(systemName: "hand.tap")
+                        .font(.footnote)
+                    Text(OnboardingStrings.p4ChangeFreqHint)
+                        .font(.footnote)
+                        .multilineTextAlignment(.leading)
+                }
+                .foregroundColor(Color("PrimaryTextColor").opacity(0.65))
+                .padding(.horizontal, 24)
+                .padding(.top, 4)
+
+                Text(OnboardingStrings.p4PrivateChannelsTeaser)
+                    .font(.caption)
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.55))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 24)
+                    .padding(.top, 10)
+            }
+        }
+        .padding()
+    }
+}
+
+// MARK: - Page 5: Steps
+
+private struct OnboardingStepsPage: View {
+    var body: some View {
+        VStack(spacing: 28) {
+            Image(systemName: "checklist")
+                .font(.system(size: 72, weight: .light))
+                .foregroundColor(Color("PrimaryTextColor"))
+
+            Text(OnboardingStrings.p5Title)
+                .font(.title.bold())
+                .foregroundColor(Color("PrimaryTextColor"))
+                .multilineTextAlignment(.center)
+
+            VStack(alignment: .leading, spacing: 16) {
+                StepRow(index: 1, text: OnboardingStrings.p5Step1)
+                StepRow(index: 2, text: OnboardingStrings.p5Step2)
+                StepRow(index: 3, text: OnboardingStrings.p5Step3)
+            }
+            .padding(.horizontal, 32)
+        }
+        .padding()
+    }
+}
+
+private struct StepRow: View {
+    let index: Int
+    let text: String
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 14) {
+            Text("\(index)")
+                .font(.headline)
+                .foregroundColor(.white)
+                .frame(width: 28, height: 28)
+                .background(Circle().fill(Color("PrimaryTextColor")))
+
+            Text(text)
+                .font(.body)
+                .foregroundColor(Color("PrimaryTextColor"))
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
+// MARK: - Permissions Sheet
 
 struct PermissionsView: View {
     @Binding var isOnboardingComplete: Bool
     @ObservedObject var notificationManager: NotificationManager
     @Environment(\.dismiss) private var dismiss
-    
+
     @State private var microphonePermissionGranted = false
     @State private var notificationPermissionGranted = false
     @State private var isRequestingPermissions = false
-    
+    @State private var hasRequestedOnce = false
+
     var body: some View {
         NavigationView {
             ZStack {
                 Color("BackgroundColor")
                     .ignoresSafeArea()
-                
-                VStack(spacing: 30) {
+
+                VStack(spacing: 28) {
                     Image(systemName: "lock.shield")
-                        .font(.system(size: 80))
+                        .font(.system(size: 72, weight: .light))
                         .foregroundColor(Color("PrimaryTextColor"))
-                    
-                    VStack(spacing: 15) {
+                        .padding(.top, 20)
+
+                    VStack(spacing: 12) {
                         Text(OnboardingStrings.permissionsTitle)
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
+                            .font(.title.bold())
                             .foregroundColor(Color("PrimaryTextColor"))
                             .multilineTextAlignment(.center)
-                        
+
                         Text(OnboardingStrings.permissionsDescription)
                             .font(.body)
-                            .foregroundColor(Color("PrimaryTextColor").opacity(0.8))
+                            .foregroundColor(Color("PrimaryTextColor").opacity(0.75))
                             .multilineTextAlignment(.center)
                             .padding(.horizontal, 20)
                     }
-                    
-                    VStack(alignment: .leading, spacing: 15) {
+
+                    VStack(spacing: 12) {
                         PermissionRow(
                             icon: "mic.fill",
                             title: OnboardingStrings.microphonePermission,
+                            subtitle: OnboardingStrings.microphonePermissionWhy,
                             isGranted: microphonePermissionGranted
                         )
-                        
-                        PermissionRow(
-                            icon: "network",
-                            title: OnboardingStrings.networkPermission,
-                            isGranted: true // Always true for local network
-                        )
-                        
-                        PermissionRow(
-                            icon: "bluetooth",
-                            title: OnboardingStrings.bluetoothPermission,
-                            isGranted: true // Always true for Bluetooth
-                        )
-                        
+
                         PermissionRow(
                             icon: "bell.fill",
                             title: OnboardingStrings.notificationPermission,
+                            subtitle: OnboardingStrings.notificationPermissionWhy,
                             isGranted: notificationPermissionGranted
                         )
                     }
                     .padding(.horizontal, 20)
-                    
+
                     Spacer()
-                    
-                    VStack(spacing: 15) {
+
+                    VStack(spacing: 12) {
                         Button(action: requestPermissions) {
                             HStack {
                                 if isRequestingPermissions {
@@ -323,53 +394,64 @@ struct PermissionsView: View {
                             .cornerRadius(25)
                         }
                         .disabled(isRequestingPermissions)
-                        
-                        Button(action: {
+
+                        if hasRequestedOnce && (!microphonePermissionGranted || !notificationPermissionGranted) {
+                            Button {
+                                if let url = URL(string: UIApplication.openSettingsURLString) {
+                                    UIApplication.shared.open(url)
+                                }
+                            } label: {
+                                Text(OnboardingStrings.openSettingsLink)
+                                    .font(.footnote)
+                                    .underline()
+                                    .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
+                                    .padding(.vertical, 6)
+                            }
+                        }
+
+                        Button {
                             isOnboardingComplete = true
                             dismiss()
-                        }) {
+                        } label: {
                             Text(OnboardingStrings.skipButton)
-                                .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
-                                .padding(.vertical, 10)
+                                .foregroundColor(Color("PrimaryTextColor").opacity(0.55))
+                                .padding(.vertical, 8)
                         }
                     }
-                    .padding(.horizontal, 30)
-                    .padding(.bottom, 30)
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 24)
                 }
             }
             .navigationBarHidden(true)
         }
-        .onAppear {
-            checkPermissions()
-        }
+        .onAppear { checkPermissions() }
     }
-    
+
     private func checkPermissions() {
-        // Check microphone permission
         microphonePermissionGranted = AVAudioSession.sharedInstance().recordPermission == .granted
-        
-        // Check notification permission
         notificationPermissionGranted = notificationManager.hasPermission
     }
-    
+
     private func requestPermissions() {
         isRequestingPermissions = true
-        
-        // Request microphone permission
+        hasRequestedOnce = true
+
         AVAudioSession.sharedInstance().requestRecordPermission { granted in
             DispatchQueue.main.async {
                 microphonePermissionGranted = granted
+                Analytics.logEvent(
+                    granted ? "permission_mic_granted" : "permission_mic_denied",
+                    parameters: nil
+                )
             }
         }
-        
-        // Request notification permission
+
         notificationManager.requestNotificationPermission()
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             isRequestingPermissions = false
             checkPermissions()
-            
-            // Complete onboarding after requesting permissions
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 isOnboardingComplete = true
                 dismiss()
@@ -378,32 +460,41 @@ struct PermissionsView: View {
     }
 }
 
-struct PermissionRow: View {
+private struct PermissionRow: View {
     let icon: String
     let title: String
+    let subtitle: String
     let isGranted: Bool
-    
+
     var body: some View {
-        HStack(spacing: 15) {
+        HStack(alignment: .top, spacing: 14) {
             Image(systemName: icon)
-                .font(.title2)
+                .font(.title3)
                 .foregroundColor(Color("PrimaryTextColor"))
-                .frame(width: 30)
-            
-            Text(title)
-                .font(.body)
-                .foregroundColor(Color("PrimaryTextColor"))
-            
+                .frame(width: 28)
+                .padding(.top, 2)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.body.weight(.semibold))
+                    .foregroundColor(Color("PrimaryTextColor"))
+
+                Text(subtitle)
+                    .font(.footnote)
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
             Spacer()
-            
+
             Image(systemName: isGranted ? "checkmark.circle.fill" : "circle")
                 .font(.title3)
                 .foregroundColor(isGranted ? .green : Color("PrimaryTextColor").opacity(0.3))
+                .padding(.top, 2)
         }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 15)
+        .padding(14)
         .background(Color("SurfaceColor"))
-        .cornerRadius(10)
+        .cornerRadius(12)
     }
 }
 

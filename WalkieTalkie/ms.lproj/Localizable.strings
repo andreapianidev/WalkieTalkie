@@ -200,29 +200,192 @@
 "no_connected_peers" = "Tiada peranti disambung";
 
 // MARK: - Onboarding
-"onboarding_welcome_title" = "Selamat Datang ke WalkieTalkie";
-"onboarding_welcome_subtitle" = "Komunikasi walkie-talkie profesional untuk pengembaraan anda";
-"onboarding_how_it_works_title" = "Bagaimana Ia Berfungsi";
-"onboarding_how_it_works_description" = "WalkieTalkie mengubah iPhone anda menjadi peranti walkie-talkie profesional untuk komunikasi lancar dengan peranti berdekatan.";
-"onboarding_connectivity_title" = "Sambungan Canggih";
-"onboarding_connectivity_description" = "Pelbagai kaedah sambungan memastikan komunikasi yang boleh dipercayai:";
-"onboarding_bluetooth_feature" = "• Bluetooth untuk komunikasi jarak dekat";
-"onboarding_wifi_feature" = "• Wi-Fi untuk prestasi yang dipertingkatkan";
-"onboarding_multipeer_feature" = "• Multipeer Connectivity Apple untuk rangkaian mesh";
-"onboarding_range_feature" = "• Sehingga 1km jangkauan dalam keadaan optimum";
-"onboarding_frequency_title" = "Sistem Frekuensi";
-"onboarding_frequency_description" = "Semua peranti mesti ditetapkan pada frekuensi yang sama untuk berkomunikasi. Frekuensi rumah lalai ialah 428.283 MHz.";
-"onboarding_home_frequency" = "Frekuensi Rumah: 428.283 MHz";
-"onboarding_permissions_title" = "Kebenaran Diperlukan";
-"onboarding_permissions_description" = "Untuk memberikan pengalaman terbaik, WalkieTalkie memerlukan akses kepada:";
-"onboarding_microphone_permission" = "• Mikrofon - Penting untuk penghantaran suara";
-"onboarding_network_permission" = "• Rangkaian Tempatan - Diperlukan untuk penemuan peranti";
-"onboarding_bluetooth_permission" = "• Bluetooth - Untuk sambungan peranti";
-"onboarding_notification_permission" = "• Pemberitahuan - Untuk panggilan masuk dan amaran";
+"onboarding_p1_title" = "Walkie-talkie dalam iPhone anda";
+"onboarding_p1_subtitle" = "Di gunung, di dataran, di konsert: bercakap dengan kawan walaupun tiada talian.";
+
+"onboarding_p2_no_internet_title" = "Tanpa internet, tanpa SIM";
+"onboarding_p2_no_internet_body" = "Suara dihantar terus antara iPhone melalui Bluetooth dan Wi-Fi. Ia berfungsi dalam mod pesawat, dalam terowong dan di hutan, selagi anda dalam lingkungan kira-kira 1 km.";
+"onboarding_p2_range_caveat" = "Dinding, bukit dan kecerunan mengurangkan jangkauan.";
+
+"onboarding_p3_ptt_title" = "Tekan dan tahan untuk bercakap";
+"onboarding_p3_ptt_body" = "Seperti walkie-talkie sebenar: tekan dan tahan butang tengah untuk bercakap, lepaskan untuk mendengar.";
+"onboarding_p3_ptt_rule" = "Hanya satu suara pada satu masa di saluran yang sama.";
+
+"onboarding_p4_frequency_title" = "Frekuensi sama, perbualan sama";
+"onboarding_p4_frequency_analogy" = "Seperti radio FM: jika anda di 146.520 dan kawan di 150.000, anda tidak akan saling dengar. Sama-sama tetapkan frekuensi yang sama untuk bercakap.";
+"onboarding_p4_change_freq_hint" = "Gunakan butang ‹ dan › untuk menukar frekuensi, atau butang Home untuk kembali ke yang lalai.";
+"onboarding_p4_private_channels_teaser" = "Mahu saluran khas untuk kumpulan anda? Cipta Saluran Peribadi dengan kata laluan dari menu.";
+
+"onboarding_p5_steps_title" = "Sedia? Cuma 3 langkah";
+"onboarding_p5_step1" = "Buka Talky di iPhone lain berdekatan anda";
+"onboarding_p5_step2" = "Ketik \"Sambungan\" dan pilih perantinya";
+"onboarding_p5_step3" = "Apabila tersambung, tekan dan tahan butang tengah dan bercakap";
+
+"onboarding_permissions_title" = "Dua kebenaran dan kami sedia";
+"onboarding_permissions_description" = "Talky memerlukan ini untuk berfungsi.";
+"onboarding_microphone_permission" = "Mikrofon";
+"onboarding_permission_mic_why" = "Untuk merakam suara anda apabila anda tekan untuk bercakap.";
+"onboarding_notification_permission" = "Pemberitahuan";
+"onboarding_permission_notif_why" = "Untuk memberitahu anda jika seseorang memanggil semasa aplikasi ditutup.";
+"onboarding_permission_open_settings" = "Buka Tetapan iOS";
+
 "onboarding_continue" = "Teruskan";
-"onboarding_get_started" = "Mula";
+"onboarding_get_started" = "Mari mula";
 "onboarding_allow_permissions" = "Benarkan Kebenaran";
 "onboarding_skip" = "Langkau";
-"onboarding_up_to_eight_devices" = "Sambung sehingga 8 peranti serentak";
-"onboarding_mountain_use" = "Sempurna untuk ekspedisi gunung";
-"onboarding_excursion_use" = "Sesuai untuk mendaki dan aktiviti luar";}]}}
+"onboarding_back" = "Kembali";
+
+// MARK: - First Run Coach
+"coach_no_peers_title" = "Langkah pertama";
+"coach_no_peers_body" = "Buka Talky di iPhone lain berdekatan, kemudian ketik \"Sambungan\" di bawah.";
+"coach_press_ptt_title" = "Sekarang tekan dan tahan di sini";
+"coach_press_ptt_body" = "Tekan dan tahan butang tengah untuk bercakap, lepaskan untuk mendengar.";
+"coach_dismiss" = "Faham";
+"ads_section_title" = "Iklan & Privasi";
+"watch_ad_remove_ads" = "Tonton video, tiada iklan";
+"watch_ad_remove_ads_subtitle" = "Tiada iklan selama 1 jam";
+"ads_removed_active" = "Iklan dinyahaktifkan";
+"ads_removed_remaining" = "Baki: %d minit";
+"manage_privacy" = "Urus pilihan privasi";
+
+/* MARK: - Talky Pro features (added 2026-05) */
+
+// Paywall
+"paywall.close" = "Tutup";
+"paywall.title" = "Buka Kunci Talky Pro";
+"paywall.subtitle" = "Semua Talky, tanpa had";
+"paywall.error_title" = "Pembelian gagal";
+"paywall.feature.no_ads" = "Tiada iklan";
+"paywall.feature.unlimited_stations" = "Stesen radio tanpa had";
+"paywall.feature.premium_international" = "Radio antarabangsa premium";
+"paywall.feature.record_transmissions" = "Rakam penghantaran anda sendiri";
+"paywall.feature.private_channels" = "Saluran walkie peribadi";
+"paywall.feature.custom_themes" = "Tema tersuai";
+"paywall.feature.history" = "Sejarah penghantaran";
+"paywall.feature.sleep_timer" = "Pemasa tidur radio";
+"paywall.feature.equalizer" = "Penyamaan audio premium";
+"paywall.plan.weekly" = "Mingguan";
+"paywall.plan.weekly_suffix" = "/minggu";
+"paywall.plan.yearly" = "Tahunan";
+"paywall.plan.yearly_suffix" = "/tahun";
+"paywall.badge.most_popular" = "PALING POPULAR";
+"paywall.badge.save" = "Jimat 81%";
+"paywall.cta.start" = "Mula Talky Pro";
+"paywall.apple_footer" = "Langganan diperbaharui secara automatik. Anda boleh batal pada bila-bila masa daripada Tetapan Apple ID anda. Bayaran akan dikenakan kepada Apple ID anda apabila pembelian disahkan.";
+"paywall.link.restore" = "Pulihkan";
+"paywall.link.terms" = "Terma";
+"paywall.link.privacy" = "Privasi";
+"paywall.error.purchase_failed" = "Kami tidak dapat melengkapkan pembelian anda. Semak sambungan anda dan cuba lagi.";
+"paywall.error.no_purchases" = "Tiada pembelian sebelum ini ditemui pada Apple ID ini.";
+"paywall.error.restore_failed" = "Kami tidak dapat memulihkan pembelian anda. Sila cuba lagi kemudian.";
+
+// Transmission history
+"history.title" = "Sejarah penghantaran";
+"history.delete" = "Padam";
+"history.clear_confirm_title" = "Padam sejarah?";
+"history.clear_all" = "Padam semua";
+"history.cancel" = "Batal";
+"history.paywall_message" = "Buka kunci Talky Pro untuk melihat sejarah penghantaran anda";
+"history.unlock_pro" = "Buka Kunci Pro";
+"history.empty" = "Belum ada penghantaran diterima";
+
+// Themes
+"theme.title" = "Tema";
+"theme.subtitle" = "Tukar warna aplikasi";
+"theme.name.default" = "Lalai";
+"theme.name.ocean" = "Lautan";
+"theme.name.forest" = "Hutan";
+"theme.name.sunset" = "Senja";
+"theme.name.midnight" = "Tengah Malam";
+"theme.name.military" = "Tentera";
+"theme.name.retro80s" = "Retro 80-an";
+"theme.name.vintageRadio" = "Radio Vintaj";
+"theme.name.cyberpunk" = "Cyberpunk";
+"theme.name.stealth" = "Senyap";
+"theme.name.aurora" = "Aurora";
+"theme.name.submarine" = "Kapal Selam";
+"theme.name.hamRadio" = "Radio HAM";
+"theme.name.festival" = "Festival";
+"theme.name.blackHole" = "Lubang Hitam";
+"theme.name.galaxy" = "Galaksi";
+
+// Sleep timer
+"sleep_timer.title" = "Pemasa tidur radio";
+"sleep_timer.close" = "Tutup";
+"sleep_timer.paywall_message" = "Buka kunci Talky Pro untuk mengaktifkan pemasa tidur radio";
+"sleep_timer.unlock_pro" = "Buka Kunci Pro";
+"sleep_timer.countdown_label" = "Radio akan berhenti dalam";
+"sleep_timer.cancel" = "Batal pemasa";
+"sleep_timer.picker_prompt" = "Berapa lama anda mahu mendengar?";
+
+// Equalizer
+"equalizer.title" = "Penyamaan Audio";
+"equalizer.subtitle" = "Pilih pratetap audio";
+"equalizer.active_preset" = "Pratetap aktif";
+"equalizer.preset.flat" = "Rata";
+"equalizer.preset.bass" = "Bes";
+"equalizer.preset.vocal" = "Vokal";
+"equalizer.preset.rock" = "Rock";
+"equalizer.preset.pop" = "Pop";
+
+// Recordings
+"recordings.title" = "Rakaman";
+"recordings.delete_all_title" = "Padam semua rakaman?";
+"recordings.delete_all" = "Padam semua";
+"recordings.delete_all_message" = "Tindakan ini tidak boleh dibatalkan.";
+"recordings.cancel" = "Batal";
+"recordings.pro_feature" = "Ciri Pro";
+"recordings.paywall_message" = "Buka kunci Talky Pro untuk merakam dan memainkan semula penghantaran anda sendiri dan yang diterima.";
+"recordings.unlock_pro" = "Buka Kunci Pro";
+"recordings.empty_title" = "Tiada rakaman";
+"recordings.empty_message" = "Penghantaran anda dan yang diterima akan muncul di sini.";
+"recordings.privacy_notice" = "Rakaman disimpan hanya pada peranti anda. Anda bertanggungjawab untuk penggunaan yang mematuhi undang-undang privasi tempatan.";
+"recordings.own_transmission" = "Penghantaran anda";
+
+// Private channels
+"private_channels.title" = "Saluran peribadi";
+"private_channels.close" = "Tutup";
+"private_channels.channel_fallback" = "Saluran";
+"private_channels.public_state_title" = "Anda dalam mod awam";
+"private_channels.public_state_description" = "Mana-mana pengguna Talky berdekatan boleh menemui anda. Cipta saluran peribadi untuk bercakap hanya dengan orang yang tahu kata laluan.";
+"private_channels.create_or_join" = "Cipta atau sertai saluran peribadi";
+"private_channels.private_state_title" = "Saluran peribadi aktif";
+"private_channels.private_state_description" = "Hanya orang yang tahu kata laluan boleh menemui anda dan bercakap dengan anda.";
+"private_channels.leave" = "Tinggalkan saluran";
+"private_channels.form.title" = "Sertai saluran";
+"private_channels.form.name_label" = "Nama saluran";
+"private_channels.form.name_placeholder" = "Cth. Keluarga Ahmad";
+"private_channels.form.password_label" = "Kata laluan";
+"private_channels.form.password_placeholder" = "Sekurang-kurangnya 4 aksara";
+"private_channels.form.submit" = "Sertai";
+"private_channels.form.hint" = "Hanya peranti yang memasukkan kata laluan yang sama akan menemui satu sama lain dan bercakap.";
+"private_channels.paywall.pro_feature" = "Ciri Pro";
+"private_channels.paywall.headline" = "Saluran dilindungi kata laluan";
+"private_channels.paywall.description" = "Cipta saluran walkie yang dilindungi kata laluan: hanya orang yang tahu kata laluan boleh menemui anda dan bercakap dengan anda.";
+"private_channels.paywall.cta" = "Buka kunci dengan Talky Pro";
+"private_channels.error.empty_name" = "Sila masukkan nama saluran.";
+"private_channels.error.password_min" = "Kata laluan mestilah sekurang-kurangnya %d aksara.";
+"private_channels.error.join_failed" = "Tidak dapat menyertai saluran. Pastikan Talky Pro aktif.";
+
+// Settings - Pro section
+"settings.pro.title" = "Talky Pro";
+"settings.pro.title_active" = "Talky Pro aktif";
+"settings.pro.manage_subscription" = "Urus langganan";
+"settings.pro.manage_subscription_subtitle" = "Edit atau batal daripada Apple ID anda";
+"settings.pro.unlock" = "Buka Kunci Talky Pro";
+"settings.pro.unlock_subtitle" = "Tiada iklan, tanpa had";
+"settings.pro.restore_purchases" = "Pulihkan pembelian";
+
+// Settings - Personalization section
+"settings.personalization.title" = "Pemperibadian";
+"settings.personalization.themes" = "Tema";
+"settings.personalization.history.title" = "Sejarah penghantaran";
+"settings.personalization.history.subtitle" = "Lihat siapa yang menghubungi anda";
+"settings.personalization.sleep_timer.title" = "Pemasa tidur radio";
+"settings.personalization.sleep_timer.subtitle" = "Matikan radio selepas X minit";
+"settings.personalization.equalizer.title" = "Penyamaan Audio";
+"settings.personalization.equalizer.subtitle" = "Pratetap audio premium";
+"settings.personalization.recordings.title" = "Rakaman";
+"settings.personalization.recordings.subtitle" = "Mainkan semula penghantaran anda";
+"settings.personalization.private_channels.title" = "Saluran peribadi";
+"settings.personalization.private_channels.subtitle" = "Walkie talkie dilindungi kata laluan";

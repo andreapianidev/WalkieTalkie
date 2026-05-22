@@ -8,43 +8,52 @@
 import Foundation
 
 struct OnboardingStrings {
-    // MARK: - Welcome
-    static let welcomeTitle = NSLocalizedString("onboarding_welcome_title", comment: "Welcome screen title")
-    static let welcomeSubtitle = NSLocalizedString("onboarding_welcome_subtitle", comment: "Welcome screen subtitle")
-    
-    // MARK: - How it Works
-    static let howItWorksTitle = NSLocalizedString("onboarding_how_it_works_title", comment: "How it works title")
-    static let howItWorksDescription = NSLocalizedString("onboarding_how_it_works_description", comment: "How it works description")
-    
-    // MARK: - Connectivity
-    static let connectivityTitle = NSLocalizedString("onboarding_connectivity_title", comment: "Connectivity title")
-    static let connectivityDescription = NSLocalizedString("onboarding_connectivity_description", comment: "Connectivity description")
-    static let bluetoothFeature = NSLocalizedString("onboarding_bluetooth_feature", comment: "Bluetooth feature")
-    static let wifiFeature = NSLocalizedString("onboarding_wifi_feature", comment: "WiFi feature")
-    static let multipeerFeature = NSLocalizedString("onboarding_multipeer_feature", comment: "Multipeer feature")
-    static let rangeFeature = NSLocalizedString("onboarding_range_feature", comment: "Range feature")
-    
-    // MARK: - Frequency
-    static let frequencyTitle = NSLocalizedString("onboarding_frequency_title", comment: "Frequency title")
-    static let frequencyDescription = NSLocalizedString("onboarding_frequency_description", comment: "Frequency description")
-    static let homeFrequency = NSLocalizedString("onboarding_home_frequency", comment: "Home frequency info")
-    
-    // MARK: - Permissions
+    // MARK: - Page 1 — Hook
+    static let p1Title = NSLocalizedString("onboarding_p1_title", comment: "Page 1 title")
+    static let p1Subtitle = NSLocalizedString("onboarding_p1_subtitle", comment: "Page 1 subtitle")
+
+    // MARK: - Page 2 — No internet
+    static let p2Title = NSLocalizedString("onboarding_p2_no_internet_title", comment: "Page 2 title")
+    static let p2Body = NSLocalizedString("onboarding_p2_no_internet_body", comment: "Page 2 body")
+    static let p2RangeCaveat = NSLocalizedString("onboarding_p2_range_caveat", comment: "Page 2 range note")
+
+    // MARK: - Page 3 — Push to talk
+    static let p3Title = NSLocalizedString("onboarding_p3_ptt_title", comment: "Page 3 title")
+    static let p3Body = NSLocalizedString("onboarding_p3_ptt_body", comment: "Page 3 body")
+    static let p3Rule = NSLocalizedString("onboarding_p3_ptt_rule", comment: "Page 3 rule")
+
+    // MARK: - Page 4 — Frequencies
+    static let p4Title = NSLocalizedString("onboarding_p4_frequency_title", comment: "Page 4 title")
+    static let p4Analogy = NSLocalizedString("onboarding_p4_frequency_analogy", comment: "Page 4 analogy")
+    static let p4ChangeFreqHint = NSLocalizedString("onboarding_p4_change_freq_hint", comment: "Page 4 change freq hint")
+    static let p4PrivateChannelsTeaser = NSLocalizedString("onboarding_p4_private_channels_teaser", comment: "Page 4 private channels teaser")
+
+    // MARK: - Page 5 — Next steps
+    static let p5Title = NSLocalizedString("onboarding_p5_steps_title", comment: "Page 5 title")
+    static let p5Step1 = NSLocalizedString("onboarding_p5_step1", comment: "Page 5 step 1")
+    static let p5Step2 = NSLocalizedString("onboarding_p5_step2", comment: "Page 5 step 2")
+    static let p5Step3 = NSLocalizedString("onboarding_p5_step3", comment: "Page 5 step 3")
+
+    // MARK: - Permissions sheet
     static let permissionsTitle = NSLocalizedString("onboarding_permissions_title", comment: "Permissions title")
     static let permissionsDescription = NSLocalizedString("onboarding_permissions_description", comment: "Permissions description")
-    static let microphonePermission = NSLocalizedString("onboarding_microphone_permission", comment: "Microphone permission")
-    static let networkPermission = NSLocalizedString("onboarding_network_permission", comment: "Network permission")
-    static let bluetoothPermission = NSLocalizedString("onboarding_bluetooth_permission", comment: "Bluetooth permission")
-    static let notificationPermission = NSLocalizedString("onboarding_notification_permission", comment: "Notification permission")
-    
+    static let microphonePermission = NSLocalizedString("onboarding_microphone_permission", comment: "Microphone permission label")
+    static let microphonePermissionWhy = NSLocalizedString("onboarding_permission_mic_why", comment: "Why microphone is needed")
+    static let notificationPermission = NSLocalizedString("onboarding_notification_permission", comment: "Notification permission label")
+    static let notificationPermissionWhy = NSLocalizedString("onboarding_permission_notif_why", comment: "Why notifications are needed")
+    static let openSettingsLink = NSLocalizedString("onboarding_permission_open_settings", comment: "Open iOS Settings link")
+
     // MARK: - Actions
     static let continueButton = NSLocalizedString("onboarding_continue", comment: "Continue button")
     static let getStartedButton = NSLocalizedString("onboarding_get_started", comment: "Get started button")
     static let allowPermissionsButton = NSLocalizedString("onboarding_allow_permissions", comment: "Allow permissions button")
     static let skipButton = NSLocalizedString("onboarding_skip", comment: "Skip button")
-    
-    // MARK: - Features
-    static let upToEightDevices = NSLocalizedString("onboarding_up_to_eight_devices", comment: "Up to 8 devices feature")
-    static let mountainUse = NSLocalizedString("onboarding_mountain_use", comment: "Mountain use case")
-    static let excursionUse = NSLocalizedString("onboarding_excursion_use", comment: "Excursion use case")
+    static let backButton = NSLocalizedString("onboarding_back", comment: "Back button")
+
+    // MARK: - First Run Coach (post-onboarding)
+    static let coachNoPeersTitle = NSLocalizedString("coach_no_peers_title", comment: "Coach: no peers title")
+    static let coachNoPeersBody = NSLocalizedString("coach_no_peers_body", comment: "Coach: no peers body")
+    static let coachPressPTTTitle = NSLocalizedString("coach_press_ptt_title", comment: "Coach: press PTT title")
+    static let coachPressPTTBody = NSLocalizedString("coach_press_ptt_body", comment: "Coach: press PTT body")
+    static let coachDismiss = NSLocalizedString("coach_dismiss", comment: "Coach dismiss button")
 }

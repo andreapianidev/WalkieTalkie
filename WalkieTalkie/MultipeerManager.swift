@@ -13,7 +13,12 @@ import os.log
 class MultipeerManager: NSObject, ObservableObject {
     private let serviceType = "walkie-talkie"
     private let myPeerID = MCPeerID(displayName: UIDevice.current.name)
-    
+
+    /// Istanza condivisa: viene popolata dalla prima `init()` chiamata (tipicamente in ContentView).
+    /// Usata da `PrivateChannelManager` per riavviare advertising/browsing al cambio canale.
+    /// È weak per evitare retain cycle con il proprietario reale (`@StateObject` in ContentView).
+    static weak var shared: MultipeerManager?
+
     // Proprietà pubblica per accedere al peer ID
     var localPeerID: MCPeerID {
         return myPeerID
@@ -73,14 +78,22 @@ class MultipeerManager: NSObject, ObservableObject {
     
     override init() {
         session = MCSession(peer: myPeerID, securityIdentity: nil, encryptionPreference: .optional)
-        
-        // Aggiungi discoveryInfo per migliorare la scoperta
-        let discoveryInfo = ["deviceName": UIDevice.current.name]
+
+        // Discovery info: include il canale corrente (pubblico oppure hash della password)
+        // così che il browsing possa filtrare per canale al volo.
+        let initialChannel = UserDefaults.standard.string(forKey: "private_channel_id") ?? "public"
+        let discoveryInfo = [
+            "deviceName": UIDevice.current.name,
+            "channel": initialChannel
+        ]
         advertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: discoveryInfo, serviceType: serviceType)
         browser = MCNearbyServiceBrowser(peer: myPeerID, serviceType: serviceType)
-        
+
         super.init()
-        
+
+        // Registrazione dell'istanza condivisa per il bridge con PrivateChannelManager
+        MultipeerManager.shared = self
+
         session.delegate = self
         advertiser.delegate = self
         browser.delegate = self
@@ -306,6 +319,65 @@ class MultipeerManager: NSObject, ObservableObject {
         }
     }
     
+    // MARK: - Private Channel Support
+
+    /// Restituisce l'ID del canale corrente leggendo direttamente da UserDefaults.
+    /// Usato per filtrare i peer scoperti e impostare il discoveryInfo.
+    /// Lo storage è in UserDefaults così non dipendiamo dall'isolamento @MainActor di PrivateChannelManager.
+    private var currentChannelID: String {
+        UserDefaults.standard.string(forKey: "private_channel_id") ?? "public"
+    }
+
+    /// Riavvia advertising e browsing con il nuovo discoveryInfo (cambio canale).
+    /// Cambiare canale invalida le connessioni esistenti: le svuotiamo.
+    func restartWithCurrentChannel() {
+        logger.logNetworkInfo("Riavvio Multipeer su canale: \(currentChannelID)")
+
+        let wasAdvertising = isAdvertising
+        let wasBrowsing = isBrowsing
+
+        // Stop di tutto
+        if isAdvertising {
+            advertiser.stopAdvertisingPeer()
+            isAdvertising = false
+        }
+        if isBrowsing {
+            browser.stopBrowsingForPeers()
+            isBrowsing = false
+        }
+        session.disconnect()
+
+        // Pulizia stato: le connessioni del vecchio canale non sono più valide
+        DispatchQueue.main.async {
+            self.connectedPeers.removeAll()
+            self.discoveredPeers.removeAll()
+            self.disconnectedPeers.removeAll()
+            self.retryAttempts.removeAll()
+            self.connectionThrottle.removeAll()
+            self.connectionStatus = "Disconnesso"
+        }
+
+        // Ricrea advertiser con il nuovo discoveryInfo (browser non richiede ricreazione)
+        let discoveryInfo = [
+            "deviceName": UIDevice.current.name,
+            "channel": currentChannelID
+        ]
+        advertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: discoveryInfo, serviceType: serviceType)
+        advertiser.delegate = self
+
+        // Riavvia se erano attivi prima
+        if wasAdvertising {
+            advertiser.startAdvertisingPeer()
+            isAdvertising = true
+        }
+        if wasBrowsing {
+            browser.startBrowsingForPeers()
+            isBrowsing = true
+        }
+
+        logger.logNetworkInfo("Multipeer riavviato (advertising: \(isAdvertising), browsing: \(isBrowsing))")
+    }
+
     func disconnect() {
         session.disconnect()
         browser.stopBrowsingForPeers()
@@ -597,7 +669,14 @@ class MultipeerManager: NSObject, ObservableObject {
             lastError = WalkieTalkieError.audioTransmissionFailed(underlying: error)
             logger.logAudioError(lastError!, context: "Errore invio audio accumulato")
         }
-        
+
+        // Pro recording: salva una copia dell'audio trasmesso (no-op se non Pro).
+        // Eseguito DOPO l'invio ai peer e PRIMA del reset del buffer.
+        let snapshot = recordedAudioData
+        DispatchQueue.main.async {
+            RecordingsManager.shared.saveTransmittedAudio(snapshot)
+        }
+
         // Reset dei dati dopo l'invio
          recordedAudioData = Data()
     }
@@ -774,8 +853,16 @@ extension MultipeerManager: MCSessionDelegate {
                 // Aggiorna stato ricezione
                 DispatchQueue.main.async {
                     self.isReceiving = true
+                    FirstTimeEventTracker.shared.fireOnce(
+                        FirstTimeEventTracker.Events.reception,
+                        parameters: ["peer_name": peerID.displayName]
+                    )
+                    TransmissionHistoryManager.shared.recordReception(peerName: peerID.displayName, dataSize: dataSize)
+                    // Privacy: NON salviamo l'audio ricevuto da altri peer (GDPR + App Store review).
+                    // Solo metadata (peer, timestamp, durata stimata) finiscono nella cronologia.
+                    // La registrazione resta attiva solo per le trasmissioni in uscita dell'utente.
                 }
-                
+
                 // Invia notifica di trasmissione in arrivo
                 self.notificationManager.sendIncomingTransmissionNotification()
                 
@@ -829,9 +916,11 @@ extension MultipeerManager: MCNearbyServiceAdvertiserDelegate {
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         logger.logNetworkInfo("Ricevuto invito da: \(peerID.displayName)")
         
-        // Validazione sicurezza: verifica che il peer sia nella lista dei dispositivi scoperti
+        // Validazione sicurezza + filtro canale: il peer deve trovarsi in discoveredPeers,
+        // che è già filtrato per channelID corrente. Quindi inviti da peer di altri canali
+        // (che non sarebbero stati scoperti) vengono respinti silenziosamente.
         guard discoveredPeers.contains(peerID) else {
-            logger.logNetworkError(WalkieTalkieError.invalidPeer, context: "Peer non autorizzato: \(peerID.displayName)")
+            logger.logNetworkError(WalkieTalkieError.invalidPeer, context: "Peer non autorizzato o di altro canale: \(peerID.displayName)")
             invitationHandler(false, nil)
             return
         }
@@ -859,8 +948,16 @@ extension MultipeerManager: MCNearbyServiceBrowserDelegate {
             logger.logNetworkDebug("Ignorato auto-discovery del proprio peer")
             return
         }
-        
-        logger.logNetworkInfo("Trovato peer: \(peerID.displayName)")
+
+        // Filtro per canale: il peer è visibile solo se condivide lo stesso channelID.
+        // Peer senza chiave "channel" sono considerati "public" (retro-compatibilità).
+        let peerChannel = info?["channel"] ?? "public"
+        guard peerChannel == currentChannelID else {
+            logger.logNetworkDebug("Peer \(peerID.displayName) ignorato: canale '\(peerChannel)' diverso da '\(currentChannelID)'")
+            return
+        }
+
+        logger.logNetworkInfo("Trovato peer: \(peerID.displayName) (canale: \(peerChannel))")
         
         DispatchQueue.main.async {
             if !self.discoveredPeers.contains(peerID) {

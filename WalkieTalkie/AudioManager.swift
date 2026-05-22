@@ -276,10 +276,16 @@ class AudioManager: ObservableObject {
                 channelData.assign(from: floatPointer, count: Int(frameCount))
             }
             
-            // Configura audio engine
+            // Configura audio engine — inserisce l'Equalizer Pro in catena se presente.
             audioEngine.attach(playerNode)
-            audioEngine.connect(playerNode, to: audioEngine.mainMixerNode, format: format)
-            
+            EqualizerManager.shared.attach(to: audioEngine)
+            if let eq = EqualizerManager.shared.audioUnitEQ {
+                audioEngine.connect(playerNode, to: eq, format: format)
+                audioEngine.connect(eq, to: audioEngine.mainMixerNode, format: format)
+            } else {
+                audioEngine.connect(playerNode, to: audioEngine.mainMixerNode, format: format)
+            }
+
             try audioEngine.start()
             
             // Riproduci il buffer

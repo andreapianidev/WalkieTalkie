@@ -200,29 +200,192 @@
 "no_connected_peers" = "無連接的裝置";
 
 // MARK: - Onboarding
-"onboarding_welcome_title" = "歡迎使用 WalkieTalkie";
-"onboarding_welcome_subtitle" = "專業對講機通訊，為您的冒險之旅";
-"onboarding_how_it_works_title" = "運作原理";
-"onboarding_how_it_works_description" = "WalkieTalkie 將您的 iPhone 轉換為專業對講機裝置，與附近裝置進行無縫通訊。";
-"onboarding_connectivity_title" = "先進連接技術";
-"onboarding_connectivity_description" = "多種連接方式確保可靠的通訊：";
-"onboarding_bluetooth_feature" = "• 藍牙 - 近距離通訊";
-"onboarding_wifi_feature" = "• Wi-Fi - 增強性能";
-"onboarding_multipeer_feature" = "• Apple Multipeer Connectivity - 網狀網路";
-"onboarding_range_feature" = "• 最佳條件下可達 1 公里範圍";
-"onboarding_frequency_title" = "頻率系統";
-"onboarding_frequency_description" = "所有裝置必須設定為相同頻率才能通訊。預設家用頻率為 428.283 MHz。";
-"onboarding_home_frequency" = "家用頻率：428.283 MHz";
-"onboarding_permissions_title" = "所需權限";
-"onboarding_permissions_description" = "為提供最佳體驗，WalkieTalkie 需要存取：";
-"onboarding_microphone_permission" = "• 麥克風 - 語音傳輸必需";
-"onboarding_network_permission" = "• 本地網路 - 裝置發現必需";
-"onboarding_bluetooth_permission" = "• 藍牙 - 裝置連接";
-"onboarding_notification_permission" = "• 通知 - 來電和警報";
+"onboarding_p1_title" = "iPhone 裡的對講機";
+"onboarding_p1_subtitle" = "登山、廣場、演唱會：即使沒有訊號，也能與朋友對話。";
+
+"onboarding_p2_no_internet_title" = "無需網路，無需 SIM 卡";
+"onboarding_p2_no_internet_body" = "聲音透過藍牙與 Wi-Fi 直接在 iPhone 之間傳送。即使在飛行模式、隧道或森林中，只要距離約 1 公里以內也能使用。";
+"onboarding_p2_range_caveat" = "牆壁、山丘與高低差會降低傳輸距離。";
+
+"onboarding_p3_ptt_title" = "按住即可說話";
+"onboarding_p3_ptt_body" = "就像真正的對講機：按住中央按鈕說話，放開後聆聽。";
+"onboarding_p3_ptt_rule" = "同一頻道上同一時間只能有一個人說話。";
+
+"onboarding_p4_frequency_title" = "相同頻率，同一段對話";
+"onboarding_p4_frequency_analogy" = "就像 FM 收音機：如果你在 146.520 而朋友在 150.000，你們聽不到彼此。請設定相同頻率才能對話。";
+"onboarding_p4_change_freq_hint" = "使用 ‹ 和 › 按鈕切換頻率，或按 Home 鍵回到預設頻率。";
+"onboarding_p4_private_channels_teaser" = "想要僅限你的群組使用的頻道？從選單建立有密碼保護的私人頻道。";
+
+"onboarding_p5_steps_title" = "準備好了嗎？只需 3 步";
+"onboarding_p5_step1" = "在附近的另一支 iPhone 開啟 Talky";
+"onboarding_p5_step2" = "前往「連線」並選擇對方裝置";
+"onboarding_p5_step3" = "連線後，按住中央按鈕開始說話";
+
+"onboarding_permissions_title" = "兩個權限，馬上就好";
+"onboarding_permissions_description" = "Talky 需要這些權限才能運作。";
+"onboarding_microphone_permission" = "麥克風";
+"onboarding_permission_mic_why" = "用於在你按下說話時錄製語音。";
+"onboarding_notification_permission" = "通知";
+"onboarding_permission_notif_why" = "在 App 關閉時提醒你有人呼叫。";
+"onboarding_permission_open_settings" = "開啟 iOS 設定";
+
 "onboarding_continue" = "繼續";
-"onboarding_get_started" = "開始使用";
+"onboarding_get_started" = "開始吧";
 "onboarding_allow_permissions" = "允許權限";
 "onboarding_skip" = "跳過";
-"onboarding_up_to_eight_devices" = "同時連接最多 8 個裝置";
-"onboarding_mountain_use" = "完美適用於登山探險";
-"onboarding_excursion_use" = "理想的徒步和戶外活動";}]}}
+"onboarding_back" = "返回";
+
+// MARK: - First Run Coach
+"coach_no_peers_title" = "第一步";
+"coach_no_peers_body" = "在附近的另一支 iPhone 開啟 Talky，然後點擊下方的「連線」。";
+"coach_press_ptt_title" = "現在按住這裡";
+"coach_press_ptt_body" = "按住中央按鈕說話，放開後聆聽。";
+"coach_dismiss" = "我知道了";
+"ads_section_title" = "廣告與隱私";
+"watch_ad_remove_ads" = "觀看影片,無廣告";
+"watch_ad_remove_ads_subtitle" = "1 小時無廣告";
+"ads_removed_active" = "廣告已停用";
+"ads_removed_remaining" = "剩餘:%d 分鐘";
+"manage_privacy" = "管理隱私偏好設定";
+
+/* MARK: - Talky Pro features (added 2026-05) */
+
+// Paywall
+"paywall.close" = "關閉";
+"paywall.title" = "解鎖 Talky Pro";
+"paywall.subtitle" = "完整 Talky，無任何限制";
+"paywall.error_title" = "購買失敗";
+"paywall.feature.no_ads" = "無廣告";
+"paywall.feature.unlimited_stations" = "無限制廣播電台";
+"paywall.feature.premium_international" = "進階國際廣播";
+"paywall.feature.record_transmissions" = "錄製您的對講內容";
+"paywall.feature.private_channels" = "私人對講頻道";
+"paywall.feature.custom_themes" = "自訂主題";
+"paywall.feature.history" = "傳輸歷史紀錄";
+"paywall.feature.sleep_timer" = "廣播睡眠定時器";
+"paywall.feature.equalizer" = "進階音訊等化器";
+"paywall.plan.weekly" = "每週";
+"paywall.plan.weekly_suffix" = "/週";
+"paywall.plan.yearly" = "每年";
+"paywall.plan.yearly_suffix" = "/年";
+"paywall.badge.most_popular" = "最受歡迎";
+"paywall.badge.save" = "省 81%";
+"paywall.cta.start" = "開始使用 Talky Pro";
+"paywall.apple_footer" = "訂閱會自動續訂。您隨時可以從 Apple ID 設定中取消。確認購買後，款項將從您的 Apple ID 扣款。";
+"paywall.link.restore" = "還原";
+"paywall.link.terms" = "服務條款";
+"paywall.link.privacy" = "隱私權";
+"paywall.error.purchase_failed" = "我們無法完成您的購買。請檢查網路連線後再試一次。";
+"paywall.error.no_purchases" = "在此 Apple ID 上找不到先前的購買紀錄。";
+"paywall.error.restore_failed" = "我們無法還原您的購買。請稍後再試。";
+
+// Transmission history
+"history.title" = "傳輸歷史紀錄";
+"history.delete" = "刪除";
+"history.clear_confirm_title" = "要清除歷史紀錄嗎？";
+"history.clear_all" = "全部清除";
+"history.cancel" = "取消";
+"history.paywall_message" = "解鎖 Talky Pro 以查看您的傳輸歷史紀錄";
+"history.unlock_pro" = "解鎖 Pro";
+"history.empty" = "尚未收到任何傳輸";
+
+// Themes
+"theme.title" = "主題";
+"theme.subtitle" = "變更應用程式顏色";
+"theme.name.default" = "預設";
+"theme.name.ocean" = "海洋";
+"theme.name.forest" = "森林";
+"theme.name.sunset" = "日落";
+"theme.name.midnight" = "午夜";
+"theme.name.military" = "軍事";
+"theme.name.retro80s" = "復古 80s";
+"theme.name.vintageRadio" = "復古收音機";
+"theme.name.cyberpunk" = "賽博龐克";
+"theme.name.stealth" = "隱形";
+"theme.name.aurora" = "極光";
+"theme.name.submarine" = "潛艇";
+"theme.name.hamRadio" = "業餘無線電";
+"theme.name.festival" = "慶典";
+"theme.name.blackHole" = "黑洞";
+"theme.name.galaxy" = "銀河";
+
+// Sleep timer
+"sleep_timer.title" = "廣播睡眠定時器";
+"sleep_timer.close" = "關閉";
+"sleep_timer.paywall_message" = "解鎖 Talky Pro 以啟用廣播睡眠定時器";
+"sleep_timer.unlock_pro" = "解鎖 Pro";
+"sleep_timer.countdown_label" = "廣播將於此時間後停止";
+"sleep_timer.cancel" = "取消定時器";
+"sleep_timer.picker_prompt" = "您想聆聽多久？";
+
+// Equalizer
+"equalizer.title" = "等化器";
+"equalizer.subtitle" = "選擇音訊預設";
+"equalizer.active_preset" = "目前預設";
+"equalizer.preset.flat" = "平坦";
+"equalizer.preset.bass" = "低音";
+"equalizer.preset.vocal" = "人聲";
+"equalizer.preset.rock" = "搖滾";
+"equalizer.preset.pop" = "流行";
+
+// Recordings
+"recordings.title" = "錄音";
+"recordings.delete_all_title" = "要刪除所有錄音嗎？";
+"recordings.delete_all" = "全部刪除";
+"recordings.delete_all_message" = "此操作無法復原。";
+"recordings.cancel" = "取消";
+"recordings.pro_feature" = "Pro 功能";
+"recordings.paywall_message" = "解鎖 Talky Pro 以錄製並重播您自己的及收到的傳輸內容。";
+"recordings.unlock_pro" = "解鎖 Pro";
+"recordings.empty_title" = "沒有錄音";
+"recordings.empty_message" = "您的傳輸與收到的傳輸將顯示於此。";
+"recordings.privacy_notice" = "錄音僅儲存於您的裝置上。您須自行負責依當地隱私法規使用。";
+"recordings.own_transmission" = "您的傳輸";
+
+// Private channels
+"private_channels.title" = "私人頻道";
+"private_channels.close" = "關閉";
+"private_channels.channel_fallback" = "頻道";
+"private_channels.public_state_title" = "您處於公開模式";
+"private_channels.public_state_description" = "附近任何 Talky 使用者都能找到您。建立私人頻道，僅與知道密碼的人對話。";
+"private_channels.create_or_join" = "建立或加入私人頻道";
+"private_channels.private_state_title" = "私人頻道已啟用";
+"private_channels.private_state_description" = "只有知道密碼的人才能找到您並與您通話。";
+"private_channels.leave" = "離開頻道";
+"private_channels.form.title" = "加入頻道";
+"private_channels.form.name_label" = "頻道名稱";
+"private_channels.form.name_placeholder" = "例如：陳家";
+"private_channels.form.password_label" = "密碼";
+"private_channels.form.password_placeholder" = "至少 4 個字元";
+"private_channels.form.submit" = "加入";
+"private_channels.form.hint" = "只有輸入相同密碼的裝置才會互相找到並通話。";
+"private_channels.paywall.pro_feature" = "Pro 功能";
+"private_channels.paywall.headline" = "密碼保護頻道";
+"private_channels.paywall.description" = "建立密碼保護的對講頻道：只有知道密碼的人才能找到您並與您通話。";
+"private_channels.paywall.cta" = "透過 Talky Pro 解鎖";
+"private_channels.error.empty_name" = "請輸入頻道名稱。";
+"private_channels.error.password_min" = "密碼至少需要 %d 個字元。";
+"private_channels.error.join_failed" = "無法加入頻道。請確認 Talky Pro 已啟用。";
+
+// Settings - Pro section
+"settings.pro.title" = "Talky Pro";
+"settings.pro.title_active" = "Talky Pro 已啟用";
+"settings.pro.manage_subscription" = "管理訂閱";
+"settings.pro.manage_subscription_subtitle" = "從您的 Apple ID 編輯或取消";
+"settings.pro.unlock" = "解鎖 Talky Pro";
+"settings.pro.unlock_subtitle" = "無廣告，無限制";
+"settings.pro.restore_purchases" = "還原購買";
+
+// Settings - Personalization section
+"settings.personalization.title" = "個人化";
+"settings.personalization.themes" = "主題";
+"settings.personalization.history.title" = "傳輸歷史紀錄";
+"settings.personalization.history.subtitle" = "查看誰曾與您聯繫";
+"settings.personalization.sleep_timer.title" = "廣播睡眠定時器";
+"settings.personalization.sleep_timer.subtitle" = "X 分鐘後關閉廣播";
+"settings.personalization.equalizer.title" = "等化器";
+"settings.personalization.equalizer.subtitle" = "進階音訊預設";
+"settings.personalization.recordings.title" = "錄音";
+"settings.personalization.recordings.subtitle" = "重播您的傳輸";
+"settings.personalization.private_channels.title" = "私人頻道";
+"settings.personalization.private_channels.subtitle" = "密碼保護的對講機";

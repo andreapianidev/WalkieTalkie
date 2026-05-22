@@ -17,6 +17,10 @@ struct RadioStation {
     let frequency: String
     let streamURL: String
     let genre: String
+
+    /// Le stazioni con id > 10 sono internazionali premium (Brasile, Giappone, Australia, Canada, ecc.)
+    /// e richiedono Talky Pro per essere riprodotte.
+    var isPro: Bool { id > 10 }
 }
 
 class RadioManager: NSObject, ObservableObject {
@@ -30,6 +34,9 @@ class RadioManager: NSObject, ObservableObject {
     @Published var currentStation: RadioStation?
     @Published var volume: Float = 0.5
     @Published var isBuffering = false
+    /// Diventa `true` quando l'utente tenta di riprodurre una stazione Pro senza essere Pro.
+    /// La UI dovrebbe osservare questo flag, mostrare il paywall e poi resettarlo a `false`.
+    @Published var blockedByPaywall: Bool = false
     
     // Lista di stazioni radio internazionali
     let radioStations: [RadioStation] = [
@@ -160,8 +167,16 @@ class RadioManager: NSObject, ObservableObject {
     // MARK: - Radio Controls
     
     func playStation(_ station: RadioStation) {
+        // Pro gate: blocca la riproduzione delle stazioni internazionali premium per utenti non Pro.
+        // La UI osserva `blockedByPaywall` e si occupa di mostrare il paywall.
+        if station.isPro && !UserDefaults.standard.bool(forKey: "fastboot_isProUser") {
+            logger.logInfo("Riproduzione bloccata da paywall per stazione Pro: \(station.name)")
+            blockedByPaywall = true
+            return
+        }
+
         stopRadio()
-        
+
         guard let url = URL(string: station.streamURL) else {
             logger.logAudioError(NSError(domain: "RadioManager", code: -1, userInfo: [NSLocalizedDescriptionKey: "URL non valido"]), context: "Play station")
             return
@@ -237,8 +252,20 @@ class RadioManager: NSObject, ObservableObject {
         radioPlayer?.volume = newVolume
     }
     
+    // MARK: - Free / Pro Stations
+
+    /// Prime 10 stazioni (id 1...10) disponibili a tutti gli utenti.
+    var freeStations: [RadioStation] {
+        radioStations.filter { $0.id <= 10 }
+    }
+
+    /// Stazioni internazionali premium (id > 10) sbloccabili con Talky Pro.
+    var proStations: [RadioStation] {
+        radioStations.filter { $0.id > 10 }
+    }
+
     // MARK: - Station Selection
-    
+
     func getStationByFrequency(_ frequency: String) -> RadioStation? {
         return radioStations.first { $0.frequency == frequency }
     }
