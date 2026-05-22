@@ -12,11 +12,13 @@ enum AdConfig {
     static let appOpenAdUnitID      = "ca-app-pub-3940256099942544/5575463023"
     static let interstitialAdUnitID = "ca-app-pub-3940256099942544/4411468910"
     static let rewardedAdUnitID     = "ca-app-pub-3940256099942544/1712485313"
+    static let nativeStationAdUnitID = "ca-app-pub-3940256099942544/3986624511"
     #else
     // Talky production ad units (account ca-app-pub-1193280742171051).
     static let appOpenAdUnitID      = "ca-app-pub-1193280742171051/4903244407"
     static let interstitialAdUnitID = "ca-app-pub-1193280742171051/1317702703"
     static let rewardedAdUnitID     = "ca-app-pub-1193280742171051/3696454034"
+    static let nativeStationAdUnitID = "ca-app-pub-1193280742171051/4859462082"
     #endif
 
     enum FrequencyCap {

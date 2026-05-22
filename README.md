@@ -1,350 +1,509 @@
-// Created by Andrea Piani - Immaginet Srl - 15/01/25 - https://www.andreapiani.com - README.md
+// Created by Andrea Piani - Immaginet Srl - 22/05/26 - https://www.andreapiani.com - README.md
 
-# Talky - Professional Walkie-Talkie & FM Radio App
+# Talky — Walkie-Talkie & FM Radio (Open Source iOS App)
 
 ![Talky App](https://www.andreapiani.com/talky.png)
 
-[![iOS](https://img.shields.io/badge/iOS-15.0+-blue.svg)](https://developer.apple.com/ios/)
-[![Swift](https://img.shields.io/badge/Swift-5.0+-orange.svg)](https://swift.org/)
-[![Xcode](https://img.shields.io/badge/Xcode-14.0+-blue.svg)](https://developer.apple.com/xcode/)
-[![License](https://img.shields.io/badge/License-Open%20Source-green.svg)]()
+[![iOS](https://img.shields.io/badge/iOS-15.6+-blue.svg)](https://developer.apple.com/ios/)
+[![Swift](https://img.shields.io/badge/Swift-5.9+-orange.svg)](https://swift.org/)
+[![Xcode](https://img.shields.io/badge/Xcode-16.0+-blue.svg)](https://developer.apple.com/xcode/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](#-license)
+[![Open Source](https://img.shields.io/badge/Open-Source-brightgreen.svg)]()
 
-## 📱 Overview
+> **Talky** is a SwiftUI iOS app that combines **offline peer-to-peer push-to-talk** (Multipeer Connectivity) with a **global FM/internet radio browser** (135 stations across 50+ countries) plus a complete **Pro tier** (themes, animated backgrounds, equalizer, recording, sleep timer) and a production-grade **AdMob monetization stack** for the free tier.
 
-**Talky is now Open Source!** 🎉
+**App Store**: search for **Talky — Walkie & Radio** · Bundle ID `com.immaginet.talky`
+**Repository**: <https://github.com/andreapianidev/WalkieTalkie>
 
-Talky is a professional iOS app that combines Push-to-Talk walkie-talkie functionality with integrated FM radio streaming. Built with SwiftUI and modern technologies, it offers peer-to-peer communication through Multipeer Connectivity and real-time radio streaming without requiring internet connectivity.
+---
 
-## ✨ Features
+## Table of Contents
 
-- 🎙️ **Push-to-Talk Communication**: Professional walkie-talkie system with crystal-clear audio
-- 📻 **FM Radio Integration**: Built-in radio streaming with advanced playback controls
-- 🔗 **Multipeer Connectivity**: Peer-to-peer communication without internet connection
-- 🔔 **Smart Notifications**: Intelligent notification system with cooldown protection
-- 🌍 **Multi-language Support**: Italian, English, Spanish localization
-- ⚡ **Power Management**: Optimized battery usage and power monitoring
-- 🎵 **Audio Management**: Advanced audio session control and management
-- 📳 **Haptic Feedback**: Tactile feedback for enhanced user experience
-- 🔥 **Firebase Integration**: Analytics and crash reporting for better app insights
-- 🎯 **Modern Architecture**: Clean MVVM pattern with SwiftUI and Combine
+- [Highlights](#-highlights)
+- [Feature Matrix (Free vs Pro)](#-feature-matrix-free-vs-pro)
+- [Walkie-Talkie Engine](#-walkie-talkie-engine)
+- [Radio Browser (135 stations)](#-radio-browser-135-stations)
+- [Theme System (16 themes)](#-theme-system-16-themes)
+- [Pro Tier — IAP & Paywall](#-pro-tier--iap--paywall)
+- [AdMob Monetization](#-admob-monetization)
+- [Privacy & Consent (UMP + ATT)](#-privacy--consent-ump--att)
+- [Localization](#-localization)
+- [Architecture](#-architecture)
+- [Project Structure](#-project-structure)
+- [Build & Run](#-build--run)
+- [Configuration](#-configuration)
+- [Testing](#-testing)
+- [Performance & Battery](#-performance--battery)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Credits & Links](#-credits--links)
+
+---
+
+## ✨ Highlights
+
+- 🎙️ **Push-to-Talk** over peer-to-peer (no internet, no servers) — up to 8 simultaneous peers
+- 📻 **135 verified live radio stations** across **50+ countries**, with favorites, recents, nearby, search and grouping by country/genre
+- 🎨 **16 themes** (5 free + 11 paid/Pro) including 2 fully-animated GPU backgrounds (Black Hole, Galaxy)
+- 🔊 **5-band EQ**, **sleep timer**, **session recording** and **transmission history**
+- 💎 **Talky Pro** subscription (weekly/yearly) with paywall, restore purchases and StoreKit 2
+- 📣 **Full AdMob stack** (App Open, Interstitial, Rewarded, **Native Advanced**) with UMP + ATT consent flow
+- 🌍 **5 localizations**: 🇮🇹 Italian · 🇬🇧 English · 🇪🇸 Spanish · 🇲🇾 Malay · 🇹🇼 Traditional Chinese
+- 🔒 **Privacy-first**: walkie-talkie audio never leaves the device, no accounts, no cloud
+- 🧱 **Clean MVVM + SwiftUI + Combine**, singleton managers, Swift 6 strict concurrency-ready
+
+---
+
+## 📊 Feature Matrix (Free vs Pro)
+
+| Capability | Free | Talky Pro |
+|---|:--:|:--:|
+| Push-to-talk over Multipeer (up to 8 peers) | ✅ | ✅ |
+| 24 frequency channels (f1.mp3 … f24.mp3) | ✅ | ✅ |
+| Radio stations available | 30 free | **All 135** |
+| Station browser (search / favorites / recents / nearby) | ✅ | ✅ |
+| Themes available | 5 base | **All 16** |
+| Animated themes (Black Hole, Galaxy) | ❌ | ✅ |
+| 5-band Equalizer | ❌ | ✅ |
+| Session recording (RecordingsManager) | ❌ | ✅ |
+| Sleep timer | ✅ | ✅ |
+| Transmission history | ✅ | ✅ |
+| Ads (banner / interstitial / native / app-open) | Shown | **Removed** |
+| Rewarded "remove ads for 1 hour" | ✅ | n/a |
+| App Tracking Transparency prompt | Shown | Shown¹ |
+
+¹ ATT is required by Apple regardless of Pro status; only ad delivery is disabled for Pro users.
+
+---
+
+## 🎙️ Walkie-Talkie Engine
+
+Backed by **`MultipeerManager`** and **`AudioManager`**:
+
+- **Service type**: `walkie-talkie` (MCSession / MCNearbyServiceAdvertiser + Browser)
+- **No internet required** — works over Wi-Fi, peer-to-peer Wi-Fi, or Bluetooth
+- **Up to 8 simultaneous peers**
+- **Audio session** `.playAndRecord` with `.defaultToSpeaker`, mixWithOthers off during PTT
+- **Background audio** entitlement for radio + incoming PTT alerts
+- **Anti-spam** notifications via `NotificationManager` cooldown
+- **Haptic feedback** on PTT press/release via `HapticManager`
+- **Auto-reconnect** with exponential backoff
+- **24 frequency channels** for quick audible signalling (`f1.mp3` … `f24.mp3`)
+
+---
+
+## 📻 Radio Browser (135 stations)
+
+The radio side is a full streaming client (`RadioManager` + `StationBrowserSheet`):
+
+- **135 live stations** across 50+ countries (Italy, USA, UK, Spain, France, Germany, Japan, Brazil, Australia, Argentina, Mexico, Canada, Netherlands, Sweden, India, and 30+ more)
+- **30 stations free** · **105 stations Pro-only** (`isPro = id > 30`)
+- **Smart UX**:
+  - 🔍 Full-text search by name / country / genre
+  - ⭐ **Favorites** (persisted in `UserDefaults`)
+  - 🕘 **Recents** (auto-tracked)
+  - 📍 **Nearby** — surfaces stations matching `deviceCountry` (CoreTelephony / Locale)
+  - 🌍 Grouping by country (with flag emoji)
+  - 🎵 Grouping by genre
+- **Native AdMob slot** rendered between personal sections and country list (non-Pro only)
+- **Background playback** (radio keeps streaming when app is backgrounded)
+- **Sleep timer** (`SleepTimerSheet` + `SleepTimerManager`) — 5/10/15/30/45/60 min or end-of-track
+- **Pro paywall trigger** when a free user taps a locked station
+
+---
+
+## 🎨 Theme System (16 themes)
+
+Themes are organised into 3 pluggable **packs** registered into a central `ThemeRegistry`:
+
+### 🎨 Color Pack — Free (5 themes)
+| Theme | Accent | Icon |
+|---|---|---|
+| Default (Talky Yellow) | `#FFCC00` | `radio` |
+| Ocean | Cyan | `water.waves` |
+| Forest | Green | `leaf.fill` |
+| Sunset | Orange | `sun.horizon.fill` |
+| Midnight | Indigo | `moon.stars.fill` |
+
+### 🎭 Identity Pack — €0.99 each OR included in Pro (9 themes)
+- **Military** · **Retro 80s** · **Vintage Radio** · **Cyberpunk** · **Stealth** · **Aurora** · **Submarine** · **Ham Radio** · **Festival**
+
+Each Identity theme bundles:
+- Custom `accentColor`
+- Optional custom PostScript font (e.g. `PressStart2P-Regular` for Retro 80s) via `FontManager`
+- Optional themed sound pack (e.g. `morse`, `sonar`, `glitch`) via `ThemeSoundManager`
+
+### 🌌 Animated Pack — €1.99 each OR included in Pro (2 themes)
+- **Black Hole** — GPU shader gravitational lensing background
+- **Galaxy** — Procedural starfield
+
+Rendered by `AnimatedBackgroundView` using `TimelineView` + Canvas for 60 fps.
+
+> Themes can be purchased individually (StoreKit 2 non-consumable) or unlocked all-at-once via Talky Pro subscription. Unlocking is enforced by `ThemeManager` reading `IAPManager.shared.ownedProducts`.
+
+---
+
+## 💎 Pro Tier — IAP & Paywall
+
+Backed by **StoreKit 2** in [`IAP/IAPManager.swift`](WalkieTalkie/WalkieTalkie/IAP/IAPManager.swift) with product IDs declared in [`IAP/IAPProducts.swift`](WalkieTalkie/WalkieTalkie/IAP/IAPProducts.swift).
+
+### Subscriptions (auto-renewing)
+| Product ID | Plan |
+|---|---|
+| `app.immaginet.talky.pro.weekly` | Weekly |
+| `app.immaginet.talky.pro.yearly` | Yearly (best value) |
+
+### One-shot theme purchases (non-consumable)
+- `app.immaginet.talky.theme.<name>` — one per Identity / Animated theme
+
+### Paywall — [`IAP/PaywallView.swift`](WalkieTalkie/WalkieTalkie/IAP/PaywallView.swift)
+- Trigger-aware (`station_browser`, `theme_locked`, `equalizer`, …) for analytics
+- Restore Purchases
+- Receipt validation via Apple's `Transaction.currentEntitlements`
+- Fast-boot Pro flag cached in `UserDefaults("fastboot_isProUser")` to avoid UI flicker on cold launch
+
+---
+
+## 📣 AdMob Monetization
+
+A complete, **policy-compliant** AdMob stack lives under [`Ads/`](WalkieTalkie/WalkieTalkie/Ads/):
+
+| Format | Coordinator | Where it shows |
+|---|---|---|
+| **App Open** | `AppOpenAdManager` | Cold launch + return-from-background |
+| **Interstitial** | `InterstitialAdCoordinator` | Natural breaks (frequency-capped: 5/day, 180s min interval) |
+| **Rewarded** | `RewardedAdCoordinator` | "Remove ads for 1 hour" opt-in |
+| **Native Advanced** | `NativeAdCoordinator` + `NativeAdCardView` | Inline card inside the radio browser |
+
+Implementation notes:
+- **SDK**: Google Mobile Ads SDK **13.x** (modern types: `InterstitialAd`, `Request`, `MobileAds.shared.start`, etc. — no `GAD` prefix)
+- **DEBUG**: always uses Google's test ad unit IDs (no risk of policy strikes during development)
+- **Release**: production unit IDs under account `ca-app-pub-1193280742171051`
+- **Native ad card** is styled with the app's design tokens (`Color("SurfaceColor")`, `Color("PrimaryTextColor")`) so it visually matches the surrounding station rows; the AdMob "Ad" badge is always visible (policy compliance)
+- **Frequency capping**: `AdConfig.FrequencyCap` enforces interstitial cool-downs + rewarded-ads remove-ads duration
+- **Pro / `adsRemoved` users**: every coordinator guards on `IAPManager.shared.isProUser` and `AdManager.shared.adsRemoved` — Pro users never see an ad
+
+### Bootstrap order ([`Ads/AdManager.swift`](WalkieTalkie/WalkieTalkie/Ads/AdManager.swift))
+```
+1. UMP consent flow   ──► gatherConsent()
+2. ATT prompt         ──► requestATTIfNeeded()
+3. SDK init           ──► MobileAds.shared.start
+4. Parallel preload   ──► appOpen | interstitial | rewarded | nativeStation
+```
+
+This order is mandatory for both Apple review and AdMob eCPM (Google must see the consent + IDFA signal before any ad request).
+
+---
+
+## 🔒 Privacy & Consent (UMP + ATT)
+
+`Ads/ConsentManager.swift` orchestrates the full **GDPR + ATT** flow:
+
+- **UMP SDK**: shows the AdMob consent form to EEA/UK users; gates ad requests on `canRequestAds`
+- **ATT (App Tracking Transparency)**: prompted **after** UMP resolution and only once UI is active (Apple requirement for iOS 14.5+)
+- **Privacy policy & terms** hosted at <https://privacypolicyhub.vercel.app>
+- **What we DON'T collect**:
+  - Walkie-talkie audio (stays on-device, peer-to-peer encrypted by Multipeer)
+  - Location (no GPS in this app — radio "nearby" uses Locale country only)
+  - Personally identifiable information
+- **What we DO collect** (only with consent):
+  - Anonymous Firebase Analytics + Crashlytics
+  - AdMob ad-targeting signals (IDFA) — only if user consents to ATT
+
+---
+
+## 🌍 Localization
+
+5 full translations under `WalkieTalkie/<locale>.lproj/Localizable.strings`:
+
+| Locale | Language |
+|---|---|
+| `it` | 🇮🇹 Italiano |
+| `en` | 🇬🇧 English |
+| `es` | 🇪🇸 Español |
+| `ms` | 🇲🇾 Bahasa Melayu |
+| `zh-Hant` | 🇹🇼 繁體中文 (Traditional Chinese) |
+
+All UI strings flow through `String+Localization.swift` (`.localized`). i18n keys are kept in sync across languages — see commit `6ba6d06` for the latest dedup audit.
+
+---
 
 ## 🏗️ Architecture
 
-### Design Patterns
-- **MVVM (Model-View-ViewModel)**: Primary architecture pattern for clean separation of concerns
-- **Singleton Pattern**: Shared managers for system-wide functionality
-- **Observer Pattern**: Reactive programming using `@Published` and `ObservableObject`
-- **Dependency Injection**: SwiftUI's `@StateObject` and `@ObservedObject` for loose coupling
+**Pattern**: MVVM + Singleton Managers + Combine for reactive UI.
 
-### Core Components
+```
+┌───────────────────────────────────────────────────────────┐
+│ SwiftUI Views (@StateObject / @ObservedObject)            │
+│  ContentView · ExploreView · ConnectionsView · Settings   │
+│  StationBrowserSheet · PaywallView · ThemeSelectorView    │
+└──────────────────────────┬────────────────────────────────┘
+                           │  @Published / Combine
+┌──────────────────────────▼────────────────────────────────┐
+│ Singleton Managers (.shared)                              │
+│  AudioManager · MultipeerManager · RadioManager           │
+│  NotificationManager · SettingsManager · PowerManager     │
+│  HapticManager · FirebaseManager · ThemeManager           │
+│  IAPManager · AdManager · ConsentManager                  │
+│  EqualizerManager · RecordingsManager · SleepTimerManager │
+└──────────────────────────┬────────────────────────────────┘
+                           │
+┌──────────────────────────▼────────────────────────────────┐
+│ Apple frameworks                                          │
+│  MultipeerConnectivity · AVFoundation · StoreKit 2        │
+│  UserNotifications · Combine · CoreHaptics                │
+│  AppTrackingTransparency                                  │
+└──────────────────────────┬────────────────────────────────┘
+                           │
+┌──────────────────────────▼────────────────────────────────┐
+│ Third-party (SPM)                                         │
+│  GoogleMobileAds (13.x) · UserMessagingPlatform           │
+│  Firebase (Analytics + Crashlytics + Performance)         │
+└───────────────────────────────────────────────────────────┘
+```
 
-#### 🔧 Managers (Business Logic Layer)
-- **AudioManager**: Audio session management, recording, playback, and real-time audio processing
-- **MultipeerManager**: Peer-to-peer communication, device discovery, and connection management
-- **RadioManager**: FM radio streaming, playback controls, and audio routing
-- **NotificationManager**: Smart notification system with anti-spam protection and user engagement
-- **SettingsManager**: User preferences persistence and app configuration
-- **PowerManager**: Battery monitoring and power optimization strategies
-- **HapticManager**: Tactile feedback coordination for enhanced UX
-- **FirebaseManager**: Analytics tracking, crash reporting, and app insights
-- **Logger**: Centralized logging system with categorized output
-
-#### 🎨 Views (Presentation Layer)
-- **ContentView**: Main interface with Radio/Walkie-Talkie mode toggle and primary controls
-- **ConnectionsView**: Active peer-to-peer connection management and status monitoring
-- **ExploreView**: Device discovery interface for finding and connecting to nearby devices
-- **SettingsView**: App configuration, user preferences, and system settings
+---
 
 ## 📁 Project Structure
 
 ```
-WalkieTalkie/
-├── WalkieTalkie.xcodeproj/          # Xcode Project Configuration
-│   ├── project.pbxproj              # Project settings and build configuration
-│   └── project.xcworkspace/         # Workspace for dependencies
-├── WalkieTalkie/                    # Main Source Code
-│   ├── 🔧 Managers (Business Logic)
-│   │   ├── AudioManager.swift       # Audio session, recording, playback management
-│   │   ├── MultipeerManager.swift   # P2P communication and device discovery
-│   │   ├── RadioManager.swift       # FM radio streaming and controls
-│   │   ├── NotificationManager.swift # Smart notifications with anti-spam
-│   │   ├── SettingsManager.swift    # User preferences and app configuration
-│   │   ├── PowerManager.swift       # Battery monitoring and optimization
-│   │   ├── HapticManager.swift      # Tactile feedback coordination
-│   │   └── FirebaseManager.swift    # Analytics and crash reporting
-│   ├── 🎨 Views (SwiftUI Interface)
-│   │   ├── ContentView.swift        # Main app interface with mode toggle
-│   │   ├── ConnectionsView.swift    # P2P connection management
-│   │   ├── ExploreView.swift        # Device discovery and pairing
-│   │   └── SettingsView.swift       # App configuration and preferences
-│   ├── 🛠️ Utilities
-│   │   ├── Logger.swift             # Centralized logging system
-│   │   └── String+Localization.swift # Localization extensions
-│   ├── 🎵 Audio Resources
-│   │   ├── f1.mp3 - f24.mp3         # Frequency tone samples (1-24)
-│   │   ├── radio2.mp3               # Radio background audio
-│   │   ├── radio3.mp3               # Alternative radio samples
-│   │   └── radio4.mp3
-│   ├── 🎨 Assets
-│   │   ├── Assets.xcassets/         # App icons, images, and color sets
-│   │   └── Contents.json            # Asset catalog configuration
-│   ├── 🌍 Localization
-│   │   ├── it.lproj/                # Italian translations
-│   │   ├── en.lproj/                # English translations
-│   │   └── es.lproj/                # Spanish translations
-│   ├── ⚙️ Configuration
-│   │   ├── Info.plist               # App metadata and permissions
-│   │   ├── WalkieTalkie-Info.plist  # Additional app configuration
-│   │   ├── GoogleService-Info.plist # Firebase configuration
-│   │   └── WalkieTalkieApp.swift    # App entry point and initialization
-├── 📚 Documentation
-│   ├── plan.md                      # Development roadmap
-│   ├── AppStore_Description.md      # App Store listing content
-│   └── README.md                    # This documentation file
+WalkieTalkie/                            ← Xcode project root
+├── WalkieTalkie.xcodeproj/
+├── WalkieTalkie/                        ← App source
+│   ├── WalkieTalkieApp.swift            ← @main + AppDelegate (Firebase, ad bootstrap)
+│   ├── ContentView.swift                ← Main UI: radio/walkie tabs
+│   ├── OnboardingView.swift             ← First-run permissions + intro
+│   ├── ExploreView.swift                ← Peer discovery
+│   ├── ConnectionsView.swift            ← Active peer list
+│   ├── SettingsView.swift               ← Preferences + Pro upsell
+│   │
+│   ├── Ads/                             ← AdMob stack (5 files)
+│   │   ├── AdConfig.swift               ← Ad unit IDs (DEBUG/Release split)
+│   │   ├── AdManager.swift              ← Bootstrap + lifecycle
+│   │   ├── ConsentManager.swift         ← UMP + ATT
+│   │   ├── AppOpenAdManager.swift
+│   │   ├── InterstitialAdCoordinator.swift
+│   │   ├── RewardedAdCoordinator.swift
+│   │   ├── NativeAdCoordinator.swift    ← NEW: Native Advanced loader
+│   │   ├── NativeAdCardView.swift       ← NEW: SwiftUI card UI
+│   │   └── AdViewControllerRepresentable.swift
+│   │
+│   ├── IAP/                             ← StoreKit 2
+│   │   ├── IAPProducts.swift            ← Subscription + theme product IDs
+│   │   ├── IAPManager.swift             ← Purchase / restore / entitlements
+│   │   └── PaywallView.swift            ← Paywall UI with trigger analytics
+│   │
+│   ├── Theme/                           ← 16-theme engine
+│   │   ├── Theme.swift                  ← enum Theme (16 cases)
+│   │   ├── ThemeMetadata.swift          ← Tier + accent + font + sound
+│   │   ├── ThemeColorPack.swift         ← 5 free themes
+│   │   ├── ThemeIdentityPack.swift      ← 9 identity themes (€0.99)
+│   │   ├── ThemeAnimatedPack.swift      ← 2 animated themes (€1.99)
+│   │   ├── ThemeManager.swift           ← Active theme + persistence
+│   │   ├── ThemeSelectorView.swift      ← Theme picker
+│   │   ├── ThemePurchaseSheet.swift     ← Single-theme purchase flow
+│   │   ├── ThemeSoundManager.swift      ← Themed sound packs
+│   │   ├── FontManager.swift            ← Custom PostScript fonts
+│   │   └── AnimatedBackgroundView.swift ← GPU animated backgrounds
+│   │
+│   ├── Radio/                           ← Radio browser
+│   │   ├── StationBrowserSheet.swift    ← Search + favorites + recents + groups
+│   │   ├── SleepTimerSheet.swift        ← Timer UI
+│   │   └── SleepTimerManager.swift
+│   │
+│   ├── Audio/                           ← Pro audio features
+│   │   ├── EqualizerManager.swift       ← 5-band EQ (AVAudioUnitEQ)
+│   │   ├── EqualizerView.swift
+│   │   ├── RecordingsManager.swift      ← Persist + replay sessions
+│   │   └── RecordingsListView.swift
+│   │
+│   ├── History/
+│   │   └── TransmissionHistoryView.swift
+│   │
+│   ├── Managers (core)/
+│   │   ├── AudioManager.swift           ← AVAudioSession + PTT pipeline
+│   │   ├── MultipeerManager.swift       ← MCSession + peer discovery
+│   │   ├── RadioManager.swift           ← AVPlayer + 135 stations
+│   │   ├── NotificationManager.swift    ← Anti-spam local notifications
+│   │   ├── SettingsManager.swift        ← UserDefaults wrapper
+│   │   ├── PowerManager.swift           ← Battery monitoring
+│   │   ├── HapticManager.swift          ← CoreHaptics
+│   │   ├── FirebaseManager.swift        ← Analytics + Crashlytics
+│   │   ├── PerformanceMonitor.swift     ← FPS / memory profiling
+│   │   └── Logger.swift                 ← Categorised logs
+│   │
+│   ├── String+Localization.swift
+│   ├── FirstTimeEventTracker.swift      ← Onboarding analytics
+│   ├── FirstRunCoachView.swift
+│   │
+│   ├── Audio resources/
+│   │   └── f1.mp3 … f24.mp3, radio2.mp3, radio3.mp3, radio4.mp3
+│   │
+│   ├── Assets.xcassets/                 ← App icons, color sets
+│   │
+│   ├── it.lproj · en.lproj · es.lproj · ms.lproj · zh-Hant.lproj
+│   │
+│   └── Info.plist · GoogleService-Info.plist
+│
+└── README.md · AppStore_Description.md · plan.md
 ```
 
-## 🛠️ Technical Requirements
+---
 
-### System Requirements
-- **iOS**: 15.0+ (optimized for iOS 16+)
-- **Xcode**: 14.0+ (recommended: latest stable version)
-- **Swift**: 5.0+ (using modern Swift features)
-- **Device**: iPhone/iPad with Multipeer Connectivity support
-- **Hardware**: Microphone access required for walkie-talkie functionality
-
-### Frameworks & Dependencies
-- **SwiftUI**: Modern declarative UI framework for all interfaces
-- **MultipeerConnectivity**: Peer-to-peer communication without internet
-- **AVFoundation**: Audio recording, playback, and session management
-- **UserNotifications**: Local notification system with smart scheduling
-- **Combine**: Reactive programming for data flow and state management
-- **Firebase**: Analytics, crash reporting, and app performance monitoring
-- **UIKit**: Legacy components integration where needed
-
-### Required Permissions
-- **Microphone (`NSMicrophoneUsageDescription`)**: Essential for audio recording and walkie-talkie communication
-- **Local Network (`NSLocalNetworkUsageDescription`)**: Required for Multipeer Connectivity device discovery
-- **Notifications**: For incoming call alerts and system notifications
-
-## 🚀 Setup & Installation
+## 🚀 Build & Run
 
 ### Prerequisites
-1. **macOS** with Xcode 14.0+ installed
-2. **Apple Developer Account** (for device testing and distribution)
-3. **Physical iOS Device** (required for testing Multipeer Connectivity - simulator limitations)
-4. **Firebase Account** (optional, for analytics and crash reporting)
+- **macOS** with **Xcode 16.0+** (Xcode 17 fully supported)
+- **iOS 15.6+** target device (physical device required — Multipeer Connectivity does not run in the Simulator)
+- **Apple Developer account** for code signing
+- **(Optional) Firebase project** — replace `GoogleService-Info.plist` with yours or remove Firebase frameworks
+- **(Optional) AdMob account** — replace production unit IDs in [`Ads/AdConfig.swift`](WalkieTalkie/WalkieTalkie/Ads/AdConfig.swift); DEBUG builds always use Google's test IDs
 
-### Installation Steps
+### Clone & open
+```bash
+git clone https://github.com/andreapianidev/WalkieTalkie.git
+cd WalkieTalkie
+open WalkieTalkie/WalkieTalkie.xcodeproj
+```
 
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/andreapianidev/WalkieTalkie.git
-   cd WalkieTalkie
-   ```
+### Command-line build
+```bash
+# Debug build
+xcodebuild -project WalkieTalkie/WalkieTalkie.xcodeproj \
+           -scheme WalkieTalkie -configuration Debug build
 
-2. **Open the Project**
-   ```bash
-   open WalkieTalkie.xcodeproj
-   ```
+# Release archive
+xcodebuild -project WalkieTalkie/WalkieTalkie.xcodeproj \
+           -scheme WalkieTalkie -configuration Release archive
+```
 
-3. **Configure Code Signing**
-   - Select your **Development Team** in "Signing & Capabilities"
-   - Update **Bundle Identifier** to match your developer account
-   - Ensure **Automatically manage signing** is enabled
+### Code-signing
+1. Open the project in Xcode
+2. Target **WalkieTalkie** → **Signing & Capabilities** → choose your **Team**
+3. Set a unique **Bundle Identifier** (the default `com.immaginet.talky` is owned by the original developer)
+4. Run on a physical device with **Cmd+R**
 
-4. **Firebase Setup (Optional)**
-   - Replace `GoogleService-Info.plist` with your Firebase configuration
-   - Or remove Firebase integration if not needed
+### Swift Package Manager dependencies (auto-resolved)
+- [`swift-package-manager-google-mobile-ads`](https://github.com/googleads/swift-package-manager-google-mobile-ads) (Google Mobile Ads SDK)
+- [`firebase-ios-sdk`](https://github.com/firebase/firebase-ios-sdk) (Analytics + Crashlytics + Performance)
+- UMP SDK is bundled with Google Mobile Ads
 
-5. **Build & Run**
-   - Select your **target device** (physical device recommended)
-   - Press **Cmd+R** to build and run the app
-   - Grant microphone and local network permissions when prompted
+---
 
-## 🔧 Configuration
+## ⚙️ Configuration
 
-### App Configuration
-- **Bundle ID**: Configurable in `project.pbxproj` (default: `com.immaginet.talky`)
-- **Display Name**: "Talky" (customizable in Info.plist)
-- **Service Type**: `walkie-talkie` for Multipeer Connectivity identification
-- **Version**: Semantic versioning (Major.Minor.Patch)
+### AdMob unit IDs — [`Ads/AdConfig.swift`](WalkieTalkie/WalkieTalkie/Ads/AdConfig.swift)
+```swift
+#if DEBUG
+// Google's official test ad units — safe during development.
+static let appOpenAdUnitID       = "ca-app-pub-3940256099942544/5575463023"
+static let interstitialAdUnitID  = "ca-app-pub-3940256099942544/4411468910"
+static let rewardedAdUnitID      = "ca-app-pub-3940256099942544/1712485313"
+static let nativeStationAdUnitID = "ca-app-pub-3940256099942544/3986624511"
+#else
+// Replace with YOUR AdMob account IDs before shipping.
+static let appOpenAdUnitID       = "ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX"
+static let interstitialAdUnitID  = "ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX"
+static let rewardedAdUnitID      = "ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX"
+static let nativeStationAdUnitID = "ca-app-pub-XXXXXXXXXXXXXXXX/XXXXXXXXXX"
+#endif
+```
 
-### Audio Configuration
-- **Audio Session Category**: `.playAndRecord` with `.defaultToSpeaker` option
-- **Sample Rate**: 44.1 kHz (CD quality)
-- **Bit Depth**: 16-bit linear PCM
-- **Channels**: Mono for walkie-talkie communication, Stereo for radio playback
-- **Buffer Size**: Optimized for low-latency real-time communication
+### Frequency capping
+```swift
+enum FrequencyCap {
+    static let appOpenMaxAge: TimeInterval = 4 * 3600      // 4h
+    static let interstitialMinInterval: TimeInterval = 180 // 3min between interstitials
+    static let interstitialDailyMax: Int = 5
+    static let removeAdsRewardDuration: TimeInterval = 3600 // 1h
+}
+```
 
-### Network Configuration
-- **Multipeer Service Type**: `_walkie-talkie._tcp` (Bonjour service)
-- **Auto-discovery**: Enabled by default for seamless device detection
-- **Maximum Peers**: 8 simultaneous device connections
-- **Connection Timeout**: 30 seconds for initial pairing
-- **Reconnection**: Automatic retry with exponential backoff
+### Info.plist permission strings
+- `NSMicrophoneUsageDescription` — walkie-talkie recording
+- `NSLocalNetworkUsageDescription` — Multipeer Connectivity discovery
+- `NSBonjourServices` — `_walkie-talkie._tcp`, `_walkie-talkie._udp`
+- `NSUserTrackingUsageDescription` — ATT prompt copy
+- `GADApplicationIdentifier` — AdMob app ID
+- `SKAdNetworkItems` — see Info.plist (full list of partner SKAdNetwork IDs)
+
+### Audio session
+- Category `.playAndRecord` with `.defaultToSpeaker, .allowBluetooth, .mixWithOthers`
+- 44.1 kHz, 16-bit PCM, mono for PTT / stereo for radio
+- Background audio entitlement enabled
+
+---
 
 ## 🧪 Testing
 
-### Unit Testing
-- **Manager Testing**: Individual testing of each manager class with mocked dependencies
-- **Utility Testing**: Comprehensive testing of helper functions and extensions
-- **Model Testing**: Validation of data models and business logic
-- **Audio Testing**: Verify audio processing and session management
+> ⚠️ **Multipeer Connectivity does not work in the iOS Simulator.** You need at least one physical device (two for PTT testing).
 
-### Integration Testing
-- **Multipeer Communication**: End-to-end testing of device discovery and connection
-- **Audio Pipeline**: Testing complete audio recording, transmission, and playback flow
-- **Data Persistence**: Verify settings and preferences are correctly saved/loaded
-- **Firebase Integration**: Analytics and crash reporting functionality
+Recommended test matrix:
+- **PTT**: 2+ physical iPhones on the same Wi-Fi → discover → connect → press-to-talk
+- **Radio**: pick a station from each of the 14 region groups, verify audio + sleep timer + favorite/unfavorite
+- **IAP**: create a StoreKit configuration file with the product IDs in [`IAPProducts.swift`](WalkieTalkie/WalkieTalkie/IAP/IAPProducts.swift), test the paywall + restore on a sandbox account
+- **Ads**: launch a DEBUG build → the AdMob test creatives must appear (app-open, interstitial after 5 mode switches, native card inside station browser)
+- **Consent**: change device region to EU → UMP consent form must appear on first launch, then ATT prompt
+- **Theme purchase**: try to apply a locked theme → `ThemePurchaseSheet` should open with the correct price
 
-### Device Testing
-- **Physical Device Required**: Multipeer Connectivity cannot be tested in simulator
-- **Multi-device Testing**: Test with 2+ devices for real P2P communication
-- **Performance Testing**: Audio latency, memory usage, and battery consumption
-- **Edge Cases**: Network interruptions, background/foreground transitions
+There is no automated test target in this repo — contributions welcome.
 
-## 📊 Performance Considerations
+---
 
-### Memory Management
-- **Weak References**: Proper use of `weak self` in closures to prevent retain cycles
-- **Automatic Cleanup**: Connection and session cleanup when app backgrounds
-- **Audio Session Optimization**: Efficient management of AVAudioSession lifecycle
-- **Firebase Optimization**: Batched analytics events to reduce overhead
+## 🔋 Performance & Battery
 
-### Battery Optimization
-- **PowerManager Integration**: Real-time battery monitoring and adaptive behavior
-- **Low Power Mode**: Reduced functionality when device battery is low
-- **Smart Connection Management**: Automatic disconnection of idle peers
-- **Background Processing**: Minimal background activity to preserve battery
+- `PowerManager` watches `UIDevice.batteryLevel` + `ProcessInfo.isLowPowerModeEnabled` and reduces radio polling
+- `PerformanceMonitor` exposes a debug overlay with FPS / memory / active peers (gated by a hidden build flag)
+- AVAudioSession is **deactivated** when both modes are idle to free the audio hardware
+- All Combine subscriptions store `cancellables` and are torn down in `deinit` to avoid retain cycles
+- `MultipeerManager` automatically disconnects idle peers after a configurable timeout to save battery
+- AdMob ads are **preloaded once** and reused; frequency caps prevent ad-storm scenarios
 
-### Network Optimization
-- **Audio Compression**: Efficient encoding for real-time transmission
-- **Automatic Reconnection**: Smart retry logic with exponential backoff
-- **Connection Pooling**: Efficient management of multiple peer connections
-- **Timeout Management**: Configurable timeouts for different network conditions
+---
 
-## 🐛 Debugging
+## 🤝 Contributing
 
-### Centralized Logging System
-- **Logger.swift**: Unified logging with categorized output
-- **Log Categories**: Audio, Network, UI, Error, Firebase, Performance
-- **Debug Levels**: Verbose, Info, Warning, Error for different build configurations
-- **Console Output**: Real-time logging visible in Xcode console
+Contributions are welcome! Please:
 
-### Common Issues & Solutions
-1. **Multipeer Discovery Fails**: 
-   - ✅ Verify Local Network permissions are granted
-   - ✅ Ensure both devices are on same network
-   - ✅ Check firewall settings on macOS
+1. **Fork** the repo and create a feature branch (`feat/<short-name>` or `fix/<short-name>`)
+2. **Match the existing code style** — Swift API Design Guidelines, no force-unwraps, prefer `@MainActor` and `nonisolated` correctness over `@unchecked Sendable`
+3. **Update localizations** if you change any UI string (`it`, `en`, `es`, `ms`, `zh-Hant` must stay in sync)
+4. **Build & run on a physical device** before opening the PR
+5. **Open a PR** with a clear description, screenshots for UI changes, and reference any related issue
 
-2. **Audio Recording Issues**:
-   - ✅ Confirm Microphone permissions are granted
-   - ✅ Check if another app is using audio session
-   - ✅ Verify device is not in silent mode
+Conventional-commit prefixes are appreciated: `feat:`, `fix:`, `chore:`, `refactor:`, `docs:`, `style:`.
 
-3. **Notifications Not Appearing**:
-   - ✅ Verify notification permissions are granted
-   - ✅ Check Do Not Disturb settings
-   - ✅ Ensure app is not backgrounded too long
+### Good first issues
+- Add more radio stations (extend `RadioManager.radioStations`)
+- Add additional language translations (clone an existing `.lproj` folder)
+- New themes — add a new file under `Theme/` and register into `ThemeRegistry`
+- Apple Watch companion app
+- iOS Widgets for quick PTT
 
-## 🔒 Security & Privacy
-
-### Data Privacy
-- **Local-Only Communication**: No data transmitted to external servers
-- **Peer-to-Peer Encryption**: Multipeer Connectivity uses built-in encryption
-- **No Audio Storage**: Voice data is not permanently stored on device
-- **Anonymous Analytics**: Firebase analytics with no personally identifiable information
-
-### Security Measures
-- **Input Validation**: All user inputs are sanitized and validated
-- **Secure Connections**: TLS encryption for all network communications
-- **No Hardcoded Secrets**: All sensitive data stored securely in Keychain
-- **Permission Validation**: Runtime checks for all required permissions
-
-## 📈 Future Enhancements
-
-### Planned Features
-- [ ] **Conversation Recording**: Save and replay walkie-talkie conversations
-- [ ] **Group Communication**: Multi-user channels and group management
-- [ ] **End-to-End Encryption**: Enhanced security for sensitive communications
-- [ ] **Apple Watch Support**: Companion app for wrist-based communication
-- [ ] **iOS Widgets**: Quick access controls and connection status
-- [ ] **Background Audio**: Continue radio playback when app is backgrounded
-- [ ] **Custom Frequencies**: User-defined radio station presets
-- [ ] **Voice Effects**: Real-time audio filters and effects
-
-### Technical Roadmap
-- [ ] **AudioManager Refactoring**: Improve audio pipeline architecture
-- [ ] **Enhanced Test Coverage**: Comprehensive unit and integration tests
-- [ ] **Performance Optimization**: Reduce memory footprint and improve battery life
-- [ ] **API Documentation**: Complete code documentation with examples
-- [ ] **Accessibility Improvements**: VoiceOver support and accessibility features
-- [ ] **SwiftUI Migration**: Complete migration from UIKit components
-
-## 👨‍💻 Contributing
-
-**We welcome contributions from the open source community!** 🎉
-
-### Code Style Guidelines
-- Follow **Swift API Design Guidelines** and community best practices
-- Use **SwiftLint** for code consistency and style enforcement
-- Document all **public functions and classes** with clear descriptions
-- Write **comprehensive tests** for new features and bug fixes
-- Use **meaningful commit messages** following conventional commit format
-
-### Development Workflow
-1. **Fork** the repository and create a feature branch
-2. **Implement** your changes with appropriate tests
-3. **Run** SwiftLint and ensure all tests pass
-4. **Submit** a pull request with detailed description
-5. **Collaborate** during code review process
-
-### Pull Request Guidelines
-- Provide clear description of changes and motivation
-- Include screenshots for UI changes
-- Ensure backward compatibility when possible
-- Update documentation for new features
+---
 
 ## 📄 License
 
-**Open Source** - MIT License © 2025 Andrea Piani - Immaginet Srl
+**MIT License** © 2025–2026 Andrea Piani / Immaginet Srl.
 
-This project is now open source and available for community contributions. See the LICENSE file for full details.
+Free for personal, educational and commercial use. You can fork, modify, ship your own version on the App Store — just keep the copyright notice. Ad networks, Firebase keys and StoreKit product IDs must be replaced with your own.
 
-## 🏔️ Peak - Complete Altimetry App
-
-**🎉 Exciting News!** The walkie-talkie functionality is now also available in our comprehensive altimetry app:
-
-### 📱 [Peak - GPS Altimeter Barometer](https://apps.apple.com/app/peak-altimetro-gps-barometro/id6477742031)
-
-**Why choose Peak?**
-- 🏔️ **Professional Altimetry**: Accurate GPS and barometric altitude measurements
-- 🧭 **Advanced Navigation**: Comprehensive GPS tools and compass functionality
-- 🌦️ **Weather Monitoring**: Real-time barometric pressure and weather tracking
-- 📡 **Built-in Walkie-Talkie**: All the communication features you love from this app
-- 🎯 **All-in-One Solution**: Complete outdoor adventure toolkit in one app
-
-**Peak combines the best of both worlds** - professional altimetry tools with the reliable walkie-talkie communication system you're already familiar with.
-
-[![Download Peak](https://img.shields.io/badge/Download-Peak%20App-blue?style=for-the-badge&logo=apple&logoColor=white)](https://apps.apple.com/app/peak-altimetro-gps-barometro/id6477742031)
+See the `LICENSE` file for the full text.
 
 ---
 
-## 📞 Support & Community
+## 🏔️ Credits & Links
 
-- **Developer**: Andrea Piani
-- **Company**: Immaginet Srl
-- **Website**: [https://www.andreapiani.com](https://www.andreapiani.com)
-- **Issues**: Report bugs and request features via GitHub Issues
-- **Discussions**: Join community discussions for questions and ideas
+- **Developer**: Andrea Piani · **Company**: Immaginet Srl
+- **Website**: <https://www.andreapiani.com>
+- **Privacy policy**: <https://privacypolicyhub.vercel.app>
+- **Support coffee** ☕: <https://buymeacoffee.com/andreapianidev>
 
-### Getting Help
-- 📖 Check this README for setup and configuration help
-- 🐛 Search existing issues before creating new ones
-- 💬 Use GitHub Discussions for questions and community support
-- 📧 Contact developer for business inquiries
+### Sister app — Peak (GPS Altimeter + Walkie)
+The walkie-talkie engine from Talky also powers **Peak — GPS Altimeter Barometer**, an outdoor companion app with professional altimetry and built-in PTT.
 
-👉 If you want say me thank you ...buy me a coffee! 🤗❤️ [buymeacoffee.com/andreapianidev](https://buymeacoffee.com/andreapianidev)
+[![Download Peak](https://img.shields.io/badge/Download-Peak%20on%20App%20Store-blue?style=for-the-badge&logo=apple&logoColor=white)](https://apps.apple.com/app/peak-altimetro-gps-barometro/id6477742031)
+
 ---
 
-**Note**: This project is actively maintained and developed. Check `plan.md` for current development status and upcoming features. Contributions and feedback are always welcome!
+> 💛 If Talky helped you, ship something cool with it, or just learn how to build a freemium SwiftUI app — drop a ⭐ on GitHub and consider a coffee. Pull requests, station packs and theme contributions are always welcome.

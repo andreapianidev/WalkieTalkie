@@ -19,6 +19,7 @@ final class AdManager: ObservableObject {
     let appOpen = AppOpenAdManager()
     let interstitial = InterstitialAdCoordinator()
     let rewarded = RewardedAdCoordinator()
+    let nativeStation = NativeAdCoordinator()
 
     private init() {}
 
@@ -54,6 +55,20 @@ final class AdManager: ObservableObject {
             group.addTask { await self.appOpen.loadAd() }
             group.addTask { await self.interstitial.loadAd() }
             group.addTask { await self.rewarded.loadAd() }
+        }
+        // Native ad is sync-loaded (delegate callback). Skip for Pro users to save bandwidth.
+        if !IAPManager.shared.isProUser {
+            nativeStation.loadAd()
+        }
+    }
+
+    /// Re-request a native station ad. Call when the station browser opens so the user sees fresh creatives.
+    /// Throttled: skips reload if the cached ad is younger than 60s (avoids hammering AdMob on rapid open/close).
+    func refreshStationNativeAdIfNeeded() {
+        guard !IAPManager.shared.isProUser else { return }
+        guard !adsRemoved else { return }
+        if nativeStation.shouldReload(minAge: 60) {
+            nativeStation.loadAd()
         }
     }
 

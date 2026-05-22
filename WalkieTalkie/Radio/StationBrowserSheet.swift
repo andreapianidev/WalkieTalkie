@@ -53,6 +53,11 @@ struct StationBrowserSheet: View {
             }
         }
         .navigationViewStyle(.stack)
+        .onAppear {
+            if !isProUser {
+                AdManager.shared.refreshStationNativeAdIfNeeded()
+            }
+        }
         .onChange(of: radioManager.blockedByPaywall) { blocked in
             if blocked { showPaywall = true }
         }
@@ -162,6 +167,11 @@ struct StationBrowserSheet: View {
                 } label: {
                     sectionHeader("📍 \("nearby".localized) — \(radioManager.deviceCountry) (\(radioManager.localStations.count))")
                 }
+            }
+
+            // Native AdMob slot — only for non-Pro users, only when filled.
+            if !isProUser, let ad = nativeAd.nativeAd {
+                NativeAdCardView(nativeAd: ad)
             }
 
             DisclosureGroup {
