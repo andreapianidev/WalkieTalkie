@@ -338,7 +338,10 @@ class RadioManager: NSObject, ObservableObject {
             return
         }
 
-        stopRadio()
+        // Cleanup intermedio: chiamato da playStation come reset, NON come stop
+        // utente. Saltiamo il resync walkie altrimenti per un frame appare la
+        // walkie LA fra una stazione e l'altra.
+        stopRadio(resyncWalkieAfter: false)
 
         guard let url = URL(string: station.streamURL) else {
             logger.logAudioError(NSError(domain: "RadioManager", code: -1, userInfo: [NSLocalizedDescriptionKey: "URL non valido"]), context: "Play station")
@@ -386,7 +389,7 @@ class RadioManager: NSObject, ObservableObject {
         UserDefaults.standard.set(rec, forKey: recentsKey)
     }
     
-    func stopRadio() {
+    func stopRadio(resyncWalkieAfter: Bool = true) {
         radioPlayer?.pause()
         radioPlayer?.removeObserver(self, forKeyPath: "timeControlStatus")
         radioPlayer?.removeObserver(self, forKeyPath: "error")
@@ -399,11 +402,15 @@ class RadioManager: NSObject, ObservableObject {
         // Cancella Now Playing Info
         clearNowPlayingInfo()
 
-        // Termina la Live Activity radio se attiva, poi lascia che il walkie
-        // riconquisti la Dynamic Island se ci sono ancora peer connessi.
+        // Termina la Live Activity radio se attiva. Se si tratta di uno stop
+        // utente esplicito (non un reset interno fra una stazione e l'altra),
+        // lascia che il walkie riconquisti la Dynamic Island se ci sono ancora
+        // peer connessi.
         if #available(iOS 16.2, *) {
             LiveActivityManager.shared.endRadio()
-            LiveActivityManager.shared.resyncWalkieFromCurrentState()
+            if resyncWalkieAfter {
+                LiveActivityManager.shared.resyncWalkieFromCurrentState()
+            }
         }
 
         logger.logAudioInfo("Radio fermata")
