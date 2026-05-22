@@ -46,10 +46,6 @@ struct WalkieTalkieApp: App {
                 if isOnboardingComplete {
                     adManager.showAppOpenIfAllowed()
                 }
-                // Bootstrap Live Activity observers (no-op pre-iOS-16.2).
-                if #available(iOS 16.2, *) {
-                    LiveActivityManager.shared.bootstrap()
-                }
             }
             .onOpenURL { url in
                 // Live Activity (iOS 16.x fallback) deep links: talky://radio/<action>.
@@ -74,6 +70,14 @@ struct WalkieTalkieApp: App {
 
 class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // Bootstrap Live Activity observers BEFORE any URL or scene processing.
+        // Cold-launch from a talky:// Live Activity button (iOS 16.x fallback)
+        // delivers the URL to .onOpenURL right after this delegate method; the
+        // observers must already be installed when LiveActivityDeepLink posts.
+        if #available(iOS 16.2, *) {
+            LiveActivityManager.shared.bootstrap()
+        }
+
         // Inizializza Firebase
         FirebaseApp.configure()
 
