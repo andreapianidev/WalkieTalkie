@@ -89,12 +89,7 @@
 "performance_trends" = "性能趨勢";
 "connection_time" = "連接時間";
 "active_connections" = "活躍連接";
-"performance_recommendations" = "性能建議";
 "no_recommendations" = "目前沒有建議。性能是最佳的！";
-"reduce_connections" = "考慮減少連接數量以提高性能";
-"check_network" = "檢查您的網路連接以減少延遲";
-"restart_app" = "考慮重新啟動應用程式以釋放記憶體";
-"close_apps" = "關閉其他應用程式以釋放系統記憶體";
 "too_many_connections_warning" = "連接過多 (%d) - 考慮限制在 6-8 個以獲得最佳性能";
 
 // MARK: - Radio
@@ -389,3 +384,14 @@
 "settings.personalization.recordings.subtitle" = "重播您的傳輸";
 "settings.personalization.private_channels.title" = "私人頻道";
 "settings.personalization.private_channels.subtitle" = "密碼保護的對講機";
+
+/* MARK: - Misc additions 2026-05 */
+"audio_cache" = "音訊快取";
+"close" = "關閉";
+"current_recommendations" = "目前建議";
+"full_report" = "完整報告";
+"optimized_mode" = "最佳化模式";
+"peak_altimeter_free" = "免費高度計";
+"peak_walkie_ai_description" = "搭配對講機與 AI";
+"recommendations" = "建議";
+"updated_now" = "剛剛更新";

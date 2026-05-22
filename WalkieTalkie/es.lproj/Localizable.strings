@@ -66,12 +66,7 @@
 "performance_trends" = "Tendencias de Rendimiento";
 "connection_time" = "Tiempo de Conexión";
 "active_connections" = "Conexiones Activas";
-"performance_recommendations" = "Recomendaciones de Rendimiento";
 "no_recommendations" = "No hay recomendaciones en este momento. ¡El rendimiento es óptimo!";
-"reduce_connections" = "Considera reducir el número de conexiones para mejorar el rendimiento";
-"check_network" = "Verifica tu conexión de red para reducir la latencia";
-"restart_app" = "Considera reiniciar la aplicación para liberar memoria";
-"close_apps" = "Cierra otras aplicaciones para liberar memoria del sistema";
 "too_many_connections_warning" = "Demasiadas conexiones (%d) - Considera limitarlas a 6-8 para un rendimiento óptimo";
 
 // MARK: - Radio
@@ -162,8 +157,6 @@
 "dark_mode_description" = "Usar tema oscuro para la interfaz de la app";
 
 // MARK: - Peak App
-"peak_app_title" = "Peak: Altímetro para Excursionistas";
-"peak_app_description" = "Altímetro gratuito para excursionistas con IA y walkie talkie integrado";
 "download_peak_app" = "Descargar App Peak";
 "peak_altimeter_free" = "Altímetro Gratuito";
 "peak_walkie_ai_description" = "con Walkie Talkie e IA";
@@ -245,16 +238,8 @@
 "charging" = "Cargando";
 "full" = "Completa";
 "unplugged" = "Desconectado";
-"notifications" = "Notificaciones";
-"enable_notifications" = "Habilitar Notificaciones";
-"disable_notifications" = "Deshabilitar Notificaciones";
-"notification_description" = "Recibe notificaciones cuando se detecten nuevos dispositivos o durante transmisiones";
 
 // MARK: - Battery Status
-"charging" = "Cargando";
-"full" = "Completa";
-"unplugged" = "Desconectado";
-"unknown" = "Desconocido";
 "ads_section_title" = "Anuncios y Privacidad";
 "watch_ad_remove_ads" = "Mira un vídeo, sin anuncios";
 "watch_ad_remove_ads_subtitle" = "Sin anuncios durante 1 hora";
@@ -403,3 +388,12 @@
 "settings.personalization.recordings.subtitle" = "Vuelve a escuchar tus transmisiones";
 "settings.personalization.private_channels.title" = "Canales privados";
 "settings.personalization.private_channels.subtitle" = "Walkie talkie con contraseña";
+
+/* MARK: - Misc additions 2026-05 */
+"audio_cache" = "Caché de Audio";
+"close" = "Cerrar";
+"current_recommendations" = "Recomendaciones Actuales";
+"full_report" = "Informe Completo";
+"optimized_mode" = "Modo Optimizado";
+"recommendations" = "Recomendaciones";
+"updated_now" = "Actualizado ahora";

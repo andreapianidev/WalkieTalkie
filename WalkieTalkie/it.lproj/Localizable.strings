@@ -97,10 +97,7 @@
 "no_recommendations" = "Nessuna raccomandazione al momento. Le performance sono ottimali!";
 "full_report" = "Report Completo";
 "close" = "Chiudi";
-"high_memory_warning" = "Utilizzo memoria elevato (%.1f%%) - Considera di ridurre le connessioni";
-"high_latency_warning" = "Latenza elevata (%.2fs) - Verifica la connessione di rete";
 "too_many_connections_warning" = "Troppe connessioni (%d) - Considera di limitare a 6-8 per prestazioni ottimali";
-"slow_connection_warning" = "Tempo di connessione lento (%.1fs) - Verifica la stabilità della rete";
 
 // MARK: - Radio
 "station" = "Stazione";

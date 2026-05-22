@@ -89,12 +89,7 @@
 "performance_trends" = "Trend Prestasi";
 "connection_time" = "Masa Sambungan";
 "active_connections" = "Sambungan Aktif";
-"performance_recommendations" = "Cadangan Prestasi";
 "no_recommendations" = "Tiada cadangan pada masa ini. Prestasi adalah optimum!";
-"reduce_connections" = "Pertimbangkan untuk mengurangkan bilangan sambungan untuk meningkatkan prestasi";
-"check_network" = "Periksa sambungan rangkaian anda untuk mengurangkan kelewatan";
-"restart_app" = "Pertimbangkan untuk memulakan semula aplikasi untuk membebaskan memori";
-"close_apps" = "Tutup aplikasi lain untuk membebaskan memori sistem";
 "too_many_connections_warning" = "Terlalu banyak sambungan (%d) - Pertimbangkan untuk mengehadkan kepada 6-8 untuk prestasi optimum";
 
 // MARK: - Radio
@@ -389,3 +384,14 @@
 "settings.personalization.recordings.subtitle" = "Mainkan semula penghantaran anda";
 "settings.personalization.private_channels.title" = "Saluran peribadi";
 "settings.personalization.private_channels.subtitle" = "Walkie talkie dilindungi kata laluan";
+
+/* MARK: - Misc additions 2026-05 */
+"audio_cache" = "Cache Audio";
+"close" = "Tutup";
+"current_recommendations" = "Cadangan Semasa";
+"full_report" = "Laporan Penuh";
+"optimized_mode" = "Mod Dioptimumkan";
+"peak_altimeter_free" = "Altimeter Percuma";
+"peak_walkie_ai_description" = "dengan Walkie Talkie & AI";
+"recommendations" = "Cadangan";
+"updated_now" = "Dikemas kini sekarang";
