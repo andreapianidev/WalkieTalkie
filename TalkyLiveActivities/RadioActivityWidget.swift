@@ -18,6 +18,7 @@ struct RadioActivityWidget: Widget {
             RadioLockScreenView(state: context.state)
                 .activityBackgroundTint(Color.black.opacity(0.65))
                 .activitySystemActionForegroundColor(.white)
+                .widgetURL(URL(string: "talky://radio"))
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
@@ -196,50 +197,44 @@ private struct RadioControlsView: View {
         }
     }
 
+    @ViewBuilder
     private var prevButton: some View {
         let label = ControlButtonLabel(symbol: "backward.fill", size: size, padding: padding, emphasized: false)
-        return AnyView(
-            Group {
-                if #available(iOS 17.0, *) {
-                    Button(intent: SkipPreviousStationIntent()) { label }
-                        .buttonStyle(.plain)
-                } else {
-                    Link(destination: URL(string: "talky://radio/prev")!) { label }
-                }
-            }
-            .accessibilityLabel("Previous favorite station")
-        )
+        if #available(iOS 17.0, *) {
+            Button(intent: SkipPreviousStationIntent()) { label }
+                .buttonStyle(.plain)
+                .accessibilityLabel(RadioWidgetL10n.accPrev)
+        } else {
+            Link(destination: URL(string: "talky://radio/prev")!) { label }
+                .accessibilityLabel(RadioWidgetL10n.accPrev)
+        }
     }
 
+    @ViewBuilder
     private var playPauseButton: some View {
         let symbol = state.isPlaying ? "pause.fill" : "play.fill"
         let label = ControlButtonLabel(symbol: symbol, size: size, padding: padding, emphasized: true)
-        return AnyView(
-            Group {
-                if #available(iOS 17.0, *) {
-                    Button(intent: PlayPauseRadioIntent()) { label }
-                        .buttonStyle(.plain)
-                } else {
-                    Link(destination: URL(string: "talky://radio/playpause")!) { label }
-                }
-            }
-            .accessibilityLabel(state.isPlaying ? "Pause" : "Play")
-        )
+        if #available(iOS 17.0, *) {
+            Button(intent: PlayPauseRadioIntent()) { label }
+                .buttonStyle(.plain)
+                .accessibilityLabel(state.isPlaying ? RadioWidgetL10n.accPause : RadioWidgetL10n.accPlay)
+        } else {
+            Link(destination: URL(string: "talky://radio/playpause")!) { label }
+                .accessibilityLabel(state.isPlaying ? RadioWidgetL10n.accPause : RadioWidgetL10n.accPlay)
+        }
     }
 
+    @ViewBuilder
     private var nextButton: some View {
         let label = ControlButtonLabel(symbol: "forward.fill", size: size, padding: padding, emphasized: false)
-        return AnyView(
-            Group {
-                if #available(iOS 17.0, *) {
-                    Button(intent: SkipNextStationIntent()) { label }
-                        .buttonStyle(.plain)
-                } else {
-                    Link(destination: URL(string: "talky://radio/next")!) { label }
-                }
-            }
-            .accessibilityLabel("Next favorite station")
-        )
+        if #available(iOS 17.0, *) {
+            Button(intent: SkipNextStationIntent()) { label }
+                .buttonStyle(.plain)
+                .accessibilityLabel(RadioWidgetL10n.accNext)
+        } else {
+            Link(destination: URL(string: "talky://radio/next")!) { label }
+                .accessibilityLabel(RadioWidgetL10n.accNext)
+        }
     }
 }
 
@@ -265,5 +260,35 @@ private struct ControlButtonLabel: View {
                     : AnyShapeStyle(Color.white.opacity(0.14))
                 )
             )
+            // HIG: target di hit minimo 44pt. Lo sfondo grafico resta a `size+padding`
+            // (estetica compatta), ma l'area touch effettiva è 44pt — invisibile.
+            .contentShape(Rectangle())
+            .frame(minWidth: 44, minHeight: 44)
+    }
+}
+
+/// Mini helper di localizzazione duplicato dal widget walkie per gli accessibility
+/// label dei controlli radio. Bersagliamo le stesse lingue del bundle app
+/// (it/en/es/ms/zh-Hant); l'estensione non ha accesso ai Localizable.strings.
+private enum RadioWidgetL10n {
+    static let accPrev  = pick(it: "Stazione precedente", en: "Previous station", es: "Estación anterior", ms: "Stesen sebelumnya", zh: "上一頻道")
+    static let accNext  = pick(it: "Stazione successiva", en: "Next station", es: "Siguiente estación", ms: "Stesen seterusnya", zh: "下一頻道")
+    static let accPlay  = pick(it: "Riproduci", en: "Play", es: "Reproducir", ms: "Main", zh: "播放")
+    static let accPause = pick(it: "Pausa", en: "Pause", es: "Pausa", ms: "Jeda", zh: "暫停")
+
+    private static func pick(it: String, en: String, es: String, ms: String, zh: String) -> String {
+        let code: String
+        if #available(iOS 16, *) {
+            code = Locale.current.language.languageCode?.identifier ?? "en"
+        } else {
+            code = Locale.current.languageCode ?? "en"
+        }
+        switch code.lowercased() {
+        case "it": return it
+        case "es": return es
+        case "ms": return ms
+        case "zh": return zh
+        default:   return en
+        }
     }
 }

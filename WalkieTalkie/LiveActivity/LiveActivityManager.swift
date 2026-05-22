@@ -22,11 +22,37 @@ final class LiveActivityManager {
 
     private var didBootstrap = false
 
+    /// Lifecycle queue. Each start/update/end appends to a single Task chain.
+    /// Awaiting the previous task before the next op completes serializes ActivityKit
+    /// requests, preventing the "ivar nil-ed before await end completes" race that
+    /// otherwise made rapid mode switches leak activities or fail with
+    /// `targetMaximumExceeded`.
+    private var pendingLifecycle: Task<Void, Never>?
+
+    /// Synchronous "this mode is intended to be visible" flags. Set/cleared *before*
+    /// scheduling work, so precedence checks (radio wins over walkie) are race-free
+    /// even when a peer audio packet arrives during the radio start/end window.
+    private var radioIntent: Bool = false
+    private var walkieIntent: Bool = false
+
+    private var observerTokens: [NSObjectProtocol] = []
+
     private init() {}
 
     /// Activities-enabled check (user toggle in iOS Settings → app).
     var areActivitiesEnabled: Bool {
         ActivityAuthorizationInfo().areActivitiesEnabled
+    }
+
+    /// Appends work to the lifecycle chain. Use `enqueue` for any code that mutates
+    /// an Activity (request/update/end) so ops run in the order they were scheduled
+    /// on the MainActor.
+    private func enqueue(_ work: @escaping @MainActor () async -> Void) {
+        let prev = pendingLifecycle
+        pendingLifecycle = Task { @MainActor in
+            await prev?.value
+            await work()
+        }
     }
 
     /// Wires the NotificationCenter observers for interactive intent broadcasts
@@ -38,51 +64,49 @@ final class LiveActivityManager {
 
         Logger.shared.logInfo("LiveActivityManager bootstrap")
 
-        // Reconcile system-known activities with app state. If the OS still has
-        // an activity in flight but our managers report no matching session,
-        // end the stale one — otherwise the user sees a frozen LA from a past
-        // run with no way to dismiss it through normal UI.
-        let inFlightRadio = Activity<RadioActivityAttributes>.activities.first
-        let inFlightWalkie = Activity<WalkieActivityAttributes>.activities.first
-
-        if let radio = inFlightRadio, RadioManager.shared.currentStation == nil {
-            Task { await radio.end(nil, dismissalPolicy: .immediate) }
-            radioActivity = nil
-        } else {
-            radioActivity = inFlightRadio
-        }
-        if let walkie = inFlightWalkie, MultipeerManager.shared?.connectedPeers.isEmpty ?? true {
-            Task { await walkie.end(nil, dismissalPolicy: .immediate) }
-            walkieActivity = nil
-        } else {
-            walkieActivity = inFlightWalkie
+        // End ALL stale in-flight activities from a previous process. At cold launch
+        // neither RadioManager nor MultipeerManager has any active session yet, so
+        // any LA the OS still has on screen is by definition orphaned and would
+        // otherwise stay visible with broken (no-op) intent buttons. Iterating —
+        // not `.first` — also covers the edge case where ActivityKit delivered
+        // duplicates after a process crash + relaunch.
+        enqueue { [weak self] in
+            for activity in Activity<RadioActivityAttributes>.activities {
+                await activity.end(nil, dismissalPolicy: .immediate)
+            }
+            for activity in Activity<WalkieActivityAttributes>.activities {
+                await activity.end(nil, dismissalPolicy: .immediate)
+            }
+            self?.radioActivity = nil
+            self?.walkieActivity = nil
         }
 
         // Observe interactive intent broadcasts. These come from
         // LiveActivityIntent.perform() in the widget UI on iOS 17+.
         // Registering BEFORE the scene processes any deep-link URL is critical:
         // a cold launch from a talky:// URL must find observers ready.
-        NotificationCenter.default.addObserver(
+        let t1 = NotificationCenter.default.addObserver(
             forName: .talkyRadioTogglePlayPause,
             object: nil,
             queue: .main
         ) { _ in
             Task { @MainActor in Self.handleRadioTogglePlayPause() }
         }
-        NotificationCenter.default.addObserver(
+        let t2 = NotificationCenter.default.addObserver(
             forName: .talkyRadioNextStation,
             object: nil,
             queue: .main
         ) { _ in
             Task { @MainActor in Self.handleRadioNext() }
         }
-        NotificationCenter.default.addObserver(
+        let t3 = NotificationCenter.default.addObserver(
             forName: .talkyRadioPreviousStation,
             object: nil,
             queue: .main
         ) { _ in
             Task { @MainActor in Self.handleRadioPrevious() }
         }
+        observerTokens = [t1, t2, t3]
     }
 
     // MARK: - Radio
@@ -92,34 +116,40 @@ final class LiveActivityManager {
             Logger.shared.logInfo("Live Activities disabled by user, skip startRadio")
             return
         }
-        // End any existing radio activity first (one-at-a-time semantics).
-        if let existing = radioActivity {
-            Task { await existing.end(nil, dismissalPolicy: .immediate) }
-            radioActivity = nil
-        }
-        // Also end any walkie activity — modes are mutually exclusive in the UI,
-        // but defensive cleanup avoids two icons piling up if the user switches fast.
-        endWalkie()
-
-        let state = RadioActivityAttributes.ContentState(
-            stationName: stationName,
-            stationCountry: country,
-            stationFlag: flag,
-            stationFrequency: frequency,
-            stationGenre: genre,
-            isPlaying: isPlaying,
-            isBuffering: isBuffering
-        )
-        let content = ActivityContent(state: state, staleDate: nil)
-        do {
-            radioActivity = try Activity.request(
-                attributes: RadioActivityAttributes(),
-                content: content,
-                pushType: nil
+        // Synchronous intent: protects against a walkie sync racing in between the
+        // end-walkie and Activity.request below.
+        radioIntent = true
+        walkieIntent = false
+        enqueue { [weak self] in
+            guard let self = self else { return }
+            if let existing = self.radioActivity {
+                self.radioActivity = nil
+                await existing.end(nil, dismissalPolicy: .immediate)
+            }
+            if let walkie = self.walkieActivity {
+                self.walkieActivity = nil
+                await walkie.end(nil, dismissalPolicy: .immediate)
+            }
+            let state = RadioActivityAttributes.ContentState(
+                stationName: stationName,
+                stationCountry: country,
+                stationFlag: flag,
+                stationFrequency: frequency,
+                stationGenre: genre,
+                isPlaying: isPlaying,
+                isBuffering: isBuffering
             )
-            Logger.shared.logAudioInfo("Live Activity Radio started: \(stationName)")
-        } catch {
-            Logger.shared.logAudioError(error, context: "Live Activity Radio start")
+            let content = ActivityContent(state: state, staleDate: nil)
+            do {
+                self.radioActivity = try Activity.request(
+                    attributes: RadioActivityAttributes(),
+                    content: content,
+                    pushType: nil
+                )
+                Logger.shared.logAudioInfo("Live Activity Radio started: \(stationName)")
+            } catch {
+                Logger.shared.logAudioError(error, context: "Live Activity Radio start")
+            }
         }
     }
 
@@ -134,64 +164,81 @@ final class LiveActivityManager {
     }
 
     func updateRadio(stationName: String, country: String, flag: String, frequency: String, genre: String, isPlaying: Bool, isBuffering: Bool) {
-        guard let activity = radioActivity else { return }
-        let state = RadioActivityAttributes.ContentState(
-            stationName: stationName,
-            stationCountry: country,
-            stationFlag: flag,
-            stationFrequency: frequency,
-            stationGenre: genre,
-            isPlaying: isPlaying,
-            isBuffering: isBuffering
-        )
-        let content = ActivityContent(state: state, staleDate: nil)
-        Task { await activity.update(content) }
+        enqueue { [weak self] in
+            guard let self = self, let activity = self.radioActivity else { return }
+            let state = RadioActivityAttributes.ContentState(
+                stationName: stationName,
+                stationCountry: country,
+                stationFlag: flag,
+                stationFrequency: frequency,
+                stationGenre: genre,
+                isPlaying: isPlaying,
+                isBuffering: isBuffering
+            )
+            await activity.update(ActivityContent(state: state, staleDate: nil))
+        }
     }
 
     func endRadio() {
-        guard let activity = radioActivity else { return }
-        radioActivity = nil
-        Task { await activity.end(nil, dismissalPolicy: .immediate) }
-        Logger.shared.logAudioInfo("Live Activity Radio ended")
+        radioIntent = false
+        enqueue { [weak self] in
+            guard let self = self, let activity = self.radioActivity else { return }
+            self.radioActivity = nil
+            await activity.end(nil, dismissalPolicy: .immediate)
+            Logger.shared.logAudioInfo("Live Activity Radio ended")
+        }
     }
 
     // MARK: - Walkie
 
     func startWalkie(connectedPeerCount: Int, peerNames: [String], channelName: String) {
         guard areActivitiesEnabled else { return }
-        if let existing = walkieActivity {
-            Task { await existing.end(nil, dismissalPolicy: .immediate) }
-            walkieActivity = nil
-        }
-        endRadio()
-
-        let state = WalkieActivityAttributes.ContentState(
-            connectedPeerCount: connectedPeerCount,
-            peerNames: Array(peerNames.prefix(3)),
-            channelName: channelName,
-            talkerName: nil
-        )
-        let content = ActivityContent(state: state, staleDate: nil)
-        do {
-            walkieActivity = try Activity.request(
-                attributes: WalkieActivityAttributes(),
-                content: content,
-                pushType: nil
+        walkieIntent = true
+        enqueue { [weak self] in
+            guard let self = self else { return }
+            if let existing = self.walkieActivity {
+                self.walkieActivity = nil
+                await existing.end(nil, dismissalPolicy: .immediate)
+            }
+            // Defensive — if radio is concurrently being started, the radioIntent
+            // flag is true and we yield. Otherwise tear down any orphan radio LA
+            // so the two icons don't overlap on the Dynamic Island.
+            if self.radioIntent {
+                self.walkieIntent = false
+                return
+            }
+            if let radio = self.radioActivity {
+                self.radioActivity = nil
+                await radio.end(nil, dismissalPolicy: .immediate)
+            }
+            let state = WalkieActivityAttributes.ContentState(
+                connectedPeerCount: connectedPeerCount,
+                peerNames: Array(peerNames.prefix(3)),
+                channelName: channelName,
+                talkerName: nil
             )
-            Logger.shared.logNetworkInfo("Live Activity Walkie started: \(connectedPeerCount) peer(s)")
-        } catch {
-            Logger.shared.logNetworkError(error, context: "Live Activity Walkie start")
+            let content = ActivityContent(state: state, staleDate: nil)
+            do {
+                self.walkieActivity = try Activity.request(
+                    attributes: WalkieActivityAttributes(),
+                    content: content,
+                    pushType: nil
+                )
+                Logger.shared.logNetworkInfo("Live Activity Walkie started: \(connectedPeerCount) peer(s)")
+            } catch {
+                Logger.shared.logNetworkError(error, context: "Live Activity Walkie start")
+            }
         }
     }
 
     /// Convenience for the walkie side — start if no activity, update otherwise.
-    /// **Precedence rule:** if a radio Live Activity is currently visible, walkie
-    /// updates are silently ignored. The user's active radio session must not be
-    /// hijacked by a peer's incoming audio when the MC connection happens to
-    /// still be alive from before the mode switch.
+    /// **Precedence rule:** if a radio Live Activity is currently visible OR is
+    /// being requested, walkie updates are silently ignored. We check the
+    /// synchronous `radioIntent` flag rather than only the ivar because the ivar
+    /// is nil-ed inside the serialized lifecycle Task before `Activity.request`
+    /// returns — without the flag, walkie can sneak in during that window.
     func startOrUpdateWalkie(connectedPeerCount: Int, peerNames: [String], channelName: String, talkerName: String?) {
-        if radioActivity != nil {
-            // Defensive: also ensure no orphan walkie activity is showing.
+        if radioIntent || radioActivity != nil {
             if walkieActivity != nil { endWalkie() }
             return
         }
@@ -206,22 +253,26 @@ final class LiveActivityManager {
     }
 
     func updateWalkie(connectedPeerCount: Int, peerNames: [String], channelName: String, talkerName: String?) {
-        guard let activity = walkieActivity else { return }
-        let state = WalkieActivityAttributes.ContentState(
-            connectedPeerCount: connectedPeerCount,
-            peerNames: Array(peerNames.prefix(3)),
-            channelName: channelName,
-            talkerName: talkerName
-        )
-        let content = ActivityContent(state: state, staleDate: nil)
-        Task { await activity.update(content) }
+        enqueue { [weak self] in
+            guard let self = self, let activity = self.walkieActivity else { return }
+            let state = WalkieActivityAttributes.ContentState(
+                connectedPeerCount: connectedPeerCount,
+                peerNames: Array(peerNames.prefix(3)),
+                channelName: channelName,
+                talkerName: talkerName
+            )
+            await activity.update(ActivityContent(state: state, staleDate: nil))
+        }
     }
 
     func endWalkie() {
-        guard let activity = walkieActivity else { return }
-        walkieActivity = nil
-        Task { await activity.end(nil, dismissalPolicy: .immediate) }
-        Logger.shared.logNetworkInfo("Live Activity Walkie ended")
+        walkieIntent = false
+        enqueue { [weak self] in
+            guard let self = self, let activity = self.walkieActivity else { return }
+            self.walkieActivity = nil
+            await activity.end(nil, dismissalPolicy: .immediate)
+            Logger.shared.logNetworkInfo("Live Activity Walkie ended")
+        }
     }
 
     // MARK: - Intent Handlers

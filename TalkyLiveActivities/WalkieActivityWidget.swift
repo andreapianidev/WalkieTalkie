@@ -10,6 +10,47 @@ import ActivityKit
 import WidgetKit
 import SwiftUI
 
+/// Tiny inline localization for the widget extension. Il target widget non
+/// include i Localizable.strings dell'app, quindi mappiamo qui le poche stringhe
+/// utente-facing in base al Locale corrente del sistema. Italiano, inglese,
+/// spagnolo, malese, cinese tradizionale — stessi lingue del bundle app.
+enum WalkieWidgetL10n {
+    static let listening    = pick(it: "In ascolto", en: "Listening", es: "Escuchando", ms: "Mendengar", zh: "正在收聽")
+    static let allListening = pick(it: "Tutti in ascolto", en: "All listening", es: "Todos escuchando", ms: "Semua mendengar", zh: "全員收聽")
+    static func talking(_ name: String) -> String {
+        let tpl = pick(it: "%@ sta parlando", en: "%@ is talking", es: "%@ está hablando", ms: "%@ sedang bercakap", zh: "%@ 正在說話")
+        return String(format: tpl, name)
+    }
+    static func plusOthers(_ n: Int) -> String {
+        let tpl = pick(it: "+%d altri", en: "+%d more", es: "+%d más", ms: "+%d lagi", zh: "+%d 人")
+        return String(format: tpl, n)
+    }
+    static func peerCount(_ n: Int) -> String {
+        let tpl = pick(it: "%d peer", en: "%d peer", es: "%d conexiones", ms: "%d peranti", zh: "%d 個設備")
+        return String(format: tpl, n)
+    }
+    static let accPrev  = pick(it: "Stazione precedente", en: "Previous station", es: "Estación anterior", ms: "Stesen sebelumnya", zh: "上一頻道")
+    static let accNext  = pick(it: "Stazione successiva", en: "Next station", es: "Siguiente estación", ms: "Stesen seterusnya", zh: "下一頻道")
+    static let accPlay  = pick(it: "Riproduci", en: "Play", es: "Reproducir", ms: "Main", zh: "播放")
+    static let accPause = pick(it: "Pausa", en: "Pause", es: "Pausa", ms: "Jeda", zh: "暫停")
+
+    private static func pick(it: String, en: String, es: String, ms: String, zh: String) -> String {
+        let code: String
+        if #available(iOS 16, *) {
+            code = Locale.current.language.languageCode?.identifier ?? "en"
+        } else {
+            code = Locale.current.languageCode ?? "en"
+        }
+        switch code.lowercased() {
+        case "it": return it
+        case "es": return es
+        case "ms": return ms
+        case "zh": return zh
+        default:   return en
+        }
+    }
+}
+
 @available(iOS 16.2, *)
 struct WalkieActivityWidget: Widget {
     var body: some WidgetConfiguration {
@@ -17,6 +58,7 @@ struct WalkieActivityWidget: Widget {
             WalkieLockScreenView(state: context.state)
                 .activityBackgroundTint(Color.black.opacity(0.65))
                 .activitySystemActionForegroundColor(.white)
+                .widgetURL(URL(string: "talky://walkie"))
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
@@ -108,7 +150,7 @@ private struct WalkieLockScreenView: View {
 
     private var peerSummary: String {
         if state.peerNames.isEmpty {
-            return "\(state.connectedPeerCount) peer"
+            return WalkieWidgetL10n.peerCount(state.connectedPeerCount)
         }
         let first = state.peerNames.prefix(2).joined(separator: ", ")
         let extra = state.connectedPeerCount - min(2, state.peerNames.count)
@@ -140,7 +182,7 @@ private struct WalkieLeadingView: View {
                     .font(.system(size: 13, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
                     .lineLimit(1)
-                Text("\(state.connectedPeerCount) peer")
+                Text(WalkieWidgetL10n.peerCount(state.connectedPeerCount))
                     .font(.system(size: 10, design: .rounded))
                     .foregroundStyle(.white.opacity(0.6))
             }
@@ -162,7 +204,7 @@ private struct WalkieCenterView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             if state.peerNames.isEmpty {
-                Text("In ascolto")
+                Text(WalkieWidgetL10n.listening)
                     .font(.system(size: 12, design: .rounded))
                     .foregroundStyle(.white.opacity(0.7))
             } else {
@@ -178,7 +220,7 @@ private struct WalkieCenterView: View {
                     }
                 }
                 if state.connectedPeerCount > state.peerNames.count {
-                    Text("+\(state.connectedPeerCount - state.peerNames.count) altri")
+                    Text(WalkieWidgetL10n.plusOthers(state.connectedPeerCount - state.peerNames.count))
                         .font(.system(size: 10, design: .rounded))
                         .foregroundStyle(.white.opacity(0.5))
                 }
@@ -199,7 +241,7 @@ private struct WalkieBottomView: View {
                 Image(systemName: "ear")
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(.green)
-                Text("Tutti in ascolto")
+                Text(WalkieWidgetL10n.allListening)
                     .font(.system(size: 11, weight: .semibold, design: .rounded))
                     .foregroundStyle(.white.opacity(0.7))
             }
@@ -245,7 +287,7 @@ private struct TalkerBanner: View {
             }
             .font(.system(size: 12, weight: .bold))
             .foregroundStyle(.red)
-            Text("\(name) sta parlando")
+            Text(WalkieWidgetL10n.talking(name))
                 .font(.system(size: 12, weight: .semibold, design: .rounded))
                 .foregroundStyle(.white)
                 .lineLimit(1)

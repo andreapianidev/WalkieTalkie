@@ -12,9 +12,13 @@ import Foundation
 
 enum LiveActivityDeepLink {
     static func handle(_ url: URL) {
-        guard url.scheme == "talky" else { return }
-        let host = url.host ?? ""
-        let path = url.path
+        // Scheme è case-insensitive per RFC ma alcuni opener esterni passano
+        // "Talky://": normalizziamo. Il path può finire con uno slash residuo
+        // ("/playpause/") quando il sistema canonicalizza l'URL — strippiamo.
+        guard let scheme = url.scheme?.lowercased(), scheme == "talky" else { return }
+        let host = (url.host ?? "").lowercased()
+        var path = url.path.lowercased()
+        if path.hasSuffix("/") { path.removeLast() }
         Logger.shared.logInfo("Live Activity deep link: \(host)\(path)")
 
         switch (host, path) {

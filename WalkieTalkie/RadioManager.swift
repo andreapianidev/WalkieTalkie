@@ -304,6 +304,7 @@ class RadioManager: NSObject, ObservableObject {
         loadPersistedState()
         setupAudioSession()
         setupRemoteCommandCenter()
+        setupAudioInterruptionObserver()
     }
 
     private func loadPersistedState() {
@@ -315,15 +316,73 @@ class RadioManager: NSObject, ObservableObject {
             recentStationIds = rec
         }
     }
-    
+
     private func setupAudioSession() {
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .default, options: [.allowBluetoothA2DP, .mixWithOthers])
+            // Pure playback for streaming radio. We deliberately do NOT pass
+            // .mixWithOthers: with that option iOS won't show our app on the
+            // lock-screen Now Playing widget and we'd play over Apple Music /
+            // Spotify instead of pausing them, which is non-standard radio UX.
+            try audioSession.setCategory(.playback, mode: .default, options: [.allowBluetoothA2DP, .allowAirPlay])
             try audioSession.setActive(true)
             logger.logAudioInfo("Radio audio session configurata per background playback")
         } catch {
             logger.logAudioError(error, context: "Configurazione radio audio session")
+        }
+    }
+
+    /// Subscribe to audio session interruptions so the radio auto-resumes after
+    /// phone calls / Siri / alarms when the system requests it.
+    private func setupAudioInterruptionObserver() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleAudioInterruption(_:)),
+            name: AVAudioSession.interruptionNotification,
+            object: AVAudioSession.sharedInstance()
+        )
+    }
+
+    @objc private func handleAudioInterruption(_ notification: Notification) {
+        guard let info = notification.userInfo,
+              let typeRaw = info[AVAudioSessionInterruptionTypeKey] as? UInt,
+              let type = AVAudioSession.InterruptionType(rawValue: typeRaw) else { return }
+
+        switch type {
+        case .began:
+            // System paused us (phone call / Siri / alarm). Reflect this in state
+            // so the LA and Now Playing widget show the paused state immediately.
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self, self.isPlaying else { return }
+                self.isPlaying = false
+                if let station = self.currentStation {
+                    self.setupNowPlayingInfo(for: station)
+                    self.startOrUpdateLiveActivity(for: station)
+                }
+                self.logger.logAudioInfo("Audio interruption began — radio paused")
+            }
+        case .ended:
+            let optionsRaw = (info[AVAudioSessionInterruptionOptionKey] as? UInt) ?? 0
+            let options = AVAudioSession.InterruptionOptions(rawValue: optionsRaw)
+            guard options.contains(.shouldResume) else {
+                self.logger.logAudioInfo("Audio interruption ended — system says no resume")
+                return
+            }
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self, self.currentStation != nil, !self.isPlaying else { return }
+                // Reactivate the session and resume playback. Reactivation can fail
+                // if another app stole the focus permanently (rare); log and bail.
+                do {
+                    try AVAudioSession.sharedInstance().setActive(true)
+                } catch {
+                    self.logger.logAudioError(error, context: "Reattivazione audio session post-interruzione")
+                    return
+                }
+                self.resumeRadio()
+                self.logger.logAudioInfo("Audio interruption ended — radio resumed")
+            }
+        @unknown default:
+            break
         }
     }
     
@@ -350,18 +409,36 @@ class RadioManager: NSObject, ObservableObject {
         
         isBuffering = true
         currentStation = station
-        
-        radioPlayer = AVPlayer(url: url)
-        radioPlayer?.volume = volume
-        
-        // Osserva lo stato del player e gli errori
-        radioPlayer?.addObserver(self, forKeyPath: "timeControlStatus", options: [.new], context: nil)
-        radioPlayer?.addObserver(self, forKeyPath: "error", options: [.new], context: nil)
-        
+
+        let player = AVPlayer(url: url)
+        player.volume = volume
+        radioPlayer = player
+
+        // KVO sul player per stato di riproduzione e sul currentItem per il fallimento
+        // dello stream. AVPlayer.error NON è KVO-osservabile in modo affidabile: gli
+        // errori di rete (404, expired stream, redirect rotto) si propagano via
+        // AVPlayerItem.status = .failed e via la notifica AVPlayerItemFailedToPlayToEndTime.
+        player.addObserver(self, forKeyPath: "timeControlStatus", options: [.new], context: nil)
+        if let item = player.currentItem {
+            item.addObserver(self, forKeyPath: "status", options: [.new], context: nil)
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(handlePlayerItemFailedToPlay(_:)),
+                name: .AVPlayerItemFailedToPlayToEndTime,
+                object: item
+            )
+            NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(handlePlayerItemNewErrorLogEntry(_:)),
+                name: .AVPlayerItemNewErrorLogEntry,
+                object: item
+            )
+        }
+
         // Reset errore precedente
         lastError = nil
-        
-        radioPlayer?.play()
+
+        player.play()
         isPlaying = true
 
         // Configura Now Playing Info per Control Center
@@ -390,10 +467,7 @@ class RadioManager: NSObject, ObservableObject {
     }
     
     func stopRadio(resyncWalkieAfter: Bool = true) {
-        radioPlayer?.pause()
-        radioPlayer?.removeObserver(self, forKeyPath: "timeControlStatus")
-        radioPlayer?.removeObserver(self, forKeyPath: "error")
-        radioPlayer = nil
+        teardownPlayer()
         isPlaying = false
         isBuffering = false
         currentStation = nil
@@ -748,40 +822,79 @@ class RadioManager: NSObject, ObservableObject {
     }
     
     // MARK: - KVO Observer
-    
+
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "timeControlStatus" {
+        // Identity guard: KVO callbacks for a previously-released player can land
+        // here after `radioPlayer` was replaced. Without this check, we'd read state
+        // from the NEW player while the event came from the OLD one, producing
+        // stale `isBuffering`/`isPlaying` updates and "stuck spinner" bugs.
+        if keyPath == "timeControlStatus", let player = object as? AVPlayer {
             DispatchQueue.main.async { [weak self] in
-                guard let self = self,
-                      let player = self.radioPlayer else { return }
-                
+                guard let self = self, player === self.radioPlayer else { return }
                 switch player.timeControlStatus {
                 case .playing:
                     self.isBuffering = false
                     self.isPlaying = true
-                    self.lastError = nil // Reset errore quando la riproduzione funziona
+                    self.lastError = nil
+                    if let station = self.currentStation {
+                        self.startOrUpdateLiveActivity(for: station)
+                    }
                 case .paused:
                     self.isBuffering = false
                     self.isPlaying = false
                 case .waitingToPlayAtSpecifiedRate:
                     self.isBuffering = true
+                    if let station = self.currentStation {
+                        self.startOrUpdateLiveActivity(for: station)
+                    }
                 @unknown default:
                     break
                 }
             }
-        } else if keyPath == "error" {
+        } else if keyPath == "status", let item = object as? AVPlayerItem {
             DispatchQueue.main.async { [weak self] in
-                guard let self = self,
-                      let player = self.radioPlayer else { return }
-                
-                if let error = player.error {
-                    self.handlePlaybackError(error)
+                guard let self = self, item === self.radioPlayer?.currentItem else { return }
+                if item.status == .failed {
+                    self.handlePlaybackError(item.error)
                 }
             }
         }
     }
-    
+
+    @objc private func handlePlayerItemFailedToPlay(_ notification: Notification) {
+        let error = notification.userInfo?[AVPlayerItemFailedToPlayToEndTimeErrorKey] as? Error
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            // Treat stream cutoffs as a soft failure: surface the error but keep the
+            // station context so a manual retry from the LA / Now Playing works.
+            self.handlePlaybackError(error)
+        }
+    }
+
+    @objc private func handlePlayerItemNewErrorLogEntry(_ notification: Notification) {
+        guard let item = notification.object as? AVPlayerItem,
+              let entry = item.errorLog()?.events.last else { return }
+        self.logger.logAudioWarning("Stream errorLog: \(entry.errorComment ?? "?") (\(entry.errorStatusCode))")
+    }
+
+    /// Removes all observers and tears down the current player. Centralised so
+    /// stop/replace paths can share one idempotent implementation — duplicating
+    /// `removeObserver` in two places risked NSInternalInconsistencyException
+    /// if a path nilled the player without removing the observer first.
+    private func teardownPlayer() {
+        guard let player = radioPlayer else { return }
+        player.pause()
+        player.removeObserver(self, forKeyPath: "timeControlStatus")
+        if let item = player.currentItem {
+            item.removeObserver(self, forKeyPath: "status")
+            NotificationCenter.default.removeObserver(self, name: .AVPlayerItemFailedToPlayToEndTime, object: item)
+            NotificationCenter.default.removeObserver(self, name: .AVPlayerItemNewErrorLogEntry, object: item)
+        }
+        radioPlayer = nil
+    }
+
     deinit {
+        NotificationCenter.default.removeObserver(self)
         stopRadio()
     }
 }

@@ -109,6 +109,7 @@ class MultipeerManager: NSObject, ObservableObject {
     }
     
     deinit {
+        NotificationCenter.default.removeObserver(self)
         stopHeartbeat()
         reconnectionTimer?.invalidate()
         session.disconnect()
@@ -138,54 +139,68 @@ class MultipeerManager: NSObject, ObservableObject {
             logger.logNetworkDebug("Advertising già attivo")
             return
         }
-        
+
         logger.logNetworkInfo("Avvio advertising per peer: \(myPeerID.displayName)")
         advertiser.startAdvertisingPeer()
-        isAdvertising = true
-        DispatchQueue.main.async {
+        // SwiftUI views observe `isAdvertising` — mutations of @Published must
+        // happen on main to avoid "Publishing changes from background threads"
+        // warnings if a future caller invokes this from a non-main context.
+        runOnMain {
+            self.isAdvertising = true
             self.connectionStatus = "In advertising"
         }
     }
-    
+
     func stopAdvertising() {
         guard isAdvertising else {
             logger.logNetworkDebug("Advertising già inattivo")
             return
         }
-        
+
         logger.logNetworkInfo("Arresto advertising")
         advertiser.stopAdvertisingPeer()
-        isAdvertising = false
-        DispatchQueue.main.async {
+        runOnMain {
+            self.isAdvertising = false
             self.connectionStatus = self.connectedPeers.isEmpty ? "Disconnesso" : "Connesso"
         }
     }
-    
+
     func startBrowsing() {
         guard !isBrowsing else {
             logger.logNetworkDebug("Browsing già attivo")
             return
         }
-        
+
         logger.logNetworkInfo("Avvio ricerca peer...")
         browser.startBrowsingForPeers()
-        isBrowsing = true
-        DispatchQueue.main.async {
+        runOnMain {
+            self.isBrowsing = true
             self.connectionStatus = "Ricerca in corso"
         }
     }
-    
+
     func stopBrowsing() {
         guard isBrowsing else {
             logger.logNetworkDebug("Browsing già inattivo")
             return
         }
-        
+
         logger.logNetworkInfo("Arresto ricerca peer")
         browser.stopBrowsingForPeers()
-        isBrowsing = false
-        DispatchQueue.main.async {
+        runOnMain {
+            self.isBrowsing = false
             self.connectionStatus = self.connectedPeers.isEmpty ? "Disconnesso" : "Connesso"
+        }
+    }
+
+    /// Esegue un blocco sul main thread: sincronamente se siamo già su main,
+    /// asincronamente altrimenti. Usato per garantire che le mutazioni @Published
+    /// siano sempre dispatchate dal main senza introdurre re-entry inutili.
+    private func runOnMain(_ block: @escaping () -> Void) {
+        if Thread.isMainThread {
+            block()
+        } else {
+            DispatchQueue.main.async(execute: block)
         }
     }
     
@@ -342,16 +357,17 @@ class MultipeerManager: NSObject, ObservableObject {
         // Stop di tutto
         if isAdvertising {
             advertiser.stopAdvertisingPeer()
-            isAdvertising = false
         }
         if isBrowsing {
             browser.stopBrowsingForPeers()
-            isBrowsing = false
         }
         session.disconnect()
 
-        // Pulizia stato: le connessioni del vecchio canale non sono più valide
-        DispatchQueue.main.async {
+        // Pulizia stato + flag advertising/browsing: tutto sul main per consistenza
+        // delle mutazioni @Published. Le connessioni del vecchio canale non sono più valide.
+        runOnMain {
+            self.isAdvertising = false
+            self.isBrowsing = false
             self.connectedPeers.removeAll()
             self.discoveredPeers.removeAll()
             self.disconnectedPeers.removeAll()
@@ -371,14 +387,14 @@ class MultipeerManager: NSObject, ObservableObject {
         // Riavvia se erano attivi prima
         if wasAdvertising {
             advertiser.startAdvertisingPeer()
-            isAdvertising = true
+            runOnMain { self.isAdvertising = true }
         }
         if wasBrowsing {
             browser.startBrowsingForPeers()
-            isBrowsing = true
+            runOnMain { self.isBrowsing = true }
         }
 
-        logger.logNetworkInfo("Multipeer riavviato (advertising: \(isAdvertising), browsing: \(isBrowsing))")
+        logger.logNetworkInfo("Multipeer riavviato (advertising: \(wasAdvertising), browsing: \(wasBrowsing))")
     }
 
     // MARK: - Live Activity glue
@@ -421,20 +437,24 @@ class MultipeerManager: NSObject, ObservableObject {
         session.disconnect()
         browser.stopBrowsingForPeers()
         advertiser.stopAdvertisingPeer()
-        
+
         // Cleanup connection management
         stopHeartbeat()
         reconnectionTimer?.invalidate()
         reconnectionTimer = nil
-        
-        connectedPeers.removeAll()
-        discoveredPeers.removeAll()
-        disconnectedPeers.removeAll()
-        retryAttempts.removeAll()
-        currentTalkerName = nil
-        connectionStatus = "Disconnesso"
 
-        syncWalkieLiveActivity()
+        // Mutazioni @Published e LA sync sempre da main.
+        runOnMain {
+            self.connectedPeers.removeAll()
+            self.discoveredPeers.removeAll()
+            self.disconnectedPeers.removeAll()
+            self.retryAttempts.removeAll()
+            self.currentTalkerName = nil
+            self.isAdvertising = false
+            self.isBrowsing = false
+            self.connectionStatus = "Disconnesso"
+            self.syncWalkieLiveActivity()
+        }
 
         logger.logNetworkInfo("Disconnesso da tutti i peer")
     }
@@ -442,39 +462,15 @@ class MultipeerManager: NSObject, ObservableObject {
     // MARK: - Memory Management
     
     // MARK: - Performance Optimization
-    
+
+    /// Restituisce i dati audio invariati: il PCM viene già inviato come messaggio
+    /// reliable singolo da Multipeer e il framework si occupa di chunking/MTU.
+    /// La precedente "compressione" stride-skipping corrompeva il waveform (Float32
+    /// interleaved trattato come byte stream) producendo rumore su >4 peer.
+    /// Lo strato di caching basato su `Data.hashValue` era anch'esso fragile
+    /// (hash randomizzato per processo + collisioni → audio scambiato fra
+    /// utterance diverse). Una vera compressione audio richiede Opus/AAC.
     func optimizeBandwidth(for audioData: Data) -> Data {
-        // High traffic optimization: Enhanced compression with caching
-        let cacheKey = NSString(string: "audio_\(audioData.hashValue)")
-        
-        // Check cache first
-        if let cachedData = audioDataCache.object(forKey: cacheKey) {
-            logger.logNetworkDebug("Audio recuperato da cache (\(cachedData.length) bytes)")
-            return cachedData as Data
-        }
-        
-        // Dynamic compression based on connection count
-        let compressionRatio: Float = connectedPeers.count > 4 ? 0.6 : 0.8
-        let targetSize = Int(Float(audioData.count) * compressionRatio)
-        
-        if audioData.count > targetSize {
-            // Riduzione qualità per ottimizzare banda
-            let step = audioData.count / targetSize
-            var compressedData = Data()
-            
-            for i in stride(from: 0, to: audioData.count, by: step) {
-                if i < audioData.count {
-                    compressedData.append(audioData[i])
-                }
-            }
-            
-            // Cache the compressed data
-            audioDataCache.setObject(compressedData as NSData, forKey: cacheKey)
-            
-            logger.logNetworkDebug("Audio compresso da \(audioData.count) a \(compressedData.count) bytes (ratio: \(compressionRatio))")
-            return compressedData
-        }
-        
         return audioData
     }
     
@@ -976,6 +972,12 @@ extension MultipeerManager: MCNearbyServiceAdvertiserDelegate {
         }
         
         DispatchQueue.main.async {
+            // Se c'è già un invito pendente non gestito dall'utente, declina il
+            // precedente automaticamente: lasciarlo in sospeso fa scadere il timeout
+            // sul peer remoto (~30s) lasciandolo bloccato in "connecting".
+            if let previous = self.pendingInvitationHandler {
+                previous(false, nil)
+            }
             self.receivedInvitation = (peerID, self.session)
             self.pendingInvitationHandler = invitationHandler
         }
