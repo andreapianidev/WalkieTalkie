@@ -4,6 +4,8 @@
 
 ![Talky App](https://www.andreapiani.com/talky.png)
 
+[![Website](https://img.shields.io/badge/Website-walkie--talky.vercel.app-7cf9de.svg?style=flat&logo=vercel&logoColor=white)](https://walkie-talky.vercel.app)
+[![App Store](https://img.shields.io/badge/App%20Store-Free%20Download-0a84ff.svg?style=flat&logo=appstore&logoColor=white)](https://apps.apple.com/app/id6748584483)
 [![iOS](https://img.shields.io/badge/iOS-15.6+-blue.svg)](https://developer.apple.com/ios/)
 [![Swift](https://img.shields.io/badge/Swift-5.9+-orange.svg)](https://swift.org/)
 [![Xcode](https://img.shields.io/badge/Xcode-16.0+-blue.svg)](https://developer.apple.com/xcode/)
@@ -15,7 +17,8 @@
 
 > ⚠️ **This project is source-available, NOT MIT/Apache/BSD/GPL.** It is distributed under the **[PolyForm Noncommercial License 1.0.0](LICENSE)** — you may read, fork, modify and run it for personal/educational/non-profit purposes, but **commercial use (including shipping a derived app on any app store, paid services, ad-supported services and consulting deliverables) is strictly prohibited without a separate written commercial license.** See [License](#-license) for details and commercial-license contact.
 
-**App Store**: search for **Talky — Walkie & Radio** · Bundle ID `com.immaginet.talky`
+**Website**: <https://walkie-talky.vercel.app>
+**App Store**: [Talky — Walkie Talkie, Radio](https://apps.apple.com/app/id6748584483) · Free · Bundle ID `com.immaginet.talky`
 **Repository**: <https://github.com/andreapianidev/WalkieTalkie>
 
 ---
