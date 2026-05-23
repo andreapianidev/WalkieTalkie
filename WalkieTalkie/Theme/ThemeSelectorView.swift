@@ -14,9 +14,10 @@ struct ThemeSelectorView: View {
 
     @ObservedObject private var themeManager = ThemeManager.shared
 
-    /// Closure invocata quando l'utente tocca un tema Pro-locked senza essere Pro.
-    /// L'orchestrator userà questa callback per presentare il paywall.
-    private let onLockedTap: (() -> Void)?
+    /// Closure invocata quando l'utente tocca un tema Pro-locked senza essere Pro
+    /// né possessore del themes pack. Riceve il tema che ha innescato il tap
+    /// così che l'orchestrator possa mostrarlo come preview nella sheet del pack.
+    private let onLockedTap: ((Theme) -> Void)?
 
     // MARK: - Layout
 
@@ -27,7 +28,7 @@ struct ThemeSelectorView: View {
 
     // MARK: - Init
 
-    init(onLockedTap: (() -> Void)? = nil) {
+    init(onLockedTap: ((Theme) -> Void)? = nil) {
         self.onLockedTap = onLockedTap
     }
 
@@ -65,7 +66,7 @@ struct ThemeSelectorView: View {
     @ViewBuilder
     private func themeCard(for theme: Theme) -> some View {
         let isSelected = themeManager.currentTheme == theme
-        let showProBadge = theme.isProLocked && !themeManager.isProUser
+        let showProBadge = theme.isProLocked && !themeManager.canAccess(theme: theme)
 
         let isAnimatedTheme = (theme == .blackHole || theme == .galaxy)
 
@@ -133,10 +134,11 @@ struct ThemeSelectorView: View {
     // MARK: - Tap Handling
 
     private func handleTap(on theme: Theme) {
-        // Se setTheme ritorna false il tema è Pro-locked: inoltra al paywall
+        // Se setTheme ritorna false il tema è Pro-locked: inoltra alla sheet del
+        // themes pack, passando il tema toccato come preview.
         let applied = themeManager.setTheme(theme)
         if !applied {
-            onLockedTap?()
+            onLockedTap?(theme)
         }
     }
 }
@@ -146,7 +148,7 @@ struct ThemeSelectorView: View {
 #if DEBUG
 struct ThemeSelectorView_Previews: PreviewProvider {
     static var previews: some View {
-        ThemeSelectorView(onLockedTap: {
+        ThemeSelectorView(onLockedTap: { _ in
             // Anteprima: stub paywall
         })
     }

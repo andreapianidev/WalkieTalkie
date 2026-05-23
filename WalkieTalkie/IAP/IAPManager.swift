@@ -9,14 +9,14 @@ import StoreKit
 import Combine
 import FirebaseAnalytics
 
-/// Gestisce gli acquisti in-app (StoreKit 2) per Talky Pro e per i temi singoli.
-/// Singleton @MainActor che espone lo stato dell'abbonamento e dei temi acquistati
+/// Gestisce gli acquisti in-app (StoreKit 2) per Talky Pro e per il themes pack.
+/// Singleton @MainActor che espone lo stato dell'abbonamento e del pack temi
 /// via @Published properties.
 ///
 /// Modello di unlock dei temi Pro-locked:
 /// - Utente con subscription Talky Pro → accede a TUTTI i temi.
-/// - Utente senza subscription → può comprare singoli temi (€0,99 / €1,99)
-///   come non-consumable e accederà solo a quelli effettivamente acquistati.
+/// - Utente con themes pack (non-consumable one-shot) → accede a TUTTI i temi.
+/// - Utente senza né l'uno né l'altro → solo temi free.
 @MainActor
 final class IAPManager: ObservableObject {
     static let shared = IAPManager()
@@ -28,50 +28,38 @@ final class IAPManager: ObservableObject {
     @Published var activeSubscription: Product? = nil
     @Published var isLoading: Bool = false
 
-    /// Set di product ID dei temi singoli effettivamente acquistati (non-consumable).
-    /// Le View possono osservarlo per aggiornare l'UI del paywall per-tema.
-    @Published var ownedThemeProductIDs: Set<String> = []
+    /// True se l'utente ha acquistato il themes pack non-consumable.
+    /// Le View possono osservarlo per aggiornare l'UI dei badge "PRO" sui temi.
+    @Published var hasThemesPack: Bool = false
 
     // MARK: - Private
 
     private let logger = Logger.shared
     private var transactionListenerTask: Task<Void, Never>? = nil
 
-    /// Chiave UserDefaults usata come "bridge" per il fast-boot: altre feature
-    /// (es. AdManager, gating premium) leggono questo flag per evitare di
-    /// attendere il completamento di updateEntitlements() all'avvio.
+    /// Bridge fast-boot per `isProUser`: altre feature leggono questa chiave
+    /// per evitare di attendere updateEntitlements() all'avvio.
     private static let fastBootKey = "fastboot_isProUser"
 
-    /// Chiave UserDefaults usata come "bridge" per i temi singoli posseduti.
-    /// Memorizzata come `[String]` (array di product ID). ThemeManager legge
-    /// questa chiave per validare l'accesso senza importare IAPManager.
-    private static let fastBootOwnedThemesKey = "fastboot_ownedThemes"
+    /// Bridge fast-boot per il themes pack. ThemeManager legge questa chiave
+    /// per validare l'accesso senza importare IAPManager.
+    private static let fastBootThemesPackKey = "fastboot_hasThemesPack"
 
     #if DEBUG && targetEnvironment(simulator)
-    /// Override DEBUG-only attivo solo in simulator: forza `isProUser` al
-    /// valore scelto dallo sviluppatore dal popup di lancio e blocca
-    /// `updateEntitlements()` dal sovrascriverlo (StoreKit in simulator
-    /// non restituisce entitlements affidabili).
     private var debugSimulatedProOverride: Bool? = nil
     #endif
 
     // MARK: - Lifecycle
 
     private init() {
-        // Carica subito lo stato pro dal fast-boot, prima ancora di interrogare StoreKit
         self.isProUser = UserDefaults.standard.bool(forKey: Self.fastBootKey)
+        self.hasThemesPack = UserDefaults.standard.bool(forKey: Self.fastBootThemesPackKey)
 
-        // Fast-boot dei temi acquistati: array di product ID salvati in UserDefaults
-        if let owned = UserDefaults.standard.array(forKey: Self.fastBootOwnedThemesKey) as? [String] {
-            self.ownedThemeProductIDs = Set(owned)
-        }
-
-        // Avvia il listener delle transazioni (rinnovi automatici, refund, ecc.)
         self.transactionListenerTask = Task { [weak self] in
             await self?.listenForTransactions()
         }
 
-        logger.logInfo("IAPManager inizializzato (fast-boot isProUser=\(isProUser), ownedThemes=\(ownedThemeProductIDs.count))")
+        logger.logInfo("IAPManager inizializzato (fast-boot isProUser=\(isProUser), hasThemesPack=\(hasThemesPack))")
     }
 
     deinit {
@@ -80,16 +68,10 @@ final class IAPManager: ObservableObject {
 
     // MARK: - Bootstrap
 
-    /// Bootstrap completo: legge il fast-boot, carica i prodotti dallo Store,
-    /// e aggiorna lo stato entitlements (subscription + temi singoli).
     func bootstrap() async {
-        // Fast-boot: stato già caricato in init, qui ribadisco per sicurezza
         self.isProUser = UserDefaults.standard.bool(forKey: Self.fastBootKey)
-        if let owned = UserDefaults.standard.array(forKey: Self.fastBootOwnedThemesKey) as? [String] {
-            self.ownedThemeProductIDs = Set(owned)
-        }
+        self.hasThemesPack = UserDefaults.standard.bool(forKey: Self.fastBootThemesPackKey)
 
-        // Carica prodotti + aggiorna entitlements in parallelo
         do {
             try await loadProducts()
         } catch {
@@ -100,22 +82,17 @@ final class IAPManager: ObservableObject {
 
     // MARK: - Products
 
-    /// Recupera i prodotti configurati su App Store Connect (subscription + temi).
     func loadProducts() async throws {
         isLoading = true
         defer { isLoading = false }
 
         let requested = ProductID.allIDs
         let storeProducts = try await Product.products(for: requested)
-        // Ordina: settimanale prima, annuale dopo (più ergonomico per la UI)
         self.products = storeProducts.sorted { lhs, rhs in
             return lhs.price < rhs.price
         }
         logger.logInfo("IAPManager: caricati \(self.products.count)/\(requested.count) prodotti")
 
-        // Diagnostica: se ASC non ritorna nessun prodotto, è quasi sempre uno dei
-        // seguenti motivi. Stampare i product ID mancanti aiuta a triagare in fretta
-        // (in particolare quando si scopre che ID nel codice ≠ ID in ASC).
         if self.products.count < requested.count {
             let returnedIDs = Set(storeProducts.map(\.id))
             let missing = requested.filter { !returnedIDs.contains($0) }
@@ -133,11 +110,9 @@ final class IAPManager: ObservableObject {
 
     // MARK: - Purchase
 
-    /// Avvia l'acquisto di un prodotto. Ritorna `true` se l'acquisto si conclude
-    /// con successo (verificato), `false` se l'utente annulla o se è pending.
-    /// Usato per le subscription Talky Pro.
+    /// Avvia l'acquisto di una subscription. Ritorna `true` se l'acquisto
+    /// si conclude con successo (verificato), `false` se cancellato o pending.
     func purchase(_ product: Product) async throws -> Bool {
-        // Analytics: inizio acquisto
         Analytics.logEvent("purchase_initiated", parameters: [
             "product_id": product.id
         ])
@@ -151,13 +126,11 @@ final class IAPManager: ObservableObject {
 
             switch result {
             case .success(let verification):
-                // Verifica firma Apple prima di sbloccare
                 switch verification {
                 case .verified(let transaction):
                     await transaction.finish()
                     await updateEntitlements()
 
-                    // Analytics: acquisto completato
                     Analytics.logEvent("purchase_completed", parameters: [
                         "product_id": product.id,
                         "revenue": NSDecimalNumber(decimal: product.price).doubleValue
@@ -166,7 +139,6 @@ final class IAPManager: ObservableObject {
                     return true
 
                 case .unverified(_, let error):
-                    // Transazione non verificata: tratto come fallimento
                     Analytics.logEvent("purchase_failed", parameters: [
                         "product_id": product.id,
                         "error": "unverified: \(error.localizedDescription)"
@@ -180,7 +152,6 @@ final class IAPManager: ObservableObject {
                 return false
 
             case .pending:
-                // Acquisto in attesa di approvazione esterna (Ask to Buy, SCA, ecc.)
                 logger.logInfo("IAPManager: purchase pending per \(product.id)")
                 return false
 
@@ -198,34 +169,30 @@ final class IAPManager: ObservableObject {
         }
     }
 
-    /// Avvia l'acquisto di un singolo tema (non-consumable) by product ID.
-    /// Stesso flusso di `purchase(_:)` ma aggiorna `ownedThemeProductIDs` su successo
-    /// e logga eventi Firebase dedicati (`theme_purchase_*`).
+    /// Avvia l'acquisto del themes pack (non-consumable one-shot).
+    /// Stesso flusso di `purchase(_:)` ma logga eventi Firebase dedicati
+    /// (`themes_pack_*`) e su successo flagga `hasThemesPack = true`.
     ///
-    /// - Parameter productID: l'ID del prodotto tema (es. `app.immaginet.talky.theme.galaxy`).
     /// - Returns: `true` se acquisto verificato; `false` se cancellato/pending.
-    /// - Throws: errore se il prodotto non è disponibile o se la transazione non è verificata.
-    func purchaseTheme(productID: String) async throws -> Bool {
-        // Trova il Product corrispondente tra quelli già caricati
-        guard let product = products.first(where: { $0.id == productID }) else {
+    /// - Throws: errore se il prodotto non è disponibile o non verificato.
+    func purchaseThemesPack() async throws -> Bool {
+        guard let product = products.first(where: { $0.id == ProductID.themesPackID }) else {
             let error = NSError(
                 domain: "IAPManager",
                 code: -1,
-                userInfo: [NSLocalizedDescriptionKey: "Theme product \(productID) not loaded"]
+                userInfo: [NSLocalizedDescriptionKey: "Themes pack product not loaded"]
             )
-            Analytics.logEvent("theme_purchase_failed", parameters: [
-                "product_id": productID,
+            Analytics.logEvent("themes_pack_purchase_failed", parameters: [
                 "error": "product_not_loaded"
             ])
-            logger.logError(error, context: "IAPManager.purchaseTheme: product not loaded")
+            logger.logError(error, context: "IAPManager.purchaseThemesPack: product not loaded")
             throw error
         }
 
-        // Analytics: inizio acquisto tema
-        Analytics.logEvent("theme_purchase_initiated", parameters: [
-            "product_id": productID
+        Analytics.logEvent("themes_pack_purchase_initiated", parameters: [
+            "product_id": product.id
         ])
-        logger.logInfo("IAPManager: theme_purchase_initiated \(productID)")
+        logger.logInfo("IAPManager: themes_pack_purchase_initiated")
 
         isLoading = true
         defer { isLoading = false }
@@ -238,53 +205,48 @@ final class IAPManager: ObservableObject {
                 switch verification {
                 case .verified(let transaction):
                     await transaction.finish()
-                    // Aggiorna immediatamente il Set e persiste, poi rinfresca da entitlements
-                    self.ownedThemeProductIDs.insert(productID)
-                    persistOwnedThemes()
+                    self.hasThemesPack = true
+                    UserDefaults.standard.set(true, forKey: Self.fastBootThemesPackKey)
                     await updateEntitlements()
 
-                    Analytics.logEvent("theme_purchase_completed", parameters: [
-                        "product_id": productID,
+                    Analytics.logEvent("themes_pack_purchase_completed", parameters: [
+                        "product_id": product.id,
                         "revenue": NSDecimalNumber(decimal: product.price).doubleValue
                     ])
-                    logger.logInfo("IAPManager: theme_purchase_completed \(productID)")
+                    logger.logInfo("IAPManager: themes_pack_purchase_completed")
                     return true
 
                 case .unverified(_, let error):
-                    Analytics.logEvent("theme_purchase_failed", parameters: [
-                        "product_id": productID,
+                    Analytics.logEvent("themes_pack_purchase_failed", parameters: [
                         "error": "unverified: \(error.localizedDescription)"
                     ])
-                    logger.logError(error, context: "IAPManager.purchaseTheme: unverified transaction")
+                    logger.logError(error, context: "IAPManager.purchaseThemesPack: unverified")
                     throw error
                 }
 
             case .userCancelled:
-                logger.logInfo("IAPManager: utente ha annullato l'acquisto tema \(productID)")
+                logger.logInfo("IAPManager: utente ha annullato l'acquisto themes pack")
                 return false
 
             case .pending:
-                logger.logInfo("IAPManager: purchase tema pending per \(productID)")
+                logger.logInfo("IAPManager: themes pack purchase pending")
                 return false
 
             @unknown default:
-                logger.logWarning("IAPManager: theme purchase result sconosciuto per \(productID)")
+                logger.logWarning("IAPManager: themes pack purchase result sconosciuto")
                 return false
             }
         } catch {
-            Analytics.logEvent("theme_purchase_failed", parameters: [
-                "product_id": productID,
+            Analytics.logEvent("themes_pack_purchase_failed", parameters: [
                 "error": error.localizedDescription
             ])
-            logger.logError(error, context: "IAPManager.purchaseTheme")
+            logger.logError(error, context: "IAPManager.purchaseThemesPack")
             throw error
         }
     }
 
     // MARK: - Restore
 
-    /// Forza la sync con App Store e aggiorna lo stato entitlements
-    /// (subscription + temi singoli). Da chiamare dal pulsante "Ripristina acquisti".
     func restorePurchases() async throws {
         isLoading = true
         defer { isLoading = false }
@@ -292,7 +254,6 @@ final class IAPManager: ObservableObject {
         try await AppStore.sync()
         await updateEntitlements()
 
-        // Analytics: se troviamo un abbonamento attivo, logghiamo restore success
         if let active = activeSubscription {
             Analytics.logEvent("subscription_restored", parameters: [
                 "product_id": active.id
@@ -302,26 +263,22 @@ final class IAPManager: ObservableObject {
             logger.logInfo("IAPManager: restorePurchases completato (nessun abbonamento attivo)")
         }
 
-        if !ownedThemeProductIDs.isEmpty {
-            Analytics.logEvent("themes_restored", parameters: [
-                "count": ownedThemeProductIDs.count
-            ])
-            logger.logInfo("IAPManager: ripristinati \(ownedThemeProductIDs.count) temi singoli")
+        if hasThemesPack {
+            Analytics.logEvent("themes_pack_restored", parameters: [:])
+            logger.logInfo("IAPManager: themes pack ripristinato")
         }
     }
 
     // MARK: - Entitlements
 
-    /// Itera le entitlement correnti, salta le transazioni non verificate,
-    /// e aggiorna sia lo stato subscription sia il set di temi singoli posseduti.
-    /// Persiste entrambi i bridge UserDefaults.
+    /// Itera le entitlement correnti, salta le non verificate, e aggiorna
+    /// sia lo stato subscription sia il flag `hasThemesPack`. Persiste i bridge.
     func updateEntitlements() async {
         var foundActiveProduct: Product? = nil
         var isPro = false
-        var ownedThemes: Set<String> = []
+        var packOwned = false
 
         for await result in Transaction.currentEntitlements {
-            // Salta le transazioni non verificate
             guard case .verified(let transaction) = result else { continue }
 
             // Caso A: subscription auto-rinnovabile (Talky Pro)
@@ -338,10 +295,10 @@ final class IAPManager: ObservableObject {
                 continue
             }
 
-            // Caso B: non-consumable tema singolo
-            if ProductID.isThemeProduct(transaction.productID) {
+            // Caso B: themes pack non-consumable
+            if ProductID.isThemesPack(transaction.productID) {
                 if transaction.revocationDate == nil {
-                    ownedThemes.insert(transaction.productID)
+                    packOwned = true
                 }
                 continue
             }
@@ -349,17 +306,14 @@ final class IAPManager: ObservableObject {
 
         self.isProUser = isPro
         self.activeSubscription = foundActiveProduct
-        self.ownedThemeProductIDs = ownedThemes
+        self.hasThemesPack = packOwned
 
-        // Persisti bridge keys: altre feature leggono queste chiavi
         UserDefaults.standard.set(isPro, forKey: Self.fastBootKey)
-        persistOwnedThemes()
+        UserDefaults.standard.set(packOwned, forKey: Self.fastBootThemesPackKey)
 
-        logger.logInfo("IAPManager: updateEntitlements isProUser=\(isPro) product=\(foundActiveProduct?.id ?? "nil") ownedThemes=\(ownedThemes.count)")
+        logger.logInfo("IAPManager: updateEntitlements isProUser=\(isPro) product=\(foundActiveProduct?.id ?? "nil") hasThemesPack=\(packOwned)")
 
         #if DEBUG && targetEnvironment(simulator)
-        // Se l'utente ha scelto un tier simulato dal popup di debug, prevale
-        // sul valore calcolato da StoreKit (che in simulator è quasi sempre vuoto).
         if let override = debugSimulatedProOverride {
             self.isProUser = override
             UserDefaults.standard.set(override, forKey: Self.fastBootKey)
@@ -374,10 +328,6 @@ final class IAPManager: ObservableObject {
     }
 
     #if DEBUG && targetEnvironment(simulator)
-    /// Imposta a runtime un override del tier Pro/Free per testare in simulator.
-    /// Aggiorna `isProUser`, persiste il fast-boot bridge e blocca successivi
-    /// `updateEntitlements()` dal sovrascrivere il valore scelto.
-    /// Disponibile SOLO in build DEBUG eseguite sul simulator.
     func applyDebugSimulatedTier(isPro: Bool) {
         debugSimulatedProOverride = isPro
         self.isProUser = isPro
@@ -386,28 +336,10 @@ final class IAPManager: ObservableObject {
     }
     #endif
 
-    // MARK: - Theme Ownership Helpers
-
-    /// True se l'utente possiede individualmente il tema con quel product ID.
-    /// NOTA: non considera la subscription Pro — usare in combinazione con `isProUser`.
-    func ownsTheme(productID: String) -> Bool {
-        return ownedThemeProductIDs.contains(productID)
-    }
-
-    /// Persiste il Set `ownedThemeProductIDs` su UserDefaults come array di stringhe.
-    /// Chiamato ad ogni mutazione del Set per mantenere il fast-boot allineato.
-    private func persistOwnedThemes() {
-        let arr = Array(ownedThemeProductIDs)
-        UserDefaults.standard.set(arr, forKey: Self.fastBootOwnedThemesKey)
-    }
-
     // MARK: - Transaction Listener
 
-    /// Listener per le transaction updates: rinnovi automatici, refund, family sharing,
-    /// acquisti di temi singoli, ecc.
     private func listenForTransactions() async {
         for await result in Transaction.updates {
-            // Salta non verificate
             guard case .verified(let transaction) = result else { continue }
 
             await transaction.finish()

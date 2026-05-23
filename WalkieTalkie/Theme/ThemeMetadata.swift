@@ -7,17 +7,6 @@
 import Foundation
 import SwiftUI
 
-/// Tier di prezzo associato a un tema. Definisce come l'utente può sbloccarlo.
-///
-/// - `subscriptionOnly`: incluso nella subscription Talky Pro (default per la maggior parte).
-/// - `iap099`: acquisto singolo non-consumabile a 0,99 € (Identity Pack premium).
-/// - `iap199`: acquisto singolo non-consumabile a 1,99 € (Animated Pack).
-enum ThemePriceTier: String, Codable {
-    case subscriptionOnly
-    case iap099
-    case iap199
-}
-
 /// Dati immutabili che descrivono un tema: colore accent, chiave di localizzazione
 /// del nome, SF Symbol per la card di anteprima, flag Pro, asset opzionali.
 ///
@@ -42,22 +31,13 @@ struct ThemeMetadata {
     /// `nil` = nessun suono tematico. Gestito da `ThemeSoundManager`.
     let soundPackID: String?
 
-    /// Product ID StoreKit per acquisto singolo (non-consumable). `nil` = solo subscription.
-    /// Esempio: "app.immaginet.talky.theme.military"
-    let productID: String?
-
-    /// Tier di prezzo / modalità di sblocco. Default `.subscriptionOnly`.
-    let priceTier: ThemePriceTier
-
     init(
         accentColor: Color,
         displayNameKey: String,
         iconName: String,
         isProLocked: Bool,
         customFontName: String? = nil,
-        soundPackID: String? = nil,
-        productID: String? = nil,
-        priceTier: ThemePriceTier = .subscriptionOnly
+        soundPackID: String? = nil
     ) {
         self.accentColor = accentColor
         self.displayNameKey = displayNameKey
@@ -65,8 +45,6 @@ struct ThemeMetadata {
         self.isProLocked = isProLocked
         self.customFontName = customFontName
         self.soundPackID = soundPackID
-        self.productID = productID
-        self.priceTier = priceTier
     }
 }
 

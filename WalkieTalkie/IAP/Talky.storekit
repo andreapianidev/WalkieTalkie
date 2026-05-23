@@ -3,173 +3,23 @@
   "nonRenewingSubscriptions" : [],
   "products" : [
     {
-      "displayPrice" : "0.99",
+      "displayPrice" : "4.99",
       "familyShareable" : false,
-      "internalID" : "T0001",
+      "internalID" : "T0100",
       "localizations" : [
         {
-          "description" : "Tema Military per Talky",
-          "displayName" : "Military",
+          "description" : "Sblocca tutti gli 11 temi premium con un acquisto unico",
+          "displayName" : "All Themes Pack",
           "locale" : "it_IT"
         },
         {
-          "description" : "Military theme for Talky",
-          "displayName" : "Military",
+          "description" : "Unlock all 11 premium themes with a single one-time purchase",
+          "displayName" : "All Themes Pack",
           "locale" : "en_US"
         }
       ],
-      "productID" : "app.immaginet.talky.theme.military",
-      "referenceName" : "Theme Military",
-      "type" : "NonConsumable"
-    },
-    {
-      "displayPrice" : "0.99",
-      "familyShareable" : false,
-      "internalID" : "T0002",
-      "localizations" : [
-        {
-          "description" : "Tema Retro 80s",
-          "displayName" : "Retro 80s",
-          "locale" : "it_IT"
-        }
-      ],
-      "productID" : "app.immaginet.talky.theme.retro80s",
-      "referenceName" : "Theme Retro 80s",
-      "type" : "NonConsumable"
-    },
-    {
-      "displayPrice" : "0.99",
-      "familyShareable" : false,
-      "internalID" : "T0003",
-      "localizations" : [
-        {
-          "description" : "Tema Vintage Radio",
-          "displayName" : "Vintage Radio",
-          "locale" : "it_IT"
-        }
-      ],
-      "productID" : "app.immaginet.talky.theme.vintageRadio",
-      "referenceName" : "Theme Vintage Radio",
-      "type" : "NonConsumable"
-    },
-    {
-      "displayPrice" : "0.99",
-      "familyShareable" : false,
-      "internalID" : "T0004",
-      "localizations" : [
-        {
-          "description" : "Tema Cyberpunk",
-          "displayName" : "Cyberpunk",
-          "locale" : "it_IT"
-        }
-      ],
-      "productID" : "app.immaginet.talky.theme.cyberpunk",
-      "referenceName" : "Theme Cyberpunk",
-      "type" : "NonConsumable"
-    },
-    {
-      "displayPrice" : "0.99",
-      "familyShareable" : false,
-      "internalID" : "T0005",
-      "localizations" : [
-        {
-          "description" : "Tema Stealth",
-          "displayName" : "Stealth",
-          "locale" : "it_IT"
-        }
-      ],
-      "productID" : "app.immaginet.talky.theme.stealth",
-      "referenceName" : "Theme Stealth",
-      "type" : "NonConsumable"
-    },
-    {
-      "displayPrice" : "0.99",
-      "familyShareable" : false,
-      "internalID" : "T0006",
-      "localizations" : [
-        {
-          "description" : "Tema Aurora",
-          "displayName" : "Aurora",
-          "locale" : "it_IT"
-        }
-      ],
-      "productID" : "app.immaginet.talky.theme.aurora",
-      "referenceName" : "Theme Aurora",
-      "type" : "NonConsumable"
-    },
-    {
-      "displayPrice" : "0.99",
-      "familyShareable" : false,
-      "internalID" : "T0007",
-      "localizations" : [
-        {
-          "description" : "Tema Submarine",
-          "displayName" : "Submarine",
-          "locale" : "it_IT"
-        }
-      ],
-      "productID" : "app.immaginet.talky.theme.submarine",
-      "referenceName" : "Theme Submarine",
-      "type" : "NonConsumable"
-    },
-    {
-      "displayPrice" : "0.99",
-      "familyShareable" : false,
-      "internalID" : "T0008",
-      "localizations" : [
-        {
-          "description" : "Tema Ham Radio",
-          "displayName" : "Ham Radio",
-          "locale" : "it_IT"
-        }
-      ],
-      "productID" : "app.immaginet.talky.theme.hamRadio",
-      "referenceName" : "Theme Ham Radio",
-      "type" : "NonConsumable"
-    },
-    {
-      "displayPrice" : "0.99",
-      "familyShareable" : false,
-      "internalID" : "T0009",
-      "localizations" : [
-        {
-          "description" : "Tema Festival",
-          "displayName" : "Festival",
-          "locale" : "it_IT"
-        }
-      ],
-      "productID" : "app.immaginet.talky.theme.festival",
-      "referenceName" : "Theme Festival",
-      "type" : "NonConsumable"
-    },
-    {
-      "displayPrice" : "1.99",
-      "familyShareable" : false,
-      "internalID" : "T0010",
-      "localizations" : [
-        {
-          "description" : "Tema animato Black Hole",
-          "displayName" : "Black Hole",
-          "locale" : "it_IT"
-        }
-      ],
-      "productID" : "app.immaginet.talky.theme.blackHole",
-      "referenceName" : "Theme Black Hole",
-      "type" : "NonConsumable"
-    },
-    {
-      "displayPrice" : "1.99",
-      "familyShareable" : false,
-      "internalID" : "T0011",
-      "localizations" : [
-        {
-          "description" : "Tema animato Galaxy",
-          "displayName" : "Galaxy",
-          "locale" : "it_IT"
-        }
-      ],
-      "productID" : "app.immaginet.talky.theme.galaxy",
-      "referenceName" : "Theme Galaxy",
+      "productID" : "app.immaginet.talky.themes.allpack",
+      "referenceName" : "All Themes Pack",
       "type" : "NonConsumable"
     }
   ],

@@ -20,6 +20,8 @@ struct SettingsView: View {
     @State private var showRecordings = false
     @State private var showPrivateChannels = false
     @State private var rewardClock = Date()
+    /// Tema che ha innescato la sheet del themes pack. Non-nil = sheet visibile.
+    @State private var themesPackTriggerTheme: Theme? = nil
 
     var body: some View {
         VStack(spacing: 0) {
@@ -75,10 +77,18 @@ struct SettingsView: View {
             PaywallView(trigger: "settings_manual")
         }
         .sheet(isPresented: $showThemeSelector) {
-            ThemeSelectorView(onLockedTap: {
+            ThemeSelectorView(onLockedTap: { tappedTheme in
                 showThemeSelector = false
-                // Piccolo delay per evitare conflitto di animazioni tra sheet e fullScreenCover.
+                // Piccolo delay per evitare conflitto di animazioni tra sheet e sheet.
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                    themesPackTriggerTheme = tappedTheme
+                }
+            })
+        }
+        .sheet(item: $themesPackTriggerTheme) { triggerTheme in
+            ThemePurchaseSheet(theme: triggerTheme, onSubscribeTap: {
+                // L'utente preferisce la subscription al pack: apriamo il paywall.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                     showPaywall = true
                 }
             })

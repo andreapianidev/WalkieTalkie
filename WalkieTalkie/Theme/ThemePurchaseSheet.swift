@@ -8,18 +8,20 @@ import SwiftUI
 import StoreKit
 import FirebaseAnalytics
 
-/// Sheet di acquisto per singolo tema Pro-locked. Mostra preview, prezzo
-/// (caricato da StoreKit) e due CTA: acquisto singolo non-consumable oppure
-/// passaggio al paywall subscription completo via `onSubscribeTap`.
+/// Sheet di acquisto del "Themes Pack" non-consumable: sblocca tutti gli 11
+/// temi Pro-locked in un'unica transazione one-shot. Mostra preview del tema
+/// che ha innescato il tap e due CTA: acquisto pack oppure passaggio al
+/// paywall subscription completo via `onSubscribeTap`.
 struct ThemePurchaseSheet: View {
 
     // MARK: - Input
 
+    /// Tema che l'utente ha provato a selezionare. Usato solo come preview
+    /// visuale nell'hero — l'acquisto sblocca comunque TUTTI i temi.
     let theme: Theme
 
     /// Callback invocata quando l'utente sceglie di sottoscrivere Talky Pro
-    /// invece dell'acquisto singolo. La sheet si chiude e il chiamante apre
-    /// il paywall fullscreen.
+    /// invece del pack. La sheet si chiude e il chiamante apre il paywall.
     let onSubscribeTap: () -> Void
 
     // MARK: - Env
@@ -39,26 +41,20 @@ struct ThemePurchaseSheet: View {
         Color(red: 1.0, green: 0.8, blue: 0.0)
     }
 
-    /// Metadata corrente del tema (productID, priceTier, accent, icon, ecc.)
     private var metadata: ThemeMetadata {
         ThemeRegistry.metadata(for: theme)
     }
 
-    /// StoreKit product corrispondente, se caricato.
+    /// StoreKit product corrispondente al themes pack, se caricato.
     private var product: Product? {
-        guard let pid = metadata.productID else { return nil }
-        return iap.products.first(where: { $0.id == pid })
+        iap.products.first(where: { $0.id == ProductID.themesPackID })
     }
 
     /// Prezzo da mostrare: preferisce `displayPrice` da StoreKit (localizzato),
-    /// fallback al tier nominale se i prodotti non sono ancora caricati.
+    /// fallback al prezzo nominale del pack se i prodotti non sono caricati.
     private var priceText: String {
         if let p = product { return p.displayPrice }
-        switch metadata.priceTier {
-        case .iap099: return "€0,99"
-        case .iap199: return "€1,99"
-        case .subscriptionOnly: return ""
-        }
+        return "€4,99"
     }
 
     private var isAnimatedTheme: Bool {
@@ -81,6 +77,7 @@ struct ThemePurchaseSheet: View {
                     closeRow
                     heroPreview
                     titleSection
+                    valueProps
                     purchaseButton
                     orDivider
                     subscribeButton
@@ -94,9 +91,8 @@ struct ThemePurchaseSheet: View {
         }
         .preferredColorScheme(.dark)
         .onAppear {
-            Analytics.logEvent("theme_purchase_sheet_shown", parameters: [
-                "theme": theme.rawValue,
-                "price_tier": metadata.priceTier.rawValue
+            Analytics.logEvent("themes_pack_sheet_shown", parameters: [
+                "trigger_theme": theme.rawValue
             ])
             if iap.products.isEmpty {
                 Task { try? await iap.loadProducts() }
@@ -128,8 +124,6 @@ struct ThemePurchaseSheet: View {
         .padding(.top, 8)
     }
 
-    /// Card di anteprima 160x160 con preview animata (per blackHole/galaxy)
-    /// o accent + icon SF Symbol per gli altri.
     private var heroPreview: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 28, style: .continuous)
@@ -156,12 +150,12 @@ struct ThemePurchaseSheet: View {
 
     private var titleSection: some View {
         VStack(spacing: 8) {
-            Text(theme.displayName)
+            Text("themes_pack.title".localized)
                 .font(.system(size: 28, weight: .bold))
                 .foregroundColor(.white)
                 .multilineTextAlignment(.center)
 
-            Text("theme_purchase.subtitle".localized)
+            Text("themes_pack.subtitle".localized)
                 .font(.system(size: 15, weight: .medium))
                 .foregroundColor(.white.opacity(0.7))
                 .multilineTextAlignment(.center)
@@ -169,7 +163,33 @@ struct ThemePurchaseSheet: View {
         }
     }
 
-    /// CTA principale: acquisto singolo non-consumable del tema.
+    /// 3 bullet rapidi che spiegano cosa c'è nel pack.
+    private var valueProps: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            valuePropRow(icon: "paintbrush.pointed.fill",
+                         text: "themes_pack.prop.all_themes".localized)
+            valuePropRow(icon: "infinity",
+                         text: "themes_pack.prop.forever".localized)
+            valuePropRow(icon: "checkmark.seal.fill",
+                         text: "themes_pack.prop.one_time".localized)
+        }
+        .padding(.horizontal, 8)
+    }
+
+    private func valuePropRow(icon: String, text: String) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundColor(brandYellow)
+                .frame(width: 24)
+            Text(text)
+                .font(.system(size: 14, weight: .medium))
+                .foregroundColor(.white.opacity(0.85))
+            Spacer()
+        }
+    }
+
+    /// CTA principale: acquisto del themes pack.
     private var purchaseButton: some View {
         Button {
             Task { await performPurchase() }
@@ -179,7 +199,7 @@ struct ThemePurchaseSheet: View {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: .black))
                 } else {
-                    Text(String(format: "theme_purchase.cta_buy".localized, theme.displayName))
+                    Text("themes_pack.cta_buy".localized)
                         .font(.system(size: 16, weight: .bold))
                         .foregroundColor(.black)
                         .lineLimit(1)
@@ -216,12 +236,10 @@ struct ThemePurchaseSheet: View {
         .padding(.vertical, 4)
     }
 
-    /// CTA secondaria: passa al paywall subscription completo.
-    /// Chiude la sheet con un piccolo delay per evitare conflitti di animazione.
     private var subscribeButton: some View {
         Button {
-            Analytics.logEvent("theme_purchase_subscribe_tap", parameters: [
-                "theme": theme.rawValue
+            Analytics.logEvent("themes_pack_subscribe_tap", parameters: [
+                "trigger_theme": theme.rawValue
             ])
             dismiss()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
@@ -288,14 +306,13 @@ struct ThemePurchaseSheet: View {
     // MARK: - Actions
 
     private func performPurchase() async {
-        guard let pid = metadata.productID else { return }
         isPurchasing = true
         defer { isPurchasing = false }
 
         do {
-            let success = try await iap.purchaseTheme(productID: pid)
+            let success = try await iap.purchaseThemesPack()
             if success {
-                // Applica subito il tema appena comprato — best UX.
+                // Applica subito il tema che ha triggherato il paywall — best UX.
                 _ = ThemeManager.shared.setTheme(theme)
                 dismiss()
             }
@@ -308,7 +325,6 @@ struct ThemePurchaseSheet: View {
     private func performRestore() async {
         do {
             try await iap.restorePurchases()
-            // Se ora possiede il tema (sub o singolo), applica e chiudi.
             if ThemeManager.shared.canAccess(theme: theme) {
                 _ = ThemeManager.shared.setTheme(theme)
                 dismiss()

@@ -428,3 +428,23 @@
 "upsell.title" = "解鎖 Talky Pro";
 "upsell.subtitle" = "國際電台，無廣告";
 "upsell.dismiss" = "關閉";
+
+// MARK: - Themes Pack (one-shot non-consumable, added 2026-05-23)
+"themes_pack.title" = "解鎖所有主題";
+"themes_pack.subtitle" = "一次購買，永久擁有";
+"themes_pack.cta_buy" = "解鎖所有主題";
+"themes_pack.prop.all_themes" = "11 款高級主題（Identity + Animated）";
+"themes_pack.prop.forever" = "無需訂閱，永久擁有";
+"themes_pack.prop.one_time" = "單次付款";
+"theme_purchase.or" = "或";
+"theme_purchase.subscribe_title" = "升級至 Talky Pro";
+"theme_purchase.subscribe_subtitle" = "主題 + 國際電台 + 無廣告";
+"theme_purchase.apple_footer" = "由 Apple 處理付款。主題包不會自動續訂。";
+"paywall.close" = "關閉";
+"paywall.link.restore" = "還原購買";
+"paywall.link.terms" = "條款";
+"paywall.link.privacy" = "私隱";
+"paywall.error_title" = "錯誤";
+"paywall.error.purchase_failed" = "購買失敗，請再試一次。";
+"paywall.error.no_purchases" = "找不到可還原的購買項目。";
+"paywall.error.restore_failed" = "還原失敗，請再試一次。";

@@ -426,3 +426,23 @@
 "upsell.title" = "Sblocca Talky Pro";
 "upsell.subtitle" = "Radio internazionali, niente pubblicità";
 "upsell.dismiss" = "Chiudi";
+
+// MARK: - Themes Pack (one-shot non-consumable, added 2026-05-23)
+"themes_pack.title" = "Sblocca tutti i temi";
+"themes_pack.subtitle" = "Acquisto unico, per sempre tuoi";
+"themes_pack.cta_buy" = "Sblocca tutti i temi";
+"themes_pack.prop.all_themes" = "11 temi premium (Identity + Animated)";
+"themes_pack.prop.forever" = "Nessun abbonamento, per sempre";
+"themes_pack.prop.one_time" = "Pagamento una tantum";
+"theme_purchase.or" = "Oppure";
+"theme_purchase.subscribe_title" = "Passa a Talky Pro";
+"theme_purchase.subscribe_subtitle" = "Temi + radio internazionali + niente pubblicità";
+"theme_purchase.apple_footer" = "Pagamento gestito da Apple. Nessun rinnovo automatico per il pack temi.";
+"paywall.close" = "Chiudi";
+"paywall.link.restore" = "Ripristina acquisti";
+"paywall.link.terms" = "Termini";
+"paywall.link.privacy" = "Privacy";
+"paywall.error_title" = "Errore";
+"paywall.error.purchase_failed" = "Acquisto non riuscito. Riprova.";
+"paywall.error.no_purchases" = "Nessun acquisto trovato da ripristinare.";
+"paywall.error.restore_failed" = "Ripristino non riuscito. Riprova.";

@@ -428,3 +428,23 @@
 "upsell.title" = "Buka kunci Talky Pro";
 "upsell.subtitle" = "Radio antarabangsa, tanpa iklan";
 "upsell.dismiss" = "Tutup";
+
+// MARK: - Themes Pack (one-shot non-consumable, added 2026-05-23)
+"themes_pack.title" = "Buka kunci semua tema";
+"themes_pack.subtitle" = "Pembelian sekali, milik anda selamanya";
+"themes_pack.cta_buy" = "Buka kunci semua tema";
+"themes_pack.prop.all_themes" = "11 tema premium (Identity + Animated)";
+"themes_pack.prop.forever" = "Tiada langganan, selamanya milik anda";
+"themes_pack.prop.one_time" = "Bayaran sekali sahaja";
+"theme_purchase.or" = "Atau";
+"theme_purchase.subscribe_title" = "Naik taraf ke Talky Pro";
+"theme_purchase.subscribe_subtitle" = "Tema + radio antarabangsa + tanpa iklan";
+"theme_purchase.apple_footer" = "Pembayaran dikendalikan oleh Apple. Pek tema tidak diperbaharui secara automatik.";
+"paywall.close" = "Tutup";
+"paywall.link.restore" = "Pulihkan pembelian";
+"paywall.link.terms" = "Terma";
+"paywall.link.privacy" = "Privasi";
+"paywall.error_title" = "Ralat";
+"paywall.error.purchase_failed" = "Pembelian gagal. Sila cuba lagi.";
+"paywall.error.no_purchases" = "Tiada pembelian untuk dipulihkan.";
+"paywall.error.restore_failed" = "Pemulihan gagal. Sila cuba lagi.";

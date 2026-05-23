@@ -10,7 +10,10 @@ import SwiftUI
 /// Identificatore dei temi disponibili. I metadati (colore, icona, nome, lock Pro)
 /// sono registrati nei pack file (`ThemeColorPack`, `ThemeIdentityPack`) per evitare
 /// che questo enum diventi monolitico ad ogni nuovo tema.
-enum Theme: String, CaseIterable, Codable {
+enum Theme: String, CaseIterable, Codable, Identifiable {
+    /// Identificatore stabile usato da SwiftUI per `sheet(item:)` e simili.
+    var id: String { rawValue }
+
     // Core (free)
     case defaultTheme = "default"
 
