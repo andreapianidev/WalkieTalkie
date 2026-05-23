@@ -175,6 +175,18 @@ private struct OnboardingNoInternetPage: View {
                 }
                 .foregroundColor(Color("PrimaryTextColor").opacity(0.6))
                 .padding(.top, 6)
+
+                HStack(alignment: .top, spacing: 8) {
+                    Image(systemName: "ipad.and.iphone")
+                        .font(.footnote)
+                    Text(OnboardingStrings.p2MultiPlatform)
+                        .font(.footnote)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .foregroundColor(Color("PrimaryTextColor").opacity(0.6))
+                .padding(.horizontal, 24)
+                .padding(.top, 4)
             }
         }
         .padding()

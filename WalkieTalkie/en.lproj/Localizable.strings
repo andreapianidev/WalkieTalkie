@@ -208,6 +208,7 @@
 "onboarding_p2_no_internet_title" = "No internet, no SIM";
 "onboarding_p2_no_internet_body" = "Voices travel directly between iPhones over Bluetooth and Wi-Fi. It works in airplane mode, in tunnels and in the woods, as long as you're within about 1 km.";
 "onboarding_p2_range_caveat" = "Walls, hills and elevation reduce the range.";
+"onboarding_p2_multi_platform" = "Also runs on iPad and Apple Silicon Macs — same app, all your devices talk together.";
 
 "onboarding_p3_ptt_title" = "Hold to talk";
 "onboarding_p3_ptt_body" = "Just like a real walkie-talkie: hold the center button to speak, release to listen.";

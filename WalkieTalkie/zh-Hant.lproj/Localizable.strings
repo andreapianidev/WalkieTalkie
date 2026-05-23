@@ -199,6 +199,7 @@
 "onboarding_p2_no_internet_title" = "無需網路，無需 SIM 卡";
 "onboarding_p2_no_internet_body" = "聲音透過藍牙與 Wi-Fi 直接在 iPhone 之間傳送。即使在飛行模式、隧道或森林中，只要距離約 1 公里以內也能使用。";
 "onboarding_p2_range_caveat" = "牆壁、山丘與高低差會降低傳輸距離。";
+"onboarding_p2_multi_platform" = "也支援 iPad 與 Apple Silicon Mac — 同一個 App，你的所有裝置都能互相通話。";
 
 "onboarding_p3_ptt_title" = "按住即可說話";
 "onboarding_p3_ptt_body" = "就像真正的對講機：按住中央按鈕說話，放開後聆聽。";

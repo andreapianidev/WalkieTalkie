@@ -16,6 +16,7 @@ struct OnboardingStrings {
     static let p2Title = NSLocalizedString("onboarding_p2_no_internet_title", comment: "Page 2 title")
     static let p2Body = NSLocalizedString("onboarding_p2_no_internet_body", comment: "Page 2 body")
     static let p2RangeCaveat = NSLocalizedString("onboarding_p2_range_caveat", comment: "Page 2 range note")
+    static let p2MultiPlatform = NSLocalizedString("onboarding_p2_multi_platform", comment: "Page 2 multi-platform note (iPad + Apple Silicon Mac)")
 
     // MARK: - Page 3 — Push to talk
     static let p3Title = NSLocalizedString("onboarding_p3_ptt_title", comment: "Page 3 title")

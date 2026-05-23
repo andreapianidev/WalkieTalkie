@@ -199,6 +199,7 @@
 "onboarding_p2_no_internet_title" = "Tanpa internet, tanpa SIM";
 "onboarding_p2_no_internet_body" = "Suara dihantar terus antara iPhone melalui Bluetooth dan Wi-Fi. Ia berfungsi dalam mod pesawat, dalam terowong dan di hutan, selagi anda dalam lingkungan kira-kira 1 km.";
 "onboarding_p2_range_caveat" = "Dinding, bukit dan kecerunan mengurangkan jangkauan.";
+"onboarding_p2_multi_platform" = "Juga berfungsi pada iPad dan Mac dengan Apple Silicon — aplikasi yang sama, semua peranti anda boleh berbual antara satu sama lain.";
 
 "onboarding_p3_ptt_title" = "Tekan dan tahan untuk bercakap";
 "onboarding_p3_ptt_body" = "Seperti walkie-talkie sebenar: tekan dan tahan butang tengah untuk bercakap, lepaskan untuk mendengar.";

@@ -178,6 +178,7 @@
 "onboarding_p2_no_internet_title" = "Sin internet, sin SIM";
 "onboarding_p2_no_internet_body" = "Las voces viajan directamente entre iPhones por Bluetooth y Wi-Fi. Funciona en modo avión, en túneles y en el bosque, siempre que estéis a menos de 1 km.";
 "onboarding_p2_range_caveat" = "Muros, colinas y desniveles reducen el alcance.";
+"onboarding_p2_multi_platform" = "También funciona en iPad y Mac con Apple Silicon: la misma app y todos tus dispositivos se comunican entre sí.";
 
 "onboarding_p3_ptt_title" = "Mantén pulsado para hablar";
 "onboarding_p3_ptt_body" = "Como un walkie-talkie de verdad: mantén pulsado el botón central para hablar, suéltalo para escuchar.";
