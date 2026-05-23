@@ -78,7 +78,12 @@ struct RadioStation: Identifiable {
         "Filippine": "🇵🇭", "Singapore": "🇸🇬", "Vietnam": "🇻🇳", "Nuova Zelanda": "🇳🇿",
         "Australia": "🇦🇺", "Messico": "🇲🇽", "Argentina": "🇦🇷", "Brasile": "🇧🇷",
         "Cile": "🇨🇱", "Colombia": "🇨🇴", "Perù": "🇵🇪", "Uruguay": "🇺🇾",
-        "Cuba": "🇨🇺", "Hong Kong": "🇭🇰", "Internet": "🌐"
+        "Cuba": "🇨🇺", "Hong Kong": "🇭🇰",
+        "Irlanda": "🇮🇪", "Capo Verde": "🇨🇻", "Groenlandia": "🇬🇱", "Bermuda": "🇧🇲",
+        "Giamaica": "🇯🇲", "Bahamas": "🇧🇸", "Trinidad": "🇹🇹", "Senegal": "🇸🇳",
+        "Canada": "🇨🇦", "Cina": "🇨🇳", "Taiwan": "🇹🇼", "Arabia Saudita": "🇸🇦",
+        "Venezuela": "🇻🇪",
+        "Internet": "🌐"
     ]
 }
 
@@ -347,7 +352,70 @@ class RadioManager: NSObject, ObservableObject {
         // Hong Kong
         RadioStation(id: 161, name: "RTHK Radio 1", country: "Hong Kong", frequency: "92.6", streamURL: "http://stm.rthk.hk/radio1", genre: "Talk"),
         RadioStation(id: 162, name: "RTHK Radio 2", country: "Hong Kong", frequency: "94.8", streamURL: "http://stm.rthk.hk/radio2", genre: "Pop"),
-        RadioStation(id: 163, name: "RTHK Radio 3", country: "Hong Kong", frequency: "97.9", streamURL: "http://stm.rthk.hk/radio3", genre: "Talk")
+        RadioStation(id: 163, name: "RTHK Radio 3", country: "Hong Kong", frequency: "97.9", streamURL: "http://stm.rthk.hk/radio3", genre: "Talk"),
+
+        // MARK: - Free aggiuntive (round 2, verificate maggio 2026 via radio-browser API)
+        // Major broadcaster atlantici/europei occidentali estesi al Free tier.
+        RadioStation(id: 164, name: "RTÉ Radio 1", country: "Irlanda", frequency: "89.0", streamURL: "http://icecast.rte.ie/radio1", genre: "News", isPro: false),
+        RadioStation(id: 165, name: "Today FM", country: "Irlanda", frequency: "100.0", streamURL: "https://stream.audioxi.com/TD", genre: "Pop", isPro: false),
+        RadioStation(id: 166, name: "Rádio Renascença", country: "Portogallo", frequency: "103.4", streamURL: "http://22653.live.streamtheworld.com/RADIO_RENASCENCA_SC", genre: "News", isPro: false),
+
+        // MARK: - Pro aggiuntive (round 2) — focus Oceano Atlantico + espansione globale
+        // Irlanda extra
+        RadioStation(id: 167, name: "Newstalk", country: "Irlanda", frequency: "106.0", streamURL: "https://edge.audioxi.com/NT", genre: "News"),
+        RadioStation(id: 168, name: "8radio", country: "Irlanda", frequency: "—", streamURL: "https://edge4.audioxi.com/8RADIO", genre: "Alternative"),
+        // Portogallo extra
+        RadioStation(id: 169, name: "Rádio Observador", country: "Portogallo", frequency: "98.7", streamURL: "http://195.23.85.126:8455/stream", genre: "News"),
+        // Islanda extra
+        RadioStation(id: 170, name: "X977", country: "Islanda", frequency: "97.7", streamURL: "http://icecast.365net.is:8000/orbXid.aac", genre: "Rock"),
+        // Atlantico — isole + africa atlantica
+        RadioStation(id: 171, name: "RCV Rádio Cabo Verde", country: "Capo Verde", frequency: "—", streamURL: "https://a3.asurahosting.com:6980/radio.mp3", genre: "World"),
+        RadioStation(id: 172, name: "Nanoq FM", country: "Groenlandia", frequency: "—", streamURL: "http://getnanoq.retro-radio.dk/Nanoq-TX-1", genre: "Pop"),
+        RadioStation(id: 173, name: "Dr. Dick's Dub Shack", country: "Bermuda", frequency: "—", streamURL: "http://streamer.radio.co/s0635c8b0d/listen", genre: "Reggae"),
+        RadioStation(id: 174, name: "Dakar Musique", country: "Senegal", frequency: "—", streamURL: "http://listen.senemultimedia.net:8090/stream", genre: "World"),
+        // Caraibi atlantici
+        RadioStation(id: 175, name: "Alpha Boys School Radio", country: "Giamaica", frequency: "—", streamURL: "http://alphaboys-live.streamguys1.com/alphaboys.mp3", genre: "Jazz"),
+        RadioStation(id: 176, name: "Mello FM", country: "Giamaica", frequency: "88.0", streamURL: "http://peridot.streamguys.com:5660/live", genre: "Reggae"),
+        RadioStation(id: 177, name: "Global FM", country: "Bahamas", frequency: "99.5", streamURL: "http://ice64.securenetsystems.net/GLOBALBS", genre: "Pop"),
+        RadioStation(id: 178, name: "Guardian Radio", country: "Bahamas", frequency: "96.9", streamURL: "https://radiostreams.streamcomedia.com:8000/969guardianradio", genre: "News"),
+        RadioStation(id: 179, name: "Hot 93", country: "Trinidad", frequency: "93.5", streamURL: "http://ice41.securenetsystems.net/HOTT93", genre: "Pop"),
+        RadioStation(id: 180, name: "Radio Tambrin", country: "Trinidad", frequency: "92.7", streamURL: "http://ice42.securenetsystems.net/TAMBRIN", genre: "News"),
+        // Atlantico nord — Canada
+        RadioStation(id: 181, name: "680 News Toronto", country: "Canada", frequency: "680", streamURL: "https://rogers-hls.leanstream.co/rogers/tor680.stream/playlist.m3u8", genre: "News"),
+        // Asia
+        RadioStation(id: 182, name: "CCTV-13 News", country: "Cina", frequency: "—", streamURL: "https://piccpndali.v.myalicdn.com/audio/cctv13_2.m3u8", genre: "News"),
+        RadioStation(id: 183, name: "FM Kahoku", country: "Giappone", frequency: "78.7", streamURL: "http://radio.kahoku.net:8000/;", genre: "Talk"),
+        RadioStation(id: 184, name: "J1 Gold", country: "Giappone", frequency: "—", streamURL: "http://jenny.torontocast.com:8062/", genre: "J-Pop"),
+        RadioStation(id: 185, name: "Taipei Radio", country: "Taiwan", frequency: "93.1", streamURL: "https://stream.ginnet.cloud/live0130lo-yfyo/_definst_/fm/playlist.m3u8", genre: "News"),
+        RadioStation(id: 186, name: "Radio Taiwan International", country: "Taiwan", frequency: "—", streamURL: "https://streamak0138.akamaized.net/live0138lh-mbm9/_definst_/rti3/chunklist.m3u8", genre: "News"),
+        RadioStation(id: 187, name: "Barangay LS 97.1", country: "Filippine", frequency: "97.1", streamURL: "http://28093.live.streamtheworld.com:3690/MORFM_S01AAC_SC", genre: "Talk"),
+        RadioStation(id: 188, name: "Love Radio Dagupan", country: "Filippine", frequency: "98.3", streamURL: "https://loveradiodagupan.radioca.st/", genre: "Pop"),
+        RadioStation(id: 189, name: "RFI Tiếng Việt", country: "Vietnam", frequency: "—", streamURL: "https://rfienvietnamien64k.ice.infomaniak.ch/rfienvietnamien-64.mp3", genre: "News"),
+        RadioStation(id: 190, name: "VOH FM", country: "Vietnam", frequency: "99.9", streamURL: "https://strm.voh.com.vn/radio/channel3/chunklist_w1005696319.m3u8", genre: "Pop"),
+        // Mediterraneo orientale + Medio Oriente
+        RadioStation(id: 191, name: "Real FM", country: "Grecia", frequency: "97.8", streamURL: "http://netradio.live24.gr/realfm", genre: "News"),
+        RadioStation(id: 192, name: "Arabesk FM", country: "Turchia", frequency: "—", streamURL: "http://yayin.arabeskfm.biz:8042/", genre: "Pop"),
+        RadioStation(id: 193, name: "Al Arabiya FM", country: "Arabia Saudita", frequency: "99.0", streamURL: "https://fm.alarabiya.net/fm/myStream/playlist.m3u8", genre: "News"),
+        RadioStation(id: 194, name: "Mp3Quran Tarateel", country: "Arabia Saudita", frequency: "—", streamURL: "https://qurango.net/radio/tarateel", genre: "World"),
+        // America Latina
+        RadioStation(id: 195, name: "La Ranchera Monterrey", country: "Messico", frequency: "1050", streamURL: "http://streamingcwsradio20.com:9410/stream", genre: "Latin"),
+        RadioStation(id: 196, name: "La Kalle", country: "Colombia", frequency: "96.9", streamURL: "http://26683.live.streamtheworld.com/LA_KALLE_SC", genre: "Urban"),
+        RadioStation(id: 197, name: "Radiónica RTVC", country: "Colombia", frequency: "99.1", streamURL: "http://shoutcast.rtvc.gov.co:8010/;", genre: "Alternative"),
+        RadioStation(id: 198, name: "Unión Radio", country: "Venezuela", frequency: "90.3", streamURL: "http://ur58.lorini.net:2080/stream", genre: "News"),
+        RadioStation(id: 199, name: "Bío-Bío Chile", country: "Cile", frequency: "99.7", streamURL: "https://unlimited3-cl.dps.live/biobiosantiago/aac/icecast.audio", genre: "News"),
+        RadioStation(id: 200, name: "Radio Rivadavia", country: "Argentina", frequency: "630", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/RIVADAVIA.mp3", genre: "News"),
+        RadioStation(id: 201, name: "Rock & Pop", country: "Argentina", frequency: "95.9", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/ROCKANDPOPAAC.aac", genre: "Rock"),
+        RadioStation(id: 202, name: "Rádio Saudade FM", country: "Brasile", frequency: "99.7", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/SAUDADE_FMAAC.aac", genre: "Oldies"),
+        // Oceania
+        RadioStation(id: 203, name: "ABC Radio National", country: "Australia", frequency: "—", streamURL: "http://abc.streamguys1.com/live/rnnsw/icecast.audio", genre: "News"),
+        RadioStation(id: 204, name: "ABC Country", country: "Australia", frequency: "—", streamURL: "http://live-radio01.mediahubaustralia.com/CTRW/mp3/", genre: "Country"),
+        RadioStation(id: 205, name: "RNZ National", country: "Nuova Zelanda", frequency: "101.4", streamURL: "http://radionz-ice.streamguys.com/national.mp3", genre: "News"),
+        // Europa centrale extra
+        RadioStation(id: 206, name: "Rádió 1 Budapest", country: "Ungheria", frequency: "96.4", streamURL: "http://icast.connectmedia.hu/5201/live.mp3", genre: "Pop"),
+        RadioStation(id: 207, name: "Kossuth Rádió", country: "Ungheria", frequency: "107.8", streamURL: "http://mr-stream.mediaconnect.hu/4734/mr1.aac", genre: "News"),
+        // Africa
+        RadioStation(id: 208, name: "94.7 Joburg", country: "Sud Africa", frequency: "94.7", streamURL: "http://27953.live.streamtheworld.com/FM947AAC_SC", genre: "Pop"),
+        RadioStation(id: 209, name: "702 Johannesburg", country: "Sud Africa", frequency: "92.7", streamURL: "http://23543.live.streamtheworld.com:3690/FM702_SC", genre: "Talk")
     ]
     
     private override init() {
