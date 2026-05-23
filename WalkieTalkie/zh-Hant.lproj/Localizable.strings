@@ -422,3 +422,9 @@
 "live_activities.title" = "即時動態";
 "live_activities.toggle" = "於背景顯示";
 "live_activities.description" = "當應用程式進入背景時，於動態島及鎖定螢幕顯示廣播與對講機控制項。";
+
+// MARK: - Pro upsell banner (added 2026-05-23)
+"paywall.brand_label" = "TALKY PRO";
+"upsell.title" = "解鎖 Talky Pro";
+"upsell.subtitle" = "國際電台，無廣告";
+"upsell.dismiss" = "關閉";

@@ -40,6 +40,7 @@ struct StationBrowserSheet: View {
         NavigationView {
             VStack(spacing: 0) {
                 searchBar
+                upsellBanner
                 tabPicker
                 content
             }
@@ -69,6 +70,19 @@ struct StationBrowserSheet: View {
         }) {
             PaywallView(trigger: "station_browser")
         }
+    }
+
+    // MARK: - Upsell banner
+
+    /// Banner Pro discreto sopra la lista stazioni. Si auto-nasconde se Pro o
+    /// se l'utente l'ha dismissato negli ultimi 7 giorni (cooldown gestito
+    /// internamente da `ProUpsellBanner`).
+    private var upsellBanner: some View {
+        ProUpsellBanner(placement: .stationBrowser) {
+            showPaywall = true
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 10)
     }
 
     // MARK: - Search bar

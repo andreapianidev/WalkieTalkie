@@ -420,3 +420,9 @@
 "live_activities.title" = "Live Activities";
 "live_activities.toggle" = "Show in background";
 "live_activities.description" = "Show radio and walkie controls in the Dynamic Island and lock screen when the app goes in background.";
+
+// MARK: - Pro upsell banner (added 2026-05-23)
+"paywall.brand_label" = "TALKY PRO";
+"upsell.title" = "Unlock Talky Pro";
+"upsell.subtitle" = "International radio, no ads";
+"upsell.dismiss" = "Dismiss";
