@@ -21,6 +21,10 @@ struct WalkieTalkieApp: App {
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage("isOnboardingComplete") private var isOnboardingComplete = false
 
+    #if DEBUG && targetEnvironment(simulator)
+    @State private var showDebugTierAlert = true
+    #endif
+
     var body: some Scene {
         WindowGroup {
             Group {
@@ -38,6 +42,18 @@ struct WalkieTalkieApp: App {
             .environmentObject(adManager)
             .environmentObject(iapManager)
             .environmentObject(themeManager)
+            #if DEBUG && targetEnvironment(simulator)
+            .alert("DEBUG · Simula tier", isPresented: $showDebugTierAlert) {
+                Button("Free") {
+                    iapManager.applyDebugSimulatedTier(isPro: false)
+                }
+                Button("Pro") {
+                    iapManager.applyDebugSimulatedTier(isPro: true)
+                }
+            } message: {
+                Text("Solo simulator/DEBUG: scegli quale versione vuoi simulare per questa sessione.")
+            }
+            #endif
             .task {
                 // IAP bootstrap deve precedere AdManager: i guard !isProUser dipendono dallo stato Pro.
                 await iapManager.bootstrap()

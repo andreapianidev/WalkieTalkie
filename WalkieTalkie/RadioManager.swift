@@ -421,7 +421,11 @@ class RadioManager: NSObject, ObservableObject {
     private override init() {
         super.init()
         loadPersistedState()
-        setupAudioSession()
+        // NOTE: do NOT activate an audio session here. AudioManager already owns
+        // the active session (.playAndRecord) for the walkie. Activating .playback
+        // at init clobbers it and triggers OSStatus -50 (paramErr) because the two
+        // categories are incompatible. We swap categories lazily at play time via
+        // `activateAudioSessionForPlayback()` and restore on stopRadio.
         setupRemoteCommandCenter()
         setupAudioInterruptionObserver()
     }
@@ -436,18 +440,32 @@ class RadioManager: NSObject, ObservableObject {
         }
     }
 
-    private func setupAudioSession() {
+    /// Swap the shared `AVAudioSession` to `.playback` for radio streaming.
+    /// Pure playback (no `.mixWithOthers`) so Now Playing widget works and
+    /// we pause Apple Music / Spotify instead of layering on top of them.
+    /// Called from `playStation()` — never at init, to avoid clobbering the
+    /// walkie's `.playAndRecord` session (would yield OSStatus -50).
+    private func activateAudioSessionForPlayback() {
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            // Pure playback for streaming radio. We deliberately do NOT pass
-            // .mixWithOthers: with that option iOS won't show our app on the
-            // lock-screen Now Playing widget and we'd play over Apple Music /
-            // Spotify instead of pausing them, which is non-standard radio UX.
             try audioSession.setCategory(.playback, mode: .default, options: [.allowBluetoothA2DP, .allowAirPlay])
             try audioSession.setActive(true)
-            logger.logAudioInfo("Radio audio session configurata per background playback")
+            logger.logAudioInfo("Radio audio session attivata (.playback)")
         } catch {
-            logger.logAudioError(error, context: "Configurazione radio audio session")
+            logger.logAudioError(error, context: "Attivazione radio audio session")
+        }
+    }
+
+    /// Restore the walkie session (`.playAndRecord` + `.defaultToSpeaker`) when
+    /// the user explicitly stops the radio, so mic capture works again.
+    private func restoreWalkieAudioSession() {
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker, .allowBluetooth])
+            try audioSession.setActive(true)
+            logger.logAudioInfo("Audio session ripristinata per walkie (.playAndRecord)")
+        } catch {
+            logger.logAudioError(error, context: "Ripristino walkie audio session")
         }
     }
 
@@ -525,7 +543,12 @@ class RadioManager: NSObject, ObservableObject {
             logger.logAudioError(NSError(domain: "RadioManager", code: -1, userInfo: [NSLocalizedDescriptionKey: "URL non valido"]), context: "Play station")
             return
         }
-        
+
+        // Switch the shared audio session to .playback BEFORE creating the
+        // AVPlayer. Doing it after `player.play()` triggers a momentary
+        // interruption and the lock-screen Now Playing widget can desync.
+        activateAudioSessionForPlayback()
+
         isBuffering = true
         currentStation = station
 
@@ -604,6 +627,14 @@ class RadioManager: NSObject, ObservableObject {
             if resyncWalkieAfter {
                 LiveActivityManager.shared.resyncWalkieFromCurrentState()
             }
+        }
+
+        // Only on explicit user stop: hand the audio session back to the
+        // walkie. Inter-station resets (resyncWalkieAfter=false) keep the
+        // .playback category so the next playStation() doesn't pay another
+        // category-swap latency.
+        if resyncWalkieAfter {
+            restoreWalkieAudioSession()
         }
 
         logger.logAudioInfo("Radio fermata")

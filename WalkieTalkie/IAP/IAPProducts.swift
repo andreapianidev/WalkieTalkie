@@ -11,8 +11,11 @@ import Foundation
 /// I temi singoli (non-consumable) sono gestiti come stringhe statiche separate
 /// per non mescolare semantica subscription vs. acquisto una tantum.
 enum ProductID: String, CaseIterable {
-    case weekly = "app.immaginet.talky.pro.weekly"
-    case yearly = "app.immaginet.talky.pro.yearly"
+    // Gli ID devono corrispondere ESATTAMENTE ai prodotti registrati su
+    // App Store Connect (vedi "Acquisti In-App" → "Abbonamenti").
+    // Non aggiungere prefissi reverse-DNS: ASC li accetta come stringhe libere.
+    case weekly = "ProWeeklyWT"
+    case yearly = "ProAnnualWT"
 
     /// Tutti gli identificatori prodotto (subscription + tema) come stringhe
     /// per `Product.products(for:)`. Include subscription Talky Pro e i temi

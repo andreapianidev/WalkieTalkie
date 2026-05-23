@@ -46,6 +46,16 @@ final class AdManager: ObservableObject {
         // 2. ATT
         await consent.requestATTIfNeeded()
 
+        #if DEBUG
+        // Register test devices BEFORE starting the SDK so every request is
+        // returned as a test ad (no risk of accidental real-ad clicks during
+        // development). Simulators are auto-detected by Google but physical
+        // test devices must be listed explicitly.
+        MobileAds.shared.requestConfiguration.testDeviceIdentifiers = [
+            "B07ED5E0-8565-45F8-95AD-3F0C990972F2" // iPhone Andrea
+        ]
+        #endif
+
         // 3. SDK init
         MobileAds.shared.start { _ in }
         isInitialized = true

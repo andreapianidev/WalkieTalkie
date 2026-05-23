@@ -47,6 +47,14 @@ final class IAPManager: ObservableObject {
     /// questa chiave per validare l'accesso senza importare IAPManager.
     private static let fastBootOwnedThemesKey = "fastboot_ownedThemes"
 
+    #if DEBUG && targetEnvironment(simulator)
+    /// Override DEBUG-only attivo solo in simulator: forza `isProUser` al
+    /// valore scelto dallo sviluppatore dal popup di lancio e blocca
+    /// `updateEntitlements()` dal sovrascriverlo (StoreKit in simulator
+    /// non restituisce entitlements affidabili).
+    private var debugSimulatedProOverride: Bool? = nil
+    #endif
+
     // MARK: - Lifecycle
 
     private init() {
@@ -97,12 +105,30 @@ final class IAPManager: ObservableObject {
         isLoading = true
         defer { isLoading = false }
 
-        let storeProducts = try await Product.products(for: ProductID.allIDs)
+        let requested = ProductID.allIDs
+        let storeProducts = try await Product.products(for: requested)
         // Ordina: settimanale prima, annuale dopo (più ergonomico per la UI)
         self.products = storeProducts.sorted { lhs, rhs in
             return lhs.price < rhs.price
         }
-        logger.logInfo("IAPManager: caricati \(self.products.count) prodotti")
+        logger.logInfo("IAPManager: caricati \(self.products.count)/\(requested.count) prodotti")
+
+        // Diagnostica: se ASC non ritorna nessun prodotto, è quasi sempre uno dei
+        // seguenti motivi. Stampare i product ID mancanti aiuta a triagare in fretta
+        // (in particolare quando si scopre che ID nel codice ≠ ID in ASC).
+        if self.products.count < requested.count {
+            let returnedIDs = Set(storeProducts.map(\.id))
+            let missing = requested.filter { !returnedIDs.contains($0) }
+            logger.logWarning("""
+            IAPManager: \(missing.count) prodotti mancanti dallo Store. Verifica:
+              1. Gli ID corrispondono ESATTAMENTE a quelli in App Store Connect (case-sensitive)
+              2. I prodotti sono "Pronto per la revisione" o approvati (non "Metadati mancanti")
+              3. L'app è firmata con lo stesso bundle ID del record ASC (com.immaginet.talky)
+              4. Per testing locale: collega WalkieTalkie/IAP/Talky.storekit allo scheme
+                 (Edit Scheme → Run → Options → StoreKit Configuration)
+            Mancanti: \(missing.joined(separator: ", "))
+            """)
+        }
     }
 
     // MARK: - Purchase
@@ -330,12 +356,35 @@ final class IAPManager: ObservableObject {
         persistOwnedThemes()
 
         logger.logInfo("IAPManager: updateEntitlements isProUser=\(isPro) product=\(foundActiveProduct?.id ?? "nil") ownedThemes=\(ownedThemes.count)")
+
+        #if DEBUG && targetEnvironment(simulator)
+        // Se l'utente ha scelto un tier simulato dal popup di debug, prevale
+        // sul valore calcolato da StoreKit (che in simulator è quasi sempre vuoto).
+        if let override = debugSimulatedProOverride {
+            self.isProUser = override
+            UserDefaults.standard.set(override, forKey: Self.fastBootKey)
+            logger.logInfo("IAPManager: DEBUG override applicato in updateEntitlements → isProUser=\(override)")
+        }
+        #endif
     }
 
     /// Alias di compatibilità: mantiene l'API precedente al refactor entitlements.
     func updateSubscriptionStatus() async {
         await updateEntitlements()
     }
+
+    #if DEBUG && targetEnvironment(simulator)
+    /// Imposta a runtime un override del tier Pro/Free per testare in simulator.
+    /// Aggiorna `isProUser`, persiste il fast-boot bridge e blocca successivi
+    /// `updateEntitlements()` dal sovrascrivere il valore scelto.
+    /// Disponibile SOLO in build DEBUG eseguite sul simulator.
+    func applyDebugSimulatedTier(isPro: Bool) {
+        debugSimulatedProOverride = isPro
+        self.isProUser = isPro
+        UserDefaults.standard.set(isPro, forKey: Self.fastBootKey)
+        logger.logInfo("IAPManager DEBUG override: simulazione tier=\(isPro ? "PRO" : "FREE")")
+    }
+    #endif
 
     // MARK: - Theme Ownership Helpers
 

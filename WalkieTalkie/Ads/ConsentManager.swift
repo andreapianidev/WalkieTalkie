@@ -30,21 +30,42 @@ final class ConsentManager: ObservableObject {
 
         #if DEBUG
         let debug = UserMessagingPlatform.DebugSettings()
+        // Register known internal test devices so UMP returns deterministic
+        // debug-geography responses. The IDs are surfaced by UMP at runtime as
+        // "<UMP SDK> To enable debug mode for this device, set: ...". Add new
+        // ones here when onboarding additional test phones.
+        debug.testDeviceIdentifiers = [
+            "B07ED5E0-8565-45F8-95AD-3F0C990972F2" // iPhone Andrea
+        ]
         // Uncomment to force EEA flow in development:
         // debug.geography = .EEA
         params.debugSettings = debug
         #endif
 
+        var didFail = false
         do {
             try await ConsentInformation.shared.requestConsentInfoUpdate(with: params)
             if let root = AdRootViewController.current() {
                 try await ConsentForm.loadAndPresentIfRequired(from: root)
             }
         } catch {
+            didFail = true
             print("[ConsentManager] error: \(error.localizedDescription)")
         }
 
         refreshState()
+
+        #if DEBUG
+        // In DEBUG, if UMP failed (e.g. publisher has not yet configured a
+        // consent form in the AdMob dashboard for the current app ID) we still
+        // want the test ad pipeline to work end-to-end. AdMob's own test ads
+        // are policy-compliant without explicit user consent, so we flip the
+        // gate manually to unblock local dev. Never compiled in Release.
+        if didFail && !canRequestAds {
+            canRequestAds = true
+            print("[ConsentManager] DEBUG override: canRequestAds=true (form non configurato lato AdMob)")
+        }
+        #endif
     }
 
     /// Requests ATT only after UMP has resolved and the app is foreground-active.
