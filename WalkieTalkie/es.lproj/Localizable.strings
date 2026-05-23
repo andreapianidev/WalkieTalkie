@@ -421,3 +421,8 @@
 "onboarding.radio_mode.title" = "Walkie-Talkie + Radio FM";
 "onboarding.radio_mode.subtitle" = "Cambia entre los dos modos con un toque";
 "onboarding.radio_mode.body" = "El botón superior izquierdo te permite alternar entre Walkie-Talkie para hablar con amigos y Radio FM con 135 emisoras internacionales.";
+
+// MARK: - Live Activities
+"live_activities.title" = "Live Activities";
+"live_activities.toggle" = "Mostrar en segundo plano";
+"live_activities.description" = "Muestra los controles de radio y walkie en la Dynamic Island y la pantalla bloqueada cuando la app pasa a segundo plano.";

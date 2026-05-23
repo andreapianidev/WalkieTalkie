@@ -44,6 +44,13 @@ final class LiveActivityManager {
         ActivityAuthorizationInfo().areActivitiesEnabled
     }
 
+    /// In-app user toggle (Settings → Live Activities). Independent from the
+    /// system-level `areActivitiesEnabled` so the user can opt out without
+    /// touching iOS Settings.
+    private var isUserEnabled: Bool {
+        SettingsManager.shared.isLiveActivitiesEnabled
+    }
+
     /// Appends work to the lifecycle chain. Use `enqueue` for any code that mutates
     /// an Activity (request/update/end) so ops run in the order they were scheduled
     /// on the MainActor.
@@ -114,6 +121,10 @@ final class LiveActivityManager {
     func startRadio(stationName: String, country: String, flag: String, frequency: String, genre: String, isPlaying: Bool, isBuffering: Bool) {
         guard areActivitiesEnabled else {
             Logger.shared.logInfo("Live Activities disabled by user, skip startRadio")
+            return
+        }
+        guard isUserEnabled else {
+            Logger.shared.logInfo("Live Activities disabled in app settings, skip startRadio")
             return
         }
         // Synchronous intent: protects against a walkie sync racing in between the
@@ -193,6 +204,7 @@ final class LiveActivityManager {
 
     func startWalkie(connectedPeerCount: Int, peerNames: [String], channelName: String) {
         guard areActivitiesEnabled else { return }
+        guard isUserEnabled else { return }
         walkieIntent = true
         enqueue { [weak self] in
             guard let self = self else { return }
@@ -272,6 +284,26 @@ final class LiveActivityManager {
             self.walkieActivity = nil
             await activity.end(nil, dismissalPolicy: .immediate)
             Logger.shared.logNetworkInfo("Live Activity Walkie ended")
+        }
+    }
+
+    /// Force-end every in-flight activity. Called when the user flips the
+    /// in-app Live Activities toggle off — has to cover both ivars and any
+    /// stragglers ActivityKit still holds, so the Dynamic Island clears
+    /// immediately instead of waiting for the next radio/walkie state change.
+    func endAll() {
+        radioIntent = false
+        walkieIntent = false
+        enqueue { [weak self] in
+            guard let self = self else { return }
+            self.radioActivity = nil
+            self.walkieActivity = nil
+            for activity in Activity<RadioActivityAttributes>.activities {
+                await activity.end(nil, dismissalPolicy: .immediate)
+            }
+            for activity in Activity<WalkieActivityAttributes>.activities {
+                await activity.end(nil, dismissalPolicy: .immediate)
+            }
         }
     }
 

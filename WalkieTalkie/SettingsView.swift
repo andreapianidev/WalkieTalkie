@@ -37,6 +37,9 @@ struct SettingsView: View {
                     // Notifications Section
                     notificationsSection
 
+                    // Live Activities Section
+                    liveActivitiesSection
+
                     // Audio Settings Section
                     audioSettingsSection
 
@@ -459,6 +462,47 @@ struct SettingsView: View {
         )
     }
     
+    private var liveActivitiesSection: some View {
+        VStack(alignment: .leading, spacing: 15) {
+            HStack {
+                Image(systemName: "rectangle.inset.filled.on.rectangle")
+                    .foregroundColor(Color("PrimaryTextColor"))
+                Text("live_activities.title".localized)
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(Color("PrimaryTextColor"))
+                Spacer()
+            }
+
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("live_activities.toggle".localized)
+                        .font(.body)
+                        .fontWeight(.medium)
+                        .foregroundColor(Color("PrimaryTextColor"))
+                    Text("live_activities.description".localized)
+                        .font(.caption)
+                        .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
+                }
+
+                Spacer()
+
+                Toggle("", isOn: $settingsManager.isLiveActivitiesEnabled)
+                    .toggleStyle(SwitchToggleStyle(tint: Color("ToggleAccentColor")))
+            }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color("SurfaceColor"))
+            )
+        }
+        .padding()
+        .background(
+            RoundedRectangle(cornerRadius: 15)
+                .fill(Color("SurfaceColor"))
+        )
+    }
+
     private var audioSettingsSection: some View {
         VStack(alignment: .leading, spacing: 15) {
             HStack {

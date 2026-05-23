@@ -417,3 +417,8 @@
 "onboarding.radio_mode.title" = "對講機 + FM 電台";
 "onboarding.radio_mode.subtitle" = "一鍵切換兩種模式";
 "onboarding.radio_mode.body" = "左上角的按鈕讓您在與朋友通話的對講機模式和擁有 135 個國際電台的 FM 電台之間切換。";
+
+// MARK: - Live Activities
+"live_activities.title" = "即時動態";
+"live_activities.toggle" = "於背景顯示";
+"live_activities.description" = "當應用程式進入背景時，於動態島及鎖定螢幕顯示廣播與對講機控制項。";

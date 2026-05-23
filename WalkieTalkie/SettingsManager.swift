@@ -26,6 +26,7 @@ class SettingsManager: ObservableObject {
         static let isLowPowerModeEnabled = "isLowPowerModeEnabled"
         static let isDarkModeEnabled = "isDarkModeEnabled"
         static let hasSeenFirstRunCoach = "hasSeenFirstRunCoach"
+        static let isLiveActivitiesEnabled = "isLiveActivitiesEnabled"
     }
     
     // MARK: - Published Properties
@@ -94,6 +95,18 @@ class SettingsManager: ObservableObject {
         }
     }
 
+    @Published var isLiveActivitiesEnabled: Bool {
+        didSet {
+            userDefaults.set(isLiveActivitiesEnabled, forKey: Keys.isLiveActivitiesEnabled)
+            firebaseManager.trackSettingsChange(setting: "liveActivities", value: "\(isLiveActivitiesEnabled)")
+            if !isLiveActivitiesEnabled, #available(iOS 16.2, *) {
+                Task { @MainActor in
+                    LiveActivityManager.shared.endAll()
+                }
+            }
+        }
+    }
+
     // MARK: - Initialization
     private init() {
         // Carica le impostazioni salvate o usa i valori di default
@@ -107,6 +120,7 @@ class SettingsManager: ObservableObject {
         self.isLowPowerModeEnabled = userDefaults.object(forKey: Keys.isLowPowerModeEnabled) as? Bool ?? false
         self.isDarkModeEnabled = userDefaults.object(forKey: Keys.isDarkModeEnabled) as? Bool ?? false
         self.hasSeenFirstRunCoach = userDefaults.object(forKey: Keys.hasSeenFirstRunCoach) as? Bool ?? false
+        self.isLiveActivitiesEnabled = userDefaults.object(forKey: Keys.isLiveActivitiesEnabled) as? Bool ?? true
 
         // Debug print dopo l'inizializzazione completa
         print("⚙️ SettingsManager: isHapticFeedbackEnabled inizializzato a \(isHapticFeedbackEnabled)")
@@ -125,6 +139,7 @@ class SettingsManager: ObservableObject {
         voiceActivationThreshold = 0.3
         isLowPowerModeEnabled = false
         isDarkModeEnabled = false
+        isLiveActivitiesEnabled = true
     }
     
     /// Sincronizza le impostazioni con UserDefaults

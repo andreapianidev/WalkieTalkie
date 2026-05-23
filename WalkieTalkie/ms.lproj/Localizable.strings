@@ -417,3 +417,8 @@
 "onboarding.radio_mode.title" = "Walkie-Talkie + Radio FM";
 "onboarding.radio_mode.subtitle" = "Bertukar mod dengan satu ketukan";
 "onboarding.radio_mode.body" = "Butang kiri atas membolehkan anda bertukar antara Walkie-Talkie untuk berbual dengan rakan dan Radio FM dengan 135 stesen antarabangsa.";
+
+// MARK: - Live Activities
+"live_activities.title" = "Live Activities";
+"live_activities.toggle" = "Papar di latar belakang";
+"live_activities.description" = "Papar kawalan radio dan walkie di Dynamic Island dan skrin kunci apabila aplikasi berada di latar belakang.";

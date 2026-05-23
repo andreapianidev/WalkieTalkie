@@ -415,3 +415,8 @@
 "onboarding.radio_mode.title" = "Walkie-Talkie + FM Radio";
 "onboarding.radio_mode.subtitle" = "Switch between modes with one tap";
 "onboarding.radio_mode.body" = "The top-left button lets you switch between Walkie-Talkie to chat with friends and FM Radio with 135 international stations.";
+
+// MARK: - Live Activities
+"live_activities.title" = "Live Activities";
+"live_activities.toggle" = "Show in background";
+"live_activities.description" = "Show radio and walkie controls in the Dynamic Island and lock screen when the app goes in background.";
