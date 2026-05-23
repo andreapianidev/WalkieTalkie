@@ -30,6 +30,7 @@ struct ProUpsellBanner: View {
     enum Placement: String {
         case settings
         case stationBrowser = "station_browser"
+        case explore
 
         var dismissKey: String { "pro_banner_dismissed_until_\(rawValue)" }
         var analyticsTrigger: String { "banner_\(rawValue)" }

@@ -9,28 +9,40 @@ struct ExploreView: View {
     @State private var pulseScale: CGFloat = 1.0
     @State private var scanningOpacity: Double = 0.3
     @State private var detectedDevices: [DetectedDevice] = []
-    
+    @State private var showPaywall: Bool = false
+
     private let radarRadius: CGFloat = 120
     private let maxRange: Double = 100 // metri
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Header
             headerView
-            
+
+            // Banner Pro discreto: cooldown 7gg gestito da ProUpsellBanner.
+            // Posizionato sotto l'header per essere visibile senza coprire il radar.
+            ProUpsellBanner(placement: .explore) {
+                showPaywall = true
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 4)
+
             Spacer()
-            
+
             // Radar Display
             radarView
-            
+
             Spacer()
-            
+
             // Device List
             deviceListView
-            
+
             Spacer(minLength: 100)
         }
         .background(Color("BackgroundColor"))
+        .fullScreenCover(isPresented: $showPaywall) {
+            PaywallView(trigger: "explore_banner")
+        }
         .onAppear {
             startRadarAnimation()
             updateDetectedDevices()

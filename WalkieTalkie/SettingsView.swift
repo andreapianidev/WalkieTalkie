@@ -135,95 +135,145 @@ struct SettingsView: View {
 
     // MARK: - Pro Section
 
+    /// Brand color allineato alla paywall ("Field Radio" #FFCC00).
+    private var proBrand: Color { Color(red: 1.0, green: 0.8, blue: 0.0) }
+    private var proBrandDeep: Color { Color(red: 0.91, green: 0.71, blue: 0.0) }
+
     private var proSection: some View {
-        VStack(alignment: .leading, spacing: 15) {
-            HStack {
-                Image(systemName: iapManager.isProUser ? "checkmark.seal.fill" : "crown.fill")
-                    .foregroundColor(iapManager.isProUser ? .green : .yellow)
-                Text(iapManager.isProUser ? "settings.pro.title_active".localized : "settings.pro.title".localized)
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .foregroundColor(Color("PrimaryTextColor"))
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 8) {
+                Circle()
+                    .fill(iapManager.isProUser ? Color.green : proBrand)
+                    .frame(width: 6, height: 6)
+                    .shadow(color: settingsManager.isDarkModeEnabled
+                            ? (iapManager.isProUser ? Color.green.opacity(0.6) : proBrand.opacity(0.6))
+                            : .clear,
+                            radius: 4)
+                Text((iapManager.isProUser ? "settings.pro.title_active" : "settings.pro.title").localized)
+                    .font(.system(size: 11, weight: .heavy, design: .rounded))
+                    .tracking(3.5)
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.8))
                 Spacer()
             }
 
             if iapManager.isProUser {
-                // Stato Pro attivo: link per gestire la sub su Apple ID Settings.
-                Button(action: openManageSubscriptions) {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("settings.pro.manage_subscription".localized)
-                                .font(.body)
-                                .fontWeight(.medium)
-                                .foregroundColor(Color("PrimaryTextColor"))
-                            Text("settings.pro.manage_subscription_subtitle".localized)
-                                .font(.caption)
-                                .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
-                        }
-                        Spacer()
-                        Image(systemName: "arrow.up.right.square")
-                            .foregroundColor(Color("PrimaryTextColor").opacity(0.5))
-                    }
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color("SurfaceColor"))
-                    )
-                }
+                proActiveCard
             } else {
-                // CTA principale per sbloccare Pro.
-                Button(action: { showPaywall = true }) {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("settings.pro.unlock".localized)
-                                .font(.body)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.black)
-                            Text("settings.pro.unlock_subtitle".localized)
-                                .font(.caption)
-                                .foregroundColor(.black.opacity(0.7))
-                        }
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.black.opacity(0.5))
-                            .font(.caption)
-                    }
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.yellow)
-                    )
-                }
+                proUnlockCard
             }
 
-            // Restore acquisti sempre accessibile (richiesto da Apple review).
-            Button(action: restorePurchases) {
-                HStack {
-                    Image(systemName: "arrow.clockwise")
-                        .foregroundColor(Color("PrimaryTextColor"))
-                    Text("settings.pro.restore_purchases".localized)
-                        .font(.body)
-                        .fontWeight(.medium)
-                        .foregroundColor(Color("PrimaryTextColor"))
-                    Spacer()
-                    if iapManager.isLoading {
-                        ProgressView()
-                            .scaleEffect(0.8)
-                    }
-                }
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color("SurfaceColor"))
-                )
-            }
-            .disabled(iapManager.isLoading)
+            restoreButton
         }
-        .padding()
+        .padding(16)
         .background(
-            RoundedRectangle(cornerRadius: 15)
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(Color("SurfaceColor"))
         )
+    }
+
+    /// Card "TX active": Pro attivo. Tap → apri gestione abbonamento.
+    private var proActiveCard: some View {
+        Button(action: openManageSubscriptions) {
+            HStack(spacing: 12) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .fill(Color.green.opacity(0.18))
+                        .frame(width: 36, height: 36)
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundColor(Color.green)
+                }
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("settings.pro.manage_subscription".localized)
+                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .foregroundColor(Color("PrimaryTextColor"))
+                    Text("settings.pro.manage_subscription_subtitle".localized)
+                        .font(.system(size: 12))
+                        .foregroundColor(Color("PrimaryTextColor").opacity(0.65))
+                        .lineLimit(1)
+                }
+
+                Spacer()
+                Image(systemName: "arrow.up.right")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.5))
+            }
+            .padding(12)
+            .background(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color("BackgroundColor").opacity(0.6))
+            )
+        }
+        .buttonStyle(.plain)
+    }
+
+    /// Card unlock: replica il linguaggio visivo della Paywall (icona brand-square
+    /// + brand capsule CTA), così l'utente vede coerenza fra Settings e Paywall.
+    private var proUnlockCard: some View {
+        Button(action: { showPaywall = true }) {
+            HStack(spacing: 12) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .fill(proBrand)
+                        .frame(width: 36, height: 36)
+                        .shadow(color: settingsManager.isDarkModeEnabled
+                                ? proBrand.opacity(0.35) : .clear,
+                                radius: 10, y: 3)
+                    Image(systemName: "antenna.radiowaves.left.and.right")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.black)
+                }
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("settings.pro.unlock".localized)
+                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .foregroundColor(Color("PrimaryTextColor"))
+                    Text("settings.pro.unlock_subtitle".localized)
+                        .font(.system(size: 12))
+                        .foregroundColor(Color("PrimaryTextColor").opacity(0.65))
+                        .lineLimit(1)
+                }
+
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.5))
+            }
+            .padding(12)
+            .background(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color("BackgroundColor").opacity(0.6))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(proBrand.opacity(settingsManager.isDarkModeEnabled ? 0.4 : 0.3), lineWidth: 1)
+            )
+        }
+        .buttonStyle(.plain)
+    }
+
+    /// Restore: pulsante secondario testuale, niente fondo, per non competere
+    /// con la CTA primaria di unlock (riduce il rumore visivo).
+    private var restoreButton: some View {
+        Button(action: restorePurchases) {
+            HStack(spacing: 8) {
+                if iapManager.isLoading {
+                    ProgressView().scaleEffect(0.7)
+                } else {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.system(size: 11, weight: .semibold))
+                }
+                Text("settings.pro.restore_purchases".localized)
+                    .font(.system(size: 12, weight: .semibold))
+                Spacer()
+            }
+            .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
+            .padding(.horizontal, 12)
+            .padding(.top, 2)
+        }
+        .buttonStyle(.plain)
+        .disabled(iapManager.isLoading)
     }
 
     // MARK: - Personalization Section
