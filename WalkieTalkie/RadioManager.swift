@@ -574,7 +574,29 @@ class RadioManager: NSObject, ObservableObject {
         RadioStation(id: 322, name: "Bachata Radio", country: "Rep. Dominicana", frequency: "—", streamURL: "http://radio.domiplay.net:8002/", genre: "Bachata"),
         RadioStation(id: 323, name: "Adeem", country: "Libano", frequency: "—", streamURL: "https://usa19.fastcast4u.com/adeem", genre: "Arabic"),
         RadioStation(id: 324, name: "Free FM 80 Tokyo", country: "Giappone", frequency: "—", streamURL: "https://freefm80.radioca.st/", genre: "80s"),
-        RadioStation(id: 325, name: "Exclusively Pink Floyd", country: "Emirati Arabi Uniti", frequency: "—", streamURL: "https://streaming.exclusive.radio/er/pinkfloyd/icecast.audio", genre: "Rock")
+        RadioStation(id: 325, name: "Exclusively Pink Floyd", country: "Emirati Arabi Uniti", frequency: "—", streamURL: "https://streaming.exclusive.radio/er/pinkfloyd/icecast.audio", genre: "Rock"),
+
+        // MARK: - Free aggiuntive (maggio 2026) — grandi broadcaster + flagship verificate via radio-browser + curl
+        RadioStation(id: 326, name: "RMC", country: "Francia", frequency: "—", streamURL: "https://audio.bfmtv.com/rmcradio_128.mp3", genre: "Talk", isPro: false),
+        RadioStation(id: 327, name: "BFM Radio", country: "Francia", frequency: "—", streamURL: "https://audio.bfmtv.com/bfmradio_128.mp3", genre: "News", isPro: false),
+        RadioStation(id: 328, name: "Sud Radio", country: "Francia", frequency: "—", streamURL: "https://ice.creacast.com/sudradio", genre: "Talk", isPro: false),
+        RadioStation(id: 329, name: "LOS 40 Principales", country: "Spagna", frequency: "—", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/Los40.mp3", genre: "Pop", isPro: false),
+        RadioStation(id: 330, name: "Heart 70s", country: "UK", frequency: "—", streamURL: "https://media-ssl.musicradio.com/Heart70sMP3", genre: "Oldies", isPro: false),
+        RadioStation(id: 331, name: "Gold", country: "UK", frequency: "—", streamURL: "https://media-ssl.musicradio.com/GoldMP3", genre: "Oldies", isPro: false),
+        RadioStation(id: 332, name: "SomaFM Groove Salad", country: "USA", frequency: "—", streamURL: "https://ice5.somafm.com/groovesalad-128-mp3", genre: "Electronic", isPro: false),
+        RadioStation(id: 333, name: "SomaFM Secret Agent", country: "USA", frequency: "—", streamURL: "https://ice6.somafm.com/secretagent-128-mp3", genre: "Easy", isPro: false),
+        RadioStation(id: 334, name: "Kiss FM Romania", country: "Romania", frequency: "—", streamURL: "https://live.kissfm.ro/kissfm.aacp", genre: "Dance", isPro: false),
+
+        // MARK: - Pro aggiuntive (maggio 2026) — nicchia / specializzate verificate via radio-browser + curl
+        RadioStation(id: 335, name: "SomaFM Space Station", country: "USA", frequency: "—", streamURL: "https://ice5.somafm.com/spacestation-128-aac", genre: "Electronic", isPro: true),
+        RadioStation(id: 336, name: "SomaFM Underground 80s", country: "USA", frequency: "—", streamURL: "https://ice6.somafm.com/u80s-128-mp3", genre: "80s", isPro: true),
+        RadioStation(id: 337, name: "SomaFM Indie Pop Rocks", country: "USA", frequency: "—", streamURL: "https://ice6.somafm.com/indiepop-128-aac", genre: "Alternative", isPro: true),
+        RadioStation(id: 338, name: "SomaFM PopTron", country: "USA", frequency: "—", streamURL: "https://ice2.somafm.com/poptron-128-mp3", genre: "Electronic", isPro: true),
+        RadioStation(id: 339, name: "REYFM Original", country: "Germania", frequency: "—", streamURL: "https://listen.reyfm.de/original_192kbps.mp3", genre: "Dance", isPro: true),
+        RadioStation(id: 340, name: "EuroDance 90", country: "Francia", frequency: "—", streamURL: "https://stream-eurodance90.fr/radio/8000/128.mp3", genre: "Dance", isPro: true),
+        RadioStation(id: 341, name: "Radio Mirchi", country: "India", frequency: "—", streamURL: "https://eu8.fastcast4u.com/proxy/clyedupq/stream", genre: "Bollywood", isPro: true),
+        RadioStation(id: 342, name: "Funky Radio", country: "USA", frequency: "—", streamURL: "https://funkyradio.streamingmedia.it/play.mp3", genre: "Urban", isPro: true),
+        RadioStation(id: 343, name: "ABC Lounge Radio", country: "Francia", frequency: "—", streamURL: "https://eu1.fastcast4u.com/proxy/kpmxz?mp=/1", genre: "Jazz", isPro: true)
     ]
     
     private override init() {
