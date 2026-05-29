@@ -1,0 +1,22 @@
+[
+  {"query": "crea un tema lava per talky con palette rossa e arancione", "should_trigger": true},
+  {"query": "aggiungi un nuovo tema all'app, chiamalo 'neon', con sfondo gradiente", "should_trigger": true},
+  {"query": "voglio un tema animato con particelle che sembrano fuoco", "should_trigger": true},
+  {"query": "il tema hacker non ha la localizzazione in italiano, aggiungila", "should_trigger": true},
+  {"query": "come si aggiunge un font custom a un tema di talky?", "should_trigger": true},
+  {"query": "la ThemeRegistry non esiste, il progetto non compila", "should_trigger": true},
+  {"query": "cambia la palette del tema midnight, il viola è troppo scuro", "should_trigger": true},
+  {"query": "aggiungi un sound pack 'ocean' al tema ocean per i suoni delle onde", "should_trigger": true},
+  {"query": "fammi un tema 'cyber' con effetto shader tipo matrix", "should_trigger": true},
+  {"query": "i temi non si applicano più, forse è un problema di bridge keys", "should_trigger": false},
+  {"query": "come faccio a cambiare il colore del pulsante PTT?", "should_trigger": false},
+  {"query": "la live activity del walkie non si aggiorna", "should_trigger": false},
+  {"query": "aggiungi una nuova stazione radio giapponese", "should_trigger": false},
+  {"query": "il paywall non mostra il prezzo corretto", "should_trigger": false},
+  {"query": "come funziona la connessione multipeer?", "should_trigger": false},
+  {"query": "l'audio della radio si interrompe quando arriva una notifica", "should_trigger": false},
+  {"query": "aggiungi una nuova lingua, il coreano", "should_trigger": false},
+  {"query": "l'app crasha quando apro il selettore temi", "should_trigger": true},
+  {"query": "fammi un tema artico con ghiaccio e aurora boreale animata", "should_trigger": true},
+  {"query": "dov'è definito il colore di sfondo della settings view?", "should_trigger": false}
+]

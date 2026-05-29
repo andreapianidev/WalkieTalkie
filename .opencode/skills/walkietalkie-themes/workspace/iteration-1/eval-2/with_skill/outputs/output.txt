@@ -1,0 +1,163 @@
+================================================================================
+OUTPUT: Fix ThemeRegistry mancante + localizzazioni hacker, wildfire, arctic
+================================================================================
+
+1. FILE: ThemeRegistry.swift
+   Path: WalkieTalkie/Theme/ThemeRegistry.swift
+   (NEW file — to be added to the Xcode project)
+
+//  ThemeRegistry.swift
+//  WalkieTalkie
+
+import SwiftUI
+
+/// Central registry that aggregates all theme metadata from the 3 pack files.
+/// Acts as a facade — Theme.swift calls `ThemeRegistry.metadata(for:)` to resolve
+/// any Theme case into its full ThemeMetadata payload.
+enum ThemeRegistry {
+    /// All 19 themes registered once, resolved at first access.
+    private static var registry: [Theme: ThemeMetadata] = {
+        var dict: [Theme: ThemeMetadata] = [:]
+        ThemeColorPack.register(into: &dict)
+        ThemeIdentityPack.register(into: &dict)
+        ThemeAnimatedPack.register(into: &dict)
+        return dict
+    }()
+
+    /// Returns the full metadata for a given theme.
+    /// - Parameter theme: The theme identifier.
+    /// - Returns: The resolved ThemeMetadata.
+    /// - Warning: Fatal error if the theme is not registered (should never happen
+    ///   when all 3 packs are loaded and Theme enum stays in sync).
+    static func metadata(for theme: Theme) -> ThemeMetadata {
+        guard let meta = registry[theme] else {
+            fatalError("ThemeRegistry: missing metadata for \(theme.rawValue)")
+        }
+        return meta
+    }
+}
+
+================================================================================
+
+2. LOCALIZATION KEYS TO ADD
+
+2a. en.lproj/Localizable.strings (insert after line 313, before the "// Sleep timer" section)
+
+Lines to add (3):
+
+"theme.name.hacker" = "Hacker";
+"theme.name.wildfire" = "Wildfire";
+"theme.name.arctic" = "Arctic";
+
+Resulting block at lines ~314-316:
+
+"theme.name.galaxy" = "Galaxy";
+"theme.name.hacker" = "Hacker";
+"theme.name.wildfire" = "Wildfire";
+"theme.name.arctic" = "Arctic";
+
+// Sleep timer
+...
+
+================================================================================
+
+2b. it.lproj/Localizable.strings (insert after line 313, before "// Sleep timer")
+
+Lines to add (3):
+
+"theme.name.hacker" = "Hacker";
+"theme.name.wildfire" = "Fuoco Selvaggio";
+"theme.name.arctic" = "Artico";
+
+Resulting block at lines ~314-316:
+
+"theme.name.galaxy" = "Galassia";
+"theme.name.hacker" = "Hacker";
+"theme.name.wildfire" = "Fuoco Selvaggio";
+"theme.name.arctic" = "Artico";
+
+// Sleep timer
+...
+
+================================================================================
+
+2c. es.lproj/Localizable.strings (insert after line 310, before "// Sleep timer")
+
+Lines to add (3):
+
+"theme.name.hacker" = "Hacker";
+"theme.name.wildfire" = "Fuego Salvaje";
+"theme.name.arctic" = "Ártico";
+
+Resulting block at lines ~311-313:
+
+"theme.name.galaxy" = "Galaxia";
+"theme.name.hacker" = "Hacker";
+"theme.name.wildfire" = "Fuego Salvaje";
+"theme.name.arctic" = "Ártico";
+
+// Sleep timer
+...
+
+================================================================================
+
+2d. ms.lproj/Localizable.strings (insert after line 304, before "// Sleep timer")
+
+Lines to add (3):
+
+"theme.name.hacker" = "Hacker";
+"theme.name.wildfire" = "Api Liar";
+"theme.name.arctic" = "Artik";
+
+Resulting block at lines ~305-307:
+
+"theme.name.galaxy" = "Galaksi";
+"theme.name.hacker" = "Hacker";
+"theme.name.wildfire" = "Api Liar";
+"theme.name.arctic" = "Artik";
+
+// Sleep timer
+...
+
+================================================================================
+
+2e. zh-Hant.lproj/Localizable.strings (insert after line 304, before "// Sleep timer")
+
+Lines to add (3):
+
+"theme.name.hacker" = "駭客";
+"theme.name.wildfire" = "野火";
+"theme.name.arctic" = "北極";
+
+Resulting block at lines ~305-307:
+
+"theme.name.galaxy" = "銀河";
+"theme.name.hacker" = "駭客";
+"theme.name.wildfire" = "野火";
+"theme.name.arctic" = "北極";
+
+// Sleep timer
+...
+
+================================================================================
+
+SUMMARY
+
+| File                     | Action                            |
+|--------------------------|-----------------------------------|
+| Theme/ThemeRegistry.swift| CREATE — new file (see §1 above)  |
+| en.lproj/Localizable.strings | ADD 3 keys at line 314-316    |
+| it.lproj/Localizable.strings | ADD 3 keys at line 314-316    |
+| es.lproj/Localizable.strings | ADD 3 keys at line 311-313    |
+| ms.lproj/Localizable.strings | ADD 3 keys at line 305-307    |
+| zh-Hant.lproj/Localizable.strings | ADD 3 keys at line 305-307 |
+
+Total: 1 new file + 15 new localization lines (3 themes × 5 languages)
+
+The ThemeRegistry resolves all 19 themes by calling the 3 existing packs:
+  - ThemeColorPack.register(into:)     →   5 themes (default, ocean, forest, sunset, midnight)
+  - ThemeIdentityPack.register(into:)  →   9 themes (military..festival)
+  - ThemeAnimatedPack.register(into:)  →   5 themes (blackHole, galaxy, hacker, wildfire, arctic)
+
+All 3 reference sites (Theme.swift:49, ThemePurchaseSheet.swift:45,
+ThemeSoundManager.swift:33+41) will now compile because ThemeRegistry exists.

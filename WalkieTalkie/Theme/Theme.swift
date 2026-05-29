@@ -39,11 +39,29 @@ enum Theme: String, CaseIterable, Codable, Identifiable {
     case blackHole    = "blackHole"
     case galaxy       = "galaxy"
 
+    // Pro V3 — nuovi temi con palette completa
+    case hacker       = "hacker"
+    case wildfire     = "wildfire"
+    case arctic       = "arctic"
+
     // MARK: - Facade verso ThemeMetadata
 
-    var accentColor: Color      { ThemeRegistry.metadata(for: self).accentColor }
-    var displayName: String     { ThemeRegistry.metadata(for: self).displayNameKey.localized }
-    var isProLocked: Bool       { ThemeRegistry.metadata(for: self).isProLocked }
-    var iconName: String        { ThemeRegistry.metadata(for: self).iconName }
-    var customFontName: String? { ThemeRegistry.metadata(for: self).customFontName }
+    var metadata: ThemeMetadata { ThemeRegistry.metadata(for: self) }
+
+    var accentColor: Color       { metadata.accentColor }
+    var displayName: String      { metadata.displayNameKey.localized }
+    var isProLocked: Bool        { metadata.isProLocked }
+    var iconName: String         { metadata.iconName }
+    var customFontName: String?  { metadata.customFontName }
+    var soundPackID: String?     { metadata.soundPackID }
+
+    var backgroundPrimary: Color { metadata.backgroundPrimary }
+    var surfaceColor: Color      { metadata.surfaceColor }
+    var textPrimary: Color       { metadata.textPrimary }
+    var textSecondary: Color     { metadata.textSecondary }
+    var backgroundStyle: ThemeBackgroundStyle { metadata.backgroundStyle }
+    var cardStyle: ThemeCardStyle             { metadata.cardStyle }
+    var gradientTop: Color?      { metadata.gradientTop }
+    var gradientBottom: Color?   { metadata.gradientBottom }
+    var accentGlow: Color?       { metadata.accentGlow }
 }

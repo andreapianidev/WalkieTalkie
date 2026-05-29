@@ -302,6 +302,9 @@
 "theme.name.festival" = "Festival";
 "theme.name.blackHole" = "Lubang Hitam";
 "theme.name.galaxy" = "Galaksi";
+"theme.name.hacker" = "Hacker";
+"theme.name.wildfire" = "Kebakaran Liar";
+"theme.name.arctic" = "Artik";
 
 // Sleep timer
 "sleep_timer.title" = "Pemasa tidur radio";

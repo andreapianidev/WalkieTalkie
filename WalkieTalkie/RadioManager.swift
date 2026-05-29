@@ -71,17 +71,17 @@ struct RadioStation: Identifiable {
         "Rep. Ceca": "🇨🇿", "Slovacchia": "🇸🇰", "Slovenia": "🇸🇮", "Croazia": "🇭🇷",
         "Serbia": "🇷🇸", "Bulgaria": "🇧🇬", "Estonia": "🇪🇪", "Lettonia": "🇱🇻",
         "Lituania": "🇱🇹", "Ungheria": "🇭🇺", "Romania": "🇷🇴", "Ucraina": "🇺🇦",
-        "Russia": "🇷🇺", "Grecia": "🇬🇷", "Turchia": "🇹🇷", "Israele": "🇮🇱",
+        "Russia": "🇷🇺", "Grecia": "🇬🇷", "Turchia": "🇹🇷", "Israele": "🇮🇱", "Libano": "🇱🇧",
         "Portogallo": "🇵🇹", "Sud Africa": "🇿🇦", "Marocco": "🇲🇦", "Egitto": "🇪🇬",
         "Kenya": "🇰🇪", "Nigeria": "🇳🇬", "India": "🇮🇳", "Pakistan": "🇵🇰",
-        "Giappone": "🇯🇵", "Thailandia": "🇹🇭", "Indonesia": "🇮🇩", "Malesia": "🇲🇾",
+        "Corea del Sud": "🇰🇷", "Giappone": "🇯🇵", "Thailandia": "🇹🇭", "Indonesia": "🇮🇩", "Malesia": "🇲🇾",
         "Filippine": "🇵🇭", "Singapore": "🇸🇬", "Vietnam": "🇻🇳", "Nuova Zelanda": "🇳🇿",
         "Australia": "🇦🇺", "Messico": "🇲🇽", "Argentina": "🇦🇷", "Brasile": "🇧🇷",
-        "Cile": "🇨🇱", "Colombia": "🇨🇴", "Perù": "🇵🇪", "Uruguay": "🇺🇾",
-        "Cuba": "🇨🇺", "Hong Kong": "🇭🇰",
+        "Cile": "🇨🇱", "Colombia": "🇨🇴", "Costa Rica": "🇨🇷", "Ecuador": "🇪🇨", "Guatemala": "🇬🇹", "Panama": "🇵🇦", "Perù": "🇵🇪", "Uruguay": "🇺🇾",
+        "Cuba": "🇨🇺", "Rep. Dominicana": "🇩🇴", "Hong Kong": "🇭🇰",
         "Irlanda": "🇮🇪", "Capo Verde": "🇨🇻", "Groenlandia": "🇬🇱", "Bermuda": "🇧🇲",
         "Giamaica": "🇯🇲", "Bahamas": "🇧🇸", "Trinidad": "🇹🇹", "Senegal": "🇸🇳",
-        "Canada": "🇨🇦", "Cina": "🇨🇳", "Taiwan": "🇹🇼", "Arabia Saudita": "🇸🇦",
+        "Canada": "🇨🇦", "Cina": "🇨🇳", "Taiwan": "🇹🇼", "Arabia Saudita": "🇸🇦", "Emirati Arabi Uniti": "🇦🇪",
         "Venezuela": "🇻🇪",
         "Internet": "🌐"
     ]
@@ -196,7 +196,7 @@ class RadioManager: NSObject, ObservableObject {
         RadioStation(id: 58, name: "Bandit Rock", country: "Svezia", frequency: "106.3", streamURL: "http://fm02-ice.stream.khz.se/fm02_mp3", genre: "Rock"),
         // Finlandia
         RadioStation(id: 59, name: "Yle Radio Suomi", country: "Finlandia", frequency: "94.0", streamURL: "http://icecast.live.yle.fi/radio/YleRS/icecast.audio", genre: "Talk"),
-        RadioStation(id: 60, name: "Radio Nova", country: "Finlandia", frequency: "106.2", streamURL: "https://stream-redirect.bauermedia.fi/radionova/radionova_64.aac", genre: "Pop"),
+        RadioStation(id: 60, name: "YleX", country: "Finlandia", frequency: "91.9", streamURL: "http://icecast.live.yle.fi/radio/YleX/icecast.audio", genre: "Pop"),
         // Islanda
         RadioStation(id: 61, name: "Bylgjan", country: "Islanda", frequency: "98.9", streamURL: "http://icecast.365net.is:8000/orbbylgjan.aac", genre: "Pop"),
         RadioStation(id: 62, name: "Rás 2", country: "Islanda", frequency: "90.1", streamURL: "http://netradio.ruv.is/ras2.aac", genre: "Pop"),
@@ -342,7 +342,7 @@ class RadioManager: NSObject, ObservableObject {
         RadioStation(id: 153, name: "KQED FM", country: "USA", frequency: "88.5", streamURL: "https://streams.kqed.org/kqedradio", genre: "News"),
         RadioStation(id: 154, name: "WFMU", country: "USA", frequency: "91.1", streamURL: "https://stream0.wfmu.org/freeform-128k", genre: "Eclectic"),
         RadioStation(id: 155, name: "NPR News", country: "USA", frequency: "—", streamURL: "https://npr-ice.streamguys1.com/live.mp3", genre: "News"),
-        RadioStation(id: 156, name: "WBLS", country: "USA", frequency: "107.5", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/WBLSFMAAC.aac", genre: "Urban"),
+        RadioStation(id: 156, name: "WBLS", country: "USA", frequency: "107.5", streamURL: "https://stream.revma.ihrhls.com/zc3073", genre: "Urban"),
         RadioStation(id: 157, name: "Hot 97", country: "USA", frequency: "97.1", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/WQHTFMAAC.aac", genre: "Hip-Hop"),
         RadioStation(id: 158, name: "Bloomberg Radio", country: "USA", frequency: "1130", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/WBBRAMAAC.aac", genre: "News"),
         // Messico
@@ -378,7 +378,7 @@ class RadioManager: NSObject, ObservableObject {
         RadioStation(id: 176, name: "Mello FM", country: "Giamaica", frequency: "88.0", streamURL: "http://peridot.streamguys.com:5660/live", genre: "Reggae"),
         RadioStation(id: 177, name: "Global FM", country: "Bahamas", frequency: "99.5", streamURL: "http://ice64.securenetsystems.net/GLOBALBS", genre: "Pop"),
         RadioStation(id: 178, name: "Guardian Radio", country: "Bahamas", frequency: "96.9", streamURL: "https://radiostreams.streamcomedia.com:8000/969guardianradio", genre: "News"),
-        RadioStation(id: 179, name: "Hot 93", country: "Trinidad", frequency: "93.5", streamURL: "http://ice41.securenetsystems.net/HOTT93", genre: "Pop"),
+        RadioStation(id: 179, name: "BOOM 94FM", country: "Trinidad", frequency: "94.1", streamURL: "https://s8.yesstreaming.net:17103/stream", genre: "Pop"),
         RadioStation(id: 180, name: "Radio Tambrin", country: "Trinidad", frequency: "92.7", streamURL: "http://ice42.securenetsystems.net/TAMBRIN", genre: "News"),
         // Atlantico nord — Canada
         RadioStation(id: 181, name: "680 News Toronto", country: "Canada", frequency: "680", streamURL: "https://rogers-hls.leanstream.co/rogers/tor680.stream/playlist.m3u8", genre: "News"),
@@ -391,7 +391,7 @@ class RadioManager: NSObject, ObservableObject {
         RadioStation(id: 187, name: "Barangay LS 97.1", country: "Filippine", frequency: "97.1", streamURL: "http://28093.live.streamtheworld.com:3690/MORFM_S01AAC_SC", genre: "Talk"),
         RadioStation(id: 188, name: "Love Radio Dagupan", country: "Filippine", frequency: "98.3", streamURL: "https://loveradiodagupan.radioca.st/", genre: "Pop"),
         RadioStation(id: 189, name: "RFI Tiếng Việt", country: "Vietnam", frequency: "—", streamURL: "https://rfienvietnamien64k.ice.infomaniak.ch/rfienvietnamien-64.mp3", genre: "News"),
-        RadioStation(id: 190, name: "VOH FM", country: "Vietnam", frequency: "99.9", streamURL: "https://strm.voh.com.vn/radio/channel3/chunklist_w1005696319.m3u8", genre: "Pop"),
+        RadioStation(id: 190, name: "VOV Giao Thong", country: "Vietnam", frequency: "91.0", streamURL: "https://play.vovgiaothong.vn/live/gthn/playlist.m3u8", genre: "News"),
         // Mediterraneo orientale + Medio Oriente
         RadioStation(id: 191, name: "Real FM", country: "Grecia", frequency: "97.8", streamURL: "http://netradio.live24.gr/realfm", genre: "News"),
         RadioStation(id: 192, name: "Arabesk FM", country: "Turchia", frequency: "—", streamURL: "http://yayin.arabeskfm.biz:8042/", genre: "Pop"),
@@ -415,7 +415,166 @@ class RadioManager: NSObject, ObservableObject {
         RadioStation(id: 207, name: "Kossuth Rádió", country: "Ungheria", frequency: "107.8", streamURL: "http://mr-stream.mediaconnect.hu/4734/mr1.aac", genre: "News"),
         // Africa
         RadioStation(id: 208, name: "94.7 Joburg", country: "Sud Africa", frequency: "94.7", streamURL: "http://27953.live.streamtheworld.com/FM947AAC_SC", genre: "Pop"),
-        RadioStation(id: 209, name: "702 Johannesburg", country: "Sud Africa", frequency: "92.7", streamURL: "http://23543.live.streamtheworld.com:3690/FM702_SC", genre: "Talk")
+        RadioStation(id: 209, name: "702 Johannesburg", country: "Sud Africa", frequency: "92.7", streamURL: "http://23543.live.streamtheworld.com:3690/FM702_SC", genre: "Talk"),
+
+        // MARK: - Free aggiuntive (round 3, maggio 2026) — copertura generi senza stazioni gratuite
+        // Jazz
+        RadioStation(id: 210, name: "FIP Jazz", country: "Francia", frequency: "—", streamURL: "https://icecast.radiofrance.fr/fipjazz-midfi.mp3", genre: "Jazz", isPro: false),
+        RadioStation(id: 211, name: "Smooth Jazz Florida", country: "USA", frequency: "—", streamURL: "https://ais-sa2.cdnstream1.com/2319_128.mp3", genre: "Jazz", isPro: false),
+        // Oldies
+        RadioStation(id: 212, name: "WDR 4", country: "Germania", frequency: "100.5", streamURL: "https://wdr-wdr4-live.icecastssl.wdr.de/wdr/wdr4/live/mp3/128/stream.mp3", genre: "Oldies", isPro: false),
+        RadioStation(id: 213, name: "181.fm Oldies", country: "USA", frequency: "—", streamURL: "http://listen.181fm.com/181-greatoldies_128k.mp3", genre: "Oldies", isPro: false),
+        // Electronic
+        RadioStation(id: 214, name: "FIP Electro", country: "Francia", frequency: "—", streamURL: "https://icecast.radiofrance.fr/fipelectro-midfi.mp3", genre: "Electronic", isPro: false),
+        // World
+        RadioStation(id: 215, name: "FIP World", country: "Francia", frequency: "—", streamURL: "https://icecast.radiofrance.fr/fipworld-midfi.mp3", genre: "World", isPro: false),
+        // Reggae
+        RadioStation(id: 216, name: "FIP Reggae", country: "Francia", frequency: "—", streamURL: "https://icecast.radiofrance.fr/fipreggae-midfi.mp3", genre: "Reggae", isPro: false),
+        // Hip-Hop
+        RadioStation(id: 217, name: "181.fm Old School HipHop", country: "USA", frequency: "—", streamURL: "http://listen.181fm.com/181-oldschool_128k.mp3", genre: "Hip-Hop", isPro: false),
+        // Urban
+        RadioStation(id: 218, name: "Los 40 Urban", country: "Spagna", frequency: "—", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40_URBAN.mp3", genre: "Urban", isPro: false),
+        // Metal
+        RadioStation(id: 219, name: "90s90s Heavy Metal", country: "Germania", frequency: "—", streamURL: "http://streams.90s90s.de/metal/mp3-192/streams.90s90s.de/", genre: "Metal", isPro: false),
+        // J-Pop
+        RadioStation(id: 220, name: "J-Pop Sakura", country: "Giappone", frequency: "—", streamURL: "https://quincy.torontocast.com:2070/stream.mp3", genre: "J-Pop", isPro: false),
+        // Country
+        RadioStation(id: 221, name: "977 Country", country: "USA", frequency: "—", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/977_COUNTRY.mp3", genre: "Country", isPro: false),
+        RadioStation(id: 222, name: "1.fm Country", country: "Internet", frequency: "—", streamURL: "https://strm112.1.fm/country_mobile_mp3", genre: "Country", isPro: false),
+        // Bollywood
+        RadioStation(id: 223, name: "Bollywood Radio", country: "India", frequency: "—", streamURL: "https://drive.uber.radio/uber/bollywoodnow/icecast.audio", genre: "Bollywood", isPro: false),
+        RadioStation(id: 224, name: "Hits Of Bollywood", country: "India", frequency: "—", streamURL: "http://stream.zeno.fm/8ty8szwpwfeuv", genre: "Bollywood", isPro: false),
+        // Latin
+        RadioStation(id: 225, name: "1.fm Reggaeton", country: "Internet", frequency: "—", streamURL: "https://strm112.1.fm/reggaeton_mobile_mp3", genre: "Latin", isPro: false),
+        RadioStation(id: 226, name: "1.fm Samba", country: "Internet", frequency: "—", streamURL: "https://strm112.1.fm/samba_mobile_mp3", genre: "Latin", isPro: false),
+        // Bonus free — FIP tematiche + Mouv'
+        RadioStation(id: 227, name: "FIP Rock", country: "Francia", frequency: "—", streamURL: "https://icecast.radiofrance.fr/fiprock-midfi.mp3", genre: "Rock", isPro: false),
+        RadioStation(id: 228, name: "FIP Groove", country: "Francia", frequency: "—", streamURL: "https://icecast.radiofrance.fr/fipgroove-midfi.mp3", genre: "Eclectic", isPro: false),
+        RadioStation(id: 229, name: "FIP Pop", country: "Francia", frequency: "—", streamURL: "https://icecast.radiofrance.fr/fippop-midfi.mp3", genre: "Pop", isPro: false),
+        RadioStation(id: 230, name: "Mouv'", country: "Francia", frequency: "—", streamURL: "https://icecast.radiofrance.fr/mouv-midfi.mp3", genre: "Hip-Hop", isPro: false),
+
+        // MARK: - Pro aggiuntive (round 3, maggio 2026) — espansione globale
+        RadioStation(id: 231, name: "Oldie Antenne", country: "Germania", frequency: "—", streamURL: "https://s1-webradio.oldie-antenne.de/oldie-antenne", genre: "Oldies"),
+        RadioStation(id: 232, name: "181.fm The Beat", country: "USA", frequency: "—", streamURL: "http://listen.181fm.com/181-beat_128k.mp3", genre: "Hip-Hop"),
+        RadioStation(id: 233, name: "90s90s HipHop", country: "Germania", frequency: "—", streamURL: "http://streams.90s90s.de/hiphop/mp3-192/streams.90s90s.de/", genre: "Hip-Hop"),
+        RadioStation(id: 234, name: "America's Country", country: "USA", frequency: "—", streamURL: "https://ais-sa2.cdnstream1.com/1976_128.mp3", genre: "Country"),
+        RadioStation(id: 235, name: "181.fm Kickin' Country", country: "USA", frequency: "—", streamURL: "http://listen.181fm.com/181-kickincountry_128k.mp3", genre: "Country"),
+        RadioStation(id: 236, name: "181.fm Rock 40", country: "USA", frequency: "—", streamURL: "http://listen.181fm.com/181-rock40_128k.mp3", genre: "Rock"),
+        RadioStation(id: 237, name: "181.fm 80s Hairband", country: "USA", frequency: "—", streamURL: "http://listen.181fm.com/181-hairband_128k.mp3", genre: "Rock"),
+        RadioStation(id: 238, name: "Jazz Radio Blues", country: "Francia", frequency: "—", streamURL: "http://jazzblues.ice.infomaniak.ch/jazzblues-high.mp3", genre: "Jazz"),
+        RadioStation(id: 239, name: "Bayern 1 Oberbayern", country: "Germania", frequency: "93.7", streamURL: "https://dispatcher.rndfnk.com/br/br1/obb/mp3/mid", genre: "Oldies"),
+        RadioStation(id: 240, name: "Radio Paradise World", country: "USA", frequency: "—", streamURL: "https://stream.radioparadise.com/world-etc-128", genre: "World"),
+        RadioStation(id: 241, name: "FIP Nouveautés", country: "Francia", frequency: "—", streamURL: "https://icecast.radiofrance.fr/fipnouveautes-midfi.mp3", genre: "Pop"),
+
+        // MARK: - Free aggiuntive (maggio 2026) — riempimento generi sottorappresentati
+        // Italian
+        RadioStation(id: 242, name: "ItaliaRadio MRG", country: "Italia", frequency: "—", streamURL: "http://listen.mrg.fm:8120/stream", genre: "Italian", isPro: false),
+        // Metal
+        RadioStation(id: 243, name: "Big R Radio 80s Metal", country: "USA", frequency: "—", streamURL: "http://bigrradio.cdnstream1.com/5186_128", genre: "Metal", isPro: false),
+        // Classical
+        RadioStation(id: 244, name: "France Musique", country: "Francia", frequency: "91.7", streamURL: "http://direct.francemusique.fr/live/francemusique-midfi.mp3", genre: "Classical", isPro: false),
+        // Electronic
+        RadioStation(id: 245, name: "EuroDance 90", country: "Francia", frequency: "—", streamURL: "https://stream-eurodance90.fr/radio/8000/128.mp3", genre: "Electronic", isPro: false),
+        // J-Pop
+        RadioStation(id: 246, name: "Stereo Anime", country: "Giappone", frequency: "—", streamURL: "https://radio.stereoanime.com/listen/stereoanime/128", genre: "J-Pop", isPro: false),
+        // Reggae
+        RadioStation(id: 247, name: "Reggae Chill Cafe", country: "Canada", frequency: "—", streamURL: "https://maggie.torontocast.com:2020/stream/reggaechillcafe", genre: "Reggae", isPro: false),
+        // Sport
+        RadioStation(id: 248, name: "RMC Sport", country: "Francia", frequency: "—", streamURL: "https://audio.bfmtv.com/rmcradio_128.mp3", genre: "Sport", isPro: false),
+        // Latin
+        RadioStation(id: 249, name: "Rumba 98.1", country: "Venezuela", frequency: "98.1", streamURL: "https://cast20.plugstreaming.com:2020/stream/r981/", genre: "Latin", isPro: false),
+
+        // MARK: - Pro aggiuntive (maggio 2026) — riempimento paesi/generi
+        // Italian extra
+        RadioStation(id: 250, name: "Radio Birikina", country: "Italia", frequency: "—", streamURL: "http://wma01.fluidstream.net/birikina", genre: "Italian"),
+        // Classical extra
+        RadioStation(id: 251, name: "Your Classical Relax", country: "USA", frequency: "—", streamURL: "http://relax.stream.publicradio.org/relax.mp3", genre: "Classical"),
+        // Electronic extra
+        RadioStation(id: 252, name: "Radio Ibiza", country: "Italia", frequency: "—", streamURL: "http://wma08.fluidstream.net:5010/", genre: "Electronic"),
+        // J-Pop extra
+        RadioStation(id: 253, name: "Anime Para Ti", country: "Giappone", frequency: "—", streamURL: "https://stream.zeno.fm/qpn8mkt8c4duv", genre: "J-Pop"),
+        // Sport extra
+        RadioStation(id: 254, name: "BBC Radio 5 Live", country: "UK", frequency: "909", streamURL: "http://as-hls-ww-live.akamaized.net/pool_89021708/live/ww/bbc_radio_five_live/bbc_radio_five_live.isml/bbc_radio_five_live-audio%3d128000.norewind.m3u8", genre: "Sport"),
+        // Paesi con 1 sola stazione — seconda stazione
+        RadioStation(id: 255, name: "RdMix Classic Rock", country: "Canada", frequency: "—", streamURL: "https://cast1.torontocast.com:4610/stream", genre: "Rock"),
+        RadioStation(id: 256, name: "Latvijas Radio 2", country: "Lettonia", frequency: "91.5", streamURL: "http://lr2mp1.latvijasradio.lv:8002/", genre: "Pop"),
+        RadioStation(id: 257, name: "Relax FM Lietuva", country: "Lituania", frequency: "—", streamURL: "https://stream1.relaxfm.lt/relaxfm128.mp3", genre: "Easy"),
+        RadioStation(id: 258, name: "OK Radio", country: "Serbia", frequency: "—", streamURL: "https://sslstream.okradio.net/", genre: "Pop"),
+        RadioStation(id: 259, name: "Ocean 89", country: "Bermuda", frequency: "89.1", streamURL: "https://us2.internet-radio.com/proxy/ocean89?mp=/stream", genre: "Pop"),
+        RadioStation(id: 260, name: "ZFB Power 95", country: "Bermuda", frequency: "94.9", streamURL: "http://us3.internet-radio.com:8026/live", genre: "Pop"),
+        RadioStation(id: 261, name: "Cuban Flow Radio", country: "Cuba", frequency: "—", streamURL: "http://nap.casthost.net:9194/stream.mp3", genre: "Latin"),
+        RadioStation(id: 262, name: "Romance 106", country: "Cuba", frequency: "106.1", streamURL: "http://s13.myradiostream.com:41400/;", genre: "Latin"),
+        RadioStation(id: 263, name: "Radio Pakistan MW", country: "Pakistan", frequency: "1008", streamURL: "https://whmsonic.radio.gov.pk:8042/stream", genre: "World"),
+        RadioStation(id: 264, name: "106 Family News", country: "Thailandia", frequency: "106.0", streamURL: "https://radio11.plathong.net/7138/;stream.mp3", genre: "News"),
+        RadioStation(id: 265, name: "Bond 92.9 FM", country: "Nigeria", frequency: "92.9", streamURL: "https://go.webgateready.com/bondfm", genre: "World"),
+        RadioStation(id: 266, name: "Melody FM Malaysia", country: "Malesia", frequency: "103.0", streamURL: "https://n09.rcs.revma.com/2u1n6dtbv4uvv/9_11l86ncot7z1w02/playlist.m3u8", genre: "Pop"),
+        RadioStation(id: 267, name: "CNR China News", country: "Cina", frequency: "—", streamURL: "https://lhttp.qtfm.cn/live/15318317/64k.mp3", genre: "News"),
+
+        // MARK: - Free aggiuntive (maggio 2026) — grandi broadcaster pubblici europei
+        RadioStation(id: 268, name: "France Culture", country: "Francia", frequency: "93.5", streamURL: "http://icecast.radiofrance.fr/franceculture-hifi.aac", genre: "Talk", isPro: false),
+        RadioStation(id: 269, name: "Deutschlandfunk", country: "Germania", frequency: "101.8", streamURL: "https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3", genre: "News", isPro: false),
+        RadioStation(id: 270, name: "SRo1 Rádio Slovensko", country: "Slovacchia", frequency: "93.9", streamURL: "http://live.slovakradio.sk:8000/Slovensko_256.mp3", genre: "News", isPro: false),
+        RadioStation(id: 271, name: "Sveriges Radio P1", country: "Svezia", frequency: "92.4", streamURL: "https://live1.sr.se/p1-mp3-192", genre: "Talk", isPro: false),
+        RadioStation(id: 272, name: "DR P4 København", country: "Danimarca", frequency: "94.9", streamURL: "http://live-icy.gslb01.dr.dk/A/A08H.mp3", genre: "Pop", isPro: false),
+        RadioStation(id: 273, name: "NRK P1", country: "Norvegia", frequency: "89.3", streamURL: "https://cdn0-47115-liveicecast0.dna.contentdelivery.net/p1_mp3_h", genre: "Pop", isPro: false),
+        RadioStation(id: 274, name: "MNM", country: "Belgio", frequency: "101.4", streamURL: "https://icecast.vrtcdn.be/mnm-high.mp3", genre: "Pop", isPro: false),
+        RadioStation(id: 275, name: "Radio Swiss Classic", country: "Svizzera", frequency: "—", streamURL: "http://stream.srg-ssr.ch/m/rsc_fr/mp3_128", genre: "Classical", isPro: false),
+        RadioStation(id: 276, name: "RTL2 France", country: "Francia", frequency: "103.5", streamURL: "http://streamer-02.rtl.fr/rtl2-1-44-128", genre: "Rock", isPro: false),
+        RadioStation(id: 277, name: "Rock Antenne", country: "Germania", frequency: "—", streamURL: "http://mp3channels.webradio.rockantenne.de/rockantenne", genre: "Rock", isPro: false),
+
+        // MARK: - Pro aggiuntive (maggio 2026) — top radio-browser globali + nuovi paesi
+        RadioStation(id: 278, name: "MANGORADIO", country: "Germania", frequency: "—", streamURL: "https://mangoradio.stream.laut.fm/mangoradio", genre: "Pop"),
+        RadioStation(id: 279, name: "REYFM Original", country: "Germania", frequency: "—", streamURL: "https://listen.reyfm.de/original_192kbps.mp3", genre: "Pop"),
+        RadioStation(id: 280, name: "RFI Afrique", country: "Francia", frequency: "—", streamURL: "http://live02.rfi.fr/rfiafrique-64.mp3", genre: "World"),
+        RadioStation(id: 281, name: "Mosaique FM", country: "Tunisia", frequency: "94.9", streamURL: "http://radio.mosaiquefm.net:8000/mosalive", genre: "World"),
+        RadioStation(id: 282, name: "Antinea Radio", country: "Algeria", frequency: "—", streamURL: "https://listen.radioking.com/radio/6640/stream/347", genre: "World"),
+        RadioStation(id: 283, name: "Deep House Radio", country: "USA", frequency: "—", streamURL: "http://62.210.105.16:7000/stream", genre: "Electronic"),
+        RadioStation(id: 284, name: "Bassdrive", country: "USA", frequency: "—", streamURL: "http://stream.bassdrive.uk:8200", genre: "Electronic"),
+        RadioStation(id: 285, name: "Christmas Vinyl HD", country: "USA", frequency: "—", streamURL: "https://icecast.walmradio.com:8443/christmas", genre: "Easy"),
+        RadioStation(id: 286, name: "80s80s Radio", country: "Germania", frequency: "—", streamURL: "http://streams.80s80s.de/web/mp3-192/streams.80s80s.de/", genre: "Oldies"),
+        RadioStation(id: 287, name: "977 80s", country: "USA", frequency: "—", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/977_80.mp3", genre: "Oldies"),
+        RadioStation(id: 288, name: "977 The Mix", country: "USA", frequency: "—", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/977_MIX.mp3", genre: "Pop"),
+        RadioStation(id: 289, name: "Radio Kiss Kiss Napoli", country: "Italia", frequency: "—", streamURL: "http://wma08.fluidstream.net:3612/", genre: "Pop"),
+        RadioStation(id: 290, name: "RFE/RL Radio Farda", country: "Rep. Ceca", frequency: "—", streamURL: "http://rfe21.akacast.akamaistream.net/7/751/437779/v1/ibb.akacast.akamaistream.net/rfe/radiofarda", genre: "News"),
+
+        // MARK: - Free aggiuntive (maggio 2026) — round 4 globale
+        RadioStation(id: 291, name: "NPO Radio 4", country: "Olanda", frequency: "94.3", streamURL: "https://icecast.omroep.nl/radio4-bb-mp3", genre: "Classical", isPro: false),
+        RadioStation(id: 292, name: "ABC Triple J Unearthed", country: "Australia", frequency: "—", streamURL: "https://live-radio01.mediahubaustralia.com/UNEW/mp3/", genre: "Alternative", isPro: false),
+        RadioStation(id: 293, name: "Radio Mitre", country: "Argentina", frequency: "790", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/AM790_56.mp3", genre: "News", isPro: false),
+        RadioStation(id: 294, name: "METRO 95.1", country: "Argentina", frequency: "95.1", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/METRO.mp3", genre: "Pop", isPro: false),
+        RadioStation(id: 295, name: "Kronehit", country: "Austria", frequency: "105.8", streamURL: "https://secureonair.krone.at/kronehit.mp3", genre: "Pop", isPro: false),
+        RadioStation(id: 296, name: "Fun Radio France", country: "Francia", frequency: "101.9", streamURL: "http://streaming.radio.funradio.fr/fun-1-44-128", genre: "Pop", isPro: false),
+        RadioStation(id: 297, name: "CADENA 100", country: "Spagna", frequency: "100.0", streamURL: "https://cadena100-cope-rrcast.flumotion.com/cope/cadena100-low.mp3", genre: "Pop", isPro: false),
+        RadioStation(id: 311, name: "CBS Music FM", country: "Corea del Sud", frequency: "—", streamURL: "https://m-aac.cbs.co.kr/mweb_cbs939/_definst_/cbs939.stream/playlist.m3u8", genre: "Classical", isPro: false),
+        RadioStation(id: 312, name: "103 FM", country: "Costa Rica", frequency: "103.1", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/CRC_103_1AAC.aac", genre: "Pop", isPro: false),
+        RadioStation(id: 313, name: "Radio La Otra", country: "Ecuador", frequency: "91.3", streamURL: "https://laotrafm.makrodigital.com/stream/laotrafmquito", genre: "Talk", isPro: false),
+        RadioStation(id: 314, name: "Stereo 100", country: "Guatemala", frequency: "100.0", streamURL: "https://sh1.radioonlinehd.com:8056/stream?type=.mp3", genre: "Latin", isPro: false),
+        RadioStation(id: 315, name: "Fabulosa Estéreo", country: "Panama", frequency: "100.5", streamURL: "https://www.streaming507.net:8130/stream", genre: "Latin", isPro: false),
+        RadioStation(id: 316, name: "Salsa Radio", country: "Rep. Dominicana", frequency: "—", streamURL: "http://radio.domiplay.net:2002/", genre: "Salsa", isPro: false),
+        RadioStation(id: 317, name: "Al Bal Radio", country: "Libano", frequency: "—", streamURL: "https://albal-lbnet2.radioca.st/stream", genre: "Arabic", isPro: false),
+        RadioStation(id: 318, name: "Sky News Arabia Radio", country: "Emirati Arabi Uniti", frequency: "—", streamURL: "https://stream.skynewsarabia.com/hls/sna.m3u8", genre: "News", isPro: false),
+
+        // MARK: - Pro aggiuntive (maggio 2026) — round 4 globale
+        RadioStation(id: 298, name: "ROCK FM Russia", country: "Russia", frequency: "—", streamURL: "http://nashe1.hostingradio.ru/rock-128.mp3", genre: "Rock"),
+        RadioStation(id: 299, name: "Dorozhnoe Radio", country: "Russia", frequency: "—", streamURL: "http://dorognoe.hostingradio.ru:8000/radio", genre: "Pop"),
+        RadioStation(id: 300, name: "Radio Vanya", country: "Russia", frequency: "—", streamURL: "https://icecast-radiovanya.cdnvideo.ru/radiovanya", genre: "Pop"),
+        RadioStation(id: 301, name: "DFM Russian Dance", country: "Russia", frequency: "—", streamURL: "https://dfm-dfmrusdance.hostingradio.ru/dfmrusdance96.aacp", genre: "Dance"),
+        RadioStation(id: 302, name: "Radio Russkie Pesni", country: "Russia", frequency: "—", streamURL: "http://listen.rusongs.ru/ru-mp3-128", genre: "Pop"),
+        RadioStation(id: 303, name: "WALM HD", country: "USA", frequency: "—", streamURL: "https://icecast.walmradio.com:8443/walm", genre: "Eclectic"),
+        RadioStation(id: 304, name: "WALM Old Time Radio", country: "USA", frequency: "—", streamURL: "https://icecast.walmradio.com:8443/otr", genre: "Eclectic"),
+        RadioStation(id: 305, name: "Ambient Sleeping Pill", country: "USA", frequency: "—", streamURL: "http://radio.stereoscenic.com/asp-h", genre: "Electronic"),
+        RadioStation(id: 306, name: "Classic Hits 70-80", country: "USA", frequency: "—", streamURL: "https://radiopanther.radiolebowski.com/play", genre: "Oldies"),
+        RadioStation(id: 307, name: "Dance Wave Retro!", country: "Ungheria", frequency: "—", streamURL: "https://retro.dancewave.online/retrodance.mp3", genre: "Dance"),
+        RadioStation(id: 308, name: "Radio Disney Mexico", country: "Messico", frequency: "92.1", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/XHFOFMAAC.aac", genre: "Pop"),
+        RadioStation(id: 309, name: "Radio FG", country: "Francia", frequency: "—", streamURL: "https://radiofg.impek.com/fg.mp3", genre: "Dance"),
+        RadioStation(id: 310, name: "Antena 3 Portugal", country: "Portogallo", frequency: "100.3", streamURL: "http://streaming-live-app.rtp.pt/liveradio/antena380a/playlist.m3u8", genre: "Pop"),
+        RadioStation(id: 319, name: "95.5 Jazz", country: "Costa Rica", frequency: "—", streamURL: "https://streaming.radio.co/s36bd2a451/listen", genre: "Jazz"),
+        RadioStation(id: 320, name: "Radio Canela", country: "Ecuador", frequency: "—", streamURL: "https://canelaradio.makrodigital.com:9280/stream", genre: "Latin"),
+        RadioStation(id: 321, name: "L.A. Mega", country: "Panama", frequency: "98.1", streamURL: "https://www.streaming507.net:8152/stream", genre: "Latin"),
+        RadioStation(id: 322, name: "Bachata Radio", country: "Rep. Dominicana", frequency: "—", streamURL: "http://radio.domiplay.net:8002/", genre: "Bachata"),
+        RadioStation(id: 323, name: "Adeem", country: "Libano", frequency: "—", streamURL: "https://usa19.fastcast4u.com/adeem", genre: "Arabic"),
+        RadioStation(id: 324, name: "Free FM 80 Tokyo", country: "Giappone", frequency: "—", streamURL: "https://freefm80.radioca.st/", genre: "80s"),
+        RadioStation(id: 325, name: "Exclusively Pink Floyd", country: "Emirati Arabi Uniti", frequency: "—", streamURL: "https://streaming.exclusive.radio/er/pinkfloyd/icecast.audio", genre: "Rock")
     ]
     
     private override init() {
@@ -848,7 +1007,9 @@ class RadioManager: NSObject, ObservableObject {
         "JP": "Giappone", "TH": "Thailandia", "ID": "Indonesia", "MY": "Malesia",
         "PH": "Filippine", "SG": "Singapore", "VN": "Vietnam", "NZ": "Nuova Zelanda",
         "AU": "Australia", "MX": "Messico", "AR": "Argentina", "BR": "Brasile",
-        "CL": "Cile", "CO": "Colombia", "PE": "Perù", "UY": "Uruguay", "CU": "Cuba"
+        "CL": "Cile", "CO": "Colombia", "CR": "Costa Rica", "CU": "Cuba",
+        "DO": "Rep. Dominicana", "EC": "Ecuador", "GT": "Guatemala", "KR": "Corea del Sud",
+        "LB": "Libano", "PA": "Panama", "PE": "Perù", "UY": "Uruguay", "AE": "Emirati Arabi Uniti"
     ]
 
     // MARK: - Station Selection

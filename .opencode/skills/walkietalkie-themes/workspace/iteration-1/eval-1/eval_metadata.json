@@ -1,0 +1,1 @@
+{"eval_id":1,"eval_name":"crea-tema-animato-plasma","prompt":"Crea un tema animato 'Plasma' per l'app Talky con effetto particellare. Deve essere Pro locked, con particelle di plasma viola/rosa che pulsano. Genera il case enum, il blocco ThemeMetadata, lo shader Canvas, la preview per ThemeSelectorView, e le localizzazioni in tutte e 5 le lingue.","assertions":[]}

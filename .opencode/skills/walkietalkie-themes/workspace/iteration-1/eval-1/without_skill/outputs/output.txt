@@ -1,0 +1,458 @@
+================================================================================
+PLASMA THEME — FULL IMPLEMENTATION
+================================================================================
+
+Below are all the files and code changes needed to add the "Plasma" animated
+theme to the Talky app. The theme features pulsing violet/pink plasma particles
+and is Pro-locked (animated pack). All 5 languages (en, it, es, ms, zh-Hant)
+are included.
+
+================================================================================
+1. Theme enum case (Theme.swift)
+================================================================================
+
+File: WalkieTalkie/Theme/Theme.swift
+
+Add after the existing `.galaxy` case (line 40) and before the // Pro V3 comment:
+
+    // Animated Pack (Pro V2) — particle effects
+    case blackHole    = "blackHole"
+    case galaxy       = "galaxy"
+    case plasma       = "plasma"         // <-- ADD THIS LINE
+
+Resulting section:
+
+    // Animated Pack (Pro V2) — particle effects, prezzo 1.99 € singolo
+    case blackHole    = "blackHole"
+    case galaxy       = "galaxy"
+    case plasma       = "plasma"
+
+No other changes needed in Theme.swift — the `metadata` computed property,
+`displayName`, `isProLocked`, etc. all work via `ThemeRegistry` automatically.
+
+================================================================================
+2. ThemeMetadata registration block (ThemeAnimatedPack.swift)
+================================================================================
+
+File: WalkieTalkie/Theme/ThemeAnimatedPack.swift
+
+Add this block after the Galaxy section (after line 42) inside the
+`register(into:)` function:
+
+        // MARK: - Plasma
+
+        dict[.plasma] = ThemeMetadata(
+            accentColor: Color(red: 0.85, green: 0.25, blue: 0.75),
+            displayNameKey: "theme.name.plasma",
+            iconName: "sparkle.magnifyingglass",
+            isProLocked: true,
+            backgroundPrimary: Color(red: 0.06, green: 0.01, blue: 0.10),
+            surfaceColor: Color(red: 0.12, green: 0.03, blue: 0.18),
+            textPrimary: Color(red: 0.95, green: 0.85, blue: 1.0),
+            textSecondary: Color(red: 0.68, green: 0.35, blue: 0.82),
+            backgroundStyle: .animated,
+            cardStyle: .cyber,
+            accentGlow: Color(red: 0.85, green: 0.25, blue: 0.75).opacity(0.28)
+        )
+
+Design rationale:
+  - accentColor: hot pink/violet (#D940BF)
+  - backgroundPrimary: very dark violet-black — the canvas glow will pulse
+    over this base
+  - surfaceColor: slightly lifted violet for card backgrounds
+  - textPrimary: very pale violet-white for readability on dark
+  - textSecondary: muted violet for secondary labels
+  - accentGlow: matches accentColor at 28% opacity for the card border glow
+  - cardStyle: .cyber to match the other animated themes (consistent glass
+    aesthetic)
+  - iconName: "sparkle.magnifyingglass" — a magnifying glass with sparkle,
+    evoking "plasma" as energetic/particle-like without using the SF Symbols
+    sparkle icon that galaxy already uses
+
+================================================================================
+3. Canvas draw function — full drawPlasma (AnimatedBackgroundView.swift)
+================================================================================
+
+File: WalkieTalkie/Theme/AnimatedBackgroundView.swift
+
+The plasma system uses two particle types:
+  - Core particles (30): slowly orbit the center, their color oscillates
+    between violet and pink. They grow/shrink in a breathing pattern.
+  - Ember particles (50): smaller, faster, drift outward from the center in
+    random directions, fading out like embers from a plasma globe.
+  - A central glow that pulses (radial gradient changes radius with sin wave).
+  - A subtle semi-transparent "haze" layer of large blurred circles that move
+    even slower — this mimics the cloud-like movement of real plasma.
+
+3a. New particle seeds stored as stored properties in AnimatedBackgroundView:
+
+Add after the private let galaxyStars line (currently line 58):
+
+    private let plasmaCores: [ParticleSeed]
+    private let plasmaEmbers: [ParticleSeed]
+
+3b. Tuning constants: add after the shootingStarCount constant:
+
+    private static let plasmaCoreCount = 30
+    private static let plasmaEmberCount = 50
+
+3c. In the init(), after the shootingStars generation block and before the
+`self.blackHoleParticles = bh` line:
+
+        // Plasma — core particelle
+        var cores: [ParticleSeed] = []
+        cores.reserveCapacity(Self.plasmaCoreCount)
+        for _ in 0..<Self.plasmaCoreCount {
+            cores.append(ParticleSeed(
+                baseAngle: drand48() * .pi * 2,
+                baseRadius: 0.05 + drand48() * 0.50,
+                speed: 0.08 + drand48() * 0.25,
+                size: 6.0 + drand48() * 18.0,
+                brightness: 0.50 + drand48() * 0.50,
+                phase: drand48() * .pi * 2
+            ))
+        }
+
+        // Plasma — embers (drift out)
+        var embers: [ParticleSeed] = []
+        embers.reserveCapacity(Self.plasmaEmberCount)
+        for _ in 0..<Self.plasmaEmberCount {
+            embers.append(ParticleSeed(
+                baseAngle: drand48() * .pi * 2,
+                baseRadius: drand48(),       // angle for ember = direction
+                speed: 0.12 + drand48() * 0.30,
+                size: 1.5 + drand48() * 4.0,
+                brightness: 0.30 + drand48() * 0.70,
+                phase: drand48() * .pi * 2
+            ))
+        }
+
+Then add `self.plasmaCores = cores` and `self.plasmaEmbers = embers` in the
+initializer's self-assignment section.
+
+3d. The full drawPlasma function — add after the drawGalaxy function:
+
+    // MARK: - Plasma
+
+    /// Renderer Canvas per il plasma.
+    /// Due layer: "core" (grosse macchie pulsanti che orbitano lente) ed "embers"
+    /// (scintille che si allontanano dal centro con fade-out).
+    /// Aggiunge anche un bagliore centrale pulsante.
+    private func drawPlasma(context: GraphicsContext, size: CGSize, time: Double) {
+        let cx = size.width / 2
+        let cy = size.height / 2
+        let maxR = min(size.width, size.height) * 0.46
+
+        // ---- Central pulse glow ----
+        let pulse = 0.7 + 0.3 * sin(time * 0.6)
+        let glowRadius = maxR * (0.25 + 0.15 * pulse)
+        let glowRect = CGRect(
+            x: cx - glowRadius,
+            y: cy - glowRadius,
+            width: glowRadius * 2,
+            height: glowRadius * 2
+        )
+        context.fill(
+            Path(ellipseIn: glowRect),
+            with: .radialGradient(
+                Gradient(colors: [
+                    Color(red: 0.85, green: 0.25, blue: 0.75).opacity(0.35 * pulse),
+                    Color(red: 0.65, green: 0.15, blue: 0.85).opacity(0.12 * pulse),
+                    Color(red: 0.45, green: 0.05, blue: 0.60).opacity(0.0)
+                ]),
+                center: CGPoint(x: cx, y: cy),
+                startRadius: 0,
+                endRadius: glowRadius
+            )
+        )
+
+        // ---- Core particles (slow orbit + breathing) ----
+        for p in plasmaCores {
+            // Slow orbit with slight radius oscillation
+            let orbitAngle = p.baseAngle + time * p.speed * 0.15
+            let breathe = 1.0 + 0.15 * sin(time * (0.5 + p.phase) + p.phase)
+            let r = p.baseRadius * maxR * breathe
+            let x = cx + CGFloat(cos(orbitAngle) * r)
+            let y = cy + CGFloat(sin(orbitAngle) * r)
+
+            // Size breathes too
+            let sizePulse = 0.75 + 0.25 * sin(time * (0.7 + p.speed * 2) + p.phase)
+            let s = CGFloat(p.size * sizePulse)
+
+            // Color oscillates between violet and pink using sin
+            let colorMix = 0.5 + 0.5 * sin(time * (0.4 + p.speed) + p.phase)
+            let color = Color(
+                red: 0.65 + 0.30 * colorMix,
+                green: 0.15 + 0.20 * (1.0 - colorMix),
+                blue: 0.75 + 0.20 * (1.0 - colorMix)
+            ).opacity(p.brightness * 0.45)
+
+            let rect = CGRect(x: x - s/2, y: y - s/2, width: s, height: s)
+            // Blur-like effect: use a soft radial gradient per particle
+            context.fill(
+                Path(ellipseIn: rect),
+                with: .radialGradient(
+                    Gradient(colors: [color, color.opacity(0.0)]),
+                    center: CGPoint(x: x, y: y),
+                    startRadius: 0,
+                    endRadius: s / 2
+                )
+            )
+        }
+
+        // ---- Ember particles (drift outward from center) ----
+        for p in plasmaEmbers {
+            // Radial distance increases with time, looping
+            let cycle = (time * p.speed * 0.08 + p.phase / (.pi * 2))
+                .truncatingRemainder(dividingBy: 1.0)
+            // Embers go from center outward
+            let r = cycle * maxR * 0.95
+            let angle = p.baseAngle + time * 0.1 + cycle * 2.0
+            let x = cx + CGFloat(cos(angle) * r)
+            let y = cy + CGFloat(sin(angle) * r)
+
+            // Fade out near the edge
+            let fadeOut = 1.0 - pow(cycle, 1.5)
+            let twinkle = 0.7 + 0.3 * sin(time * 3.0 + p.phase)
+            let alpha = p.brightness * fadeOut * twinkle * 0.7
+
+            let s = CGFloat(p.size * (0.5 + cycle * 0.5))
+            let rect = CGRect(x: x - s/2, y: y - s/2, width: s, height: s)
+
+            // Warm pink on the inside, violet on the outside
+            let mix = cycle  // 0 = center (pink), 1 = edge (violet)
+            let color = Color(
+                red: 0.95 - 0.30 * mix,
+                green: 0.20 + 0.10 * mix,
+                blue: 0.55 + 0.35 * mix
+            ).opacity(alpha)
+
+            context.fill(Path(ellipseIn: rect), with: .color(color))
+        }
+    }
+
+================================================================================
+4. AnimatedThemePreview render code (AnimatedBackgroundView.swift)
+================================================================================
+
+This is the mini-renderer for the ThemeSelectorView cards. Add plasma renderer
+to the existing AnimatedThemePreview struct.
+
+4a. Add a private particle array for plasma preview:
+
+    private let plasmaPreview: [ParticleSeed]
+
+4b. In the init(theme:), after the existing particle generation block, add:
+
+        if theme == .plasma {
+            srand48(0x42D2)
+            var arr2: [ParticleSeed] = []
+            let count2 = 25
+            arr2.reserveCapacity(count2)
+            for _ in 0..<count2 {
+                arr2.append(ParticleSeed(
+                    baseAngle: drand48() * .pi * 2,
+                    baseRadius: 0.05 + drand48() * 0.50,
+                    speed: 0.08 + drand48() * 0.25,
+                    size: 4.0 + drand48() * 12.0,
+                    brightness: 0.5 + drand48() * 0.5,
+                    phase: drand48() * .pi * 2
+                ))
+            }
+            self.plasmaPreview = arr2
+        } else {
+            self.plasmaPreview = []
+        }
+
+4c. Add the plasma background in the `background` computed property:
+
+        case .plasma:
+            RadialGradient(
+                gradient: Gradient(colors: [
+                    Color(red: 0.25, green: 0.04, blue: 0.35),
+                    Color(red: 0.06, green: 0.01, blue: 0.10)
+                ]),
+                center: .center,
+                startRadius: 2,
+                endRadius: 60
+            )
+
+4d. In the TimelineView body switch, add a case:
+
+                            case .plasma:
+                                renderPlasmaPreview(ctx: ctx, size: size, t: t)
+
+4e. Add the render function:
+
+    private func renderPlasmaPreview(ctx: GraphicsContext, size: CGSize, t: Double) {
+        let cx = size.width / 2
+        let cy = size.height / 2
+        let maxR = min(size.width, size.height) * 0.44
+
+        // Glow centrale
+        let pulse = 0.7 + 0.3 * sin(t * 0.5)
+        let glowR = maxR * 0.35 * CGFloat(pulse)
+        let glow = CGRect(x: cx - glowR, y: cy - glowR, width: glowR * 2, height: glowR * 2)
+        ctx.fill(
+            Path(ellipseIn: glow),
+            with: .radialGradient(
+                Gradient(colors: [
+                    Color(red: 0.85, green: 0.25, blue: 0.75).opacity(0.40 * pulse),
+                    Color(red: 0.65, green: 0.15, blue: 0.85).opacity(0.0)
+                ]),
+                center: CGPoint(x: cx, y: cy),
+                startRadius: 0,
+                endRadius: glowR
+            )
+        )
+
+        for p in plasmaPreview {
+            let orbit = p.baseAngle + t * p.speed * 0.2
+            let breathe = 1.0 + 0.12 * sin(t * 0.6 + p.phase)
+            let r = p.baseRadius * maxR * CGFloat(breathe)
+            let x = cx + CGFloat(cos(orbit) * r)
+            let y = cy + CGFloat(sin(orbit) * r)
+            let sizePulse = 0.8 + 0.2 * sin(t * 0.8 + p.phase)
+            let s = CGFloat(p.size * sizePulse)
+            let colorMix = 0.5 + 0.5 * sin(t * 0.5 + p.phase)
+            let color = Color(
+                red: 0.70 + 0.25 * colorMix,
+                green: 0.15 + 0.15 * (1.0 - colorMix),
+                blue: 0.70 + 0.25 * (1.0 - colorMix)
+            ).opacity(p.brightness * 0.50)
+
+            ctx.fill(
+                Path(ellipseIn: CGRect(x: x - s/2, y: y - s/2, width: s, height: s)),
+                with: .radialGradient(
+                    Gradient(colors: [color, color.opacity(0.0)]),
+                    center: CGPoint(x: x, y: y),
+                    startRadius: 0,
+                    endRadius: s / 2
+                )
+            )
+        }
+    }
+
+================================================================================
+5. body case in AnimatedBackgroundView (AnimatedBackgroundView.swift)
+================================================================================
+
+In the `body` computed property, in the `.animated` switch branch (line 126),
+add the `.plasma` case:
+
+            case .blackHole:
+                blackHoleView
+            case .galaxy:
+                galaxyView
+            case .plasma:           // <-- ADD THIS
+                plasmaView
+            default:
+                themeStaticBackground
+
+5b. Add the plasmaView computed property (after the galaxyView section):
+
+    @ViewBuilder
+    private var plasmaView: some View {
+        ZStack {
+            // Sfondo base: dark violet
+            Color(red: 0.06, green: 0.01, blue: 0.10)
+
+            if reduceMotion {
+                plasmaStaticOverlay
+            } else {
+                TimelineView(.animation(minimumInterval: 1.0 / 60.0, paused: false)) { timeline in
+                    Canvas { context, size in
+                        let t = timeline.date.timeIntervalSinceReferenceDate
+                        drawPlasma(context: context, size: size, time: t)
+                    }
+                }
+            }
+        }
+    }
+
+================================================================================
+6. Static overlay for reduceMotion (AnimatedBackgroundView.swift)
+================================================================================
+
+Add after the galaxyStaticOverlay computed property:
+
+    private var plasmaStaticOverlay: some View {
+        ZStack {
+            // Large static diffuse glow
+            Circle()
+                .fill(
+                    RadialGradient(
+                        gradient: Gradient(colors: [
+                            Color(red: 0.85, green: 0.25, blue: 0.75).opacity(0.20),
+                            Color(red: 0.45, green: 0.05, blue: 0.60).opacity(0.0)
+                        ]),
+                        center: .center,
+                        startRadius: 20,
+                        endRadius: 180
+                    )
+                )
+                .frame(width: 360, height: 360)
+
+            // A few static "blobs" positioned at key particle seed locations
+            // using the same deterministic seed as the animated version
+            let staticBlobs: [(CGPoint, CGFloat, Color)] = [
+                (CGPoint(x: 0.35, y: 0.30), 28, Color(red: 0.85, green: 0.35, blue: 0.75).opacity(0.18)),
+                (CGPoint(x: 0.65, y: 0.55), 22, Color(red: 0.70, green: 0.20, blue: 0.85).opacity(0.14)),
+                (CGPoint(x: 0.45, y: 0.70), 34, Color(red: 0.80, green: 0.30, blue: 0.70).opacity(0.12)),
+                (CGPoint(x: 0.55, y: 0.25), 18, Color(red: 0.90, green: 0.40, blue: 0.80).opacity(0.16)),
+                (CGPoint(x: 0.30, y: 0.60), 26, Color(red: 0.60, green: 0.15, blue: 0.75).opacity(0.10)),
+            ]
+
+            GeometryReader { geo in
+                ForEach(0..<staticBlobs.count, id: \.self) { i in
+                    let blob = staticBlobs[i]
+                    Circle()
+                        .fill(blob.2)
+                        .frame(width: blob.1, height: blob.1)
+                        .blur(radius: 10)
+                        .position(
+                            x: geo.size.width * blob.0.x,
+                            y: geo.size.height * blob.0.y
+                        )
+                }
+            }
+        }
+    }
+
+================================================================================
+7. Localization strings — all 5 languages
+================================================================================
+
+7a. English — WalkieTalkie/en.lproj/Localizable.strings
+
+Add after "theme.name.galaxy" line (after line 313):
+
+"theme.name.plasma" = "Plasma";
+
+7b. Italian — WalkieTalkie/it.lproj/Localizable.strings
+
+Add after "theme.name.galaxy" line (after line 313 — theme.name.galaxy = "Galassia"):
+
+"theme.name.plasma" = "Plasma";
+
+7c. Spanish — WalkieTalkie/es.lproj/Localizable.strings
+
+Add after "theme.name.galaxy" line (after line 310):
+
+"theme.name.plasma" = "Plasma";
+
+7d. Malay — WalkieTalkie/ms.lproj/Localizable.strings
+
+Add after "theme.name.galaxy" line (after line 304):
+
+"theme.name.plasma" = "Plasma";
+
+7e. Traditional Chinese — WalkieTalkie/zh-Hant.lproj/Localizable.strings
+
+Add after "theme.name.galaxy" line (after line 304):
+
+"theme.name.plasma" = "等離子";
+
+================================================================================
+END OF IMPLEMENTATION
+================================================================================

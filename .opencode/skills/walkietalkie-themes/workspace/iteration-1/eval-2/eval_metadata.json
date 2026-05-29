@@ -1,0 +1,1 @@
+{"eval_id":2,"eval_name":"fix-themeregistry-mancante","prompt":"Il progetto Talky non compila perché ThemeRegistry è referenziato ma non esiste. C'è anche il tema 'hacker' che manca di localizzazione in tutte le lingue. Scrivi ThemeRegistry e aggiungi le localizzazioni mancanti per hacker, wildfire e arctic in tutte le 5 lingue.","assertions":[]}

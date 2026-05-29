@@ -308,6 +308,9 @@
 "theme.name.festival" = "Festival";
 "theme.name.blackHole" = "Agujero Negro";
 "theme.name.galaxy" = "Galaxia";
+"theme.name.hacker" = "Hacker";
+"theme.name.wildfire" = "Fuego Salvaje";
+"theme.name.arctic" = "Ártico";
 
 // Sleep timer
 "sleep_timer.title" = "Temporizador de apagado";

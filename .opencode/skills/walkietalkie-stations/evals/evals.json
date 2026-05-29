@@ -1,0 +1,33 @@
+{
+  "skill_name": "walkietalkie-stations",
+  "evals": [
+    {
+      "id": 1,
+      "name": "single-italian-free-station",
+      "prompt": "Aggiungi questa stazione: Radio Suby, Italia, 100.5, http://stream.suby.radio/live, genere Pop, free",
+      "expected_output": "Codice Swift per RadioStation(id: 311) con isPro: false, verificata con curl, nel blocco Free aggiuntive",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "batch-mix-free-pro",
+      "prompt": "Aggiungi queste 3 radio:\n1. Radio El Mundo, Argentina, 99.1, https://stream.elmundo.ar/live, genere News\n2. JazzCat Radio, USA, —, https://jazzcat.stream/live, genere Jazz\n3. Deutschlandradio Kultur, Germania, 90.2, http://dradio-kultur.stream/live, genere Classical",
+      "expected_output": "3 stazioni con ID 312, 313, 314; isPro determinato correttamente (Deutschlandradio free, le altre pro); tutte verificate; nel blocco corretto",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "station-new-country",
+      "prompt": "Aggiungi KBS Radio 1, Corea del Sud, 97.3, https://kbslive.stream/radio1, genere News",
+      "expected_output": "Stazione + flagMap aggiornata con Corea del Sud, flag emoji 🇰🇷",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "station-broken-url-rejected",
+      "prompt": "Aggiungi questa: Radio Fantasma, Italia, —, https://questa-url-non-esiste-proprio.niente/live, genere Pop",
+      "expected_output": "URL non verificato → stazione NON aggiunta, report con motivo del fallimento",
+      "files": []
+    }
+  ]
+}

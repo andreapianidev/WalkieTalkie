@@ -21,7 +21,22 @@ final class AdManager: ObservableObject {
     let rewarded = RewardedAdCoordinator()
     let nativeStation = NativeAdCoordinator()
 
-    private init() {}
+    /// Bridge key for the rewarded "remove ads for 1h" grant. Persisted so the
+    /// reward survives an app relaunch within its validity window.
+    private static let removeAdsUntilKey = "fastboot_removeAdsUntil"
+
+    private init() {
+        // Restore a previously granted remove-ads window. Drop it if already expired.
+        let ts = UserDefaults.standard.double(forKey: Self.removeAdsUntilKey)
+        if ts > 0 {
+            let stored = Date(timeIntervalSince1970: ts)
+            if stored > Date() {
+                removeAdsUntil = stored
+            } else {
+                UserDefaults.standard.removeObject(forKey: Self.removeAdsUntilKey)
+            }
+        }
+    }
 
     var adsRemoved: Bool {
         if let removeAdsUntil, removeAdsUntil > Date() { return true }
@@ -98,6 +113,8 @@ final class AdManager: ObservableObject {
 
     func grantRemoveAdsReward() {
         let duration = AdConfig.FrequencyCap.removeAdsRewardDuration
-        removeAdsUntil = Date().addingTimeInterval(duration)
+        let until = Date().addingTimeInterval(duration)
+        removeAdsUntil = until
+        UserDefaults.standard.set(until.timeIntervalSince1970, forKey: Self.removeAdsUntilKey)
     }
 }

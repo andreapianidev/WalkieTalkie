@@ -17,6 +17,8 @@ final class NativeAdCoordinator: NSObject, ObservableObject {
     private let adUnitID = AdConfig.nativeStationAdUnitID
 
     func loadAd() {
+        // Defensive Pro gate: never spend bandwidth fetching a creative we will not display.
+        guard !IAPManager.shared.isProUser else { return }
         // Anchor the loader to the topmost VC so click-through presents from the right context.
         let loader = AdLoader(
             adUnitID: adUnitID,

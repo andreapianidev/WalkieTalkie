@@ -221,13 +221,22 @@ class AudioManager: ObservableObject {
     }
     
     func playReceivedAudio(_ data: Data) {
-        logger.logAudioDebug("Riproduzione audio ricevuto: \(data.count) bytes")
-        
-        // Abbassa temporaneamente il volume di sottofondo
-        lowerBackgroundVolumeForVoice()
-        
-        // Usa AVAudioEngine per riprodurre i dati PCM raw
-        playPCMAudio(data)
+        // Il chiamante (MultipeerManager) invoca questo metodo da una coda globale
+        // di background. Tutte le mutazioni dei player (backgroundAudioPlayer,
+        // playbackAudioEngine, playbackPlayerNode) devono però avvenire sullo
+        // stesso thread per evitare data race con l'audio di sottofondo gestito
+        // sul main. Serializziamo quindi sul main: la copia del breve buffer PCM
+        // PTT è trascurabile in termini di CPU.
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.logger.logAudioDebug("Riproduzione audio ricevuto: \(data.count) bytes")
+
+            // Abbassa temporaneamente il volume di sottofondo
+            self.lowerBackgroundVolumeForVoice()
+
+            // Usa AVAudioEngine per riprodurre i dati PCM raw
+            self.playPCMAudio(data)
+        }
     }
     
     private func playPCMAudio(_ data: Data) {

@@ -1,0 +1,27 @@
+{
+  "skill_name": "walkietalkie-themes",
+  "skill_path": "/Users/andreapiani/Library/Mobile Documents/com~apple~CloudDocs/Progetti xCode/WalkieTalkie/WalkieTalkie/.opencode/skills/walkietalkie-themes",
+  "evals": [
+    {
+      "id": 0,
+      "name": "crea-tema-tropical",
+      "prompt": "Crea un nuovo tema 'Tropical' per l'app Talky. Deve essere Pro, con palette che evoca spiaggia tropicale (acqua turchese, sabbia chiara, verde palma). Usa .gradient come sfondo e .elevated come card. Scegli icona, font e sound pack appropriati, e aggiungi le localizzazioni in italiano e inglese.",
+      "expected_output": "Theme enum case, ThemeMetadata registration, localization keys for en/it",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "crea-tema-animato-plasma",
+      "prompt": "Crea un tema animato 'Plasma' per l'app Talky con effetto particellare. Deve essere Pro locked, con particelle di plasma viola/rosa che pulsano. Genera il case enum, il blocco ThemeMetadata, lo shader Canvas, la preview per ThemeSelectorView, e le localizzazioni in tutte e 5 le lingue.",
+      "expected_output": "Theme enum case, animated metadata, Canvas draw function, AnimatedThemePreview render, 5 localization keys",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "fix-themeregistry-mancante",
+      "prompt": "Il progetto Talky non compila perché ThemeRegistry è referenziato ma non esiste. C'è anche il tema 'hacker' che manca di localizzazione in tutte le lingue. Scrivi ThemeRegistry e aggiungi le localizzazioni mancanti per hacker, wildfire e arctic in tutte le 5 lingue.",
+      "expected_output": "ThemeRegistry.swift file, 15 localization keys added (3 themes x 5 languages)",
+      "files": []
+    }
+  ]
+}

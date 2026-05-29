@@ -75,12 +75,12 @@
 "explore" = "Esplora";
 "connections" = "Connessioni";
 "settings_tab" = "Impostazioni";
-"performance" = "Performance";
+"performance" = "Prestazioni";
 
 // MARK: - Performance
-"performance_title" = "Performance";
+"performance_title" = "Prestazioni";
 "high_traffic" = "Traffico Elevato";
-"normal_performance" = "Performance Normale";
+"normal_performance" = "Prestazioni Normali";
 "memory_usage" = "Memoria";
 "network_latency" = "Latenza Media";
 "connection_time" = "Tempo Connessione";
@@ -100,7 +100,7 @@
 // MARK: - Radio
 "station" = "Stazione";
 "no_station" = "Nessuna stazione";
-"buffering" = "Buffering...";
+"buffering" = "Caricamento...";
 "genre" = "Genere";
 "country" = "Paese";
 "scanning" = "Scansione...";
@@ -311,6 +311,9 @@
 "theme.name.festival" = "Festival";
 "theme.name.blackHole" = "Buco Nero";
 "theme.name.galaxy" = "Galassia";
+"theme.name.hacker" = "Hacker";
+"theme.name.wildfire" = "Fuoco Selvaggio";
+"theme.name.arctic" = "Artico";
 
 // Sleep timer
 "sleep_timer.title" = "Sleep timer radio";
@@ -322,7 +325,7 @@
 "sleep_timer.picker_prompt" = "Per quanto vuoi ascoltare?";
 
 // Equalizer
-"equalizer.title" = "Equalizer";
+"equalizer.title" = "Equalizzatore";
 "equalizer.subtitle" = "Scegli un preset audio";
 "equalizer.active_preset" = "Preset attivo";
 "equalizer.preset.flat" = "Piatto";
@@ -386,7 +389,7 @@
 "settings.personalization.history.subtitle" = "Vedi chi ti ha contattato";
 "settings.personalization.sleep_timer.title" = "Sleep timer radio";
 "settings.personalization.sleep_timer.subtitle" = "Spegni la radio dopo X minuti";
-"settings.personalization.equalizer.title" = "Equalizer";
+"settings.personalization.equalizer.title" = "Equalizzatore";
 "settings.personalization.equalizer.subtitle" = "Preset audio premium";
 "settings.personalization.recordings.title" = "Registrazioni";
 "settings.personalization.recordings.subtitle" = "Riascolta le trasmissioni";

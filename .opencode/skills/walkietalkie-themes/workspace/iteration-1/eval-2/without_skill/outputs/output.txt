@@ -1,0 +1,117 @@
+================================================================================
+  1. FILE CREATO: Theme/ThemeRegistry.swift
+================================================================================
+
+//  ThemeRegistry.swift
+//  WalkieTalkie
+
+import Foundation
+
+/// Punto di accesso centralizzato ai metadati di tutti i temi.
+/// Aggrega i registrations di `ThemeColorPack`, `ThemeIdentityPack` e
+/// `ThemeAnimatedPack` in un unico dizionario lazy, poi esposto via
+/// `ThemeRegistry.metadata(for:)`.
+///
+/// Progettato per tenere Theme.swift snello: l'enum chiama
+/// `ThemeRegistry.metadata(for: self)` e delega il lookup al registry.
+enum ThemeRegistry {
+
+    private static var cache: [Theme: ThemeMetadata] = {
+        var dict = [Theme: ThemeMetadata]()
+        ThemeColorPack.register(into: &dict)
+        ThemeIdentityPack.register(into: &dict)
+        ThemeAnimatedPack.register(into: &dict)
+        return dict
+    }()
+
+    /// Restituisce i metadati completi per un tema.
+    /// Fallback safe: se un tema non fosse registrato (non dovrebbe mai
+    /// accadere) genera un placeholder visibile per debug.
+    static func metadata(for theme: Theme) -> ThemeMetadata {
+        guard let meta = cache[theme] else {
+            return ThemeMetadata(
+                accentColor: .gray,
+                displayNameKey: "theme.name.\(theme.rawValue)",
+                iconName: "questionmark.circle",
+                isProLocked: false
+            )
+        }
+        return meta
+    }
+}
+
+================================================================================
+  2. LOCALIZZAZIONI AGGIUNTE — en.lproj/Localizable.strings
+================================================================================
+
+// Dopo "theme.name.galaxy" = "Galaxy" (riga 313):
+
+"theme.name.hacker" = "Hacker";
+"theme.name.wildfire" = "Wildfire";
+"theme.name.arctic" = "Arctic";
+
+================================================================================
+  3. LOCALIZZAZIONI AGGIUNTE — it.lproj/Localizable.strings
+================================================================================
+
+// Dopo "theme.name.galaxy" = "Galassia" (riga 313):
+
+"theme.name.hacker" = "Hacker";
+"theme.name.wildfire" = "Fuoco Selvaggio";
+"theme.name.arctic" = "Artico";
+
+================================================================================
+  4. LOCALIZZAZIONI AGGIUNTE — es.lproj/Localizable.strings
+================================================================================
+
+// Dopo "theme.name.galaxy" = "Galaxia" (riga 310):
+
+"theme.name.hacker" = "Hacker";
+"theme.name.wildfire" = "Fuego Salvaje";
+"theme.name.arctic" = "Ártico";
+
+================================================================================
+  5. LOCALIZZAZIONI AGGIUNTE — ms.lproj/Localizable.strings
+================================================================================
+
+// Dopo "theme.name.galaxy" = "Galaksi" (riga 304):
+
+"theme.name.hacker" = "Hacker";
+"theme.name.wildfire" = "Kebakaran Liar";
+"theme.name.arctic" = "Artik";
+
+================================================================================
+  6. LOCALIZZAZIONI AGGIUNTE — zh-Hant.lproj/Localizable.strings
+================================================================================
+
+// Dopo "theme.name.galaxy" = "銀河" (riga 304):
+
+"theme.name.hacker" = "黑客";
+"theme.name.wildfire" = "野火";
+"theme.name.arctic" = "北極";
+
+================================================================================
+  RIEPILOGO MODIFICHE
+================================================================================
+
+Files creati:
+  WalkieTalkie/Theme/ThemeRegistry.swift       (37 righe)
+
+Files modificati:
+  WalkieTalkie/en.lproj/Localizable.strings    (+3 righe)
+  WalkieTalkie/it.lproj/Localizable.strings    (+3 righe)
+  WalkieTalkie/es.lproj/Localizable.strings    (+3 righe)
+  WalkieTalkie/ms.lproj/Localizable.strings    (+3 righe)
+  WalkieTalkie/zh-Hant.lproj/Localizable.strings  (+3 righe)
+
+Temi con localizzazione ora completa (16/16):
+  default, ocean, forest, sunset, midnight,
+  military, retro80s, vintageRadio, cyberpunk, stealth,
+  aurora, submarine, hamRadio, festival, blackHole,
+  galaxy, hacker, wildfire, arctic
+
+Temi Pro V3 con palette già registrata in ThemeAnimatedPack.swift:
+  - hacker  (accent: #00FF33, Menlo, glitch sound pack, solid bg)
+  - wildfire (accent: #FF590D, Courier New, gradient bg)
+  - arctic   (accent: #8CE6FA, Georgia, cyber card style)
+================================================================================

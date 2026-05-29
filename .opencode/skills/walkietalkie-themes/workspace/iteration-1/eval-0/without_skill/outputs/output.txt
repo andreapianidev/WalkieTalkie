@@ -1,0 +1,225 @@
+================================================================================
+TALKY APP — TROPICAL THEME (Pro)
+Complete file-by-file modifications and new files
+================================================================================
+
+--------------------------------------------------------------------------------
+FILE 1: Theme.swift  —  Add enum case
+--------------------------------------------------------------------------------
+
+Location: WalkieTalkie/Theme/Theme.swift
+Action: Add `case tropical = "tropical"` after the `arctic` line (line 45).
+
+Insert after line 45 (right before // MARK: - Facade):
+
+    // Pro V4 — Tropical (beach vibes)
+    case tropical     = "tropical"
+
+Diff:
+
+     case hacker       = "hacker"
+     case wildfire     = "wildfire"
+     case arctic       = "arctic"
+
++    // Pro V4 — Tropical (beach vibes)
++    case tropical     = "tropical"
++
+     // MARK: - Facade verso ThemeMetadata
+
+
+
+--------------------------------------------------------------------------------
+FILE 2: ThemeRegistry.swift  —  NEW FILE (required by existing code)
+--------------------------------------------------------------------------------
+
+Location: WalkieTalkie/Theme/ThemeRegistry.swift
+Action: Create this file. ThemeRegistry is already referenced by Theme.swift,
+        ThemeSoundManager.swift, and ThemePurchaseSheet.swift but was never
+        defined. This registry holds the [Theme: ThemeMetadata] dictionary
+        populated by all pack files.
+
+Full content of ThemeRegistry.swift:
+
+//  ThemeRegistry.swift
+//  WalkieTalkie
+
+import Foundation
+
+/// Registry centralizzato dei metadati tema. Popolato all'avvio dai pack file
+/// (`ThemeColorPack`, `ThemeIdentityPack`, `ThemeAnimatedPack`) tramite il
+/// pattern di registrazione `register(into:)`.
+///
+/// Uso: `ThemeRegistry.metadata(for: .tropical)`
+enum ThemeRegistry {
+
+    private static let storage: [Theme: ThemeMetadata] = {
+        var dict = [Theme: ThemeMetadata]()
+        ThemeColorPack.register(into: &dict)
+        ThemeIdentityPack.register(into: &dict)
+        ThemeAnimatedPack.register(into: &dict)
+        return dict
+    }()
+
+    static func metadata(for theme: Theme) -> ThemeMetadata {
+        guard let meta = storage[theme] else {
+            // Fallback sicuro: ogni tema DEVE essere registrato.
+            // Se manca, restituiamo il default (free) per evitare crash.
+            assertionFailure("ThemeRegistry: '\(theme.rawValue)' non registrato in alcun pack")
+            return storage[.defaultTheme]!
+        }
+        return meta
+    }
+}
+
+
+
+--------------------------------------------------------------------------------
+FILE 3: ThemeIdentityPack.swift  —  Add Tropical registration
+--------------------------------------------------------------------------------
+
+Location: WalkieTalkie/Theme/ThemeIdentityPack.swift
+Action: Append the Tropical theme block at the end of `register(into:)`,
+        right before the closing brace of the function (before line 178).
+
+Insert this code before the last `}` of `static func register(into dict:)`:
+
+        // MARK: - Tropical (Pro V4 — beach paradise)
+
+        dict[.tropical] = ThemeMetadata(
+            accentColor: Color(red: 0.0, green: 0.78, blue: 0.72),
+            displayNameKey: "theme.name.tropical",
+            iconName: "beach.umbrella.fill",
+            isProLocked: true,
+            customFontName: "Noteworthy",
+            soundPackID: "tropical",
+            backgroundPrimary: Color(red: 0.04, green: 0.10, blue: 0.10),
+            surfaceColor: Color(red: 0.10, green: 0.14, blue: 0.08),
+            textPrimary: Color(red: 0.95, green: 0.95, blue: 0.90),
+            textSecondary: Color(red: 0.55, green: 0.75, blue: 0.65),
+            backgroundStyle: .gradient,
+            gradientTop: Color(red: 0.02, green: 0.08, blue: 0.10),
+            gradientBottom: Color(red: 0.12, green: 0.10, blue: 0.05),
+            cardStyle: .elevated,
+            accentGlow: Color(red: 0.0, green: 0.78, blue: 0.72).opacity(0.20)
+        )
+
+Diff context (last function body in ThemeIdentityPack.swift):
+
+         // MARK: - Festival
+
+         dict[.festival] = ThemeMetadata( ... )
+
++        // MARK: - Tropical (Pro V4 — beach paradise)
++
++        dict[.tropical] = ThemeMetadata(
++            accentColor: Color(red: 0.0, green: 0.78, blue: 0.72),
++            displayNameKey: "theme.name.tropical",
++            iconName: "beach.umbrella.fill",
++            isProLocked: true,
++            customFontName: "Noteworthy",
++            soundPackID: "tropical",
++            backgroundPrimary: Color(red: 0.04, green: 0.10, blue: 0.10),
++            surfaceColor: Color(red: 0.10, green: 0.14, blue: 0.08),
++            textPrimary: Color(red: 0.95, green: 0.95, blue: 0.90),
++            textSecondary: Color(red: 0.55, green: 0.75, blue: 0.65),
++            backgroundStyle: .gradient,
++            gradientTop: Color(red: 0.02, green: 0.08, blue: 0.10),
++            gradientBottom: Color(red: 0.12, green: 0.10, blue: 0.05),
++            cardStyle: .elevated,
++            accentGlow: Color(red: 0.0, green: 0.78, blue: 0.72).opacity(0.20)
++        )
+     }
+ }
+
+
+
+--------------------------------------------------------------------------------
+FILE 4: ThemeSoundManager.swift  —  Add tropical sound pack mappings
+--------------------------------------------------------------------------------
+
+Location: WalkieTalkie/Theme/ThemeSoundManager.swift
+Action: Add sound mappings for the "tropical" pack ID in the `systemSound(for:event:)`
+        method (around line 54-66).
+
+Add these cases inside the switch statement:
+
+        case ("tropical", .pttPress):           return 1003   // marimba (warm)
+        case ("tropical", .channelChange):       return 1104   // click
+        case ("tropical", .transmitStart):       return 1057   // tink
+        case ("tropical", .receptionStart):      return 1306   // soft chime
+
+Diff:
+
+     private func systemSound(for packID: String, event: ThemeSoundEvent) -> SystemSoundID? {
+         switch (packID, event) {
+         case ("morse", .pttPress):           return 1057
+         ...
++        case ("tropical", .pttPress):           return 1003   // marimba (warm)
++        case ("tropical", .channelChange):       return 1104   // click
++        case ("tropical", .transmitStart):       return 1057   // tink
++        case ("tropical", .receptionStart):      return 1306   // soft chime
+         default:                              return nil
+         }
+     }
+   }
+
+
+
+--------------------------------------------------------------------------------
+FILE 5:  en.lproj/Localizable.strings  —  English localization
+--------------------------------------------------------------------------------
+
+Location: WalkieTalkie/en.lproj/Localizable.strings
+Action: Add line after the last theme name entry (after `"theme.name.galaxy" = "Galaxy";` at line 313).
+
+Insert:
+
+"theme.name.tropical" = "Tropical";
+
+Also add a short description comment:
+
+// Pro V4
+"theme.name.tropical" = "Tropical";
+
+
+
+--------------------------------------------------------------------------------
+FILE 6:  it.lproj/Localizable.strings  —  Italian localization
+--------------------------------------------------------------------------------
+
+Location: WalkieTalkie/it.lproj/Localizable.strings
+Action: Add line after the last theme name entry (after `"theme.name.galaxy" = "Galassia";` at line 313).
+
+Insert:
+
+"theme.name.tropical" = "Tropicale";
+
+Also add a short description comment:
+
+// Pro V4
+"theme.name.tropical" = "Tropicale";
+
+
+
+================================================================================
+PALETTE DESIGN NOTES  (for reference)
+================================================================================
+
+Concept:   Beach Paradise / Tropical Island
+Vibes:     Turquoise water, white sand, palm trees, warm sunset
+
+Role          Color               Hex       Rationale
+──────────────────────────────────────────────────────────────────────────────
+accent        Turquoise           #00C7B8   Acqua turchese cristallina
+gradientTop   Deep Sea Blue       #051A1A   Profondità oceanica (top)
+gradientBottom Sandy Warm Dark    #1F1A0D   Sabbia scura al tramonto (bottom)
+surface       Palm Green Dark     #1A2414   Foglia di palma in ombra
+textPrimary   Warm White          #F2F2E6   Luce solare tropicale
+textSecondary Turquoise Sand      #8DBFA6   Sabbia + acqua, pastello
+
+Icon:         beach.umbrella.fill (SF Symbols)
+Font:         Noteworthy (casual hand-written, vacation vibe)
+Sound pack:   "tropical" — marimba + chimes (relaxed island feel)
+
+Background:   .gradient (deep ocean above → warm sand below)
+Card style:   .elevated (ombra standard, non cyber per mantenere leggerezza)

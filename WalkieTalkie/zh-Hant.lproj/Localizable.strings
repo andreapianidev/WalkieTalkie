@@ -302,6 +302,9 @@
 "theme.name.festival" = "音樂祭";
 "theme.name.blackHole" = "黑洞";
 "theme.name.galaxy" = "銀河";
+"theme.name.hacker" = "黑客";
+"theme.name.wildfire" = "野火";
+"theme.name.arctic" = "北極";
 
 // Sleep timer
 "sleep_timer.title" = "廣播睡眠定時器";

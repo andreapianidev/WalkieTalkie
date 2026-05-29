@@ -120,14 +120,42 @@ struct AnimatedBackgroundView: View {
     // MARK: - Body
 
     var body: some View {
-        switch themeManager.currentTheme {
-        case .blackHole:
-            blackHoleView
-        case .galaxy:
-            galaxyView
-        default:
-            Color("BackgroundColor")
+        switch themeManager.currentTheme.backgroundStyle {
+        case .animated:
+            switch themeManager.currentTheme {
+            case .blackHole:
+                blackHoleView
+            case .galaxy:
+                galaxyView
+            default:
+                themeStaticBackground
+            }
+        case .gradient:
+            themeGradientBackground
+        case .solid:
+            themeStaticBackground
         }
+    }
+
+    // MARK: - Gradient Background
+
+    @ViewBuilder
+    private var themeGradientBackground: some View {
+        let t = themeManager.currentTheme
+        LinearGradient(
+            gradient: Gradient(colors: [
+                t.gradientTop ?? t.backgroundPrimary,
+                t.gradientBottom ?? t.surfaceColor
+            ]),
+            startPoint: .top,
+            endPoint: .bottom
+        )
+    }
+
+    // MARK: - Static Background
+
+    private var themeStaticBackground: some View {
+        themeManager.currentTheme.backgroundPrimary
     }
 
     // MARK: - Black Hole

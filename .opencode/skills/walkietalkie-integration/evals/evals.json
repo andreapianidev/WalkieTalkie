@@ -1,0 +1,17 @@
+{
+  "skill_name": "walkietalkie-integration",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Crea una vista SwiftUI chiamata 'WalkieTalkieView.swift' che implementi la nostra grafica standard. Voglio un bottone gigante centrale per il push-to-talk che reagisca al tocco, il display digitale in stile LED in alto per la frequenza e la griglietta degli speaker fisici in basso.",
+      "expected_output": "Un file SwiftUI che utilizza font monospaziati per il display, un DragGesture(minimumDistance: 0) per il bottone PTT, e una LazyVGrid per gli speaker.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Devo integrare la funzione P2P in un nuovo modulo dell'app. Sistemami l'Info.plist con i permessi corretti per il walkie talkie locale in background e generami lo scheletro del MultipeerManager.swift per spedire i pacchetti audio raw con MCSession.",
+      "expected_output": "Un file Info.plist con i permessi network, mic e background audio, e un MultipeerManager.swift con MCNearbyServiceAdvertiser, Browser e la funzione di invio MCSession reliable.",
+      "files": []
+    }
+  ]
+}

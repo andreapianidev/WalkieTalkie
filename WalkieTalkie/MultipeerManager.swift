@@ -361,6 +361,9 @@ class MultipeerManager: NSObject, ObservableObject {
         if isBrowsing {
             browser.stopBrowsingForPeers()
         }
+        // Ferma l'heartbeat: i peer del vecchio canale non sono più validi e il
+        // timer verrà riavviato automaticamente alla connessione sul nuovo canale.
+        stopHeartbeat()
         session.disconnect()
 
         // Pulizia stato + flag advertising/browsing: tutto sul main per consistenza

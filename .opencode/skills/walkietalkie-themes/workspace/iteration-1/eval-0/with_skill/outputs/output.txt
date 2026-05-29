@@ -1,0 +1,113 @@
+================================================================================
+TASK: Create new "Tropical" theme for Talky
+================================================================================
+
+Files modified:
+  1. WalkieTalkie/Theme/Theme.swift                              → add enum case
+  2. WalkieTalkie/Theme/ThemeAnimatedPack.swift                   → add metadata registration
+  3. WalkieTalkie/en.lproj/Localizable.strings                    → add English localization
+  4. WalkieTalkie/it.lproj/Localizable.strings                    → add Italian localization
+
+Files created: none (ThemeRegistry.swift already exists)
+
+================================================================================
+FILE 1: Theme.swift — Add enum case
+================================================================================
+
+Insert the following after the existing `case arctic` block (line 45):
+
+    // Pro V4 — Tropical
+    case tropical     = "tropical"
+
+Full context of the enum after the edit (lines 42-48):
+
+    // Pro V3 — nuovi temi con palette completa
+    case hacker       = "hacker"
+    case wildfire     = "wildfire"
+    case arctic       = "arctic"
+
+    // Pro V4 — Tropical
+    case tropical     = "tropical"
+
+================================================================================
+FILE 2: ThemeAnimatedPack.swift — Add metadata registration block
+================================================================================
+
+Insert the following block at the end of `register(into:)`, after the arctic MARK
+(lines 81-98):
+
+        // MARK: - Tropical (NEW Pro V4)
+
+        dict[.tropical] = ThemeMetadata(
+            accentColor: Color(red: 0.0, green: 0.78, blue: 0.68),
+            displayNameKey: "theme.name.tropical",
+            iconName: "tree.fill",
+            isProLocked: true,
+            soundPackID: "synth",
+            backgroundPrimary: Color(red: 0.03, green: 0.10, blue: 0.08),
+            surfaceColor: Color(red: 0.06, green: 0.18, blue: 0.14),
+            textPrimary: Color(red: 0.90, green: 0.98, blue: 0.94),
+            textSecondary: Color(red: 0.62, green: 0.82, blue: 0.70),
+            backgroundStyle: .gradient,
+            gradientTop: Color(red: 0.02, green: 0.08, blue: 0.07),
+            gradientBottom: Color(red: 0.05, green: 0.14, blue: 0.11),
+            cardStyle: .elevated,
+            accentGlow: Color(red: 0.0, green: 0.78, blue: 0.68).opacity(0.20)
+        )
+
+Design rationale:
+  - Accent (0.0, 0.78, 0.68): bright turquoise → shallow tropical water
+  - Gradient dark teal (top 0.02/0.08/0.07 → bottom 0.05/0.14/0.11):
+    deep ocean → sunlit shallows, 10-20% difference as per guidelines
+  - Surface (0.06, 0.18, 0.14): ~2x brighter than bgPrimary → .elevated card
+  - TextPrimary (0.90, 0.98, 0.94): warm white with green tint → sand/foam
+  - TextSecondary (0.62, 0.82, 0.70): ~65% of primary → creates depth
+  - Icon "tree.fill": palm tree silhouette → tropical beach identity
+  - Font nil: clean modern system font → fresh tropical feel
+  - Sound "synth": closest existing pack → chill/summer electronic vibe
+  - Card .elevated: as explicitly requested
+  - Glow 0.20: within the 0.14-0.26 window, balanced
+
+================================================================================
+FILE 3: en.lproj/Localizable.strings — Add English localization
+================================================================================
+
+Insert after line 313 (after "theme.name.galaxy"):
+
+"theme.name.tropical" = "Tropical";
+
+Full context (lines 312-315):
+
+"theme.name.galaxy" = "Galaxy";
+"theme.name.tropical" = "Tropical";
+
+================================================================================
+FILE 4: it.lproj/Localizable.strings — Add Italian localization
+================================================================================
+
+Insert after line 313 (after "theme.name.galaxy"):
+
+"theme.name.tropical" = "Tropicale";
+
+Full context (lines 312-315):
+
+"theme.name.galaxy" = "Galassia";
+"theme.name.tropical" = "Tropicale";
+
+================================================================================
+VERIFICATION — Design Guidelines Checklist
+================================================================================
+
+[✓] Accent color: saturated turquoise, emerges on dark bg
+[✓] Text primary: 0.90/0.98/0.94 ≥ 0.88 threshold
+[✓] Text secondary: ~65% of primary intensity
+[✓] Glow: 0.20 opacity, within 0.14-0.26 window
+[✓] Icon "tree.fill": represents tropical/palm identity
+[✓] Font nil: modern system font, appropriate for tropical
+[✓] Sound "synth": closest available pack, chill electronic vibe
+[✓] Card .elevated: as explicitly required
+[✓] Gradient: top 10-20% darker than bottom
+[✓] Surface ~2x brighter than bgPrimary for .elevated cards
+
+================================================================================
+END OF OUTPUT

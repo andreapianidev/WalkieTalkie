@@ -21,7 +21,7 @@ struct ContentView: View {
     @State private var isTransmitting = false
     @State private var frequency = "428.283"
     @State private var showingPermissionAlert = false
-    @State private var isRadioMode = false
+    @AppStorage("talky_is_radio_mode") private var isRadioMode = false
     @State private var frequencyChangeAnimation = false
     @State private var showBrowser = false
     @State private var showSleepTimer = false
@@ -127,8 +127,17 @@ struct ContentView: View {
                         .transition(.opacity)
                 }
             }
-            .onAppear { maybeShowModeSwitchHint() }
+            .onAppear {
+                maybeShowModeSwitchHint()
+                restorePersistedAudioMode()
+            }
         }
+    }
+
+    /// Aligns the background-audio (white noise) state with the persisted mode
+    /// after a cold launch. Non auto-plays radio: solo coerenza dello stato audio.
+    private func restorePersistedAudioMode() {
+        audioManager.updateBackgroundAudioForMode(isRadioMode: isRadioMode)
     }
 
     /// Shows the WT/FM toggle discovery hint once, only after onboarding is done.
@@ -151,43 +160,30 @@ struct ContentView: View {
     
     private var headerView: some View {
         HStack {
-            // Toggle modalità Walkie/Radio
-            Button(action: {
-                if showModeSwitchHint {
-                    UserDefaults.standard.set(true, forKey: "talky_seen_mode_switch_hint")
-                    withAnimation(.easeIn(duration: 0.2)) {
-                        showModeSwitchHint = false
-                    }
-                }
-                isRadioMode.toggle()
-                if isRadioMode {
-                    // Ferma walkie-talkie e avvia radio
-                    multipeerManager.stopTransmitting()
-                    // Riprende l'ultima stazione ascoltata (o la prima come fallback).
-                    radioManager.playStation(radioManager.resumeStation)
-                    // Ferma il rumore bianco in modalità FM
-                    audioManager.updateBackgroundAudioForMode(isRadioMode: true)
-                } else {
-                    // Ferma radio
-                    radioManager.stopRadio()
-                    // Riavvia il rumore bianco in modalità walkie-talkie
-                    audioManager.updateBackgroundAudioForMode(isRadioMode: false)
-                }
-            }) {
-                HStack(spacing: 4) {
-                    Image(systemName: isRadioMode ? "radio" : "antenna.radiowaves.left.and.right")
-                        .foregroundColor(Color("PrimaryTextColor"))
-                        .font(.title3)
-                    Text(isRadioMode ? "FM" : "WT")
-                        .font(.caption)
-                        .fontWeight(.bold)
-                        .foregroundColor(Color("PrimaryTextColor"))
-                }
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(Color.black.opacity(0.1))
-                .cornerRadius(8)
+            // Segmented toggle: Walkie / Radio — entrambe le modalità visibili
+            // per scoperta immediata della feature radio (anche da App Review).
+            HStack(spacing: 0) {
+                modeSegment(
+                    isActive: !isRadioMode,
+                    icon: "antenna.radiowaves.left.and.right",
+                    label: "walkie_talkie".localized,
+                    targetRadio: false
+                )
+                modeSegment(
+                    isActive: isRadioMode,
+                    icon: "radio",
+                    label: "radio_fm".localized,
+                    targetRadio: true
+                )
             }
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Color.black.opacity(0.08))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color.black.opacity(0.12), lineWidth: 0.5)
+            )
             
             Spacer()
             
@@ -214,7 +210,54 @@ struct ContentView: View {
         .padding(.horizontal, 20)
         .padding(.top, 10)
     }
-    
+
+    @ViewBuilder
+    private func modeSegment(isActive: Bool, icon: String, label: String, targetRadio: Bool) -> some View {
+        Button(action: { switchMode(toRadio: targetRadio) }) {
+            HStack(spacing: 6) {
+                Image(systemName: icon)
+                    .font(.system(size: 13, weight: .semibold))
+                Text(label)
+                    .font(.system(size: 12, weight: .semibold))
+                    .lineLimit(1)
+                    .fixedSize(horizontal: true, vertical: false)
+            }
+            .foregroundColor(isActive ? Color("PrimaryTextColor") : Color("PrimaryTextColor").opacity(0.55))
+            .padding(.horizontal, 10)
+            .padding(.vertical, 7)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(isActive ? Color.white.opacity(0.85) : Color.clear)
+                    .shadow(color: isActive ? Color.black.opacity(0.12) : .clear, radius: 2, x: 0, y: 1)
+            )
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(label)
+        .accessibilityAddTraits(isActive ? [.isSelected, .isButton] : .isButton)
+    }
+
+    private func switchMode(toRadio newRadioMode: Bool) {
+        if showModeSwitchHint {
+            UserDefaults.standard.set(true, forKey: "talky_seen_mode_switch_hint")
+            withAnimation(.easeIn(duration: 0.2)) {
+                showModeSwitchHint = false
+            }
+        }
+        guard newRadioMode != isRadioMode else { return }
+        withAnimation(.easeInOut(duration: 0.2)) {
+            isRadioMode = newRadioMode
+        }
+        if newRadioMode {
+            multipeerManager.stopTransmitting()
+            radioManager.playStation(radioManager.resumeStation)
+            audioManager.updateBackgroundAudioForMode(isRadioMode: true)
+        } else {
+            radioManager.stopRadio()
+            audioManager.updateBackgroundAudioForMode(isRadioMode: false)
+        }
+        hapticManager.lightTap()
+    }
+
     private var connectionStatusView: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
