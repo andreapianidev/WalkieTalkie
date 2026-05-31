@@ -19,6 +19,9 @@
 "version" = "Versione";
 "developed_by" = "Sviluppato da";
 "website" = "Sito Web";
+"open_source" = "Open Source";
+"view_on_github" = "Vedi su GitHub";
+"license" = "Licenza";
 
 // MARK: - Peak App Promotion
 "download_peak" = "Scarica Peak Gratis";

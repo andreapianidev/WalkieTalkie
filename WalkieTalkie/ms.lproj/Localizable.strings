@@ -19,6 +19,9 @@
 "version" = "Versi";
 "developed_by" = "Dibangunkan oleh";
 "website" = "Laman Web";
+"open_source" = "Sumber Terbuka";
+"view_on_github" = "Lihat di GitHub";
+"license" = "Lesen";
 
 // MARK: - Peak App Promotion
 "download_peak" = "Muat Turun Peak Percuma";

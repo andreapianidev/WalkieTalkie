@@ -19,6 +19,9 @@
 "version" = "版本";
 "developed_by" = "開發者";
 "website" = "網站";
+"open_source" = "開放原始碼";
+"view_on_github" = "在 GitHub 上檢視";
+"license" = "授權條款";
 
 // MARK: - Peak App Promotion
 "download_peak" = "免費下載Peak";

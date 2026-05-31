@@ -2,6 +2,7 @@
 
 import SwiftUI
 import Combine
+import FirebaseAnalytics
 
 struct SettingsView: View {
     @ObservedObject var audioManager: AudioManager
@@ -13,6 +14,7 @@ struct SettingsView: View {
     @State private var showingInstructions = false
     @State private var showingPerformance = false
     @State private var showPaywall = false
+    @State private var didLogSettingsRewardImpression = false
     @State private var showThemeSelector = false
     @State private var showHistory = false
     @State private var showSleepTimer = false
@@ -32,6 +34,11 @@ struct SettingsView: View {
                 VStack(spacing: 20) {
                     // Pro Section (paywall / status)
                     proSection
+
+                    // Ads / Privacy section — risalita in alto: il rewarded
+                    // "guarda un video → 1h senza ads" era l'ultima sezione e
+                    // non veniva mai servito. Qui è visibile subito dopo il Pro.
+                    adsSection
 
                     // Personalization Section (themes + history)
                     personalizationSection
@@ -62,9 +69,6 @@ struct SettingsView: View {
 
                     // Peak App Section
                     peakAppSection
-
-                    // Ads / Privacy section
-                    adsSection
 
                     Spacer(minLength: 100)
                 }
@@ -933,6 +937,45 @@ struct SettingsView: View {
                         .font(.body)
                         .foregroundColor(.blue)
                 }
+
+                Divider()
+
+                Button(action: {
+                    if let url = URL(string: "https://github.com/andreapianidev/WalkieTalkie") {
+                        UIApplication.shared.open(url)
+                    }
+                }) {
+                    HStack {
+                        Text("open_source".localized)
+                            .font(.body)
+                            .foregroundColor(Color("PrimaryTextColor"))
+                        Spacer()
+                        Image(systemName: "chevron.left.forwardslash.chevron.right")
+                            .font(.caption)
+                            .foregroundColor(.blue)
+                        Text("view_on_github".localized)
+                            .font(.body)
+                            .foregroundColor(.blue)
+                    }
+                }
+
+                Divider()
+
+                Button(action: {
+                    if let url = URL(string: "https://github.com/andreapianidev/WalkieTalkie/blob/main/WalkieTalkie/LICENSE") {
+                        UIApplication.shared.open(url)
+                    }
+                }) {
+                    HStack {
+                        Text("license".localized)
+                            .font(.body)
+                            .foregroundColor(Color("PrimaryTextColor"))
+                        Spacer()
+                        Text("PolyForm Noncommercial")
+                            .font(.body)
+                            .foregroundColor(.blue)
+                    }
+                }
             }
             .padding()
             .background(
@@ -1184,7 +1227,10 @@ struct SettingsView: View {
 
     @ViewBuilder
     private var rewardRow: some View {
-        if adManager.adsRemoved {
+        if iapManager.isProUser {
+            // I Pro non hanno pubblicità: offrire "rimuovi ads" non avrebbe senso.
+            EmptyView()
+        } else if adManager.adsRemoved {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("ads_removed_active".localized)
@@ -1206,10 +1252,7 @@ struct SettingsView: View {
             )
         } else {
             Button(action: {
-                adManager.rewarded.showAd {
-                    adManager.grantRemoveAdsReward()
-                    HapticManager.shared.success()
-                }
+                adManager.presentRewardedRemoveAds(source: "settings")
             }) {
                 HStack {
                     Image(systemName: "play.rectangle.fill")
@@ -1237,6 +1280,11 @@ struct SettingsView: View {
             }
             .disabled(!adManager.rewarded.isAdReady)
             .opacity(adManager.rewarded.isAdReady ? 1.0 : 0.6)
+            .onAppear {
+                guard !didLogSettingsRewardImpression else { return }
+                didLogSettingsRewardImpression = true
+                Analytics.logEvent("rewarded_cta_shown", parameters: ["source": "settings"])
+            }
         }
     }
 

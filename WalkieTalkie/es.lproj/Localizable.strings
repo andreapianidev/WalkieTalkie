@@ -19,6 +19,9 @@
 "version" = "Versión";
 "developed_by" = "Desarrollado por";
 "website" = "Sitio Web";
+"open_source" = "Código Abierto";
+"view_on_github" = "Ver en GitHub";
+"license" = "Licencia";
 
 // MARK: - Peak App Promotion
 "peak_app_title" = "Peak: Altímetro para Excursionistas";

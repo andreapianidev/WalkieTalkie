@@ -7,6 +7,7 @@ import Foundation
 import Combine
 import SwiftUI
 import GoogleMobileAds
+import FirebaseAnalytics
 
 @MainActor
 final class AdManager: ObservableObject {
@@ -81,10 +82,12 @@ final class AdManager: ObservableObject {
             group.addTask { await self.interstitial.loadAd() }
             group.addTask { await self.rewarded.loadAd() }
         }
-        // Native ad is sync-loaded (delegate callback). Skip for Pro users to save bandwidth.
-        if !IAPManager.shared.isProUser {
-            nativeStation.loadAd()
-        }
+        // Native ad is NOT preloaded here on purpose: it is only ever displayed
+        // inside the station browser sheet, which most sessions never open. Eager
+        // bootstrap preloading produced ~1 request per launch against ~2% display,
+        // tanking its show rate. It now loads lazily the first time the sheet
+        // appears, via refreshStationNativeAdIfNeeded() (shouldReload returns true
+        // when no ad is cached). Same impressions, far fewer wasted requests.
     }
 
     /// Re-request a native station ad. Call when the station browser opens so the user sees fresh creatives.
@@ -116,5 +119,21 @@ final class AdManager: ObservableObject {
         let until = Date().addingTimeInterval(duration)
         removeAdsUntil = until
         UserDefaults.standard.set(until.timeIntervalSince1970, forKey: Self.removeAdsUntilKey)
+    }
+
+    /// Single entry point used by every rewarded CTA in the app (paywall, settings,
+    /// explore, …). Centralises the present → grant → haptic flow and emits a
+    /// measurable funnel on Firebase: `rewarded_cta_tapped` on tap and
+    /// `rewarded_reward_earned` only when the user actually completes the video.
+    /// `source` is the surface that drove the tap, so we can see which placement
+    /// converts on AdMob/Firebase instead of a single anonymous number.
+    func presentRewardedRemoveAds(source: String) {
+        Analytics.logEvent("rewarded_cta_tapped", parameters: ["source": source])
+        rewarded.showAd { [weak self] in
+            guard let self else { return }
+            self.grantRemoveAdsReward()
+            HapticManager.shared.success()
+            Analytics.logEvent("rewarded_reward_earned", parameters: ["source": source])
+        }
     }
 }

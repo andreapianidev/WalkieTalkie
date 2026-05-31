@@ -30,6 +30,8 @@ struct PaywallView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var iap = IAPManager.shared
     @StateObject private var settingsManager = SettingsManager.shared
+    @StateObject private var adManager = AdManager.shared
+    @ObservedObject private var rewardedCoordinator = AdManager.shared.rewarded
 
     // MARK: - State
 
@@ -38,6 +40,7 @@ struct PaywallView: View {
     @State private var errorMessage: String = ""
     @State private var isPurchasing: Bool = false
     @State private var heroAppeared: Bool = false
+    @State private var didLogRewardedImpression: Bool = false
 
     // MARK: - Palette adattiva
 
@@ -107,6 +110,7 @@ struct PaywallView: View {
                     hairlineDivider
                     priceCards
                     ctaButton
+                    rewardedSecondaryCTA
                     appleLegalFooter
                     footerLinks
                     Spacer(minLength: 24)
@@ -449,6 +453,50 @@ struct PaywallView: View {
         .disabled(isPurchasing || selectedProduct == nil)
         .padding(.top, 12)
         .accessibilityLabel("paywall.cta.start".localized)
+    }
+
+    // MARK: - Rewarded fallback
+
+    /// CTA secondario e volutamente sottotono: chi non è pronto ad abbonarsi può
+    /// guardare un video e ottenere 1 ora senza pubblicità. Vive sotto il bottone
+    /// principale così non gli ruba attenzione, ma intercetta ogni utente Free che
+    /// arriva al paywall (da qualunque trigger: stazione Pro, banner, feature-gate).
+    /// È questo il punto che porta finalmente impression sul rewarded `walkiepremio`.
+    /// `source` = `trigger`, così su Firebase vediamo quale funnel converte.
+    @ViewBuilder
+    private var rewardedSecondaryCTA: some View {
+        if !adManager.adsRemoved {
+            Button {
+                adManager.presentRewardedRemoveAds(source: trigger)
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "play.rectangle.fill")
+                        .font(.system(size: 14, weight: .semibold))
+                    Text("watch_ad_remove_ads".localized)
+                        .font(.system(size: 14, weight: .semibold))
+                    if !rewardedCoordinator.isAdReady {
+                        ProgressView()
+                            .controlSize(.mini)
+                            .padding(.leading, 2)
+                    }
+                }
+                .foregroundColor(ink.opacity(0.75))
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 13)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(hairline, lineWidth: 1)
+                )
+            }
+            .buttonStyle(.plain)
+            .disabled(!rewardedCoordinator.isAdReady)
+            .opacity(rewardedCoordinator.isAdReady ? 1.0 : 0.55)
+            .onAppear {
+                guard !didLogRewardedImpression else { return }
+                didLogRewardedImpression = true
+                Analytics.logEvent("rewarded_cta_shown", parameters: ["source": trigger])
+            }
+        }
     }
 
     // MARK: - Legal

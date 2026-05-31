@@ -27,6 +27,12 @@ struct ExploreView: View {
             .padding(.horizontal, 16)
             .padding(.top, 4)
 
+            // Alternativa morbida al paywall: guarda un video → 1h senza ads.
+            // Si auto-nasconde per i Pro o se il reward è già attivo.
+            RewardAdCTAView(source: "explore_banner")
+                .padding(.horizontal, 16)
+                .padding(.top, 8)
+
             Spacer()
 
             // Radar Display

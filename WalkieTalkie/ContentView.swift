@@ -18,6 +18,7 @@ struct ContentView: View {
     @StateObject private var sleepTimerManager = SleepTimerManager.shared
     @EnvironmentObject private var adManager: AdManager
     @State private var frequencyChangeCount = 0
+    @State private var stationChangeCount = 0
     @State private var isTransmitting = false
     @State private var frequency = "428.283"
     @State private var showingPermissionAlert = false
@@ -444,8 +445,10 @@ struct ContentView: View {
                         guard isRadioMode else { return }
                         if value.translation.width < -30 {
                             radioManager.nextStation()
+                            maybeShowInterstitialOnStationChange()
                         } else if value.translation.width > 30 {
                             radioManager.previousStation()
+                            maybeShowInterstitialOnStationChange()
                         }
                     }
             )
@@ -561,6 +564,7 @@ struct ContentView: View {
                 // Previous station (tap: previous, long press: jump -10)
                 Button(action: {
                     radioManager.previousStation()
+                    maybeShowInterstitialOnStationChange()
                 }) {
                     ZStack {
                         Circle()
@@ -601,6 +605,7 @@ struct ContentView: View {
                 // Next station (tap: next, long press: jump +10)
                 Button(action: {
                     radioManager.nextStation()
+                    maybeShowInterstitialOnStationChange()
                 }) {
                     ZStack {
                         Circle()
@@ -1066,6 +1071,19 @@ struct ContentView: View {
         frequencyChangeCount += 1
         // Skip the very first change after launch.
         guard frequencyChangeCount > 1 else { return }
+        adManager.showInterstitialIfAllowed()
+    }
+
+    /// Radio counterpart of `maybeShowInterstitialOnChannelChange`. Fires only on
+    /// explicit user station changes (tuner prev/next + swipe) — never on the
+    /// auto-resume that runs when switching into radio mode. The actual cadence
+    /// (180s min interval, 5/day) is enforced centrally by AdManager, so these
+    /// extra call sites only widen the pool of eligible moments, they don't raise
+    /// the cap.
+    private func maybeShowInterstitialOnStationChange() {
+        stationChangeCount += 1
+        // Skip the very first change so we never greet a fresh session with an ad.
+        guard stationChangeCount > 1 else { return }
         adManager.showInterstitialIfAllowed()
     }
     
