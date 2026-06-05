@@ -137,7 +137,7 @@
 "configure_app" = "Konfigurasi aplikasi anda";
 "audio" = "Audio";
 "white_noise" = "Bunyi Putih";
-"background_audio" = "Audio Latar Belakang";
+"background_audio" = "Kesan radio simulasi (bunyi latar, bukan komunikasi sebenar)";
 "background_audio_description" = "Audio latar belakang semasa penggunaan";
 "noise_volume" = "Volum Bunyi";
 "adjust_background_volume" = "Laraskan volum bunyi latar belakang";
@@ -214,9 +214,9 @@
 "onboarding_p4_private_channels_teaser" = "Mahu saluran khas untuk kumpulan anda? Cipta Saluran Peribadi dengan kata laluan dari menu.";
 
 "onboarding_p5_steps_title" = "Sedia? Cuma 3 langkah";
-"onboarding_p5_step1" = "Buka Talky di iPhone lain berdekatan anda";
-"onboarding_p5_step2" = "Ketik \"Sambungan\" dan pilih perantinya";
-"onboarding_p5_step3" = "Apabila tersambung, tekan dan tahan butang tengah dan bercakap";
+"onboarding_p5_step1" = "Buka Talky pada peranti kedua berdekatan: iPhone, iPad atau Mac Apple Silicon (boleh uji seorang diri)";
+"onboarding_p5_step2" = "Pastikan kedua-duanya pada saluran yang sama dan terima permintaan sambungan yang muncul";
+"onboarding_p5_step3" = "Apabila tersambung (titik hijau), tekan dan tahan butang tengah untuk bercakap, lepaskan untuk mendengar";
 
 "onboarding_permissions_title" = "Dua kebenaran dan kami sedia";
 "onboarding_permissions_description" = "Talky memerlukan ini untuk berfungsi.";

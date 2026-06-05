@@ -5,6 +5,7 @@
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_walkie-talkie._tcp</string>
+		<string>_walkie-talkie._udp</string>
 	</array>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Talky usa il microfono per trasmettere la tua voce agli altri iPhone connessi quando tieni premuto il pulsante per parlare.</string>

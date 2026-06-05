@@ -14,6 +14,14 @@ class MultipeerManager: NSObject, ObservableObject {
     private let serviceType = "walkie-talkie"
     private let myPeerID = MCPeerID(displayName: UIDevice.current.name)
 
+    /// Identificatore univoco di questa istanza (per-lancio). Serve a decidere in modo
+    /// DETERMINISTICO chi invita chi quando due device si scoprono a vicenda: solo il peer
+    /// con `instanceID` minore invia l'invito. Evita il doppio-invito incrociato che
+    /// causava sessioni in conflitto e connessioni bloccate in "connecting".
+    /// (Non si può usare il solo displayName: da iOS 16 `UIDevice.current.name` ritorna
+    /// spesso "iPhone" generico → collisioni.)
+    private let instanceID = UUID().uuidString
+
     /// Istanza condivisa: viene popolata dalla prima `init()` chiamata (tipicamente in ContentView).
     /// Usata da `PrivateChannelManager` per riavviare advertising/browsing al cambio canale.
     /// È weak per evitare retain cycle con il proprietario reale (`@StateObject` in ContentView).
@@ -87,7 +95,8 @@ class MultipeerManager: NSObject, ObservableObject {
         let initialChannel = UserDefaults.standard.string(forKey: "private_channel_id") ?? "public"
         let discoveryInfo = [
             "deviceName": UIDevice.current.name,
-            "channel": initialChannel
+            "channel": initialChannel,
+            "uid": instanceID
         ]
         advertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: discoveryInfo, serviceType: serviceType)
         browser = MCNearbyServiceBrowser(peer: myPeerID, serviceType: serviceType)
@@ -234,7 +243,10 @@ class MultipeerManager: NSObject, ObservableObject {
             
             let inviteStartTime = Date()
             self.connectionThrottle[peerID] = inviteStartTime
-            self.browser.invitePeer(peerID, to: self.session, withContext: nil, timeout: self.connectionTimeout)
+            // Il canale corrente viaggia nel context dell'invito: il ricevente lo valida
+            // così senza dipendere da `discoveredPeers` (che era una race condition).
+            let contextData = self.currentChannelID.data(using: .utf8)
+            self.browser.invitePeer(peerID, to: self.session, withContext: contextData, timeout: self.connectionTimeout)
             self.retryAttempts[peerID] = currentAttempts + 1
             
             DispatchQueue.main.async {
@@ -382,7 +394,8 @@ class MultipeerManager: NSObject, ObservableObject {
         // Ricrea advertiser con il nuovo discoveryInfo (browser non richiede ricreazione)
         let discoveryInfo = [
             "deviceName": UIDevice.current.name,
-            "channel": currentChannelID
+            "channel": currentChannelID,
+            "uid": instanceID
         ]
         advertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: discoveryInfo, serviceType: serviceType)
         advertiser.delegate = self
@@ -964,16 +977,20 @@ extension MCSessionState {
 extension MultipeerManager: MCNearbyServiceAdvertiserDelegate {
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         logger.logNetworkInfo("Ricevuto invito da: \(peerID.displayName)")
-        
-        // Validazione sicurezza + filtro canale: il peer deve trovarsi in discoveredPeers,
-        // che è già filtrato per channelID corrente. Quindi inviti da peer di altri canali
-        // (che non sarebbero stati scoperti) vengono respinti silenziosamente.
-        guard discoveredPeers.contains(peerID) else {
-            logger.logNetworkError(WalkieTalkieError.invalidPeer, context: "Peer non autorizzato o di altro canale: \(peerID.displayName)")
+
+        // Filtro canale tramite il CONTEXT dell'invito (non più tramite `discoveredPeers`).
+        // Il vecchio guard `discoveredPeers.contains(peerID)` era una race condition: se il
+        // nostro browser non aveva ancora scoperto il mittente, l'invito VALIDO veniva
+        // rifiutato in silenzio → l'utente vedeva "non si connette" pur essendo vicino.
+        // Il context contiene il channelID del mittente: accettiamo solo se combacia.
+        // (context nil = peer su vecchia versione → trattato come canale "public".)
+        let invitedChannel = context.flatMap { String(data: $0, encoding: .utf8) } ?? "public"
+        guard invitedChannel == currentChannelID else {
+            logger.logNetworkError(WalkieTalkieError.invalidPeer, context: "Invito da canale diverso: '\(invitedChannel)' ≠ '\(currentChannelID)'")
             invitationHandler(false, nil)
             return
         }
-        
+
         DispatchQueue.main.async {
             // Se c'è già un invito pendente non gestito dall'utente, declina il
             // precedente automaticamente: lasciarlo in sospeso fa scadere il timeout
@@ -1024,10 +1041,18 @@ extension MultipeerManager: MCNearbyServiceBrowserDelegate {
             }
         }
         
-        // Invita automaticamente il peer trovato
-        invitePeer(peerID)
+        // Invito DETERMINISTICO: entrambi i device si scoprono a vicenda, ma se entrambi
+        // invitassero si avrebbe il doppio-invito incrociato (sessioni in conflitto, peer
+        // bloccato in "connecting"). Quindi solo il peer con `instanceID` minore invia
+        // l'invito; l'altro attende — il suo advertiser riceverà l'invito e lo accetterà.
+        let remoteUID = info?["uid"] ?? peerID.displayName
+        if instanceID < remoteUID {
+            invitePeer(peerID)
+        } else {
+            logger.logNetworkDebug("Attendo invito da \(peerID.displayName) (uid remoto minore, invita lui)")
+        }
     }
-    
+
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
         logger.logNetworkInfo("Perso peer: \(peerID.displayName)")
         DispatchQueue.main.async {

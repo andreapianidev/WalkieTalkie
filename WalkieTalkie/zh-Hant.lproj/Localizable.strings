@@ -137,7 +137,7 @@
 "configure_app" = "配置您的應用程式";
 "audio" = "音訊";
 "white_noise" = "白噪音";
-"background_audio" = "背景音訊";
+"background_audio" = "模擬無線電效果（環境音效，非真實通訊）";
 "background_audio_description" = "使用期間的背景音訊";
 "noise_volume" = "噪音音量";
 "adjust_background_volume" = "調整背景噪音音量";
@@ -214,9 +214,9 @@
 "onboarding_p4_private_channels_teaser" = "想要僅限你的群組使用的頻道？從選單建立有密碼保護的私人頻道。";
 
 "onboarding_p5_steps_title" = "準備好了嗎？只需 3 步";
-"onboarding_p5_step1" = "在附近的另一支 iPhone 開啟 Talky";
-"onboarding_p5_step2" = "前往「連線」並選擇對方裝置";
-"onboarding_p5_step3" = "連線後，按住中央按鈕開始說話";
+"onboarding_p5_step1" = "在附近的第二台裝置開啟 Talky：iPhone、iPad 或 Apple Silicon Mac（也可自行測試）";
+"onboarding_p5_step2" = "讓兩台裝置保持在相同頻道，並接受出現的連線要求";
+"onboarding_p5_step3" = "連線成功（綠點）後，按住中央按鈕說話，放開即可聆聽";
 
 "onboarding_permissions_title" = "兩個權限，馬上就好";
 "onboarding_permissions_description" = "Talky 需要這些權限才能運作。";

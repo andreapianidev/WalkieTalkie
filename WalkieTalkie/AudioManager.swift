@@ -166,6 +166,15 @@ class AudioManager: ObservableObject {
     
     /// Riproduce un file MP3 casuale per le frequenze non-home
     func playRandomFrequencyAudio() {
+        // L'audio frequenza è parte dell'effetto "audio simulato": rispetta lo stesso
+        // interruttore del rumore bianco. Se l'utente lo tiene OFF (default) non parte
+        // alcun suono finto cambiando frequenza — niente percezione "fake".
+        guard settingsManager.isBackgroundAudioEnabled else {
+            logger.logAudioInfo("Audio frequenza simulato disabilitato dalle impostazioni")
+            stopFrequencyAudio()
+            return
+        }
+
         guard let randomFile = frequencyAudioFiles.randomElement() else {
             logger.logAudioError(NSError(domain: "AudioManager", code: -1, userInfo: [NSLocalizedDescriptionKey: "Nessun file audio frequenza disponibile"]), context: "Selezione file frequenza")
             return

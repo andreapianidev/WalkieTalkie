@@ -116,7 +116,7 @@
 "configure_app" = "Configura tu app";
 "audio" = "Audio";
 "white_noise" = "Ruido Blanco";
-"background_audio" = "Audio de Fondo";
+"background_audio" = "Efecto de radio simulado (sonido ambiental, no comunicación real)";
 "background_audio_description" = "Audio de fondo durante el uso";
 "noise_volume" = "Volumen del Ruido";
 "adjust_background_volume" = "Ajusta el volumen del ruido de fondo";
@@ -193,9 +193,9 @@
 "onboarding_p4_private_channels_teaser" = "¿Quieres un canal solo para tu grupo? Crea un Canal Privado con contraseña desde el menú.";
 
 "onboarding_p5_steps_title" = "¿Listo? Solo 3 pasos";
-"onboarding_p5_step1" = "Abre Talky en otro iPhone cerca de ti";
-"onboarding_p5_step2" = "Toca \"Conexiones\" y elige su dispositivo";
-"onboarding_p5_step3" = "Cuando aparezca conectado, mantén pulsado el botón central y habla";
+"onboarding_p5_step1" = "Abre Talky en un segundo dispositivo cercano: iPhone, iPad o Mac con Apple Silicon (puedes probar tú solo)";
+"onboarding_p5_step2" = "Mantén ambos en el mismo canal y acepta la solicitud de conexión que aparece";
+"onboarding_p5_step3" = "Cuando esté conectado (punto verde), mantén pulsado el botón central para hablar y suéltalo para escuchar";
 
 "onboarding_permissions_title" = "Dos permisos y listo";
 "onboarding_permissions_description" = "Talky los necesita para funcionar.";

@@ -110,7 +110,10 @@ class SettingsManager: ObservableObject {
     // MARK: - Initialization
     private init() {
         // Carica le impostazioni salvate o usa i valori di default
-        self.isBackgroundAudioEnabled = userDefaults.object(forKey: Keys.isBackgroundAudioEnabled) as? Bool ?? true
+        // Audio simulato (rumore bianco + effetti frequenza) OFF di default: è un effetto
+        // ambientale decorativo, non comunicazione reale. Acceso di serie faceva percepire
+        // l'app come "fake" (recensioni App Store). Chi lo vuole lo attiva dalle Impostazioni.
+        self.isBackgroundAudioEnabled = userDefaults.object(forKey: Keys.isBackgroundAudioEnabled) as? Bool ?? false
         self.backgroundVolume = userDefaults.object(forKey: Keys.backgroundVolume) as? Float ?? 0.15
         self.isHapticFeedbackEnabled = userDefaults.object(forKey: Keys.isHapticFeedbackEnabled) as? Bool ?? true
         self.isAutoConnectEnabled = userDefaults.object(forKey: Keys.isAutoConnectEnabled) as? Bool ?? false
@@ -130,7 +133,7 @@ class SettingsManager: ObservableObject {
     
     /// Resetta tutte le impostazioni ai valori di default
     func resetToDefaults() {
-        isBackgroundAudioEnabled = true
+        isBackgroundAudioEnabled = false
         backgroundVolume = 0.15
         isHapticFeedbackEnabled = true
         isAutoConnectEnabled = false
