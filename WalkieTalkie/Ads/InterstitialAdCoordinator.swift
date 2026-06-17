@@ -12,6 +12,8 @@ import GoogleMobileAds
 final class InterstitialAdCoordinator: NSObject, ObservableObject {
     @Published private(set) var isAdReady = false
 
+    var onDismiss: (() -> Void)?
+
     private var interstitial: InterstitialAd?
     private var lastShownAt: Date?
     private var shownTodayCount: Int = 0
@@ -66,6 +68,7 @@ extension InterstitialAdCoordinator: FullScreenContentDelegate {
         Task { @MainActor in
             self.interstitial = nil
             self.isAdReady = false
+            self.onDismiss?()
             await loadAd()
         }
     }

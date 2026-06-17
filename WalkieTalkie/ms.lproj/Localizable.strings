@@ -128,6 +128,9 @@
 "no_devices_detected" = "Tiada peranti dikesan";
 "ensure_devices_open" = "Pastikan peranti lain mempunyai aplikasi terbuka";
 "available" = "Tersedia";
+"tap_plus_to_invite" = "Ketik + untuk menghantar permintaan sambungan. Peranti lain mesti menerimanya.";
+"send_connection_request" = "Hantar permintaan sambungan";
+"invitation_sent" = "Permintaan dihantar";
 "strong" = "Kuat";
 "medium" = "Sederhana";
 "weak" = "Lemah";
@@ -155,10 +158,10 @@
 "how_to_use" = "Cara Menggunakan Aplikasi";
 "instruction_1_title" = "Buka Aplikasi di Semua Peranti";
 "instruction_1_description" = "Pastikan semua peranti mempunyai aplikasi WalkieTalkie terbuka dan aktif.";
-"instruction_2_title" = "Pergi ke Sambungan";
-"instruction_2_description" = "Ketik tab 'Sambungan' untuk melihat peranti yang tersedia berdekatan.";
+"instruction_2_title" = "Pergi ke Terokai";
+"instruction_2_description" = "Ketik tab 'Terokai' untuk melihat peranti yang tersedia berdekatan.";
 "instruction_3_title" = "Sambung Peranti";
-"instruction_3_description" = "Pilih peranti dari senarai untuk menghantar permintaan sambungan.";
+"instruction_3_description" = "Ketik + di sebelah peranti untuk menghantar permintaan sambungan.";
 "instruction_4_title" = "Pilih Frekuensi";
 "instruction_4_description" = "Semua peranti yang disambung mesti menggunakan frekuensi yang sama untuk berkomunikasi.";
 "instruction_5_title" = "Tahan untuk Bercakap";
@@ -200,7 +203,7 @@
 "onboarding_p1_subtitle" = "Di gunung, di dataran, di konsert: bercakap dengan kawan walaupun tiada talian.";
 
 "onboarding_p2_no_internet_title" = "Tanpa internet, tanpa SIM";
-"onboarding_p2_no_internet_body" = "Suara dihantar terus antara iPhone melalui Bluetooth dan Wi-Fi. Ia berfungsi dalam mod pesawat, dalam terowong dan di hutan, selagi anda dalam lingkungan kira-kira 1 km.";
+"onboarding_p2_no_internet_body" = "Suara dihantar terus antara peranti berdekatan melalui Bluetooth, Wi-Fi dan rangkaian setempat. Ia berfungsi tanpa pelayan internet selagi berada dalam julat setempat.";
 "onboarding_p2_range_caveat" = "Dinding, bukit dan kecerunan mengurangkan jangkauan.";
 "onboarding_p2_multi_platform" = "Juga berfungsi pada iPad dan Mac dengan Apple Silicon — aplikasi yang sama, semua peranti anda boleh berbual antara satu sama lain.";
 
@@ -214,8 +217,8 @@
 "onboarding_p4_private_channels_teaser" = "Mahu saluran khas untuk kumpulan anda? Cipta Saluran Peribadi dengan kata laluan dari menu.";
 
 "onboarding_p5_steps_title" = "Sedia? Cuma 3 langkah";
-"onboarding_p5_step1" = "Buka Talky pada peranti kedua berdekatan: iPhone, iPad atau Mac Apple Silicon (boleh uji seorang diri)";
-"onboarding_p5_step2" = "Pastikan kedua-duanya pada saluran yang sama dan terima permintaan sambungan yang muncul";
+"onboarding_p5_step1" = "Buka Talky pada peranti kedua berdekatan: iPhone, iPad, Mac Apple Silicon atau klien Android yang serasi";
+"onboarding_p5_step2" = "Buka Terokai, ketik + di sebelah peranti berdekatan, kemudian terima permintaan pada peranti lain";
 "onboarding_p5_step3" = "Apabila tersambung (titik hijau), tekan dan tahan butang tengah untuk bercakap, lepaskan untuk mendengar";
 
 "onboarding_permissions_title" = "Dua kebenaran dan kami sedia";
@@ -234,7 +237,7 @@
 
 // MARK: - First Run Coach
 "coach_no_peers_title" = "Langkah pertama";
-"coach_no_peers_body" = "Buka Talky di iPhone lain berdekatan, kemudian ketik \"Sambungan\" di bawah.";
+"coach_no_peers_body" = "Buka Talky pada peranti lain berdekatan, kemudian ketik \"Terokai\" di bawah.";
 "coach_press_ptt_title" = "Sekarang tekan dan tahan di sini";
 "coach_press_ptt_body" = "Tekan dan tahan butang tengah untuk bercakap, lepaskan untuk mendengar.";
 "coach_dismiss" = "Faham";
@@ -420,9 +423,10 @@
 // MARK: - Mode Switch & Onboarding Radio
 "mode_switch_hint" = "Ketuk butang kiri atas untuk bertukar antara Walkie Talkie dan Radio FM";
 "got_it" = "Faham";
-"onboarding.radio_mode.title" = "Walkie-Talkie + Radio FM";
+"onboarding.radio_mode.title" = "Walkie-Talkie + Radio";
 "onboarding.radio_mode.subtitle" = "Bertukar mod dengan satu ketukan";
-"onboarding.radio_mode.body" = "Butang kiri atas membolehkan anda bertukar antara Walkie-Talkie untuk berbual dengan rakan dan Radio FM dengan 135 stesen antarabangsa.";
+"onboarding.radio_mode.body" = "Butang kiri atas membolehkan anda bertukar antara Walkie-Talkie untuk berbual dengan rakan dan ratusan stesen radio antarabangsa melalui penstriman internet.";
+"onboarding.radio_mode.streaming_note" = "Radio menggunakan penstriman internet — bukan antena FM fizikal. Sambungan data aktif (Wi-Fi atau selular) diperlukan.";
 
 // MARK: - Live Activities
 "live_activities.title" = "Live Activities";
@@ -454,3 +458,4 @@
 "paywall.error.purchase_failed" = "Pembelian gagal. Sila cuba lagi.";
 "paywall.error.no_purchases" = "Tiada pembelian untuk dipulihkan.";
 "paywall.error.restore_failed" = "Pemulihan gagal. Sila cuba lagi.";
+"check_wifi_bluetooth" = "Semak WiFi & Bluetooth";

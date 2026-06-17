@@ -15,6 +15,7 @@ final class AdManager: ObservableObject {
 
     @Published var isInitialized = false
     @Published var removeAdsUntil: Date?
+    @Published var showRewardedPill = false
 
     let consent = ConsentManager.shared
     let appOpen = AppOpenAdManager()
@@ -27,6 +28,15 @@ final class AdManager: ObservableObject {
     private static let removeAdsUntilKey = "fastboot_removeAdsUntil"
 
     private init() {
+        interstitial.onDismiss = { [weak self] in
+            guard let self else { return }
+            guard !IAPManager.shared.isProUser, !self.adsRemoved else { return }
+            self.showRewardedPill = true
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 8_000_000_000)
+                self.showRewardedPill = false
+            }
+        }
         // Restore a previously granted remove-ads window. Drop it if already expired.
         let ts = UserDefaults.standard.double(forKey: Self.removeAdsUntilKey)
         if ts > 0 {
@@ -105,13 +115,21 @@ final class AdManager: ObservableObject {
     func showInterstitialIfAllowed() {
         guard !IAPManager.shared.isProUser else { return }
         guard !adsRemoved else { return }
+        // Mai interrompere l'audio della radio con un interstitial: gli utenti
+        // percepivano la pubblicità come "invadente" perché spezzava l'ascolto
+        // (recensione App Store "penetrantester Werbung"). Gate centrale così
+        // copre ogni call site (cambio stazione/canale, idle, ecc.).
+        guard !RadioManager.shared.isPlaying else { return }
         interstitial.showAdIfAllowed()
     }
 
-    func showAppOpenIfAllowed() {
+    func showAppOpenIfAllowed(afterDelay: Bool = false) {
         guard !IAPManager.shared.isProUser else { return }
         guard !adsRemoved else { return }
-        appOpen.showAdIfAvailable()
+        // Idem per l'app-open al rientro in foreground: se la radio sta suonando
+        // (anche da background) non sovrapporre un annuncio a schermo intero.
+        guard !RadioManager.shared.isPlaying else { return }
+        appOpen.showAdIfAvailable(afterDelay: afterDelay)
     }
 
     func grantRemoveAdsReward() {

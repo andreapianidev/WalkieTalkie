@@ -339,6 +339,13 @@ private struct OnboardingRadioModePage: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 24)
                     .padding(.top, 4)
+
+                Text(OnboardingStrings.radioModeStreamingNote)
+                    .font(.caption)
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.5))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 24)
+                    .padding(.top, 8)
             }
         }
         .padding()

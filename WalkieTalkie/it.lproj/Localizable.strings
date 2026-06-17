@@ -135,6 +135,9 @@
 "no_devices_detected" = "Nessun dispositivo rilevato";
 "ensure_devices_open" = "Assicurati che altri dispositivi abbiano l'app aperta";
 "available" = "Disponibile";
+"tap_plus_to_invite" = "Tocca + per inviare una richiesta di connessione. L'altro dispositivo deve accettarla.";
+"send_connection_request" = "Invia richiesta di connessione";
+"invitation_sent" = "Richiesta inviata";
 "strong" = "Forte";
 "medium" = "Medio";
 "weak" = "Debole";
@@ -162,10 +165,10 @@
 "how_to_use" = "Come Usare l'App";
 "instruction_1_title" = "Apri l'App su Tutti i Dispositivi";
 "instruction_1_description" = "Assicurati che tutti i dispositivi abbiano l'app WalkieTalkie aperta e attiva.";
-"instruction_2_title" = "Vai su Connessioni";
-"instruction_2_description" = "Tocca il tab 'Connessioni' per vedere i dispositivi disponibili nelle vicinanze.";
+"instruction_2_title" = "Vai su Esplora";
+"instruction_2_description" = "Tocca il tab 'Esplora' per vedere i dispositivi disponibili nelle vicinanze.";
 "instruction_3_title" = "Connetti i Dispositivi";
-"instruction_3_description" = "Seleziona un dispositivo dalla lista per inviare una richiesta di connessione.";
+"instruction_3_description" = "Tocca + accanto a un dispositivo per inviare una richiesta di connessione.";
 "instruction_4_title" = "Seleziona la Frequenza";
 "instruction_4_description" = "Tutti i dispositivi connessi devono usare la stessa frequenza per comunicare.";
 "instruction_5_title" = "Tieni Premuto per Parlare";
@@ -209,7 +212,7 @@
 "onboarding_p1_subtitle" = "In montagna, in piazza, al concerto: parla con i tuoi amici anche dove non c'è linea.";
 
 "onboarding_p2_no_internet_title" = "Niente internet, niente SIM";
-"onboarding_p2_no_internet_body" = "Le voci viaggiano direttamente da iPhone a iPhone via Bluetooth e Wi-Fi. Funziona anche in modalità aereo, in galleria o nel bosco, finché siete entro circa 1 km.";
+"onboarding_p2_no_internet_body" = "Le voci viaggiano direttamente tra dispositivi vicini via Bluetooth, Wi-Fi e rete locale. Funziona senza un server internet, finché siete nel raggio della rete locale.";
 "onboarding_p2_range_caveat" = "Muri, colline e dislivelli riducono la portata.";
 "onboarding_p2_multi_platform" = "Funziona anche su iPad e Mac con Apple Silicon — stessa app, tutti i tuoi dispositivi si parlano tra loro.";
 
@@ -223,8 +226,8 @@
 "onboarding_p4_private_channels_teaser" = "Vuoi un canale solo per il tuo gruppo? Crea un Canale Privato con password dal menu.";
 
 "onboarding_p5_steps_title" = "Pronto? Ecco i 3 passi";
-"onboarding_p5_step1" = "Apri Talky su un secondo dispositivo vicino: iPhone, iPad o Mac Apple Silicon (puoi provare anche da solo)";
-"onboarding_p5_step2" = "Tieni entrambi sullo stesso canale e accetta la richiesta di connessione che compare";
+"onboarding_p5_step1" = "Apri Talky su un secondo dispositivo vicino: iPhone, iPad, Mac Apple Silicon o client Android compatibile";
+"onboarding_p5_step2" = "Apri Esplora, tocca + accanto al dispositivo vicino, poi accetta la richiesta sull'altro dispositivo";
 "onboarding_p5_step3" = "Quando è connesso (pallino verde), tieni premuto il pulsante centrale per parlare, rilascia per ascoltare";
 
 "onboarding_permissions_title" = "Due permessi e siamo pronti";
@@ -243,7 +246,7 @@
 
 // MARK: - First Run Coach
 "coach_no_peers_title" = "Primo passo";
-"coach_no_peers_body" = "Apri Talky su un altro iPhone vicino a te, poi tocca \"Connessioni\" qui sotto.";
+"coach_no_peers_body" = "Apri Talky su un altro dispositivo vicino, poi tocca \"Esplora\" qui sotto.";
 "coach_press_ptt_title" = "Ora tieni premuto qui";
 "coach_press_ptt_body" = "Tieni premuto il pulsante centrale per parlare, rilascia per ascoltare.";
 "coach_dismiss" = "Ho capito";
@@ -418,9 +421,10 @@
 // MARK: - Mode Switch & Onboarding Radio
 "mode_switch_hint" = "Tocca il pulsante in alto a sinistra per passare tra Walkie Talkie e Radio FM";
 "got_it" = "Capito";
-"onboarding.radio_mode.title" = "Walkie-Talkie + Radio FM";
+"onboarding.radio_mode.title" = "Walkie-Talkie + Radio";
 "onboarding.radio_mode.subtitle" = "Passa tra le due modalità con un tap";
-"onboarding.radio_mode.body" = "Il pulsante in alto a sinistra ti permette di switchare tra Walkie-Talkie per parlare con gli amici e Radio FM per ascoltare 135 stazioni internazionali.";
+"onboarding.radio_mode.body" = "Il pulsante in alto a sinistra ti permette di passare da Walkie-Talkie per parlare con gli amici a centinaia di stazioni radio internazionali in streaming.";
+"onboarding.radio_mode.streaming_note" = "La radio usa lo streaming internet — non un'antenna FM fisica. Serve una connessione dati attiva (Wi-Fi o cellulare).";
 
 // MARK: - Live Activities
 "live_activities.title" = "Live Activities";
@@ -452,3 +456,4 @@
 "paywall.error.purchase_failed" = "Acquisto non riuscito. Riprova.";
 "paywall.error.no_purchases" = "Nessun acquisto trovato da ripristinare.";
 "paywall.error.restore_failed" = "Ripristino non riuscito. Riprova.";
+"check_wifi_bluetooth" = "Verifica WiFi e Bluetooth";

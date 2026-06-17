@@ -59,8 +59,11 @@ struct WalkieTalkieApp: App {
                 await iapManager.bootstrap()
                 await adManager.bootstrap()
                 // Cold start app-open ad after consent + first UI frame.
+                // Delayed: the user may already be interacting with the UI, so
+                // we add the same idle guard as the resume path to avoid
+                // accidental taps inflating the CTR.
                 if isOnboardingComplete {
-                    adManager.showAppOpenIfAllowed()
+                    adManager.showAppOpenIfAllowed(afterDelay: true)
                 }
             }
             .onOpenURL { url in
@@ -71,7 +74,7 @@ struct WalkieTalkieApp: App {
                 if newPhase == .active {
                     // Only re-show when truly coming back from background.
                     if isOnboardingComplete {
-                        adManager.showAppOpenIfAllowed()
+                        adManager.showAppOpenIfAllowed(afterDelay: true)
                     }
                 }
             }

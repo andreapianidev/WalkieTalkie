@@ -33,6 +33,7 @@ struct OnboardingStrings {
     static let radioModeTitle = NSLocalizedString("onboarding.radio_mode.title", comment: "Radio mode title")
     static let radioModeSubtitle = NSLocalizedString("onboarding.radio_mode.subtitle", comment: "Radio mode subtitle")
     static let radioModeBody = NSLocalizedString("onboarding.radio_mode.body", comment: "Radio mode body")
+    static let radioModeStreamingNote = NSLocalizedString("onboarding.radio_mode.streaming_note", comment: "Streaming note (clarifies it's internet, not antenna FM)")
 
     // MARK: - Page 6 — Next steps
     static let p5Title = NSLocalizedString("onboarding_p5_steps_title", comment: "Page 5 title")

@@ -8,11 +8,11 @@
 		<string>_walkie-talkie._udp</string>
 	</array>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Talky usa il microfono per trasmettere la tua voce agli altri iPhone connessi quando tieni premuto il pulsante per parlare.</string>
+	<string>Talky usa il microfono per trasmettere la tua voce agli altri dispositivi connessi quando tieni premuto il pulsante per parlare.</string>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>Talky usa la rete locale per scoprire altri iPhone vicini con cui parlare via walkie-talkie. Non viene inviato nulla su internet.</string>
+	<string>Talky usa la rete locale per scoprire dispositivi vicini con cui parlare via walkie-talkie. Non viene inviato nulla su internet.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Talky usa il Bluetooth per comunicare con altri iPhone vicini quando il Wi-Fi non è disponibile.</string>
+	<string>Talky usa il Bluetooth per comunicare con altri dispositivi vicini quando il Wi-Fi non è disponibile.</string>
 	<key>NSUserNotificationAlertStyle</key>
 	<string>alert</string>
 	<key>UIBackgroundModes</key>

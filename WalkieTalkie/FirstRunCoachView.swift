@@ -11,7 +11,7 @@ import SwiftUI
 struct FirstRunCoachView: View {
     let connectedPeersCount: Int
     let isTransmitting: Bool
-    let onGoToConnections: () -> Void
+    let onGoToExplore: () -> Void
     let onDismiss: () -> Void
 
     private var stage: Stage {
@@ -26,9 +26,9 @@ struct FirstRunCoachView: View {
                     title: OnboardingStrings.coachNoPeersTitle,
                     body: OnboardingStrings.coachNoPeersBody,
                     icon: "1.circle.fill",
-                    actionLabel: "connections".localized,
+                    actionLabel: "explore".localized,
                     actionIcon: "arrow.down.right.circle.fill",
-                    onAction: onGoToConnections
+                    onAction: onGoToExplore
                 )
                 .padding(.top, 8)
                 .transition(.move(edge: .top).combined(with: .opacity))
@@ -129,7 +129,7 @@ struct FirstRunCoachView: View {
         FirstRunCoachView(
             connectedPeersCount: 0,
             isTransmitting: false,
-            onGoToConnections: {},
+            onGoToExplore: {},
             onDismiss: {}
         )
     }

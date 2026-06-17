@@ -19,7 +19,11 @@ struct ConnectionsView: View {
             
             // Connection info textbox
             connectionInfoView
-            
+
+            // Adaptive banner: low-interaction view, safe for a persistent ad.
+            AdaptiveBannerView()
+                .padding(.horizontal, 16)
+
             // Status section
             statusSection
             

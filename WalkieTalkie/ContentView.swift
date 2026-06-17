@@ -16,9 +16,11 @@ struct ContentView: View {
     @StateObject private var hapticManager = HapticManager.shared
     @StateObject private var settingsManager = SettingsManager.shared
     @StateObject private var sleepTimerManager = SleepTimerManager.shared
+    @StateObject private var crossPlatformManager = TalkyCrossPlatformManager.shared
     @EnvironmentObject private var adManager: AdManager
     @State private var frequencyChangeCount = 0
     @State private var stationChangeCount = 0
+    @State private var interstitialDebounceTask: Task<Void, Never>?
     @State private var isTransmitting = false
     @State private var frequency = "428.283"
     @State private var showingPermissionAlert = false
@@ -42,6 +44,27 @@ struct ContentView: View {
     @State private var showingConnectionAlert = false
     @State private var showingErrorAlert = false
     @State private var isPoweredOn = true
+
+    private var connectedWalkiePeerCount: Int {
+        multipeerManager.connectedPeers.count + crossPlatformManager.connectedPeerCount
+    }
+
+    private var hasWalkieConnection: Bool {
+        connectedWalkiePeerCount > 0
+    }
+
+    private var walkieConnectionStatusText: String {
+        if connectedWalkiePeerCount == 0 {
+            return multipeerManager.connectionStatus
+        }
+        if crossPlatformManager.connectedPeerCount > 0 && multipeerManager.connectedPeers.isEmpty {
+            return "Connesso Android (\(crossPlatformManager.connectedPeerCount))"
+        }
+        if crossPlatformManager.connectedPeerCount > 0 {
+            return "Connesso (\(connectedWalkiePeerCount), Android \(crossPlatformManager.connectedPeerCount))"
+        }
+        return multipeerManager.connectionStatus
+    }
     
     var body: some View {
         GeometryReader { geometry in
@@ -111,10 +134,10 @@ struct ContentView: View {
                 // First-run coach overlay (non-blocking)
                 if !settingsManager.hasSeenFirstRunCoach && selectedTab == 0 && !isRadioMode {
                     FirstRunCoachView(
-                        connectedPeersCount: multipeerManager.connectedPeers.count,
+                        connectedPeersCount: connectedWalkiePeerCount,
                         isTransmitting: isTransmitting,
-                        onGoToConnections: {
-                            withAnimation { selectedTab = 2 }
+                        onGoToExplore: {
+                            withAnimation { selectedTab = 1 }
                         },
                         onDismiss: dismissFirstRunCoach
                     )
@@ -126,6 +149,14 @@ struct ContentView: View {
                     ModeSwitchHintOverlay(isShown: $showModeSwitchHint)
                         .zIndex(100)
                         .transition(.opacity)
+                }
+
+                // Rewarded CTA pill: shown for 8s after the user sees an interstitial.
+                // Gives users who just experienced an ad a one-tap path to remove them.
+                if adManager.showRewardedPill {
+                    rewardedPillOverlay
+                        .zIndex(90)
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
             }
             .onAppear {
@@ -319,9 +350,9 @@ struct ContentView: View {
                         }
                     }
                     
-                    Text("status".localized + ": \(multipeerManager.connectionStatus)")
+                    Text("status".localized + ": \(walkieConnectionStatusText)")
                         .font(.caption)
-                        .foregroundColor(multipeerManager.connectedPeers.isEmpty ? .red : .green)
+                        .foregroundColor(hasWalkieConnection ? .green : .red)
                     
                     // Mostra errore se presente
                     if let error = multipeerManager.lastError {
@@ -340,7 +371,7 @@ struct ContentView: View {
             Spacer()
             
             Circle()
-                .fill(isRadioMode ? (radioManager.isPlaying ? Color.green : Color.orange) : (multipeerManager.connectedPeers.isEmpty ? Color.red : Color.green))
+                .fill(isRadioMode ? (radioManager.isPlaying ? Color.green : Color.orange) : (hasWalkieConnection ? Color.green : Color.red))
                 .frame(width: 12, height: 12)
         }
         .padding(.horizontal, 20)
@@ -373,11 +404,11 @@ struct ContentView: View {
                     
                     Spacer()
                     
-                    Text("\(multipeerManager.connectedPeers.count)")
+                    Text("\(connectedWalkiePeerCount)")
                         .foregroundColor(.white)
                         .font(.caption)
                     
-                    Image(systemName: multipeerManager.connectedPeers.count > 0 ? "antenna.radiowaves.left.and.right" : "antenna.radiowaves.left.and.right.slash")
+                    Image(systemName: hasWalkieConnection ? "antenna.radiowaves.left.and.right" : "antenna.radiowaves.left.and.right.slash")
                         .foregroundColor(.white)
                         .font(.caption)
                 }
@@ -806,7 +837,7 @@ struct ContentView: View {
                 
                 // Status sotto il pulsante
                 VStack(spacing: 4) {
-                    if multipeerManager.connectedPeers.isEmpty {
+                    if !hasWalkieConnection {
                         HStack {
                             Image(systemName: "exclamationmark.triangle.fill")
                                 .foregroundColor(.red)
@@ -820,7 +851,7 @@ struct ContentView: View {
                             Image(systemName: "checkmark.circle.fill")
                                 .foregroundColor(.green)
                                 .font(.caption)
-                            Text("\(multipeerManager.connectedPeers.count) " + "devices_connected".localized)
+                            Text("\(connectedWalkiePeerCount) " + "devices_connected".localized)
                                 .font(.caption)
                                 .foregroundColor(.green)
                         }
@@ -1023,6 +1054,44 @@ struct ContentView: View {
         }
     }
 
+    // MARK: - Rewarded CTA Pill
+
+    private var rewardedPillOverlay: some View {
+        VStack {
+            Spacer()
+            Button(action: {
+                adManager.presentRewardedRemoveAds(source: "post_interstitial")
+            }) {
+                HStack(spacing: 10) {
+                    Image(systemName: "play.rectangle.fill")
+                        .font(.system(size: 16, weight: .semibold))
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("watch_ad_remove_ads".localized)
+                            .font(.system(size: 14, weight: .semibold))
+                        Text("watch_ad_remove_ads_subtitle".localized)
+                            .font(.system(size: 12))
+                    }
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.caption.bold())
+                }
+                .foregroundColor(.white)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .background(
+                    RoundedRectangle(cornerRadius: 14)
+                        .fill(Color.blue.opacity(0.9))
+                        .shadow(color: .blue.opacity(0.4), radius: 8, x: 0, y: 4)
+                )
+                .padding(.horizontal, 20)
+                .padding(.bottom, 10)
+            }
+            .buttonStyle(.plain)
+            .disabled(!adManager.rewarded.isAdReady)
+            .opacity(adManager.rewarded.isAdReady ? 1.0 : 0.5)
+        }
+    }
+
     // MARK: - Helper Functions
     
     private func previousFrequency() {
@@ -1071,7 +1140,7 @@ struct ContentView: View {
         frequencyChangeCount += 1
         // Skip the very first change after launch.
         guard frequencyChangeCount > 1 else { return }
-        adManager.showInterstitialIfAllowed()
+        scheduleInterstitialAfterIdle()
     }
 
     /// Radio counterpart of `maybeShowInterstitialOnChannelChange`. Fires only on
@@ -1084,7 +1153,19 @@ struct ContentView: View {
         stationChangeCount += 1
         // Skip the very first change so we never greet a fresh session with an ad.
         guard stationChangeCount > 1 else { return }
-        adManager.showInterstitialIfAllowed()
+        scheduleInterstitialAfterIdle()
+    }
+
+    private func scheduleInterstitialAfterIdle() {
+        interstitialDebounceTask?.cancel()
+        interstitialDebounceTask = Task { @MainActor in
+            let delay = UInt64(AdConfig.FrequencyCap.interstitialIdleDelay * 1_000_000_000)
+            try? await Task.sleep(nanoseconds: delay)
+            guard !Task.isCancelled else { return }
+            guard !isTransmitting, !multipeerManager.isReceiving else { return }
+            adManager.showInterstitialIfAllowed()
+            interstitialDebounceTask = nil
+        }
     }
     
     private func playFrequencyChangeSound() {
@@ -1193,7 +1274,7 @@ struct ContentView: View {
     private func startTransmitting() {
         FirstTimeEventTracker.shared.fireOnce(FirstTimeEventTracker.Events.pttPress)
 
-        guard !multipeerManager.connectedPeers.isEmpty else {
+        guard hasWalkieConnection else {
             multipeerManager.lastError = WalkieTalkieError.noConnectedPeers
             hapticManager.error()
             return
@@ -1263,4 +1344,3 @@ struct TabButton: View {
     ContentView()
         .environmentObject(AdManager.shared)
 }
-

@@ -234,8 +234,15 @@ struct StationBrowserSheet: View {
             emptyState(emptyMessage)
         } else {
             List {
-                ForEach(stations) { station in
+                ForEach(Array(stations.enumerated()), id: \.element.id) { index, station in
                     stationRow(station)
+
+                    if !isProUser,
+                       let ad = nativeAd.nativeAd,
+                       (index + 1) % 8 == 0,
+                       index > 0 {
+                        NativeAdCardView(nativeAd: ad)
+                    }
                 }
             }
             .listStyle(.plain)

@@ -15,6 +15,7 @@ final class AppOpenAdManager: NSObject, ObservableObject {
     private var appOpenAd: AppOpenAd?
     private var loadTime: Date?
     private var isLoading = false
+    private var pendingPresentationTask: Task<Void, Never>?
     private let adUnitID = AdConfig.appOpenAdUnitID
 
     /// Suppress flag set by other components (e.g. while user is transmitting).
@@ -38,8 +39,9 @@ final class AppOpenAdManager: NSObject, ObservableObject {
         }
     }
 
-    func showAdIfAvailable() {
+    func showAdIfAvailable(afterDelay: Bool = false) {
         guard !isPresenting else { return }
+        guard pendingPresentationTask == nil else { return }
         guard !suppressNextResume else {
             suppressNextResume = false
             return
@@ -48,8 +50,33 @@ final class AppOpenAdManager: NSObject, ObservableObject {
             Task { await loadAd() }
             return
         }
+
+        guard afterDelay else {
+            isPresenting = true
+            ad.present(from: root)
+            return
+        }
+
         isPresenting = true
-        ad.present(from: root)
+        pendingPresentationTask = Task { @MainActor in
+            let delay = UInt64(AdConfig.FrequencyCap.appOpenResumeDelay * 1_000_000_000)
+            try? await Task.sleep(nanoseconds: delay)
+            guard !Task.isCancelled else {
+                self.isPresenting = false
+                self.pendingPresentationTask = nil
+                return
+            }
+            guard self.isAdAvailable,
+                  let delayedAd = self.appOpenAd,
+                  let delayedRoot = AdRootViewController.current() else {
+                self.isPresenting = false
+                self.pendingPresentationTask = nil
+                Task { await self.loadAd() }
+                return
+            }
+            self.pendingPresentationTask = nil
+            delayedAd.present(from: delayedRoot)
+        }
     }
 
     private var isAdAvailable: Bool {
@@ -63,6 +90,7 @@ extension AppOpenAdManager: FullScreenContentDelegate {
         Task { @MainActor in
             self.appOpenAd = nil
             self.isPresenting = false
+            self.pendingPresentationTask = nil
             await loadAd()
         }
     }
@@ -73,6 +101,7 @@ extension AppOpenAdManager: FullScreenContentDelegate {
             print("[AppOpenAd] present failed: \(error.localizedDescription)")
             self.appOpenAd = nil
             self.isPresenting = false
+            self.pendingPresentationTask = nil
             await loadAd()
         }
     }

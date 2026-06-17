@@ -5,11 +5,13 @@ import MultipeerConnectivity
 
 struct ExploreView: View {
     @ObservedObject var multipeerManager: MultipeerManager
+    @ObservedObject private var crossPlatformManager = TalkyCrossPlatformManager.shared
     @State private var radarRotation: Double = 0
     @State private var pulseScale: CGFloat = 1.0
     @State private var scanningOpacity: Double = 0.3
     @State private var detectedDevices: [DetectedDevice] = []
     @State private var showPaywall: Bool = false
+    @State private var pendingInvitePeerIDs: Set<String> = []
 
     private let radarRadius: CGFloat = 120
     private let maxRange: Double = 100 // metri
@@ -32,6 +34,11 @@ struct ExploreView: View {
             RewardAdCTAView(source: "explore_banner")
                 .padding(.horizontal, 16)
                 .padding(.top, 8)
+
+            // Adaptive banner: low-interaction view, safe for a persistent ad.
+            AdaptiveBannerView()
+                .padding(.horizontal, 16)
+                .padding(.top, 6)
 
             Spacer()
 
@@ -59,6 +66,15 @@ struct ExploreView: View {
         .onReceive(multipeerManager.$discoveredPeers) { _ in
             updateDetectedDevices()
         }
+        .onReceive(crossPlatformManager.$peers) { _ in
+            updateDetectedDevices()
+        }
+        .onReceive(crossPlatformManager.$connectedPeerCount) { _ in
+            updateDetectedDevices()
+        }
+        .onReceive(crossPlatformManager.$connectedPeerIDs) { _ in
+            updateDetectedDevices()
+        }
     }
     
     private var headerView: some View {
@@ -84,6 +100,7 @@ struct ExploreView: View {
             Button(action: {
                 multipeerManager.stopBrowsing()
                 multipeerManager.startBrowsing()
+                crossPlatformManager.start()
             }) {
                 Image(systemName: "arrow.clockwise")
                     .foregroundColor(Color("PrimaryTextColor"))
@@ -297,6 +314,13 @@ struct ExploreView: View {
                             .fill(Color.black.opacity(0.1))
                     )
             }
+
+            if !detectedDevices.isEmpty {
+                Text("tap_plus_to_invite".localized)
+                    .font(.caption)
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.65))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
             
             if detectedDevices.isEmpty {
                 VStack(spacing: 8) {
@@ -330,9 +354,11 @@ struct ExploreView: View {
     }
     
     private func deviceRow(for device: DetectedDevice) -> some View {
-        HStack {
+        let isInvitePending = pendingInvitePeerIDs.contains(device.id)
+
+        return HStack {
             Circle()
-                .fill(device.isConnected ? Color.green : Color.orange)
+                .fill(deviceStatusColor(device, isInvitePending: isInvitePending))
                 .frame(width: 12, height: 12)
             
             VStack(alignment: .leading, spacing: 2) {
@@ -341,9 +367,13 @@ struct ExploreView: View {
                     .fontWeight(.medium)
                     .foregroundColor(.black)
                 
-                Text(device.isConnected ? "connected".localized : "available".localized)
+                Text(deviceStatusText(device, isInvitePending: isInvitePending))
                     .font(.caption)
                     .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
+
+                Text(device.transportLabel)
+                    .font(.caption2)
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.45))
             }
             
             Spacer()
@@ -359,17 +389,22 @@ struct ExploreView: View {
                     .foregroundColor(Color("PrimaryTextColor").opacity(0.5))
             }
             
-            if !device.isConnected {
+            if !device.isConnected, let peerID = device.applePeerID {
                 Button(action: {
-                    // Connect to device
-                    if let peer = multipeerManager.discoveredPeers.first(where: { $0.displayName == device.name }) {
-                        multipeerManager.invitePeer(peer)
-                    }
+                    pendingInvitePeerIDs.insert(device.id)
+                    multipeerManager.invitePeer(peerID)
                 }) {
-                    Image(systemName: "plus.circle.fill")
-                        .foregroundColor(.black)
-                        .font(.title3)
+                    if isInvitePending {
+                        ProgressView()
+                            .scaleEffect(0.75)
+                    } else {
+                        Image(systemName: "plus.circle.fill")
+                            .foregroundColor(.black)
+                            .font(.title3)
+                    }
                 }
+                .disabled(isInvitePending)
+                .accessibilityLabel(isInvitePending ? "invitation_sent".localized : "send_connection_request".localized)
             }
         }
         .padding()
@@ -399,8 +434,10 @@ struct ExploreView: View {
         // Add connected peers
         for peer in multipeerManager.connectedPeers {
             let device = DetectedDevice(
-                id: peer.displayName,
+                id: "apple-\(peer.hash)",
+                applePeerID: peer,
                 name: peer.displayName,
+                transportLabel: "Apple",
                 isConnected: true,
                 estimatedDistance: Double.random(in: 5...30),
                 signalStrength: "Strong",
@@ -414,8 +451,10 @@ struct ExploreView: View {
         for peer in multipeerManager.discoveredPeers {
             if !multipeerManager.connectedPeers.contains(peer) {
                 let device = DetectedDevice(
-                    id: peer.displayName,
+                    id: "apple-\(peer.hash)",
+                    applePeerID: peer,
                     name: peer.displayName,
+                    transportLabel: "Apple",
                     isConnected: false,
                     estimatedDistance: Double.random(in: 10...80),
                     signalStrength: ["weak".localized, "medium".localized, "strong".localized].randomElement() ?? "medium".localized,
@@ -425,8 +464,39 @@ struct ExploreView: View {
                 devices.append(device)
             }
         }
+
+        for peer in crossPlatformManager.peers {
+            let isConnected = crossPlatformManager.connectedPeerIDs.contains(peer.id)
+            let device = DetectedDevice(
+                id: "android-\(peer.id)",
+                applePeerID: nil,
+                name: peer.name,
+                transportLabel: "Android / Cross-platform",
+                isConnected: isConnected,
+                estimatedDistance: Double.random(in: 5...50),
+                signalStrength: "strong".localized,
+                position: randomPosition(),
+                pulseScale: 1.15
+            )
+            devices.append(device)
+        }
         
         detectedDevices = devices
+        let visiblePeerIDs = Set(devices.map(\.id))
+        pendingInvitePeerIDs = pendingInvitePeerIDs.intersection(visiblePeerIDs)
+        for peer in multipeerManager.connectedPeers {
+            pendingInvitePeerIDs.remove("apple-\(peer.hash)")
+        }
+    }
+
+    private func deviceStatusColor(_ device: DetectedDevice, isInvitePending: Bool) -> Color {
+        if device.isConnected { return .green }
+        return isInvitePending ? .blue : .orange
+    }
+
+    private func deviceStatusText(_ device: DetectedDevice, isInvitePending: Bool) -> String {
+        if device.isConnected { return "connected".localized }
+        return isInvitePending ? "invitation_sent".localized : "available".localized
     }
     
     private func randomPosition() -> CGPoint {
@@ -442,7 +512,9 @@ struct ExploreView: View {
 
 struct DetectedDevice: Identifiable {
     let id: String
+    let applePeerID: MCPeerID?
     let name: String
+    let transportLabel: String
     let isConnected: Bool
     let estimatedDistance: Double
     let signalStrength: String

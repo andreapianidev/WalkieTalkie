@@ -59,6 +59,8 @@ class MultipeerManager: NSObject, ObservableObject {
     private var lastHeartbeatSent: Date = Date()
     
     // MARK: - High Traffic Optimization Properties
+    private var declinedPeers: Set<MCPeerID> = []
+    private let declineCooldown: TimeInterval = 120 // 2 min cooldown after user declines
     private var connectionThrottle: [MCPeerID: Date] = [:]
     private let throttleInterval: TimeInterval = 2.0 // Minimum time between connection attempts
     private var maxConcurrentConnections = 8 // Limit for high traffic scenarios
@@ -109,12 +111,13 @@ class MultipeerManager: NSObject, ObservableObject {
         session.delegate = self
         advertiser.delegate = self
         browser.delegate = self
-        
+
         // Richiedi permessi audio
         audioManager.requestAudioPermission()
         
         setupAudio()
         setupHighTrafficOptimizations()
+        TalkyCrossPlatformManager.shared.start()
     }
     
     deinit {
@@ -214,6 +217,11 @@ class MultipeerManager: NSObject, ObservableObject {
     }
     
     func invitePeer(_ peerID: MCPeerID) {
+        guard !declinedPeers.contains(peerID) else {
+            logger.logNetworkDebug("Saltato invito: il peer \(peerID.displayName) è stato appena rifiutato dall'utente")
+            return
+        }
+
         // High traffic optimization: Check connection limits
         guard connectedPeers.count < maxConcurrentConnections else {
             logger.logNetworkWarning("Limite massimo connessioni raggiunto (\(maxConcurrentConnections))")
@@ -254,17 +262,17 @@ class MultipeerManager: NSObject, ObservableObject {
                 self.performanceMonitor.recordConnectionTime(connectionTime)
                 self.performanceMonitor.startLatencyTest(to: peerID.displayName)
                 
-                self.logger.logNetworkInfo("Invito inviato a: \(peerID.displayName) (tentativo \(currentAttempts + 1)/\(self.maxRetryAttempts), tempo: \(String(format: "%.2f", connectionTime))s)")
+                self.logger.logNetworkInfo("Invito inviato a: \(peerID.displayName) (tempo: \(String(format: "%.2f", connectionTime))s)")
             }
-            
-            // Retry automatico in caso di fallimento
-            DispatchQueue.main.asyncAfter(deadline: .now() + self.connectionTimeout + 2.0) { [weak self] in
-                guard let self = self else { return }
-                if !self.connectedPeers.contains(peerID) && self.discoveredPeers.contains(peerID) {
-                    self.logger.logNetworkInfo("Retry invito per \(peerID.displayName)")
-                    self.invitePeer(peerID)
-                }
-            }
+
+            // NESSUN retry automatico in uscita: ri-invitare in loop ogni
+            // (timeout+2s) faceva comparire un nuovo prompt di connessione sul
+            // device ricevente ad ogni tentativo → utenti "spammati di richieste"
+            // / "prompted endlessly to connect to the same device" (recensioni
+            // App Store). L'invito è ora un'azione esplicita dell'utente da
+            // Explore (ExploreView → invitePeer); se fallisce, basta ri-toccare.
+            // La riconnessione dei peer GIÀ connessi e poi caduti resta gestita
+            // da `scheduleReconnection(for:)`, che è il caso legittimo.
         }
     }
     
@@ -277,6 +285,12 @@ class MultipeerManager: NSObject, ObservableObject {
     
     func declineInvitation() {
         guard let handler = pendingInvitationHandler else { return }
+        if let declinedPeer = receivedInvitation?.0 {
+            declinedPeers.insert(declinedPeer)
+            DispatchQueue.main.asyncAfter(deadline: .now() + declineCooldown) { [weak self] in
+                self?.declinedPeers.remove(declinedPeer)
+            }
+        }
         handler(false, nil)
         receivedInvitation = nil
         pendingInvitationHandler = nil
@@ -601,7 +615,7 @@ class MultipeerManager: NSObject, ObservableObject {
         logger.logAudioInfo("Avvio trasmissione audio...")
 
 
-        guard !connectedPeers.isEmpty else {
+        guard !connectedPeers.isEmpty || TalkyCrossPlatformManager.shared.connectedPeerCount > 0 else {
             lastError = WalkieTalkieError.noConnectedPeers
             return
         }
@@ -702,7 +716,10 @@ class MultipeerManager: NSObject, ObservableObject {
 
     
     private func sendAccumulatedAudio() {
-        guard !connectedPeers.isEmpty else {
+        let hasApplePeers = !connectedPeers.isEmpty
+        let hasCrossPlatformPeers = TalkyCrossPlatformManager.shared.connectedPeerCount > 0
+
+        guard hasApplePeers || hasCrossPlatformPeers else {
             logger.logAudioDebug("Nessun peer connesso per l'invio audio accumulato")
             recordedAudioData = Data() // Reset
             return
@@ -714,19 +731,22 @@ class MultipeerManager: NSObject, ObservableObject {
         }
         
         let optimizedData = optimizeBandwidth(for: recordedAudioData)
-        logger.logAudioInfo("Invio messaggio audio completo: \(optimizedData.count) bytes a \(connectedPeers.count) peer(s)")
+        logger.logAudioInfo("Invio messaggio audio completo: \(optimizedData.count) bytes a \(connectedPeers.count) peer Apple e \(TalkyCrossPlatformManager.shared.connectedPeerCount) peer cross-platform")
 
-        do {
-            try session.send(optimizedData, toPeers: connectedPeers, with: .reliable)
-            logger.logAudioInfo("Messaggio audio inviato a tutti i peer.")
-        } catch {
-            lastError = WalkieTalkieError.audioTransmissionFailed(underlying: error)
-            logger.logAudioError(lastError!, context: "Errore invio audio accumulato")
+        if hasApplePeers {
+            do {
+                try session.send(optimizedData, toPeers: connectedPeers, with: .reliable)
+                logger.logAudioInfo("Messaggio audio inviato a tutti i peer Apple.")
+            } catch {
+                lastError = WalkieTalkieError.audioTransmissionFailed(underlying: error)
+                logger.logAudioError(lastError!, context: "Errore invio audio accumulato")
+            }
         }
 
         // Pro recording: salva una copia dell'audio trasmesso (no-op se non Pro).
         // Eseguito DOPO l'invio ai peer e PRIMA del reset del buffer.
         let snapshot = recordedAudioData
+        TalkyCrossPlatformManager.shared.sendAudio(floatPCM: snapshot)
         DispatchQueue.main.async {
             RecordingsManager.shared.saveTransmittedAudio(snapshot)
         }
@@ -992,6 +1012,18 @@ extension MultipeerManager: MCNearbyServiceAdvertiserDelegate {
         }
 
         DispatchQueue.main.async {
+            // Auto-accept sui canali PRIVATI (password condivisa): chi è sullo stesso
+            // canale privato si è già scambiato la password, quindi richiedere un tap
+            // accept/decline per ogni peer è solo frizione ("64 clicks to accept for one
+            // 8 person call" — recensione App Store). Sul canale PUBBLICO resta il prompt
+            // manuale: lì chiunque vicino può inviare un invito, quindi la conferma
+            // esplicita protegge da connessioni indesiderate.
+            if self.currentChannelID != "public" {
+                self.logger.logNetworkInfo("Invito auto-accettato (canale privato) da \(peerID.displayName)")
+                invitationHandler(true, self.session)
+                return
+            }
+
             // Se c'è già un invito pendente non gestito dall'utente, declina il
             // precedente automaticamente: lasciarlo in sospeso fa scadere il timeout
             // sul peer remoto (~30s) lasciandolo bloccato in "connecting".
@@ -1007,6 +1039,7 @@ extension MultipeerManager: MCNearbyServiceAdvertiserDelegate {
         logger.logNetworkError(error, context: "Errore avvio advertising")
         DispatchQueue.main.async {
             self.lastError = WalkieTalkieError.networkConnectionFailed(underlying: error)
+            self.connectionStatus = "check_wifi_bluetooth".localized
         }
     }
 }
@@ -1041,16 +1074,9 @@ extension MultipeerManager: MCNearbyServiceBrowserDelegate {
             }
         }
         
-        // Invito DETERMINISTICO: entrambi i device si scoprono a vicenda, ma se entrambi
-        // invitassero si avrebbe il doppio-invito incrociato (sessioni in conflitto, peer
-        // bloccato in "connecting"). Quindi solo il peer con `instanceID` minore invia
-        // l'invito; l'altro attende — il suo advertiser riceverà l'invito e lo accetterà.
-        let remoteUID = info?["uid"] ?? peerID.displayName
-        if instanceID < remoteUID {
-            invitePeer(peerID)
-        } else {
-            logger.logNetworkDebug("Attendo invito da \(peerID.displayName) (uid remoto minore, invita lui)")
-        }
+        // Discovery is passive: users connect from Explore via an explicit tap.
+        // Auto-inviting every found peer caused unsolicited connection prompts
+        // and retry loops when several Talky users were nearby on the public channel.
     }
 
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
@@ -1064,6 +1090,7 @@ extension MultipeerManager: MCNearbyServiceBrowserDelegate {
         logger.logNetworkError(error, context: "Errore avvio browsing")
         DispatchQueue.main.async {
             self.lastError = WalkieTalkieError.networkConnectionFailed(underlying: error)
+            self.connectionStatus = "check_wifi_bluetooth".localized
         }
     }
 }

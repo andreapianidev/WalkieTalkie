@@ -128,6 +128,9 @@
 "no_devices_detected" = "未偵測到裝置";
 "ensure_devices_open" = "確保其他裝置已開啟應用程式";
 "available" = "可用";
+"tap_plus_to_invite" = "點一下 + 送出連接請求。另一台裝置必須接受。";
+"send_connection_request" = "送出連接請求";
+"invitation_sent" = "請求已送出";
 "strong" = "強";
 "medium" = "中等";
 "weak" = "弱";
@@ -155,10 +158,10 @@
 "how_to_use" = "如何使用應用程式";
 "instruction_1_title" = "在所有裝置上開啟應用程式";
 "instruction_1_description" = "確保所有裝置都已開啟並啟用 WalkieTalkie 應用程式。";
-"instruction_2_title" = "前往連接";
-"instruction_2_description" = "點擊「連接」標籤查看附近的可用裝置。";
+"instruction_2_title" = "前往探索";
+"instruction_2_description" = "點擊「探索」標籤查看附近的可用裝置。";
 "instruction_3_title" = "連接裝置";
-"instruction_3_description" = "從列表中選擇一個裝置以發送連接請求。";
+"instruction_3_description" = "點一下裝置旁的 + 送出連接請求。";
 "instruction_4_title" = "選擇頻率";
 "instruction_4_description" = "所有連接的裝置必須使用相同的頻率才能通信。";
 "instruction_5_title" = "按住說話";
@@ -200,7 +203,7 @@
 "onboarding_p1_subtitle" = "登山、廣場、演唱會：即使沒有訊號，也能與朋友對話。";
 
 "onboarding_p2_no_internet_title" = "無需網路，無需 SIM 卡";
-"onboarding_p2_no_internet_body" = "聲音透過藍牙與 Wi-Fi 直接在 iPhone 之間傳送。即使在飛行模式、隧道或森林中，只要距離約 1 公里以內也能使用。";
+"onboarding_p2_no_internet_body" = "聲音會透過藍牙、Wi-Fi 與本機網路在附近裝置之間直接傳送。不需要網際網路伺服器，只要在本機範圍內即可使用。";
 "onboarding_p2_range_caveat" = "牆壁、山丘與高低差會降低傳輸距離。";
 "onboarding_p2_multi_platform" = "也支援 iPad 與 Apple Silicon Mac — 同一個 App，你的所有裝置都能互相通話。";
 
@@ -214,8 +217,8 @@
 "onboarding_p4_private_channels_teaser" = "想要僅限你的群組使用的頻道？從選單建立有密碼保護的私人頻道。";
 
 "onboarding_p5_steps_title" = "準備好了嗎？只需 3 步";
-"onboarding_p5_step1" = "在附近的第二台裝置開啟 Talky：iPhone、iPad 或 Apple Silicon Mac（也可自行測試）";
-"onboarding_p5_step2" = "讓兩台裝置保持在相同頻道，並接受出現的連線要求";
+"onboarding_p5_step1" = "在附近的第二台裝置開啟 Talky：iPhone、iPad、Apple Silicon Mac 或相容的 Android 用戶端";
+"onboarding_p5_step2" = "開啟探索，點一下附近裝置旁的 +，然後在另一台裝置接受請求";
 "onboarding_p5_step3" = "連線成功（綠點）後，按住中央按鈕說話，放開即可聆聽";
 
 "onboarding_permissions_title" = "兩個權限，馬上就好";
@@ -234,7 +237,7 @@
 
 // MARK: - First Run Coach
 "coach_no_peers_title" = "第一步";
-"coach_no_peers_body" = "在附近的另一支 iPhone 開啟 Talky，然後點擊下方的「連線」。";
+"coach_no_peers_body" = "在附近的另一台裝置開啟 Talky，然後點擊下方的「探索」。";
 "coach_press_ptt_title" = "現在按住這裡";
 "coach_press_ptt_body" = "按住中央按鈕說話，放開後聆聽。";
 "coach_dismiss" = "我知道了";
@@ -420,9 +423,10 @@
 // MARK: - Mode Switch & Onboarding Radio
 "mode_switch_hint" = "點擊左上角按鈕在對講機與 FM 電台之間切換";
 "got_it" = "明白";
-"onboarding.radio_mode.title" = "對講機 + FM 電台";
+"onboarding.radio_mode.title" = "對講機 + 電台";
 "onboarding.radio_mode.subtitle" = "一鍵切換兩種模式";
-"onboarding.radio_mode.body" = "左上角的按鈕讓您在與朋友通話的對講機模式和擁有 135 個國際電台的 FM 電台之間切換。";
+"onboarding.radio_mode.body" = "左上角的按鈕讓您在與朋友通話的對講機模式和數百個國際網絡串流電台之間切換。";
+"onboarding.radio_mode.streaming_note" = "電台使用網絡串流——不是實體FM天線。需要有效的數據連接（Wi-Fi或手機網絡）。";
 
 // MARK: - Live Activities
 "live_activities.title" = "即時動態";
@@ -454,3 +458,4 @@
 "paywall.error.purchase_failed" = "購買失敗，請再試一次。";
 "paywall.error.no_purchases" = "找不到可還原的購買項目。";
 "paywall.error.restore_failed" = "還原失敗，請再試一次。";
+"check_wifi_bluetooth" = "檢查WiFi和藍牙";
