@@ -1,13 +1,15 @@
 // Created by Andrea Piani - Immaginet Srl - 22/05/26 - https://www.andreapiani.com - README.md
 
-# Talky — Walkie-Talkie & FM Radio (Open Source iOS App)
+# Talky — Walkie-Talkie & FM Radio (Source-Available iOS + Android App)
 
 ![Talky App](https://www.andreapiani.com/talky.png)
 
 [![Website](https://img.shields.io/badge/Website-walkie--talky.vercel.app-7cf9de.svg?style=flat&logo=vercel&logoColor=white)](https://walkie-talky.vercel.app)
 [![App Store](https://img.shields.io/badge/App%20Store-Free%20Download-0a84ff.svg?style=flat&logo=appstore&logoColor=white)](https://apps.apple.com/app/id6748584483)
 [![iOS](https://img.shields.io/badge/iOS-15.6+-blue.svg)](https://developer.apple.com/ios/)
+[![Android](https://img.shields.io/badge/Android-12+%20(Beta)-3ddc84.svg?logo=android&logoColor=white)](#-android-beta)
 [![Swift](https://img.shields.io/badge/Swift-5.9+-orange.svg)](https://swift.org/)
+[![Kotlin](https://img.shields.io/badge/Kotlin-2.0+-7f52ff.svg?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
 [![Xcode](https://img.shields.io/badge/Xcode-16.0+-blue.svg)](https://developer.apple.com/xcode/)
 [![License: PolyForm NC 1.0.0](https://img.shields.io/badge/License-PolyForm%20Noncommercial%201.0.0-red.svg)](LICENSE)
 [![Commercial use: NOT permitted](https://img.shields.io/badge/Commercial%20use-NOT%20permitted-critical.svg)](#-license)
@@ -26,6 +28,7 @@
 ## Table of Contents
 
 - [Highlights](#-highlights)
+- [Android (Beta)](#-android-beta)
 - [Feature Matrix (Free vs Pro)](#-feature-matrix-free-vs-pro)
 - [Walkie-Talkie Engine](#-walkie-talkie-engine)
 - [Radio Browser (135 stations)](#-radio-browser-135-stations)
@@ -60,6 +63,48 @@
 - 🔒 **Privacy-first**: walkie-talkie audio never leaves the device, no accounts, no cloud
 - 🧱 **Clean MVVM + SwiftUI + Combine**, singleton managers, Swift 6 strict concurrency-ready
 - ⚖️ **Source-available** under PolyForm Noncommercial 1.0.0 — fork it, study it, learn from it; commercial reuse requires a separate license
+
+---
+
+## 🤖 Android (Beta)
+
+Talky now ships an **Android port** too — it lives in [`Android/`](Android/) inside this same repo and is distributed under the **same [PolyForm Noncommercial License](LICENSE)** as the iOS app.
+
+> ⚠️ **Status: Beta.** The Android app is a younger, leaner port of the iOS original. The core experience (push-to-talk + radio) is functional and builds a **signed release APK**, but it does **not yet** have feature parity on the Pro tier (no IAP/paywall, no Live Activities, single base theme).
+
+### What works today
+- 🎙️ **Push-to-talk** over the local network (`CrossPlatformWalkieManager`, Network Service Discovery / NSD) with an `AudioManager` PTT pipeline
+- 📻 **343 radio stations** — the **same catalogue as iOS**, kept in sync from [`RadioManager.swift`](WalkieTalkie/RadioManager.swift) into [`Android/.../radio/RadioManager.kt`](Android/app/src/main/java/com/immaginet/talky/radio/RadioManager.kt)
+- 📣 **AdMob** stack (banner / interstitial / rewarded / app-open) with **UMP consent** — uses Google **test ad units** by default (see note below)
+- 🔥 **Firebase** Analytics + Crashlytics
+- 🎨 **Jetpack Compose** UI (Material 3), dark "hardware radio" aesthetic
+
+### Tech stack
+| | |
+|---|---|
+| Language | **Kotlin** |
+| UI | **Jetpack Compose** + Material 3 |
+| Min / Target SDK | **30 (Android 12)** / **36** |
+| P2P | Network Service Discovery (NSD) |
+| Ads | Google Mobile Ads + User Messaging Platform |
+| Backend | Firebase (Analytics + Crashlytics) |
+| Build | Gradle (Kotlin DSL), R8 minify + resource shrinking |
+
+### Build the Android app
+```bash
+cd Android
+# Provide your signing credentials (see keystore.properties.sample)
+cp keystore.properties.sample keystore.properties   # then edit values, or remove to build unsigned
+
+./gradlew assembleDebug      # debug APK
+./gradlew assembleRelease    # signed, minified release APK → app/build/outputs/apk/release/
+```
+- Requires the Android SDK and a `local.properties` with `sdk.dir` (Android Studio generates it automatically).
+- `google-services.json` is included for Firebase; replace it with yours or remove the Firebase plugins.
+
+> 📣 **Ad units note** — for the open-source / sideload APK, [`AdConfig.kt`](Android/app/src/main/java/com/immaginet/talky/ads/AdConfig.kt) intentionally uses Google's **test** ad units (and a test AdMob App ID in the manifest). This is the policy-compliant choice for an APK that is **not** distributed via the Play Store. Replace the `LIVE_*` IDs and the manifest App ID with your own real AdMob IDs before any Play Store release — the config switches to live IDs automatically once real (non-placeholder) values are present in a release build.
+
+> 🚫 **Not on Google Play (yet).** This repo ships the Android **source + a signed APK via [GitHub Releases](https://github.com/andreapianidev/WalkieTalkie/releases)** for sideloading. A Play Store listing would additionally require real AdMob IDs and a Play Console upload.
 
 ---
 
@@ -317,7 +362,15 @@ All UI strings flow through `String+Localization.swift` (`.localized`). i18n key
 ## 📁 Project Structure
 
 ```
-WalkieTalkie/                            ← Xcode project root
+WalkieTalkie/                            ← Repo root (Xcode project + Android port)
+├── Android/                             ← 🤖 Android app (Kotlin + Jetpack Compose)
+│   ├── app/src/main/java/com/immaginet/talky/
+│   │   ├── MainActivity.kt              ← Compose UI (radio + walkie)
+│   │   ├── net/CrossPlatformWalkieManager.kt  ← P2P PTT over NSD
+│   │   ├── radio/RadioManager.kt        ← 343 stations (synced from iOS)
+│   │   ├── audio/ · ads/ · firebase/ · protocol/
+│   ├── keystore.properties.sample       ← signing config template
+│   └── build.gradle.kts                 ← R8 minify + signing
 ├── WalkieTalkie.xcodeproj/
 ├── LICENSE                              ← PolyForm Noncommercial 1.0.0
 ├── README.md
