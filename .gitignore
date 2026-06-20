@@ -16,3 +16,8 @@ xcuserdata/
 *.ipa
 *.dSYM.zip
 *.dSYM
+
+# Internal / private notes — NEVER publish to this public repo
+problemi giugno 2026
+*.private
+notes-private/

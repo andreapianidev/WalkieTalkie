@@ -1,0 +1,9 @@
+{
+  "id" : "dc61dbc2-6337-4a36-bcf3-0a4e11c100aa",
+  "targets" : [
+    {
+      "id" : "6F1E5F74-3549-4FF2-8146-FF7B030BA874",
+      "name" : "WalkieTalkie"
+    }
+  ]
+}
