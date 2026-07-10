@@ -357,7 +357,10 @@ class MultipeerManager: NSObject, ObservableObject {
             if self.disconnectedPeers.contains(peer) && self.discoveredPeers.contains(peer) {
                 self.logger.logNetworkInfo("Tentativo riconnessione automatica a \(peer.displayName)")
                 self.disconnectedPeers.remove(peer)
-                self.retryAttempts.removeValue(forKey: peer) // Reset retry counter
+                // NON resettare retryAttempts qui: azzerarlo rendeva inefficace il
+                // cap maxRetryAttempts e trasformava la riconnessione in un loop
+                // infinito di inviti (un prompt sul remoto a ogni giro). Il contatore
+                // si azzera già in session(_:peer:didChange:) alla connessione riuscita.
                 self.invitePeer(peer)
             }
         }
@@ -893,8 +896,12 @@ extension MultipeerManager: MCSessionDelegate {
                     self.notificationManager.sendConnectionLostNotification(deviceName: peerID.displayName)
                 }
                 
-                // Gestisci riconnessione automatica
-                if self.discoveredPeers.contains(peerID) {
+                // Riconnessione automatica SOLO per peer che erano davvero connessi
+                // e sono caduti. Un invito in uscita fallito (il remoto ignora o
+                // declina) arriva qui come .notConnected con wasConnected == false:
+                // ri-invitarlo genera un nuovo prompt sul device remoto ogni ciclo
+                // → "constantly spammed with connection requests" (recensione 1★).
+                if wasConnected && self.discoveredPeers.contains(peerID) {
                     self.handlePeerDisconnection(peerID)
                 }
                 

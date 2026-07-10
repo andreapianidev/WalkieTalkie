@@ -5,13 +5,11 @@
 //
 
 import SwiftUI
-import GoogleMobileAds
 
 /// Full-screen browser per le 135 stazioni radio.
 /// Sostituisce la navigazione prev/next con ricerca, preferiti, recenti e raggruppamenti.
 struct StationBrowserSheet: View {
     @StateObject private var radioManager = RadioManager.shared
-    @StateObject private var nativeAd = AdManager.shared.nativeStation
     @Environment(\.dismiss) private var dismiss
 
     @State private var searchText: String = ""
@@ -57,11 +55,6 @@ struct StationBrowserSheet: View {
             }
         }
         .navigationViewStyle(.stack)
-        .onAppear {
-            if !isProUser {
-                AdManager.shared.refreshStationNativeAdIfNeeded()
-            }
-        }
         .onChange(of: radioManager.blockedByPaywall) { blocked in
             if blocked { showPaywall = true }
         }
@@ -186,11 +179,6 @@ struct StationBrowserSheet: View {
                 }
             }
 
-            // Native AdMob slot — only for non-Pro users, only when filled.
-            if !isProUser, let ad = nativeAd.nativeAd {
-                NativeAdCardView(nativeAd: ad)
-            }
-
             DisclosureGroup {
                 ForEach(radioManager.stationsGroupedByCountry, id: \.country) { entry in
                     DisclosureGroup {
@@ -234,15 +222,8 @@ struct StationBrowserSheet: View {
             emptyState(emptyMessage)
         } else {
             List {
-                ForEach(Array(stations.enumerated()), id: \.element.id) { index, station in
+                ForEach(stations) { station in
                     stationRow(station)
-
-                    if !isProUser,
-                       let ad = nativeAd.nativeAd,
-                       (index + 1) % 8 == 0,
-                       index > 0 {
-                        NativeAdCardView(nativeAd: ad)
-                    }
                 }
             }
             .listStyle(.plain)

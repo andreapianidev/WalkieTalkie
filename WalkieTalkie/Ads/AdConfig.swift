@@ -26,6 +26,10 @@ enum AdConfig {
     enum FrequencyCap {
         static let appOpenMaxAge: TimeInterval = 4 * 3600
         static let appOpenResumeDelay: TimeInterval = 1.2
+        /// Minimo tra due app-open: l'app vive di background/foreground continui
+        /// (walkie in uso), senza cooldown l'annuncio partiva a OGNI rientro
+        /// ("penetrantester Werbung" — recensioni 1★).
+        static let appOpenMinInterval: TimeInterval = 240
         static let interstitialIdleDelay: TimeInterval = 2.5
         static let interstitialMinInterval: TimeInterval = 180
         static let interstitialDailyMax: Int = 5

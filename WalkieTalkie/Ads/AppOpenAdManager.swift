@@ -14,6 +14,7 @@ final class AppOpenAdManager: NSObject, ObservableObject {
 
     private var appOpenAd: AppOpenAd?
     private var loadTime: Date?
+    private var lastPresentTime: Date?
     private var isLoading = false
     private var pendingPresentationTask: Task<Void, Never>?
     private let adUnitID = AdConfig.appOpenAdUnitID
@@ -46,6 +47,11 @@ final class AppOpenAdManager: NSObject, ObservableObject {
             suppressNextResume = false
             return
         }
+        // Cooldown: non ripresentare l'app-open a ogni rientro in foreground.
+        if let lastPresentTime,
+           Date().timeIntervalSince(lastPresentTime) < AdConfig.FrequencyCap.appOpenMinInterval {
+            return
+        }
         guard isAdAvailable, let ad = appOpenAd, let root = AdRootViewController.current() else {
             Task { await loadAd() }
             return
@@ -53,6 +59,7 @@ final class AppOpenAdManager: NSObject, ObservableObject {
 
         guard afterDelay else {
             isPresenting = true
+            lastPresentTime = Date()
             ad.present(from: root)
             return
         }
@@ -75,6 +82,7 @@ final class AppOpenAdManager: NSObject, ObservableObject {
                 return
             }
             self.pendingPresentationTask = nil
+            self.lastPresentTime = Date()
             delayedAd.present(from: delayedRoot)
         }
     }

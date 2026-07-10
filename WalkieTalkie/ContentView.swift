@@ -41,6 +41,10 @@ struct ContentView: View {
     ]
     @State private var currentFrequencyIndex = 0
     @State private var selectedTab = 0
+
+    /// iPhone SE/8 e simili (≤667pt): il layout a misure fisse sforava lo schermo
+    /// e la tab bar risultava tagliata/irraggiungibile (recensioni App Store).
+    private var isCompactHeight: Bool { UIScreen.main.bounds.height < 700 }
     @State private var showingConnectionAlert = false
     @State private var showingErrorAlert = false
     @State private var isPoweredOn = true
@@ -122,7 +126,7 @@ struct ContentView: View {
 
                     // Spazio per la tab bar
                     Spacer()
-                        .frame(height: 100)
+                        .frame(height: isCompactHeight ? 76 : 100)
                 }
                 
                 // Tab bar fissa in basso
@@ -390,7 +394,7 @@ struct ContentView: View {
             ZStack {
                 RoundedRectangle(cornerRadius: 15)
                     .fill(Color.black)
-                    .frame(height: 100)
+                    .frame(height: isCompactHeight ? 80 : 100)
                 
                 HStack {
                     HStack(spacing: 4) {
@@ -754,10 +758,10 @@ struct ContentView: View {
     }
 
     private var speakerAreaView: some View {
-        VStack(spacing: 30) {
+        VStack(spacing: isCompactHeight ? 14 : 30) {
             // Griglia di punti per simulare speaker - aumentata
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 8), spacing: 6) {
-                ForEach(0..<88, id: \.self) { _ in
+                ForEach(0..<(isCompactHeight ? 40 : 88), id: \.self) { _ in
                     Circle()
                         .fill(Color.black)
                         .frame(width: 5, height: 5)
@@ -771,12 +775,12 @@ struct ContentView: View {
                     // Cerchio esterno
                     Circle()
                         .fill(isRadioMode ? Color.gray.opacity(0.5) : (isTransmitting ? Color.red : Color.black))
-                        .frame(width: 140, height: 140)
-                    
+                        .frame(width: isCompactHeight ? 116 : 140, height: isCompactHeight ? 116 : 140)
+
                     // Cerchio interno
                     Circle()
                         .fill(isRadioMode ? Color.gray.opacity(0.3) : Color.white)
-                        .frame(width: 120, height: 120)
+                        .frame(width: isCompactHeight ? 98 : 120, height: isCompactHeight ? 98 : 120)
                     
                     // Testo centrale
                     VStack(spacing: 4) {
@@ -807,7 +811,7 @@ struct ContentView: View {
                     if isTransmitting && !isRadioMode {
                         Circle()
                             .stroke(Color.red.opacity(0.6), lineWidth: 3)
-                            .frame(width: 140, height: 140)
+                            .frame(width: isCompactHeight ? 116 : 140, height: isCompactHeight ? 116 : 140)
                             .scaleEffect(isTransmitting ? 1.1 : 1.0)
                             .animation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true), value: isTransmitting)
                     }
@@ -889,15 +893,18 @@ struct ContentView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 20)
+        .padding(.vertical, isCompactHeight ? 8 : 20)
     }
-    
+
     private var tabBarView: some View {
         VStack(spacing: 0) {
-            // Peak promotion button integrated with tab bar
-            peakAppPromotionBanner
-                .padding(.horizontal, 20)
-                .padding(.bottom, 8)
+            // Peak promotion button integrated with tab bar (nascosto sugli
+            // schermi compatti: ruba altezza alla tab bar su iPhone SE/8)
+            if !isCompactHeight {
+                peakAppPromotionBanner
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 8)
+            }
 
             HStack {
                 // Tab buttons
@@ -918,13 +925,13 @@ struct ContentView: View {
                 }
             }
             .padding(.horizontal, 20)
-            .padding(.vertical, 15)
+            .padding(.vertical, isCompactHeight ? 10 : 15)
             .background(
                 RoundedRectangle(cornerRadius: 25)
                     .fill(Color.black)
             )
             .padding(.horizontal, 20)
-            .padding(.bottom, 30)
+            .padding(.bottom, isCompactHeight ? 12 : 30)
         }
         .onAppear {
             setupMultipeerConnection()

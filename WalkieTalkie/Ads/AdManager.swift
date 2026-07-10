@@ -21,7 +21,11 @@ final class AdManager: ObservableObject {
     let appOpen = AppOpenAdManager()
     let interstitial = InterstitialAdCoordinator()
     let rewarded = RewardedAdCoordinator()
-    let nativeStation = NativeAdCoordinator()
+    // Native station ad RIMOSSO: in 14 giorni ha reso $0.00 con 9 impression
+    // (show rate 25%) sprecando ~230 richieste/settimana che abbassavano il
+    // match rate dell'account. Meno superficie pubblicitaria = meno recensioni
+    // "troppa pubblicità". I file NativeAdCoordinator/NativeAdCardView restano
+    // per un eventuale placement futuro.
 
     /// Bridge key for the rewarded "remove ads for 1h" grant. Persisted so the
     /// reward survives an app relaunch within its validity window.
@@ -91,22 +95,6 @@ final class AdManager: ObservableObject {
             group.addTask { await self.appOpen.loadAd() }
             group.addTask { await self.interstitial.loadAd() }
             group.addTask { await self.rewarded.loadAd() }
-        }
-        // Native ad is NOT preloaded here on purpose: it is only ever displayed
-        // inside the station browser sheet, which most sessions never open. Eager
-        // bootstrap preloading produced ~1 request per launch against ~2% display,
-        // tanking its show rate. It now loads lazily the first time the sheet
-        // appears, via refreshStationNativeAdIfNeeded() (shouldReload returns true
-        // when no ad is cached). Same impressions, far fewer wasted requests.
-    }
-
-    /// Re-request a native station ad. Call when the station browser opens so the user sees fresh creatives.
-    /// Throttled: skips reload if the cached ad is younger than 60s (avoids hammering AdMob on rapid open/close).
-    func refreshStationNativeAdIfNeeded() {
-        guard !IAPManager.shared.isProUser else { return }
-        guard !adsRemoved else { return }
-        if nativeStation.shouldReload(minAge: 60) {
-            nativeStation.loadAd()
         }
     }
 
