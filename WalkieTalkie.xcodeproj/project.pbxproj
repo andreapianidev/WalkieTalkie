@@ -55,6 +55,7 @@
 		60175A0DECAEE66CF00A380D /* LiveActivityAttributes.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LiveActivityAttributes.swift; sourceTree = "<group>"; };
 		62D9515E1F90B36B55033938 /* TalkyLiveActivitiesBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TalkyLiveActivitiesBundle.swift; sourceTree = "<group>"; };
 		6771A29D2E22DD6A00DF7071 /* Talky.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Talky.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		67D60EA3301E76EF00AAD95B /* macTalky.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = macTalky.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F075F67B33A8227815C8701 /* WalkieActivityWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WalkieActivityWidget.swift; sourceTree = "<group>"; };
 		C1B26E212D5F5CBF3E80262D /* TalkyLiveActivities.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TalkyLiveActivities.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD542FBD3C82F0AF714480DA /* RadioActivityWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RadioActivityWidget.swift; sourceTree = "<group>"; };
@@ -81,6 +82,11 @@
 			path = WalkieTalkie;
 			sourceTree = "<group>";
 		};
+		67D60EA4301E76EF00AAD95B /* macTalky */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = macTalky;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +102,13 @@
 				679EF8E42E27FCD4001C7A5E /* FirebaseInstallations in Frameworks */,
 				679EF8E02E27FCD4001C7A5E /* FirebaseCore in Frameworks */,
 				679EF8DE2E27FCD4001C7A5E /* FirebaseAppDistribution-Beta in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		67D60EA0301E76EF00AAD95B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,6 +146,7 @@
 			isa = PBXGroup;
 			children = (
 				6771A29F2E22DD6A00DF7071 /* WalkieTalkie */,
+				67D60EA4301E76EF00AAD95B /* macTalky */,
 				6771A29E2E22DD6A00DF7071 /* Products */,
 				5D7BA13A1E1D86D4A5B681B5 /* Frameworks */,
 				161CBD6E3BFEBCD2B210530B /* TalkyLiveActivities */,
@@ -145,6 +159,7 @@
 			children = (
 				6771A29D2E22DD6A00DF7071 /* Talky.app */,
 				C1B26E212D5F5CBF3E80262D /* TalkyLiveActivities.appex */,
+				67D60EA3301E76EF00AAD95B /* macTalky.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -201,6 +216,28 @@
 			productReference = 6771A29D2E22DD6A00DF7071 /* Talky.app */;
 			productType = "com.apple.product-type.application";
 		};
+		67D60EA2301E76EF00AAD95B /* macTalky */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 67D60EAD301E76F000AAD95B /* Build configuration list for PBXNativeTarget "macTalky" */;
+			buildPhases = (
+				67D60E9F301E76EF00AAD95B /* Sources */,
+				67D60EA0301E76EF00AAD95B /* Frameworks */,
+				67D60EA1301E76EF00AAD95B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				67D60EA4301E76EF00AAD95B /* macTalky */,
+			);
+			name = macTalky;
+			packageProductDependencies = (
+			);
+			productName = macTalky;
+			productReference = 67D60EA3301E76EF00AAD95B /* macTalky.app */;
+			productType = "com.apple.product-type.application";
+		};
 		B2DE79FAE6614815D779D5E1 /* TalkyLiveActivities */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = ED625056BCFC2B254C7CE825 /* Build configuration list for PBXNativeTarget "TalkyLiveActivities" */;
@@ -225,11 +262,14 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2600;
+				LastSwiftUpdateCheck = 2700;
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					6771A29C2E22DD6A00DF7071 = {
 						CreatedOnToolsVersion = 26.0;
+					};
+					67D60EA2301E76EF00AAD95B = {
+						CreatedOnToolsVersion = 27.0;
 					};
 				};
 			};
@@ -257,6 +297,7 @@
 			targets = (
 				6771A29C2E22DD6A00DF7071 /* WalkieTalkie */,
 				B2DE79FAE6614815D779D5E1 /* TalkyLiveActivities */,
+				67D60EA2301E76EF00AAD95B /* macTalky */,
 			);
 		};
 /* End PBXProject section */
@@ -276,6 +317,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		67D60EA1301E76EF00AAD95B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -285,6 +333,13 @@
 			files = (
 				3139482DCE76045CD0086042 /* LiveActivityAttributes.swift in Sources */,
 				075B298FE0620E65197509C4 /* RadioActivityIntents.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		67D60E9F301E76EF00AAD95B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -547,6 +602,88 @@
 			};
 			name = Release;
 		};
+		67D60EAB301E76F000AAD95B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ERAK83QBBM;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = macTalky;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Andrea Piani — Immaginet Srl";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "macTalky uses the local network to discover and talk to other Talky devices (iPhone, Android, Mac) around you.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "macTalky needs the microphone to transmit your voice to connected walkie-talkie devices.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Andrea-Piani.WalkieTalkie";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		67D60EAC301E76F000AAD95B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ERAK83QBBM;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = macTalky;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Andrea Piani — Immaginet Srl";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "macTalky uses the local network to discover and talk to other Talky devices (iPhone, Android, Mac) around you.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "macTalky needs the microphone to transmit your voice to connected walkie-talkie devices.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Andrea-Piani.WalkieTalkie";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		A320001418872860C4792CFC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -595,6 +732,15 @@
 			buildConfigurations = (
 				6771A2A92E22DD6D00DF7071 /* Debug */,
 				6771A2AA2E22DD6D00DF7071 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		67D60EAD301E76F000AAD95B /* Build configuration list for PBXNativeTarget "macTalky" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				67D60EAB301E76F000AAD95B /* Debug */,
+				67D60EAC301E76F000AAD95B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

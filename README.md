@@ -8,6 +8,7 @@
 [![App Store](https://img.shields.io/badge/App%20Store-Free%20Download-0a84ff.svg?style=flat&logo=appstore&logoColor=white)](https://apps.apple.com/app/id6748584483)
 [![iOS](https://img.shields.io/badge/iOS-15.6+-blue.svg)](https://developer.apple.com/ios/)
 [![Android](https://img.shields.io/badge/Android-12+%20(Beta)-3ddc84.svg?logo=android&logoColor=white)](#-android-beta)
+[![macOS](https://img.shields.io/badge/macOS-26+%20(macTalky)-9aa0a6.svg?logo=apple&logoColor=white)](#-mactalky-macos)
 [![Swift](https://img.shields.io/badge/Swift-5.9+-orange.svg)](https://swift.org/)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.0+-7f52ff.svg?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
 [![Xcode](https://img.shields.io/badge/Xcode-16.0+-blue.svg)](https://developer.apple.com/xcode/)
@@ -24,6 +25,17 @@
 **Repository**: <https://github.com/andreapianidev/WalkieTalkie>
 
 ---
+
+## 🖥 macTalky (macOS)
+
+**macTalky** is the native macOS 26+ companion app, living in the [`macTalky/`](macTalky/) folder as a third target of the same Xcode project. It speaks the same local **TALKY1 protocol** (Bonjour `_walkie-talkie._tcp.` + TCP + PCM16 mono 48 kHz) as Talky iOS and Talky Android, so a Mac, an iPhone and an Android phone on the same Wi-Fi all talk to each other.
+
+- **Design**: custom "field radio console" UI — graphite panels, amber phosphor VFD typography, Metal shaders (animated aurora background + phosphor VU visualizer via SwiftUI `colorEffect`).
+- **Push-to-talk**: giant TALK key — hold with the mouse **or hold the Space bar**. 10 s max per transmission (TALKY1 frame cap), segmented VU meter, TX/RX/NET lamps.
+- **Radio**: the full 343-station worldwide browser with search, filters, favorites and recents, Media-key/Now Playing integration, Metal wave visualizer.
+- **Private channels**: same SHA256 password-derived channel IDs as iOS/Android (Pro).
+- **Universal purchases**: same bundle ID as the iOS app → the Talky Pro subscription and Themes Pack bought on iPhone unlock on the Mac and vice versa (StoreKit 2, no Firebase on macOS).
+- **Build**: `xcodebuild -project WalkieTalkie.xcodeproj -scheme macTalky -configuration Release build` (sandboxed, hardened runtime; network client/server + audio-input entitlements).
 
 ## Table of Contents
 
