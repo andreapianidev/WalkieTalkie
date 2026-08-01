@@ -620,6 +620,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = macTalky;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Andrea Piani — Immaginet Srl";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "macTalky uses the local network to discover and talk to other Talky devices (iPhone, Android, Mac) around you.";
@@ -661,6 +662,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = macTalky;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Andrea Piani — Immaginet Srl";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "macTalky uses the local network to discover and talk to other Talky devices (iPhone, Android, Mac) around you.";
