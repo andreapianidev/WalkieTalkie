@@ -30,12 +30,16 @@
 
 **macTalky** is the native macOS 26+ companion app, living in the [`macTalky/`](macTalky/) folder as a third target of the same Xcode project. It speaks the same local **TALKY1 protocol** (Bonjour `_walkie-talkie._tcp.` + TCP + PCM16 mono 48 kHz) as Talky iOS and Talky Android, so a Mac, an iPhone and an Android phone on the same Wi-Fi all talk to each other.
 
-- **Design**: custom "field radio console" UI — graphite panels, amber phosphor VFD typography, Metal shaders (animated aurora background + phosphor VU visualizer via SwiftUI `colorEffect`).
+| Walkie — Night Ops backdrop | World-band radio — 343 stations | Walkie — Olive Drab backdrop |
+|---|---|---|
+| ![macTalky Walkie, Night Ops](docs/screenshots/macos/walkie_nightops.png) | ![macTalky Radio](docs/screenshots/macos/radio_carbon.png) | ![macTalky Walkie, Olive Drab](docs/screenshots/macos/walkie_olive.png) |
+
+- **Design**: "tactical field console" UI — graphite panels, amber phosphor VFD typography, and a full Metal shader suite via SwiftUI `colorEffect`/`layerEffect`: **5 selectable tactical backdrops** (Carbon, Night Ops, Olive Drab, Desert Fox, Naval Grey — grid, radar sweep, canvas weave, TX/RX-reactive tinting), a phosphor **spectrum VU visualizer** with peak-hold, a **CRT effect** (chromatic aberration + scanlines) on the VFD displays and radio pulse rings around the PTT key.
 - **Push-to-talk**: giant TALK key — hold with the mouse **or hold the Space bar**. 10 s max per transmission (TALKY1 frame cap), segmented VU meter, TX/RX/NET lamps.
-- **Radio**: the full 343-station worldwide browser with search, filters, favorites and recents, Media-key/Now Playing integration, Metal wave visualizer.
+- **Radio**: the full 343-station worldwide browser with search, filters, favorites and recents, Media-key/Now Playing integration.
 - **Private channels**: same SHA256 password-derived channel IDs as iOS/Android (Pro).
-- **Universal purchases**: same bundle ID as the iOS app → the Talky Pro subscription and Themes Pack bought on iPhone unlock on the Mac and vice versa (StoreKit 2, no Firebase on macOS).
-- **Build**: `xcodebuild -project WalkieTalkie.xcodeproj -scheme macTalky -configuration Release build` (sandboxed, hardened runtime; network client/server + audio-input entitlements).
+- **Universal purchases**: same bundle ID as the iOS app → the Talky Pro subscription and Themes Pack bought on iPhone unlock on the Mac and vice versa (StoreKit 2, no Firebase on macOS). Pro/Themes Pack also unlocks the three premium backdrops.
+- **Build**: `xcodebuild -project WalkieTalkie.xcodeproj -scheme macTalky -configuration Release build` (sandboxed, hardened runtime; network client/server + audio-input entitlements). The `macTalky` scheme is shared, ready for an **Xcode Cloud** "Archive – macOS" workflow.
 
 ## Table of Contents
 

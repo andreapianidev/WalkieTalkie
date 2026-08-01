@@ -18,6 +18,12 @@ final class SettingsManager: ObservableObject {
         static let radioVolume = "mac_radio_volume"
         static let spacebarPTT = "mac_spacebar_ptt"
         static let receiveChime = "mac_receive_chime"
+        static let backdrop = "mac_console_backdrop"
+    }
+
+    /// Tema di sfondo della console (raw value di `ConsoleBackdrop`).
+    @Published var backdropRaw: String {
+        didSet { defaults.set(backdropRaw, forKey: Keys.backdrop) }
     }
 
     /// Nome mostrato agli altri peer TALKY1 (default: nome del Mac).
@@ -49,6 +55,7 @@ final class SettingsManager: ObservableObject {
         self.autoStartNetwork = defaults.object(forKey: Keys.autoStartNetwork) as? Bool ?? true
         self.radioVolume = defaults.object(forKey: Keys.radioVolume) as? Float ?? 0.5
         self.spacebarPTT = defaults.object(forKey: Keys.spacebarPTT) as? Bool ?? true
+        self.backdropRaw = defaults.string(forKey: Keys.backdrop) ?? "carbon"
     }
 
     /// Nome effettivo pubblicato sulla rete (mai vuoto).

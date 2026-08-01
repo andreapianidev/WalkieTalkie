@@ -81,6 +81,7 @@ struct WalkieView: View {
                         .foregroundStyle(Talky.dim.opacity(0.7))
                 }
                 .frame(minWidth: 220)
+                .crtDisplay(strength: 0.8)
             }
         }
         .buttonStyle(.plain)
@@ -97,6 +98,10 @@ struct WalkieView: View {
         let receiving = engine.isReceiving
 
         return ZStack {
+            // Anelli radio Metal in espansione durante TX/RX
+            PulseField(mode: active ? 1 : receiving ? 2 : 0)
+                .frame(width: 340, height: 340)
+
             // Anello progresso trasmissione (max 10s)
             Circle()
                 .stroke(Talky.stroke, lineWidth: 5)

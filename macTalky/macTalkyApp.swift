@@ -29,6 +29,21 @@ struct macTalkyApp: App {
                     if settings.autoStartNetwork {
                         engine.start()
                     }
+                    // Launch argument `-mac_autoplay_radio YES`: avvia subito
+                    // l'ultima stazione (screenshot/demo automation).
+                    if UserDefaults.standard.bool(forKey: "mac_autoplay_radio") {
+                        radio.playStation(radio.resumeStation)
+                    }
+                    // Launch argument `-mac_window_rect "x,y,w,h"` (punti,
+                    // origine bottom-left): posiziona la finestra a un frame
+                    // esatto per gli screenshot automatizzati.
+                    if let rect = UserDefaults.standard.string(forKey: "mac_window_rect") {
+                        let p = rect.split(separator: ",").compactMap { Double($0) }
+                        if p.count == 4, let window = NSApp.windows.first(where: { $0.isVisible }) {
+                            window.setFrame(NSRect(x: p[0], y: p[1], width: p[2], height: p[3]),
+                                            display: true)
+                        }
+                    }
                 }
         }
         .windowStyle(.hiddenTitleBar)

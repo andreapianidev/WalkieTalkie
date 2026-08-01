@@ -47,28 +47,122 @@ extension Font {
     }
 }
 
-// MARK: - Metal background
+// MARK: - Backdrops (sfondi tattici selezionabili)
 
-/// Sfondo animato con lo shader `talkyAurora`. Un solo TimelineView per finestra.
-struct AuroraBackground: View {
+/// Temi di sfondo della console. I primi due sono free; gli altri si
+/// sbloccano con Talky Pro o con il Themes Pack (stessi acquisti dell'app
+/// iOS, condivisi via universal purchase).
+enum ConsoleBackdrop: String, CaseIterable, Identifiable {
+    case carbon
+    case nightOps
+    case oliveDrab
+    case desertFox
+    case navalGrey
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .carbon: return "Carbon"
+        case .nightOps: return "Night Ops"
+        case .oliveDrab: return "Olive Drab"
+        case .desertFox: return "Desert Fox"
+        case .navalGrey: return "Naval Grey"
+        }
+    }
+
+    var isPro: Bool {
+        switch self {
+        case .carbon, .nightOps: return false
+        case .oliveDrab, .desertFox, .navalGrey: return true
+        }
+    }
+
+    /// (base, tint, accent) — palette passata allo shader.
+    var palette: (Color, Color, Color) {
+        switch self {
+        case .carbon:
+            return (Color(red: 0.043, green: 0.049, blue: 0.056),
+                    Color(red: 0.075, green: 0.082, blue: 0.092),
+                    Color(red: 0.55, green: 0.58, blue: 0.62))
+        case .nightOps:
+            return (Color(red: 0.022, green: 0.034, blue: 0.026),
+                    Color(red: 0.040, green: 0.065, blue: 0.048),
+                    Color(red: 0.35, green: 0.85, blue: 0.48))
+        case .oliveDrab:
+            return (Color(red: 0.055, green: 0.062, blue: 0.038),
+                    Color(red: 0.105, green: 0.115, blue: 0.066),
+                    Color(red: 0.72, green: 0.68, blue: 0.42))
+        case .desertFox:
+            return (Color(red: 0.078, green: 0.062, blue: 0.042),
+                    Color(red: 0.135, green: 0.105, blue: 0.068),
+                    Color(red: 0.85, green: 0.62, blue: 0.34))
+        case .navalGrey:
+            return (Color(red: 0.038, green: 0.048, blue: 0.062),
+                    Color(red: 0.068, green: 0.085, blue: 0.108),
+                    Color(red: 0.42, green: 0.68, blue: 0.80))
+        }
+    }
+
+    /// Parametri di stile: (griglia, radar sweep, deriva texture).
+    var style: (grid: Float, sweep: Float, motion: Float) {
+        switch self {
+        case .carbon: return (0.0, 0.0, 0.4)
+        case .nightOps: return (1.0, 1.0, 0.5)
+        case .oliveDrab: return (0.55, 0.0, 0.6)
+        case .desertFox: return (0.45, 0.0, 0.7)
+        case .navalGrey: return (0.75, 0.6, 0.5)
+        }
+    }
+
+    /// Colore rappresentativo per lo swatch del selettore.
+    var swatch: Color { palette.2 }
+}
+
+/// Sfondo animato con lo shader `talkyTactical`: tema selezionabile,
+/// reattivo allo stato TX/RX (virata verde/rossa smussata frame-per-frame).
+struct TacticalBackground: View {
+    var backdrop: ConsoleBackdrop
+    var transmitting: Bool = false
+    var receiving: Bool = false
+
+    @State private var txSmooth: Float = 0
+    @State private var rxSmooth: Float = 0
+
     var body: some View {
+        let (base, tint, accent) = backdrop.palette
+        let style = backdrop.style
         TimelineView(.animation(minimumInterval: 1.0 / 30.0)) { context in
             let t = context.date.timeIntervalSinceReferenceDate
                 .truncatingRemainder(dividingBy: 100_000)
             GeometryReader { geo in
                 Rectangle()
                     .fill(Talky.coal)
-                    .colorEffect(ShaderLibrary.talkyAurora(
+                    .colorEffect(ShaderLibrary.talkyTactical(
                         .float2(Float(geo.size.width), Float(geo.size.height)),
-                        .float(Float(t))
+                        .float(Float(t)),
+                        .float(txSmooth),
+                        .float(rxSmooth),
+                        .color(base),
+                        .color(tint),
+                        .color(accent),
+                        .float(style.grid),
+                        .float(style.sweep),
+                        .float(style.motion)
                     ))
+            }
+            .onChange(of: context.date) { _, _ in
+                // Smoothing ~200ms verso il target: niente scatti di colore.
+                let k: Float = 0.15
+                txSmooth += ((transmitting ? 1 : 0) - txSmooth) * k
+                rxSmooth += ((receiving ? 1 : 0) - rxSmooth) * k
             }
         }
         .ignoresSafeArea()
     }
 }
 
-/// Visualizer a onda fosforo (shader `talkyVU`).
+/// Visualizer spettro a barre fosforo con peak-hold (shader `talkyVU`).
 struct VUWave: View {
     var level: Float
     var playing: Bool
@@ -89,6 +183,61 @@ struct VUWave: View {
             }
         }
         .allowsHitTesting(false)
+    }
+}
+
+/// Anelli radio in espansione dietro il PTT (shader `talkyPulse`).
+/// mode: 0 spento, 1 TX (verde), 2 RX (rosso).
+struct PulseField: View {
+    var mode: Int
+
+    var body: some View {
+        TimelineView(.animation(minimumInterval: 1.0 / 30.0)) { context in
+            let t = context.date.timeIntervalSinceReferenceDate
+                .truncatingRemainder(dividingBy: 10_000)
+            GeometryReader { geo in
+                Rectangle()
+                    .fill(Color.white)
+                    .colorEffect(ShaderLibrary.talkyPulse(
+                        .float2(Float(geo.size.width), Float(geo.size.height)),
+                        .float(Float(t)),
+                        .float(Float(mode))
+                    ))
+            }
+        }
+        .allowsHitTesting(false)
+    }
+}
+
+/// Effetto tubo catodico (aberrazione cromatica + scanline + flicker) per i
+/// display VFD. layerEffect: campiona i pixel già renderizzati della view.
+struct CRTEffect: ViewModifier {
+    var strength: Float = 1.0
+
+    func body(content: Content) -> some View {
+        TimelineView(.animation(minimumInterval: 1.0 / 30.0)) { context in
+            let t = Float(context.date.timeIntervalSinceReferenceDate
+                .truncatingRemainder(dividingBy: 10_000))
+            let s = strength
+            content
+                .visualEffect { view, proxy in
+                    view.layerEffect(
+                        ShaderLibrary.talkyCRT(
+                            .float2(Float(proxy.size.width), Float(proxy.size.height)),
+                            .float(t),
+                            .float(s)
+                        ),
+                        maxSampleOffset: CGSize(width: 6, height: 2)
+                    )
+                }
+        }
+    }
+}
+
+extension View {
+    /// Applica l'effetto CRT ai display fosforo della console.
+    func crtDisplay(strength: Float = 1.0) -> some View {
+        modifier(CRTEffect(strength: strength))
     }
 }
 

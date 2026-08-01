@@ -32,13 +32,34 @@ struct ContentView: View {
     @EnvironmentObject private var engine: WalkieEngine
     @EnvironmentObject private var radio: RadioManager
     @EnvironmentObject private var iap: IAPManager
+    @EnvironmentObject private var settings: SettingsManager
 
-    @State private var section: ConsoleSection = .walkie
+    @State private var section: ConsoleSection
     @State private var showPaywall = false
+
+    init() {
+        // Launch argument `-mac_start_section radio` (via NSArgumentDomain):
+        // usato da automazioni/screenshot per aprire su una sezione precisa.
+        let raw = UserDefaults.standard.string(forKey: "mac_start_section") ?? ""
+        _section = State(initialValue: ConsoleSection(rawValue: raw) ?? .walkie)
+    }
+
+    private var backdrop: ConsoleBackdrop {
+        ConsoleBackdrop(rawValue: settings.backdropRaw) ?? .carbon
+    }
+
+    /// Gli sfondi Pro si sbloccano con Talky Pro O con il Themes Pack.
+    private var hasThemeEntitlement: Bool {
+        iap.isProUser || iap.hasThemesPack
+    }
 
     var body: some View {
         ZStack {
-            AuroraBackground()
+            TacticalBackground(
+                backdrop: backdrop,
+                transmitting: engine.isTransmitting,
+                receiving: engine.isReceiving
+            )
 
             HStack(spacing: 0) {
                 sidebar
@@ -102,6 +123,22 @@ struct ContentView: View {
 
             Spacer()
 
+            // Selettore sfondo tattico
+            VStack(alignment: .leading, spacing: 8) {
+                PanelLabel("Backdrop")
+                HStack(spacing: 8) {
+                    ForEach(ConsoleBackdrop.allCases) { item in
+                        backdropSwatch(item)
+                    }
+                }
+                Text(backdrop.title.uppercased())
+                    .font(.vfd(8, weight: .semibold))
+                    .kerning(1.6)
+                    .foregroundStyle(Talky.dim.opacity(0.8))
+            }
+            .padding(.horizontal, 20)
+            .padding(.bottom, 14)
+
             // Network status
             ConsolePanel(padding: 12) {
                 VStack(alignment: .leading, spacing: 8) {
@@ -152,6 +189,41 @@ struct ContentView: View {
 
     private func showUpsell() {
         showPaywall = true
+    }
+
+    private func backdropSwatch(_ item: ConsoleBackdrop) -> some View {
+        let selected = backdrop == item
+        let locked = item.isPro && !hasThemeEntitlement
+
+        return Button {
+            if locked {
+                showPaywall = true
+            } else {
+                withAnimation(.easeOut(duration: 0.25)) {
+                    settings.backdropRaw = item.rawValue
+                }
+            }
+        } label: {
+            ZStack {
+                Circle()
+                    .fill(item.swatch.opacity(locked ? 0.35 : 0.9))
+                    .frame(width: 18, height: 18)
+                if locked {
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 7, weight: .bold))
+                        .foregroundStyle(Talky.coal)
+                }
+            }
+            .overlay(
+                Circle().strokeBorder(
+                    selected ? Talky.text : Talky.stroke,
+                    lineWidth: selected ? 2 : 1
+                )
+            )
+            .contentShape(Circle())
+        }
+        .buttonStyle(.plain)
+        .help(item.isPro ? "\(item.title) (Pro)" : item.title)
     }
 
     private func sidebarRow(_ item: ConsoleSection) -> some View {

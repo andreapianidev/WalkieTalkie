@@ -249,6 +249,7 @@ struct RadioView: View {
                     }
                 }
                 .frame(width: 230, alignment: .leading)
+                .crtDisplay(strength: 0.7)
 
                 // Visualizer Metal
                 VUWave(level: radio.isPlaying ? 0.55 : 0, playing: radio.isPlaying && !radio.isBuffering)
