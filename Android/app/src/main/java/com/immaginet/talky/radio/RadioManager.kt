@@ -140,7 +140,7 @@ class RadioManager : Closeable {
             RadioStation(115, "Love 972", "Singapore", "97.2", "http://playerservices.streamtheworld.com/api/livestream-redirect/LOVE972FMAAC.aac", "Pop"),
             RadioStation(116, "VOV1", "Vietnam", "100.0", "https://str.vov.gov.vn/vovlive/vov1vov5Vietnamese.sdp_aac/playlist.m3u8", "News"),
             RadioStation(117, "The Rock", "Nuova Zelanda", "90.2", "https://digitalstreams.mediaworks.nz/rock_net_icy", "Rock"),
-            RadioStation(118, "Magic FM NZ", "Nuova Zelanda", "97.4", "https://mediaworks.streamguys1.com/magic_net_icy", "Easy"),
+            RadioStation(118, "Magic Essential 70s", "Nuova Zelanda", "—", "https://playerservices.streamtheworld.com/api/livestream-redirect/JOSEQUAVO_S01.m3u8", "Easy"),
             RadioStation(119, "Los 40 México", "Messico", "102.5", "https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40_MEXICOAAC.aac", "Pop"),
             RadioStation(120, "Exa FM", "Messico", "104.9", "https://playerservices.streamtheworld.com/api/livestream-redirect/XHPSFMAAC.aac", "Pop"),
             RadioStation(121, "Aspen 102.3", "Argentina", "102.3", "https://playerservices.streamtheworld.com/api/livestream-redirect/ASPEN.mp3", "Pop"),
@@ -278,7 +278,7 @@ class RadioManager : Closeable {
             RadioStation(253, "Anime Para Ti", "Giappone", "—", "https://stream.zeno.fm/qpn8mkt8c4duv", "J-Pop"),
             RadioStation(254, "BBC Radio 5 Live", "UK", "909", "http://as-hls-ww-live.akamaized.net/pool_89021708/live/ww/bbc_radio_five_live/bbc_radio_five_live.isml/bbc_radio_five_live-audio%3d128000.norewind.m3u8", "Sport"),
             RadioStation(255, "RdMix Classic Rock", "Canada", "—", "https://cast1.torontocast.com:4610/stream", "Rock"),
-            RadioStation(256, "Latvijas Radio 2", "Lettonia", "91.5", "http://lr2mp1.latvijasradio.lv:8002/", "Pop"),
+            RadioStation(256, "Latvijas Radio 2", "Lettonia", "91.5", "https://muste.latvijasradio.lv/shoutcast/mp4:lr2a.stream/playlist.m3u8", "Pop"),
             RadioStation(257, "Relax FM Lietuva", "Lituania", "—", "https://stream1.relaxfm.lt/relaxfm128.mp3", "Easy"),
             RadioStation(258, "OK Radio", "Serbia", "—", "https://sslstream.okradio.net/", "Pop"),
             RadioStation(259, "Ocean 89", "Bermuda", "89.1", "https://us2.internet-radio.com/proxy/ocean89?mp=/stream", "Pop"),
@@ -298,14 +298,14 @@ class RadioManager : Closeable {
             RadioStation(273, "NRK P1", "Norvegia", "89.3", "https://cdn0-47115-liveicecast0.dna.contentdelivery.net/p1_mp3_h", "Pop", false),
             RadioStation(274, "MNM", "Belgio", "101.4", "https://icecast.vrtcdn.be/mnm-high.mp3", "Pop", false),
             RadioStation(275, "Radio Swiss Classic", "Svizzera", "—", "http://stream.srg-ssr.ch/m/rsc_fr/mp3_128", "Classical", false),
-            RadioStation(276, "RTL2 France", "Francia", "103.5", "http://streamer-02.rtl.fr/rtl2-1-44-128", "Rock", false),
+            RadioStation(276, "RTL2 France", "Francia", "103.5", "https://icecast.rtl2.fr/rtl2-1-44-128", "Rock", false),
             RadioStation(277, "Rock Antenne", "Germania", "—", "http://mp3channels.webradio.rockantenne.de/rockantenne", "Rock", false),
             RadioStation(278, "MANGORADIO", "Germania", "—", "https://mangoradio.stream.laut.fm/mangoradio", "Pop"),
             RadioStation(279, "REYFM Original", "Germania", "—", "https://listen.reyfm.de/original_192kbps.mp3", "Pop"),
             RadioStation(280, "RFI Afrique", "Francia", "—", "http://live02.rfi.fr/rfiafrique-64.mp3", "World"),
             RadioStation(281, "Mosaique FM", "Tunisia", "94.9", "http://radio.mosaiquefm.net:8000/mosalive", "World"),
             RadioStation(282, "Antinea Radio", "Algeria", "—", "https://listen.radioking.com/radio/6640/stream/347", "World"),
-            RadioStation(283, "Deep House Radio", "USA", "—", "http://62.210.105.16:7000/stream", "Electronic"),
+            RadioStation(283, "Deep House Radio", "USA", "—", "https://deephouse-radio.com/api/stream/free", "Electronic"),
             RadioStation(284, "Bassdrive", "USA", "—", "http://stream.bassdrive.uk:8200", "Electronic"),
             RadioStation(285, "Christmas Vinyl HD", "USA", "—", "https://icecast.walmradio.com:8443/christmas", "Easy"),
             RadioStation(286, "80s80s Radio", "Germania", "—", "http://streams.80s80s.de/web/mp3-192/streams.80s80s.de/", "Oldies"),
@@ -318,7 +318,7 @@ class RadioManager : Closeable {
             RadioStation(293, "Radio Mitre", "Argentina", "790", "https://playerservices.streamtheworld.com/api/livestream-redirect/AM790_56.mp3", "News", false),
             RadioStation(294, "METRO 95.1", "Argentina", "95.1", "https://playerservices.streamtheworld.com/api/livestream-redirect/METRO.mp3", "Pop", false),
             RadioStation(295, "Kronehit", "Austria", "105.8", "https://secureonair.krone.at/kronehit.mp3", "Pop", false),
-            RadioStation(296, "Fun Radio France", "Francia", "101.9", "http://streaming.radio.funradio.fr/fun-1-44-128", "Pop", false),
+            RadioStation(296, "Fun Radio France", "Francia", "101.9", "https://icecast.funradio.fr/fun-1-44-128", "Pop", false),
             RadioStation(297, "CADENA 100", "Spagna", "100.0", "https://cadena100-cope-rrcast.flumotion.com/cope/cadena100-low.mp3", "Pop", false),
             RadioStation(311, "CBS Music FM", "Corea del Sud", "—", "https://m-aac.cbs.co.kr/mweb_cbs939/_definst_/cbs939.stream/playlist.m3u8", "Classical", false),
             RadioStation(312, "103 FM", "Costa Rica", "103.1", "https://playerservices.streamtheworld.com/api/livestream-redirect/CRC_103_1AAC.aac", "Pop", false),
@@ -343,7 +343,7 @@ class RadioManager : Closeable {
             RadioStation(310, "Antena 3 Portugal", "Portogallo", "100.3", "http://streaming-live-app.rtp.pt/liveradio/antena380a/playlist.m3u8", "Pop"),
             RadioStation(319, "95.5 Jazz", "Costa Rica", "—", "https://streaming.radio.co/s36bd2a451/listen", "Jazz"),
             RadioStation(320, "Radio Canela", "Ecuador", "—", "https://canelaradio.makrodigital.com:9280/stream", "Latin"),
-            RadioStation(321, "L.A. Mega", "Panama", "98.1", "https://www.streaming507.net:8152/stream", "Latin"),
+            RadioStation(321, "L.A. Mega", "Panama", "98.1", "https://usest-mcp1.golivestream.net:19360/lamega981fm/lamega981fm.m3u8", "Latin"),
             RadioStation(322, "Bachata Radio", "Rep. Dominicana", "—", "http://radio.domiplay.net:8002/", "Bachata"),
             RadioStation(323, "Adeem", "Libano", "—", "https://usa19.fastcast4u.com/adeem", "Arabic"),
             RadioStation(324, "Free FM 80 Tokyo", "Giappone", "—", "https://freefm80.radioca.st/", "80s"),
@@ -406,8 +406,20 @@ class RadioManager : Closeable {
                 currentStationCountry = station.country
                 emitStatus(isBuffering = false)
             }
-            setOnErrorListener { _, _, _ ->
-                emitStatus(error = "Errore streaming")
+            setOnErrorListener { failedPlayer, what, extra ->
+                if (mediaPlayer === failedPlayer) {
+                    mediaPlayer = null
+                    currentStationId = -1
+                    currentStationName = ""
+                    currentStationCountry = ""
+                    isPlayingState = false
+                }
+                runCatching { failedPlayer.reset() }
+                runCatching { failedPlayer.release() }
+                emitStatus(
+                    isBuffering = false,
+                    error = "Errore streaming ($what/$extra)"
+                )
                 true
             }
             setOnInfoListener { _, what, _ ->
@@ -427,8 +439,8 @@ class RadioManager : Closeable {
             mp.setDataSource(station.streamUrl)
             mp.prepareAsync()
         } catch (e: Exception) {
-            emitStatus(error = "URL non valido: ${e.message}")
-            mp.release()
+            emitStatus(isBuffering = false, error = "URL non valido: ${e.message}")
+            runCatching { mp.release() }
             mediaPlayer = null
         }
     }
@@ -470,7 +482,7 @@ class RadioManager : Closeable {
 
     private fun emitStatus(isBuffering: Boolean? = null, error: String? = null) {
         if (isBuffering != null) lastBuffering = isBuffering
-        if (error != null) lastError = error
+        lastError = error
         onStatusChanged?.invoke(
             RadioStatus(
                 isPlaying = isPlayingState,
@@ -480,7 +492,6 @@ class RadioManager : Closeable {
                 error = lastError
             )
         )
-        if (error == null) lastError = null
     }
 
     override fun close() {

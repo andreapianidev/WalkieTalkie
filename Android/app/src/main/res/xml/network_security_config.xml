@@ -13,7 +13,6 @@
         <domain includeSubdomains="false">26683.live.streamtheworld.com</domain>
         <domain includeSubdomains="false">27953.live.streamtheworld.com</domain>
         <domain includeSubdomains="false">28093.live.streamtheworld.com</domain>
-        <domain includeSubdomains="false">62.210.105.16</domain>
         <domain includeSubdomains="false">80.232.162.149</domain>
         <domain includeSubdomains="false">89.238.227.6</domain>
         <domain includeSubdomains="false">abc.streamguys1.com</domain>
@@ -57,7 +56,6 @@
         <domain includeSubdomains="false">live.radio.si</domain>
         <domain includeSubdomains="false">live.slovakradio.sk</domain>
         <domain includeSubdomains="false">live02.rfi.fr</domain>
-        <domain includeSubdomains="false">lr2mp1.latvijasradio.lv</domain>
         <domain includeSubdomains="false">media-ice.musicradio.com</domain>
         <domain includeSubdomains="false">mp3.rtvslo.si</domain>
         <domain includeSubdomains="false">mp3channels.webradio.rockantenne.de</domain>
@@ -95,10 +93,8 @@
         <domain includeSubdomains="false">stream.srg-ssr.ch</domain>
         <domain includeSubdomains="false">stream.zeno.fm</domain>
         <domain includeSubdomains="false">stream2.friskyradio.com</domain>
-        <domain includeSubdomains="false">streamer-02.rtl.fr</domain>
         <domain includeSubdomains="false">streamer.radio.co</domain>
         <domain includeSubdomains="false">streaming-live-app.rtp.pt</domain>
-        <domain includeSubdomains="false">streaming.radio.funradio.fr</domain>
         <domain includeSubdomains="false">streamingcwsradio20.com</domain>
         <domain includeSubdomains="false">streams.80s80s.de</domain>
         <domain includeSubdomains="false">streams.90s90s.de</domain>
