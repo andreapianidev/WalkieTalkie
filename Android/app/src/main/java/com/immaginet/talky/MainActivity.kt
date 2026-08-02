@@ -1,8 +1,14 @@
 package com.immaginet.talky
 
 import android.Manifest
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -54,12 +60,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.core.content.ContextCompat
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -82,59 +89,149 @@ import com.immaginet.talky.ads.AdManager
 import com.immaginet.talky.firebase.FirebaseManager
 import com.immaginet.talky.radio.RadioManager
 import com.immaginet.talky.radio.RadioStation
+import com.immaginet.talky.service.TalkyForegroundService
 import com.immaginet.talky.ui.theme.WalkieTalkieAndroidTheme
 
 class MainActivity : ComponentActivity() {
+    private var talkyService by mutableStateOf<TalkyForegroundService?>(null)
+    private var bindingActive = false
+
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
+            talkyService = (binder as? TalkyForegroundService.LocalBinder)?.service
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            talkyService = null
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseManager.init(FirebaseApp.getInstance())
         AdManager.initialize(this)
         AdManager.requestConsent(this)
+        ContextCompat.startForegroundService(
+            this,
+            TalkyForegroundService.intent(applicationContext)
+        )
         enableEdgeToEdge()
         setContent {
             WalkieTalkieAndroidTheme {
-                TalkyApp()
+                TalkyRoot(talkyService)
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (!bindingActive) {
+            bindingActive = bindService(
+                TalkyForegroundService.intent(applicationContext),
+                serviceConnection,
+                Context.BIND_AUTO_CREATE
+            )
+        }
+    }
+
+    override fun onStop() {
+        talkyService?.stopTransmitting()
+        if (bindingActive) {
+            unbindService(serviceConnection)
+            bindingActive = false
+        }
+        talkyService = null
+        super.onStop()
     }
 }
 
 private enum class AppMode { WALKIE, RADIO }
 
 @Composable
-private fun TalkyApp() {
+private fun TalkyRoot(service: TalkyForegroundService?) {
     val context = LocalContext.current
-    val walkieManager = remember { CrossPlatformWalkieManager(context.applicationContext) }
-    val radioManager = remember { RadioManager() }
-    var isTransmitting by remember { mutableStateOf(false) }
-    var receivingAudio by remember { mutableStateOf(false) }
-    var appMode by remember { mutableStateOf(AppMode.WALKIE) }
-    var radioStatus by remember {
-        mutableStateOf(RadioManager.RadioStatus(false, "", "", false, null))
+    var permissionsRequested by rememberSaveable { mutableStateOf(false) }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { results ->
+        service?.configurePermissions(
+            microphoneGranted = results[Manifest.permission.RECORD_AUDIO]
+                ?: hasPermission(context, Manifest.permission.RECORD_AUDIO),
+            networkGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                results[Manifest.permission.NEARBY_WIFI_DEVICES]
+                    ?: hasPermission(context, Manifest.permission.NEARBY_WIFI_DEVICES)
+            } else {
+                true
+            }
+        )
     }
+
+    LaunchedEffect(Unit) {
+        if (!permissionsRequested) {
+            permissionsRequested = true
+            permissionLauncher.launch(requiredPermissions())
+        }
+    }
+
+    LaunchedEffect(service) {
+        service?.configurePermissions(
+            microphoneGranted = hasPermission(context, Manifest.permission.RECORD_AUDIO),
+            networkGranted = hasNearbyPermission(context)
+        )
+    }
+
+    if (service == null) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFF0C1117)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("Avvio Talky…", color = Color(0xFFEAF4D3))
+        }
+        return
+    }
+
+    TalkyApp(
+        service = service,
+        onRequestMicrophone = {
+            permissionLauncher.launch(arrayOf(Manifest.permission.RECORD_AUDIO))
+        }
+    )
+}
+
+private fun requiredPermissions(): Array<String> = buildList {
+    add(Manifest.permission.RECORD_AUDIO)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        add(Manifest.permission.POST_NOTIFICATIONS)
+        add(Manifest.permission.NEARBY_WIFI_DEVICES)
+    }
+}.toTypedArray()
+
+private fun hasPermission(context: Context, permission: String): Boolean =
+    ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+
+private fun hasNearbyPermission(context: Context): Boolean =
+    Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+        hasPermission(context, Manifest.permission.NEARBY_WIFI_DEVICES)
+
+@Composable
+private fun TalkyApp(
+    service: TalkyForegroundService,
+    onRequestMicrophone: () -> Unit
+) {
+    val walkieManager = service.walkieManager
+    val radioManager = service.radioManager
+    var isTransmitting by remember { mutableStateOf(false) }
+    var appMode by remember { mutableStateOf(AppMode.WALKIE) }
+    val receivingAudio = walkieManager.remoteAudioActive
+    val radioStatus = service.radioStatus
 
     val channels = remember {
         listOf("public", "ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8")
     }
 
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions()
-    ) { walkieManager.start() }
-
-    LaunchedEffect(Unit) {
-        radioManager.setStatusListener { status -> radioStatus = status }
-        val permissions = buildList {
-            add(Manifest.permission.RECORD_AUDIO)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                add(Manifest.permission.POST_NOTIFICATIONS)
-                add(Manifest.permission.NEARBY_WIFI_DEVICES)
-            }
-        }.toTypedArray()
-        permissionLauncher.launch(permissions)
-    }
-
-    LaunchedEffect(walkieManager.remoteAudioActive) {
-        receivingAudio = walkieManager.remoteAudioActive
+    LaunchedEffect(receivingAudio) {
         if (!receivingAudio) {
             walkieManager.audioManager.stopPlayback()
         }
@@ -142,18 +239,10 @@ private fun TalkyApp() {
 
     LaunchedEffect(appMode) {
         if (appMode == AppMode.WALKIE) {
-            radioManager.stop()
+            service.stopRadio()
         } else {
-            walkieManager.stopTransmitting()
+            service.stopTransmitting()
             isTransmitting = false
-        }
-    }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            walkieManager.stopTransmitting()
-            walkieManager.close()
-            radioManager.close()
         }
     }
 
@@ -194,25 +283,30 @@ private fun TalkyApp() {
                     receivingAudio = receivingAudio,
                     peers = walkieManager.discoveredPeers,
                     events = walkieManager.events,
-                    onChannelChange = { walkieManager.setChannel(it) },
+                    onChannelChange = service::setChannel,
                     onPTTPress = {
-                        if (walkieManager.startTransmitting() == TransmissionStartResult.Started) {
-                            isTransmitting = true
-                            FirebaseManager.trackPTTUsed(walkieManager.currentChannel)
+                        when (service.startTransmitting()) {
+                            TransmissionStartResult.Started -> {
+                                isTransmitting = true
+                                FirebaseManager.trackPTTUsed(walkieManager.currentChannel)
+                            }
+                            TransmissionStartResult.PermissionDenied -> onRequestMicrophone()
+                            else -> Unit
                         }
                     },
                     onPTTRelease = {
-                        walkieManager.stopTransmitting()
+                        service.stopTransmitting()
                         isTransmitting = false
                     },
-                    onRestart = { walkieManager.restart() }
+                    onRestart = service::restartWalkie
                 )
                 AppMode.RADIO -> RadioContent(
                     radioManager = radioManager,
                     status = radioStatus,
+                    onRadioStop = service::stopRadio,
                     onStationPlay = { station ->
                         FirebaseManager.trackRadioUsage(station.name, station.country)
-                        radioManager.playStation(station)
+                        service.playStation(station)
                     }
                 )
             }
@@ -702,6 +796,7 @@ private fun EventLog(events: List<String>, onRestart: () -> Unit) {
 private fun RadioContent(
     radioManager: RadioManager,
     status: RadioManager.RadioStatus,
+    onRadioStop: () -> Unit,
     onStationPlay: (RadioStation) -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
@@ -743,17 +838,17 @@ private fun RadioContent(
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         Button(
                             onClick = {
-                                radioManager.getPreviousStation()?.let { radioManager.playStation(it) }
+                                radioManager.getPreviousStation()?.let(onStationPlay)
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1A2E1A))
                         ) { Text("Prec") }
                         Button(
-                            onClick = { radioManager.stop() },
+                            onClick = onRadioStop,
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3A1A1A))
                         ) { Text("Stop") }
                         Button(
                             onClick = {
-                                radioManager.getNextStation()?.let { radioManager.playStation(it) }
+                                radioManager.getNextStation()?.let(onStationPlay)
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1A2E1A))
                         ) { Text("Succ") }

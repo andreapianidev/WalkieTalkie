@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Talky</string>
+    <string name="notification_channel_name">Talky in background</string>
+    <string name="notification_channel_description">Radio e walkie-talkie attivi in background</string>
+    <string name="notification_title">Talky attivo</string>
+    <string name="notification_transmitting">Trasmissione walkie-talkie in corso</string>
+    <string name="notification_radio_playing">Radio: %1$s</string>
+    <string name="notification_walkie_ready">Walkie in ascolto sul canale %1$s</string>
+    <string name="notification_radio_ready">Radio pronta</string>
+    <string name="notification_stop">Interrompi</string>
 </resources>
