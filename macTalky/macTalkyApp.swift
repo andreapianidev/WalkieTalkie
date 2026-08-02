@@ -29,9 +29,9 @@ struct macTalkyApp: App {
                     if settings.autoStartNetwork {
                         engine.start()
                     }
-                    // Launch argument `-mac_autoplay_radio YES`: avvia subito
-                    // l'ultima stazione (screenshot/demo automation).
-                    if UserDefaults.standard.bool(forKey: "mac_autoplay_radio") {
+                    // Auto-ripresa radio (impostazione utente) oppure launch
+                    // argument `-mac_autoplay_radio YES` (screenshot/demo).
+                    if settings.autoResumeRadio || UserDefaults.standard.bool(forKey: "mac_autoplay_radio") {
                         radio.playStation(radio.resumeStation)
                     }
                     // Launch argument `-mac_window_rect "x,y,w,h"` (punti,

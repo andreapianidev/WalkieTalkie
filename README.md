@@ -30,6 +30,8 @@
 
 **macTalky** is the native macOS 26+ companion app, living in the [`macTalky/`](macTalky/) folder as a third target of the same Xcode project. It speaks the same local **TALKY1 protocol** (Bonjour `_walkie-talkie._tcp.` + TCP + PCM16 mono 48 kHz) as Talky iOS and Talky Android, so a Mac, an iPhone and an Android phone on the same Wi-Fi all talk to each other.
 
+> ⬇️ **Download**: grab `macTalky.zip` from [**GitHub Releases**](https://github.com/andreapianidev/WalkieTalkie/releases) (macOS 26+, Apple Silicon). First launch: right-click → Open (the GitHub build is not notarized). In-app purchases work only in the Mac App Store version, currently in review on the same App Store record as Talky iOS (universal purchase).
+
 | Walkie — Night Ops backdrop | World-band radio — 343 stations | Walkie — Olive Drab backdrop |
 |---|---|---|
 | ![macTalky Walkie, Night Ops](docs/screenshots/macos/walkie_nightops.png) | ![macTalky Radio](docs/screenshots/macos/radio_carbon.png) | ![macTalky Walkie, Olive Drab](docs/screenshots/macos/walkie_olive.png) |

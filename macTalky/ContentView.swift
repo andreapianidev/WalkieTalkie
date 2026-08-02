@@ -36,6 +36,7 @@ struct ContentView: View {
 
     @State private var section: ConsoleSection
     @State private var showPaywall = false
+    @State private var showOnboarding = false
 
     init() {
         // Launch argument `-mac_start_section radio` (via NSArgumentDomain):
@@ -81,6 +82,18 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showPaywall) {
             PaywallView()
+        }
+        .sheet(isPresented: $showOnboarding) {
+            OnboardingView {
+                settings.hasSeenOnboarding = true
+            }
+            .environmentObject(engine)
+            .interactiveDismissDisabled()
+        }
+        .onAppear {
+            if !settings.hasSeenOnboarding {
+                showOnboarding = true
+            }
         }
         .onChange(of: radio.blockedByPaywall) { _, blocked in
             if blocked {
@@ -159,29 +172,40 @@ struct ContentView: View {
             .padding(.horizontal, 12)
             .padding(.bottom, 10)
 
-            // Pro upsell / badge
-            if iap.isProUser {
-                HStack(spacing: 6) {
-                    Image(systemName: "checkmark.seal.fill")
-                        .foregroundStyle(Talky.amber)
-                    Text("TALKY PRO")
-                        .font(.vfd(10, weight: .bold))
-                        .kerning(1.5)
-                        .foregroundStyle(Talky.amber)
+            // Pro upsell / badge + Impostazioni
+            HStack(spacing: 8) {
+                if iap.isProUser {
+                    HStack(spacing: 6) {
+                        Image(systemName: "checkmark.seal.fill")
+                            .foregroundStyle(Talky.amber)
+                        Text("TALKY PRO")
+                            .font(.vfd(10, weight: .bold))
+                            .kerning(1.5)
+                            .foregroundStyle(Talky.amber)
+                    }
+                } else {
+                    Button {
+                        NSApp.keyWindow?.makeFirstResponder(nil)
+                        withAnimation { showUpsell() }
+                    } label: {
+                        Text("UNLOCK PRO")
+                    }
+                    .buttonStyle(ChipButtonStyle(filled: true))
                 }
-                .frame(maxWidth: .infinity)
-                .padding(.bottom, 18)
-            } else {
-                Button {
-                    NSApp.keyWindow?.makeFirstResponder(nil)
-                    withAnimation { showUpsell() }
-                } label: {
-                    Text("UNLOCK PRO")
+
+                SettingsLink {
+                    Image(systemName: "gearshape.fill")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(Talky.dim)
+                        .padding(7)
+                        .background(Talky.panelRaised.opacity(0.8), in: Circle())
+                        .overlay(Circle().strokeBorder(Talky.stroke, lineWidth: 1))
                 }
-                .buttonStyle(ChipButtonStyle(filled: true))
-                .frame(maxWidth: .infinity)
-                .padding(.bottom, 18)
+                .buttonStyle(.plain)
+                .help("Settings (⌘,)")
             }
+            .frame(maxWidth: .infinity)
+            .padding(.bottom, 18)
         }
         .background(Talky.panel.opacity(0.55))
         .background(.ultraThinMaterial)
