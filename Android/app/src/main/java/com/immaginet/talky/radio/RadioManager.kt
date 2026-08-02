@@ -115,7 +115,7 @@ class RadioManager : Closeable {
             RadioStation(90, "Sfera", "Grecia", "102.2", "http://sfera.live24.gr/sfera4132", "Pop"),
             RadioStation(91, "Sport FM", "Grecia", "94.6", "http://netradio.live24.gr/sportfm7712", "Sport"),
             RadioStation(92, "Power FM", "Turchia", "103.2", "https://listen.powerapp.com.tr/powerfm/mpeg/icecast.audio", "Pop"),
-            RadioStation(93, "Galgalatz", "Israele", "91.8", "https://glzwizzlv.bynetcdn.com/glglz_mp3", "Rock"),
+            RadioStation(93, "Galgalatz", "Israele", "91.8", "https://glzicylv01.bynetcdn.com/glglz_mp3", "Rock"),
             RadioStation(94, "Kan Bet", "Israele", "95.5", "https://25583.live.streamtheworld.com/KAN_BET.mp3", "Talk"),
             RadioStation(95, "Antena 1", "Portogallo", "95.7", "http://streaming-live-app.rtp.pt/liveradio/antena180a/playlist.m3u8", "Pop"),
             RadioStation(96, "RFM", "Portogallo", "93.2", "https://23603.live.streamtheworld.com/RFMAAC.aac", "Pop"),
@@ -140,7 +140,7 @@ class RadioManager : Closeable {
             RadioStation(115, "Love 972", "Singapore", "97.2", "http://playerservices.streamtheworld.com/api/livestream-redirect/LOVE972FMAAC.aac", "Pop"),
             RadioStation(116, "VOV1", "Vietnam", "100.0", "https://str.vov.gov.vn/vovlive/vov1vov5Vietnamese.sdp_aac/playlist.m3u8", "News"),
             RadioStation(117, "The Rock", "Nuova Zelanda", "90.2", "https://digitalstreams.mediaworks.nz/rock_net_icy", "Rock"),
-            RadioStation(118, "Magic Essential 70s", "Nuova Zelanda", "—", "https://playerservices.streamtheworld.com/api/livestream-redirect/JOSEQUAVO_S01.m3u8", "Easy"),
+            RadioStation(118, "Magic FM NZ", "Nuova Zelanda", "97.4", "https://mediaworks.streamguys1.com/magic_net_icy", "Easy"),
             RadioStation(119, "Los 40 México", "Messico", "102.5", "https://playerservices.streamtheworld.com/api/livestream-redirect/LOS40_MEXICOAAC.aac", "Pop"),
             RadioStation(120, "Exa FM", "Messico", "104.9", "https://playerservices.streamtheworld.com/api/livestream-redirect/XHPSFMAAC.aac", "Pop"),
             RadioStation(121, "Aspen 102.3", "Argentina", "102.3", "https://playerservices.streamtheworld.com/api/livestream-redirect/ASPEN.mp3", "Pop"),
@@ -293,10 +293,10 @@ class RadioManager : Closeable {
             RadioStation(268, "France Culture", "Francia", "93.5", "http://icecast.radiofrance.fr/franceculture-hifi.aac", "Talk", false),
             RadioStation(269, "Deutschlandfunk", "Germania", "101.8", "https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3", "News", false),
             RadioStation(270, "SRo1 Rádio Slovensko", "Slovacchia", "93.9", "http://live.slovakradio.sk:8000/Slovensko_256.mp3", "News", false),
-            RadioStation(271, "Sveriges Radio P1", "Svezia", "92.4", "https://live1.sr.se/p1-mp3-192", "Talk", false),
+            RadioStation(271, "Sveriges Radio P1", "Svezia", "92.4", "https://live1.sr.se/p1-mp3-96", "Talk", false),
             RadioStation(272, "DR P4 København", "Danimarca", "94.9", "http://live-icy.gslb01.dr.dk/A/A08H.mp3", "Pop", false),
             RadioStation(273, "NRK P1", "Norvegia", "89.3", "https://cdn0-47115-liveicecast0.dna.contentdelivery.net/p1_mp3_h", "Pop", false),
-            RadioStation(274, "MNM", "Belgio", "101.4", "https://icecast.vrtcdn.be/mnm-high.mp3", "Pop", false),
+            RadioStation(274, "MNM", "Belgio", "101.4", "https://quantumcast.vrtcdn.be/mnm/mp3-128/quantumcast.vrtcdn.be/", "Pop", false),
             RadioStation(275, "Radio Swiss Classic", "Svizzera", "—", "http://stream.srg-ssr.ch/m/rsc_fr/mp3_128", "Classical", false),
             RadioStation(276, "RTL2 France", "Francia", "103.5", "https://icecast.rtl2.fr/rtl2-1-44-128", "Rock", false),
             RadioStation(277, "Rock Antenne", "Germania", "—", "http://mp3channels.webradio.rockantenne.de/rockantenne", "Rock", false),
@@ -365,7 +365,7 @@ class RadioManager : Closeable {
             RadioStation(340, "EuroDance 90", "Francia", "—", "https://stream-eurodance90.fr/radio/8000/128.mp3", "Dance", true),
             RadioStation(341, "Radio Mirchi", "India", "—", "https://eu8.fastcast4u.com/proxy/clyedupq/stream", "Bollywood", true),
             RadioStation(342, "Funky Radio", "USA", "—", "https://funkyradio.streamingmedia.it/play.mp3", "Urban", true),
-            RadioStation(343, "ABC Lounge Radio", "Francia", "—", "https://eu1.fastcast4u.com/proxy/kpmxz?mp=/1", "Jazz", true)
+            RadioStation(343, "ABC Lounge Radio", "Francia", "—", "https://str1.openstream.co/589", "Jazz", true)
         )
 
         val channelDisplayNames = listOf(

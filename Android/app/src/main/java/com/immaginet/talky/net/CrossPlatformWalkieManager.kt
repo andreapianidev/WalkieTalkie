@@ -84,7 +84,7 @@ class CrossPlatformWalkieManager(
     private val peerConnections = ConcurrentHashMap<String, PeerConnection>()
     private var heartbeatJob: Job? = null
 
-    val audioManager = AudioManager()
+    val audioManager = AudioManager(context)
     private var audioStreamingJob: Job? = null
 
     var currentChannel by mutableStateOf(TalkyProtocol.DEFAULT_CHANNEL)

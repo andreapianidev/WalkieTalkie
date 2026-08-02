@@ -7,7 +7,8 @@ existing AdMob and Firebase integrations.
 
 - Restored all catalogued HTTP radio stations through a domain-scoped Android
   network security policy; cleartext remains denied by default.
-- Replaced six unavailable radio endpoints with verified HTTPS streams.
+- Replaced nine unavailable or unreliable radio endpoints with verified HTTPS
+  streams while preserving the 343-station catalog.
 - Prevented a crash when microphone permission is denied or audio capture fails.
 - Added a foreground service for background radio playback, peer connectivity,
   and active microphone transmission.

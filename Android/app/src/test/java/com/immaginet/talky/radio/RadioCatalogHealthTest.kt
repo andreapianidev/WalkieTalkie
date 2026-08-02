@@ -24,23 +24,37 @@ class RadioCatalogHealthTest {
         }
     }
 
+    @Test
+    fun playbackErrorsReleasePlayerAndClearActiveState() {
+        assertTrue(radioSource.contains("isPlayingState = false"))
+        assertTrue(radioSource.contains("runCatching { failedPlayer.release() }"))
+        assertTrue(radioSource.contains("isBuffering = false,"))
+    }
+
     private companion object {
         val VERIFIED_STREAMS = listOf(
-            "https://playerservices.streamtheworld.com/api/livestream-redirect/JOSEQUAVO_S01.m3u8",
+            "https://mediaworks.streamguys1.com/magic_net_icy",
+            "https://glzicylv01.bynetcdn.com/glglz_mp3",
             "https://muste.latvijasradio.lv/shoutcast/mp4:lr2a.stream/playlist.m3u8",
+            "https://live1.sr.se/p1-mp3-96",
+            "https://quantumcast.vrtcdn.be/mnm/mp3-128/quantumcast.vrtcdn.be/",
             "https://icecast.rtl2.fr/rtl2-1-44-128",
             "https://deephouse-radio.com/api/stream/free",
             "https://icecast.funradio.fr/fun-1-44-128",
-            "https://usest-mcp1.golivestream.net:19360/lamega981fm/lamega981fm.m3u8"
+            "https://usest-mcp1.golivestream.net:19360/lamega981fm/lamega981fm.m3u8",
+            "https://str1.openstream.co/589"
         )
 
         val RETIRED_STREAMS = listOf(
-            "https://mediaworks.streamguys1.com/magic_net_icy",
+            "https://glzwizzlv.bynetcdn.com/glglz_mp3",
             "http://lr2mp1.latvijasradio.lv:8002/",
+            "https://live1.sr.se/p1-mp3-192",
+            "https://icecast.vrtcdn.be/mnm-high.mp3",
             "http://streamer-02.rtl.fr/rtl2-1-44-128",
             "http://62.210.105.16:7000/stream",
             "http://streaming.radio.funradio.fr/fun-1-44-128",
-            "https://www.streaming507.net:8152/stream"
+            "https://www.streaming507.net:8152/stream",
+            "https://eu1.fastcast4u.com/proxy/kpmxz?mp=/1"
         )
     }
 }

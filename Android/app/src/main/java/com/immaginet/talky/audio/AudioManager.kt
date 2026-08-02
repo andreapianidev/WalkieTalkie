@@ -1,5 +1,8 @@
 package com.immaginet.talky.audio
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioManager
@@ -7,6 +10,7 @@ import android.media.AudioRecord
 import android.media.AudioTrack
 import android.media.MediaRecorder
 import android.os.Process
+import androidx.core.content.ContextCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -14,7 +18,9 @@ import kotlinx.coroutines.withContext
 import java.io.Closeable
 import java.util.concurrent.atomic.AtomicBoolean
 
-class AudioManager : Closeable {
+class AudioManager(context: Context) : Closeable {
+
+    private val appContext = context.applicationContext
 
     companion object {
         const val SAMPLE_RATE = 48000
@@ -44,6 +50,14 @@ class AudioManager : Closeable {
 
         var record: AudioRecord? = null
         try {
+            if (ContextCompat.checkSelfPermission(
+                    appContext,
+                    Manifest.permission.RECORD_AUDIO
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                throw SecurityException("Permesso microfono non concesso")
+            }
+
             val bufferSize = bufferSizeBytes
             record = AudioRecord(
                 MediaRecorder.AudioSource.MIC,
