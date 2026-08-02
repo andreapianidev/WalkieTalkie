@@ -75,6 +75,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.immaginet.talky.net.CrossPlatformPeer
 import com.immaginet.talky.net.CrossPlatformWalkieManager
+import com.immaginet.talky.net.TransmissionStartResult
 import com.google.firebase.FirebaseApp
 import com.immaginet.talky.ads.AdBanner
 import com.immaginet.talky.ads.AdManager
@@ -195,7 +196,7 @@ private fun TalkyApp() {
                     events = walkieManager.events,
                     onChannelChange = { walkieManager.setChannel(it) },
                     onPTTPress = {
-                        if (walkieManager.startTransmitting()) {
+                        if (walkieManager.startTransmitting() == TransmissionStartResult.Started) {
                             isTransmitting = true
                             FirebaseManager.trackPTTUsed(walkieManager.currentChannel)
                         }

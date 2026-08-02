@@ -1,6 +1,8 @@
 package com.immaginet.talky.net
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.net.wifi.WifiManager
@@ -9,12 +11,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.content.ContextCompat
 import com.immaginet.talky.audio.AudioManager
 import com.immaginet.talky.protocol.PeerChannelPolicy
 import com.immaginet.talky.protocol.TalkyMessage
 import com.immaginet.talky.protocol.TalkyMessageType
 import com.immaginet.talky.protocol.TalkyProtocol
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -55,6 +59,13 @@ private data class PeerConnection(
     }
 }
 
+sealed interface TransmissionStartResult {
+    data object Started : TransmissionStartResult
+    data object NoPeer : TransmissionStartResult
+    data object PermissionDenied : TransmissionStartResult
+    data object AlreadyTransmitting : TransmissionStartResult
+}
+
 class CrossPlatformWalkieManager(
     context: Context
 ) : Closeable {
@@ -88,6 +99,9 @@ class CrossPlatformWalkieManager(
         private set
 
     var remoteAudioActive by mutableStateOf(false)
+        private set
+
+    var transmissionError by mutableStateOf<String?>(null)
         private set
 
     val discoveredPeers = mutableStateListOf<CrossPlatformPeer>()
@@ -124,36 +138,53 @@ class CrossPlatformWalkieManager(
         start()
     }
 
-    fun startTransmitting(): Boolean {
+    fun startTransmitting(): TransmissionStartResult {
+        if (ContextCompat.checkSelfPermission(appContext, Manifest.permission.RECORD_AUDIO) !=
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            transmissionError = "Permesso microfono non concesso"
+            addEvent(transmissionError.orEmpty())
+            return TransmissionStartResult.PermissionDenied
+        }
+
         if (peerConnections.isEmpty()) {
             addEvent("Nessun peer connesso per trasmettere")
-            return false
+            return TransmissionStartResult.NoPeer
         }
 
         if (audioStreamingJob?.isActive == true) {
             addEvent("Già in trasmissione")
-            return false
+            return TransmissionStartResult.AlreadyTransmitting
         }
 
+        transmissionError = null
         audioStreamingJob = scope.launch {
-            addEvent("Inizio trasmissione audio")
+            try {
+                addEvent("Inizio trasmissione audio")
 
-            val metaMsg = TalkyMessage.audioMeta(
-                byteCount = AudioManager.BUFFER_SIZE_FRAMES * 2,
-                sampleRate = AudioManager.SAMPLE_RATE,
-                channels = AudioManager.CHANNELS,
-                encoding = TalkyProtocol.PCM_ENCODING
-            )
-            broadcastMessage(metaMsg)
+                val metaMsg = TalkyMessage.audioMeta(
+                    byteCount = AudioManager.BUFFER_SIZE_FRAMES * 2,
+                    sampleRate = AudioManager.SAMPLE_RATE,
+                    channels = AudioManager.CHANNELS,
+                    encoding = TalkyProtocol.PCM_ENCODING
+                )
+                broadcastMessage(metaMsg)
 
-            audioManager.startCapturing().collect { pcmData ->
-                broadcastRawAudio(pcmData)
+                audioManager.startCapturing().collect { pcmData ->
+                    broadcastRawAudio(pcmData)
+                }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (error: Exception) {
+                transmissionError = error.localizedMessage ?: "Acquisizione microfono non disponibile"
+                addEvent("Trasmissione audio fallita: $transmissionError")
+            } finally {
+                audioManager.stopCapturing()
+                addEvent("Fine trasmissione audio")
             }
-
-            addEvent("Fine trasmissione audio")
         }
 
-        return true
+        return TransmissionStartResult.Started
     }
 
     fun stopTransmitting() {

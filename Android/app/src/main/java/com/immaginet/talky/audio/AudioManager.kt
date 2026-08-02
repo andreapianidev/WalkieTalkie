@@ -42,26 +42,25 @@ class AudioManager : Closeable {
     fun startCapturing(): Flow<ByteArray> = flow {
         if (isCapturing.getAndSet(true)) return@flow
 
-        val bufferSize = bufferSizeBytes
-        val record = AudioRecord(
-            MediaRecorder.AudioSource.MIC,
-            SAMPLE_RATE,
-            CHANNEL_CONFIG,
-            AUDIO_FORMAT,
-            bufferSize
-        ).also { audioRecord = it }
-
-        if (record.state != AudioRecord.STATE_INITIALIZED) {
-            isCapturing.set(false)
-            audioRecord = null
-            throw IllegalStateException("AudioRecord non inizializzato")
-        }
-
-        record.startRecording()
-        Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO)
-
-        val buffer = ByteArray(bufferSize)
+        var record: AudioRecord? = null
         try {
+            val bufferSize = bufferSizeBytes
+            record = AudioRecord(
+                MediaRecorder.AudioSource.MIC,
+                SAMPLE_RATE,
+                CHANNEL_CONFIG,
+                AUDIO_FORMAT,
+                bufferSize
+            ).also { audioRecord = it }
+
+            if (record.state != AudioRecord.STATE_INITIALIZED) {
+                throw IllegalStateException("AudioRecord non inizializzato")
+            }
+
+            record.startRecording()
+            Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO)
+
+            val buffer = ByteArray(bufferSize)
             while (isCapturing.get() && record.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
                 val bytesRead = record.read(buffer, 0, buffer.size)
                 if (bytesRead > 0) {
@@ -71,8 +70,12 @@ class AudioManager : Closeable {
                 }
             }
         } finally {
-            record.stop()
-            record.release()
+            record?.let { recorder ->
+                if (recorder.recordingState == AudioRecord.RECORDSTATE_RECORDING) {
+                    runCatching { recorder.stop() }
+                }
+                runCatching { recorder.release() }
+            }
             audioRecord = null
             isCapturing.set(false)
         }
