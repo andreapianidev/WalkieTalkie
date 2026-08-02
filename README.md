@@ -104,7 +104,7 @@ Talky now ships an **Android port** too — it lives in [`Android/`](Android/) i
 |---|---|
 | Language | **Kotlin** |
 | UI | **Jetpack Compose** + Material 3 |
-| Min / Target SDK | **30 (Android 12)** / **36** |
+| Min / Target SDK | **30 (Android 11)** / **36** |
 | P2P | Network Service Discovery (NSD) |
 | Ads | Google Mobile Ads + User Messaging Platform |
 | Backend | Firebase (Analytics + Crashlytics) |

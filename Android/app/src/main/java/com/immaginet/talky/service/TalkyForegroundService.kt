@@ -11,6 +11,9 @@ import android.content.pm.PackageManager
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
+import android.os.Handler
+import android.os.Looper
+import android.os.PowerManager
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -30,6 +33,8 @@ class TalkyForegroundService : Service() {
         private const val NOTIFICATION_CHANNEL_ID = "talky_background"
         private const val NOTIFICATION_ID = 1001
         private const val ACTION_STOP = "com.immaginet.talky.action.STOP_BACKGROUND"
+        private const val WAKE_LOCK_TIMEOUT_MS = 10 * 60 * 1000L
+        private const val WAKE_LOCK_REFRESH_MS = 9 * 60 * 1000L
 
         fun intent(applicationContext: android.content.Context): Intent =
             Intent(applicationContext, TalkyForegroundService::class.java)
@@ -41,8 +46,22 @@ class TalkyForegroundService : Service() {
     }
 
     private val binder = LocalBinder()
+    private val mainHandler = Handler(Looper.getMainLooper())
+    private val wakeLockRefresh = Runnable {
+        if (::wakeLock.isInitialized && wakeLock.isHeld) {
+            wakeLock.release()
+        }
+        updateWakeLock()
+    }
     private var walkieStarted = false
     private var resourcesClosed = false
+    private lateinit var wakeLock: PowerManager.WakeLock
+
+    var isStopped by mutableStateOf(false)
+        private set
+
+    var isTransmitting by mutableStateOf(false)
+        private set
 
     lateinit var walkieManager: CrossPlatformWalkieManager
         private set
@@ -63,14 +82,24 @@ class TalkyForegroundService : Service() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
+        updateForegroundNotification(isTransmitting = false)
+        wakeLock = getSystemService(PowerManager::class.java)
+            .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "$packageName:talky_background")
+            .apply {
+                setReferenceCounted(false)
+            }
         walkieManager = CrossPlatformWalkieManager(applicationContext)
+        walkieManager.setTransmissionStateListener(::onTransmissionStateChanged)
         radioManager = RadioManager().also { manager ->
             manager.setStatusListener { status ->
-                radioStatus = status
-                updateForegroundNotification(isTransmitting = walkieManager.isTransmitting())
+                runOnMainThread {
+                    if (resourcesClosed || isStopped) return@runOnMainThread
+                    radioStatus = status
+                    updateWakeLock()
+                    updateForegroundNotification(isTransmitting)
+                }
             }
         }
-        updateForegroundNotification(isTransmitting = false)
         configurePermissions(
             microphoneGranted = hasPermission(Manifest.permission.RECORD_AUDIO),
             networkGranted = hasNearbyPermission()
@@ -84,11 +113,12 @@ class TalkyForegroundService : Service() {
             stopAll()
             return START_NOT_STICKY
         }
-        updateForegroundNotification(isTransmitting = walkieManager.isTransmitting())
+        updateForegroundNotification(isTransmitting)
         return START_STICKY
     }
 
     fun configurePermissions(microphoneGranted: Boolean, networkGranted: Boolean) {
+        if (resourcesClosed || isStopped) return
         permissionPolicy = WalkiePermissionPolicy(
             microphoneGranted = microphoneGranted,
             networkGranted = networkGranted
@@ -96,50 +126,56 @@ class TalkyForegroundService : Service() {
         if (permissionPolicy.canReceive && !walkieStarted) {
             runCatching { walkieManager.start() }
                 .onSuccess { walkieStarted = true }
+        } else if (!permissionPolicy.canReceive && walkieStarted) {
+            walkieManager.suspendNetwork()
+            walkieStarted = false
         }
-        updateForegroundNotification(isTransmitting = walkieManager.isTransmitting())
+        updateWakeLock()
+        updateForegroundNotification(isTransmitting)
     }
 
     fun setChannel(channel: String) {
-        if (!permissionPolicy.canReceive) return
+        if (resourcesClosed || isStopped || !permissionPolicy.canReceive) return
         walkieManager.setChannel(channel)
         walkieStarted = true
         updateForegroundNotification(isTransmitting = false)
     }
 
     fun restartWalkie() {
-        if (!permissionPolicy.canReceive) return
+        if (resourcesClosed || isStopped || !permissionPolicy.canReceive) return
         walkieManager.restart()
         walkieStarted = true
         updateForegroundNotification(isTransmitting = false)
     }
 
     fun startTransmitting(): TransmissionStartResult {
-        if (!permissionPolicy.canTransmit) return TransmissionStartResult.PermissionDenied
-        val result = walkieManager.startTransmitting()
-        if (result == TransmissionStartResult.Started) {
-            updateForegroundNotification(isTransmitting = true)
+        if (resourcesClosed || isStopped || !permissionPolicy.canTransmit) {
+            return TransmissionStartResult.PermissionDenied
         }
-        return result
+        return walkieManager.startTransmitting()
     }
 
     fun stopTransmitting() {
+        if (resourcesClosed || isStopped) return
         walkieManager.stopTransmitting()
-        updateForegroundNotification(isTransmitting = false)
     }
 
     fun playStation(station: RadioStation) {
+        if (resourcesClosed || isStopped) return
         stopTransmitting()
         radioManager.playStation(station)
         updateForegroundNotification(isTransmitting = false)
     }
 
     fun stopRadio() {
+        if (resourcesClosed || isStopped) return
         radioManager.stop()
         updateForegroundNotification(isTransmitting = false)
     }
 
     fun stopAll() {
+        if (isStopped) return
+        isStopped = true
         closeResources()
         ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
         stopSelf()
@@ -153,9 +189,15 @@ class TalkyForegroundService : Service() {
     private fun closeResources() {
         if (resourcesClosed) return
         resourcesClosed = true
+        isTransmitting = false
+        walkieManager.setTransmissionStateListener(null)
         runCatching { walkieManager.stopTransmitting() }
         runCatching { radioManager.close() }
         runCatching { walkieManager.close() }
+        mainHandler.removeCallbacks(wakeLockRefresh)
+        if (::wakeLock.isInitialized && wakeLock.isHeld) {
+            runCatching { wakeLock.release() }
+        }
         walkieStarted = false
     }
 
@@ -188,7 +230,7 @@ class TalkyForegroundService : Service() {
                 R.string.notification_radio_playing,
                 radioStatus.stationName
             )
-            permissionPolicy.canReceive -> getString(
+            permissionPolicy.canReceive && ::walkieManager.isInitialized -> getString(
                 R.string.notification_walkie_ready,
                 walkieManager.currentChannel
             )
@@ -229,4 +271,39 @@ class TalkyForegroundService : Service() {
     private fun hasNearbyPermission(): Boolean =
         Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
             hasPermission(Manifest.permission.NEARBY_WIFI_DEVICES)
+
+    private fun onTransmissionStateChanged(active: Boolean) {
+        runOnMainThread {
+            if (resourcesClosed || isStopped) return@runOnMainThread
+            isTransmitting = active
+            updateWakeLock()
+            updateForegroundNotification(active)
+        }
+    }
+
+    private fun updateWakeLock() {
+        if (!::wakeLock.isInitialized) return
+        mainHandler.removeCallbacks(wakeLockRefresh)
+        val shouldHold = !resourcesClosed && !isStopped && TalkyWakeLockPolicy.shouldHold(
+            walkieReady = walkieStarted && permissionPolicy.canReceive,
+            radioActive = radioStatus.isPlaying || radioStatus.isBuffering,
+            isTransmitting = isTransmitting
+        )
+        if (shouldHold && !wakeLock.isHeld) {
+            wakeLock.acquire(WAKE_LOCK_TIMEOUT_MS)
+        } else if (!shouldHold && wakeLock.isHeld) {
+            wakeLock.release()
+        }
+        if (shouldHold) {
+            mainHandler.postDelayed(wakeLockRefresh, WAKE_LOCK_REFRESH_MS)
+        }
+    }
+
+    private inline fun runOnMainThread(crossinline action: () -> Unit) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            action()
+        } else {
+            mainHandler.post { action() }
+        }
+    }
 }

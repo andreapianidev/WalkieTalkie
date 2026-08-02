@@ -14,11 +14,13 @@ import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import com.immaginet.talky.audio.AudioManager
 import com.immaginet.talky.protocol.PeerChannelPolicy
+import com.immaginet.talky.protocol.PeerConnectionPolicy
 import com.immaginet.talky.protocol.TalkyMessage
 import com.immaginet.talky.protocol.TalkyMessageType
 import com.immaginet.talky.protocol.TalkyProtocol
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -31,12 +33,14 @@ import java.io.Closeable
 import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.net.ServerSocket
+import java.net.InetSocketAddress
 import java.net.Socket
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicLong
 
 data class CrossPlatformPeer(
     val uid: String,
@@ -50,6 +54,8 @@ private data class PeerConnection(
     val socket: Socket,
     val output: DataOutputStream,
     val peer: CrossPlatformPeer,
+    val connectionId: Long,
+    val channelGeneration: Long,
     val readerJob: Job
 ) : Closeable {
     override fun close() {
@@ -75,6 +81,9 @@ class CrossPlatformWalkieManager(
     private val executor: ExecutorService = Executors.newCachedThreadPool()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val isClosed = AtomicBoolean(false)
+    private val channelGeneration = AtomicLong(0)
+    private val connectionSequence = AtomicLong(0)
+    private val channelLock = Any()
     private val uid = UUID.randomUUID().toString()
     private val deviceName = "${Build.MANUFACTURER} ${Build.MODEL}".trim()
     private var serverSocket: ServerSocket? = null
@@ -86,6 +95,7 @@ class CrossPlatformWalkieManager(
 
     val audioManager = AudioManager(context)
     private var audioStreamingJob: Job? = null
+    private var onTransmissionStateChanged: ((Boolean) -> Unit)? = null
 
     var currentChannel by mutableStateOf(TalkyProtocol.DEFAULT_CHANNEL)
 
@@ -121,8 +131,7 @@ class CrossPlatformWalkieManager(
 
     fun restart() {
         stopTransmitting()
-        disconnectAllPeers()
-        discoveredPeers.clear()
+        invalidateConnections()
         stopNetwork()
         start()
     }
@@ -130,12 +139,25 @@ class CrossPlatformWalkieManager(
     fun setChannel(newChannel: String) {
         if (newChannel == currentChannel) return
         stopTransmitting()
-        currentChannel = newChannel
+        synchronized(channelLock) {
+            currentChannel = newChannel
+            channelGeneration.incrementAndGet()
+            disconnectAllPeers()
+            discoveredPeers.clear()
+        }
         addEvent("Canale cambiato: $newChannel")
-        disconnectAllPeers()
-        discoveredPeers.clear()
         stopNetwork()
         start()
+    }
+
+    fun suspendNetwork() {
+        stopTransmitting()
+        invalidateConnections()
+        stopNetwork()
+    }
+
+    fun setTransmissionStateListener(listener: ((Boolean) -> Unit)?) {
+        onTransmissionStateChanged = listener
     }
 
     fun startTransmitting(): TransmissionStartResult {
@@ -158,6 +180,7 @@ class CrossPlatformWalkieManager(
         }
 
         transmissionError = null
+        onTransmissionStateChanged?.invoke(true)
         audioStreamingJob = scope.launch {
             try {
                 addEvent("Inizio trasmissione audio")
@@ -181,6 +204,7 @@ class CrossPlatformWalkieManager(
             } finally {
                 audioManager.stopCapturing()
                 addEvent("Fine trasmissione audio")
+                onTransmissionStateChanged?.invoke(false)
             }
         }
 
@@ -191,6 +215,7 @@ class CrossPlatformWalkieManager(
         audioManager.stopCapturing()
         audioStreamingJob?.cancel()
         audioStreamingJob = null
+        onTransmissionStateChanged?.invoke(false)
     }
 
     fun isTransmitting(): Boolean = audioStreamingJob?.isActive == true
@@ -200,7 +225,7 @@ class CrossPlatformWalkieManager(
             stopTransmitting()
             audioManager.close()
             stopNetwork()
-            disconnectAllPeers()
+            invalidateConnections()
             scope.cancel()
             executor.shutdownNow()
         }
@@ -229,11 +254,13 @@ class CrossPlatformWalkieManager(
         val port = socket.port
 
         runCatching {
+            socket.soTimeout = HANDSHAKE_TIMEOUT_MS
+            val (channelSnapshot, generationSnapshot) = channelSnapshot()
             val output = DataOutputStream(BufferedOutputStream(socket.getOutputStream()))
             val input = DataInputStream(BufferedInputStream(socket.getInputStream()))
 
             val helloLine = TalkyProtocol.encodeLine(
-                TalkyMessage.hello(uid = uid, name = deviceName, channel = currentChannel)
+                TalkyMessage.hello(uid = uid, name = deviceName, channel = channelSnapshot)
             )
             writeFrame(output, helloLine.toByteArray())
 
@@ -259,7 +286,13 @@ class CrossPlatformWalkieManager(
             val peerChannel = message.fields[TalkyProtocol.Keys.CHANNEL]
                 ?: TalkyProtocol.DEFAULT_CHANNEL
 
-            if (!PeerChannelPolicy.matches(currentChannel, peerChannel)) {
+            if (!PeerChannelPolicy.matchesSnapshot(
+                    currentChannel,
+                    channelGeneration.get(),
+                    peerChannel,
+                    generationSnapshot
+                )
+            ) {
                 addEvent("Canale incompatibile da $peerName: $peerChannel")
                 socket.close()
                 return
@@ -273,16 +306,28 @@ class CrossPlatformWalkieManager(
                 channel = peerChannel
             )
 
-            val readerJob = scope.launch {
-                readPeerFrames(peer, input)
+            // Apple peers receive heartbeats but do not send them. Keep connected reads
+            // unbounded after the bounded handshake so idle iOS/macOS links stay alive.
+            socket.soTimeout = 0
+            val connectionId = connectionSequence.incrementAndGet()
+            val readerJob = scope.launch(start = CoroutineStart.LAZY) {
+                readPeerFrames(peer, generationSnapshot, connectionId, input)
             }
 
-            val connection = PeerConnection(socket, output, peer, readerJob)
-            disconnectPeer(peerUid)
-            peerConnections[peerUid] = connection
-            upsertPeer(peer)
-            isConnected = peerConnections.isNotEmpty()
-            addEvent("Connesso con ${peer.name}")
+            val connection = PeerConnection(
+                socket,
+                output,
+                peer,
+                connectionId,
+                generationSnapshot,
+                readerJob
+            )
+            if (installConnection(connection)) {
+                readerJob.start()
+                addEvent("Connesso con ${peer.name}")
+            } else {
+                connection.close()
+            }
         }.onFailure { error ->
             addEvent("Handshake fallito $host: ${error.localizedMessage}")
             runCatching { socket.close() }
@@ -373,6 +418,7 @@ class CrossPlatformWalkieManager(
                 }
 
                 override fun onServiceResolved(info: NsdServiceInfo) {
+                    val (channelSnapshot, generationSnapshot) = channelSnapshot()
                     val host = info.host?.hostAddress ?: return
                     val proto = info.attributes[TalkyProtocol.TXT_PROTOCOL_KEY]
                         ?.toString(Charsets.UTF_8)
@@ -386,7 +432,7 @@ class CrossPlatformWalkieManager(
 
                     val peerChannel = info.attributes[TalkyProtocol.Keys.CHANNEL]
                         ?.toString(Charsets.UTF_8)
-                    if (!PeerChannelPolicy.matches(currentChannel, peerChannel)) {
+                    if (!PeerChannelPolicy.matches(channelSnapshot, peerChannel)) {
                         discoveredPeers.removeAll { it.uid == peerUid }
                         addEvent("Ignoro ${info.serviceName}: canale ${peerChannel ?: "public"}")
                         return
@@ -402,7 +448,21 @@ class CrossPlatformWalkieManager(
                         port = info.port,
                         channel = peerChannel ?: TalkyProtocol.DEFAULT_CHANNEL
                     )
-                    upsertPeer(peer)
+                    val stillCurrent = synchronized(channelLock) {
+                        if (!PeerChannelPolicy.matchesSnapshot(
+                                currentChannel,
+                                channelGeneration.get(),
+                                peer.channel,
+                                generationSnapshot
+                            )
+                        ) {
+                            false
+                        } else {
+                            upsertPeer(peer)
+                            true
+                        }
+                    }
+                    if (!stillCurrent) return
                     connectToPeer(peer)
                 }
             }
@@ -410,15 +470,20 @@ class CrossPlatformWalkieManager(
     }
 
     private fun connectToPeer(peer: CrossPlatformPeer) {
-        if (!PeerChannelPolicy.matches(currentChannel, peer.channel)) return
+        val (channelSnapshot, generationSnapshot) = channelSnapshot()
+        if (!PeerChannelPolicy.matches(channelSnapshot, peer.channel)) return
         executor.execute {
+            var pendingSocket: Socket? = null
             runCatching {
-                val socket = Socket(peer.host, peer.port)
+                val socket = Socket().apply {
+                    connect(InetSocketAddress(peer.host, peer.port), HANDSHAKE_TIMEOUT_MS)
+                    soTimeout = HANDSHAKE_TIMEOUT_MS
+                }.also { pendingSocket = it }
                 val output = DataOutputStream(BufferedOutputStream(socket.getOutputStream()))
                 val input = DataInputStream(BufferedInputStream(socket.getInputStream()))
 
                 val helloLine = TalkyProtocol.encodeLine(
-                    TalkyMessage.hello(uid = uid, name = deviceName, channel = currentChannel)
+                    TalkyMessage.hello(uid = uid, name = deviceName, channel = channelSnapshot)
                 )
                 writeFrame(output, helloLine.toByteArray())
 
@@ -435,7 +500,13 @@ class CrossPlatformWalkieManager(
                 }
 
                 val helloChannel = message.fields[TalkyProtocol.Keys.CHANNEL]
-                if (!PeerChannelPolicy.matches(currentChannel, helloChannel)) {
+                if (!PeerChannelPolicy.matchesSnapshot(
+                        currentChannel,
+                        channelGeneration.get(),
+                        helloChannel,
+                        generationSnapshot
+                    )
+                ) {
                     addEvent("Handshake rifiutato ${peer.name}: canale ${helloChannel ?: "public"}")
                     socket.close()
                     return@execute
@@ -447,33 +518,50 @@ class CrossPlatformWalkieManager(
                     channel = helloChannel ?: TalkyProtocol.DEFAULT_CHANNEL
                 )
 
-                val readerJob = scope.launch {
-                    readPeerFrames(validatedPeer, input)
+                socket.soTimeout = 0
+                val connectionId = connectionSequence.incrementAndGet()
+                val readerJob = scope.launch(start = CoroutineStart.LAZY) {
+                    readPeerFrames(validatedPeer, generationSnapshot, connectionId, input)
                 }
 
-                val connection = PeerConnection(socket, output, validatedPeer, readerJob)
-                disconnectPeer(validatedPeer.uid)
-                peerConnections[validatedPeer.uid] = connection
-                upsertPeer(validatedPeer)
-                isConnected = peerConnections.isNotEmpty()
-                addEvent("Connesso con ${validatedPeer.name}")
+                val connection = PeerConnection(
+                    socket,
+                    output,
+                    validatedPeer,
+                    connectionId,
+                    generationSnapshot,
+                    readerJob
+                )
+                if (installConnection(connection)) {
+                    readerJob.start()
+                    addEvent("Connesso con ${validatedPeer.name}")
+                } else {
+                    connection.close()
+                }
             }.onFailure { error ->
+                runCatching { pendingSocket?.close() }
                 addEvent("Connessione fallita ${peer.name}: ${error.localizedMessage}")
             }
         }
     }
 
-    private suspend fun readPeerFrames(peer: CrossPlatformPeer, input: DataInputStream) {
+    private suspend fun readPeerFrames(
+        peer: CrossPlatformPeer,
+        connectionGeneration: Long,
+        connectionId: Long,
+        input: DataInputStream
+    ) {
         try {
             while (isClosed.get().not()) {
                 val frame = readFrame(input) ?: break
+                if (!isConnectionCurrent(peer.channel, connectionGeneration)) break
                 val text = frame.toString(Charsets.UTF_8)
 
                 val message = TalkyProtocol.decodeLine(text)
                 if (message != null) {
-                    handleProtocolMessage(peer, message)
+                    handleProtocolMessage(peer, connectionGeneration, connectionId, message)
                 } else {
-                    handleAudioFrame(frame)
+                    handleAudioFrame(peer, connectionGeneration, frame)
                 }
             }
         } catch (e: Exception) {
@@ -481,18 +569,27 @@ class CrossPlatformWalkieManager(
                 addEvent("Peer ${peer.name} disconnesso: ${e.message}")
             }
         } finally {
-            disconnectPeer(peer.uid)
+            disconnectPeer(peer.uid, connectionId)
             isConnected = peerConnections.isNotEmpty()
         }
     }
 
-    private fun handleProtocolMessage(peer: CrossPlatformPeer, message: TalkyMessage) {
+    private fun handleProtocolMessage(
+        peer: CrossPlatformPeer,
+        connectionGeneration: Long,
+        connectionId: Long,
+        message: TalkyMessage
+    ) {
+        if (!isConnectionCurrent(peer.channel, connectionGeneration)) {
+            disconnectPeer(peer.uid, connectionId)
+            return
+        }
         when (message.type) {
             TalkyMessageType.HELLO -> {
                 val helloChannel = message.fields[TalkyProtocol.Keys.CHANNEL]
                 if (!PeerChannelPolicy.matches(currentChannel, helloChannel)) {
                     addEvent("HELLO rifiutato ${peer.name}: canale ${helloChannel ?: "public"}")
-                    disconnectPeer(peer.uid)
+                    disconnectPeer(peer.uid, connectionId)
                 } else {
                     addEvent("HELLO da ${peer.name}")
                 }
@@ -508,17 +605,27 @@ class CrossPlatformWalkieManager(
                 addEvent("ACCEPT da ${peer.name}")
             }
             TalkyMessageType.AUDIO_META -> {
-                addEvent("Audio in arrivo da ${peer.name}")
-                prepareForIncomingAudio()
+                synchronized(channelLock) {
+                    if (!isConnectionCurrent(peer.channel, connectionGeneration)) return
+                    addEvent("Audio in arrivo da ${peer.name}")
+                    prepareForIncomingAudio()
+                }
             }
         }
     }
 
-    private fun handleAudioFrame(frame: ByteArray) {
-        if (remoteAudioActive.not()) {
-            remoteAudioActive = true
+    private fun handleAudioFrame(
+        peer: CrossPlatformPeer,
+        connectionGeneration: Long,
+        frame: ByteArray
+    ) {
+        synchronized(channelLock) {
+            if (!isConnectionCurrent(peer.channel, connectionGeneration)) return
+            if (remoteAudioActive.not()) {
+                remoteAudioActive = true
+            }
+            audioManager.writeAudio(frame)
         }
-        audioManager.writeAudio(frame)
     }
 
     private fun prepareForIncomingAudio() {
@@ -540,7 +647,7 @@ class CrossPlatformWalkieManager(
         val line = TalkyProtocol.encodeLine(message)
         val data = line.toByteArray()
         peerConnections.values
-            .filter { conn -> PeerChannelPolicy.matches(currentChannel, conn.peer.channel) }
+            .filter(::isConnectionCurrent)
             .forEach { conn ->
             runCatching {
                 writeFrame(conn.output, data)
@@ -550,6 +657,7 @@ class CrossPlatformWalkieManager(
 
     private fun sendMessageToPeer(peerUid: String, message: TalkyMessage) {
         val conn = peerConnections[peerUid] ?: return
+        if (!isConnectionCurrent(conn)) return
         val line = TalkyProtocol.encodeLine(message)
         runCatching {
             writeFrame(conn.output, line.toByteArray())
@@ -558,7 +666,7 @@ class CrossPlatformWalkieManager(
 
     private fun broadcastRawAudio(pcmData: ByteArray) {
         peerConnections.values
-            .filter { conn -> PeerChannelPolicy.matches(currentChannel, conn.peer.channel) }
+            .filter(::isConnectionCurrent)
             .forEach { conn ->
             runCatching {
                 writeFrame(conn.output, pcmData)
@@ -584,8 +692,18 @@ class CrossPlatformWalkieManager(
         }
     }
 
-    private fun disconnectPeer(peerUid: String) {
-        peerConnections.remove(peerUid)?.close()
+    private fun disconnectPeer(peerUid: String, expectedConnectionId: Long? = null) {
+        val connection = peerConnections[peerUid] ?: return
+        if (expectedConnectionId != null && !PeerConnectionPolicy.isSameConnection(
+                activeConnectionId = connection.connectionId,
+                expectedConnectionId = expectedConnectionId
+            )
+        ) {
+            return
+        }
+        if (peerConnections.remove(peerUid, connection)) {
+            connection.close()
+        }
         if (peerConnections.isEmpty()) {
             remoteAudioActive = false
             audioManager.stopPlayback()
@@ -598,6 +716,39 @@ class CrossPlatformWalkieManager(
         isConnected = false
         remoteAudioActive = false
     }
+
+    private fun invalidateConnections() {
+        synchronized(channelLock) {
+            channelGeneration.incrementAndGet()
+            disconnectAllPeers()
+            discoveredPeers.clear()
+        }
+    }
+
+    private fun channelSnapshot(): Pair<String, Long> = synchronized(channelLock) {
+        currentChannel to channelGeneration.get()
+    }
+
+    private fun isConnectionCurrent(connection: PeerConnection): Boolean =
+        isConnectionCurrent(connection.peer.channel, connection.channelGeneration)
+
+    private fun isConnectionCurrent(peerChannel: String, connectionGeneration: Long): Boolean =
+        PeerChannelPolicy.matchesSnapshot(
+            currentChannel,
+            channelGeneration.get(),
+            peerChannel,
+            connectionGeneration
+        )
+
+    private fun installConnection(connection: PeerConnection): Boolean =
+        synchronized(channelLock) {
+            if (!isConnectionCurrent(connection)) return@synchronized false
+            disconnectPeer(connection.peer.uid)
+            peerConnections[connection.peer.uid] = connection
+            upsertPeer(connection.peer)
+            isConnected = true
+            true
+        }
 
     private fun upsertPeer(peer: CrossPlatformPeer) {
         discoveredPeers.removeAll { it.uid == peer.uid }
@@ -643,5 +794,9 @@ class CrossPlatformWalkieManager(
     private fun addEvent(message: String) {
         events.add(message)
         if (events.size > 80) events.removeRange(0, events.size - 80)
+    }
+
+    private companion object {
+        const val HANDSHAKE_TIMEOUT_MS = 10_000
     }
 }

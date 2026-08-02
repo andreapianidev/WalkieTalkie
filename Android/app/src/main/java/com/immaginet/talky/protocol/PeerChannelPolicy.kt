@@ -6,4 +6,11 @@ object PeerChannelPolicy {
         val normalizedPeerChannel = peerChannel ?: TalkyProtocol.DEFAULT_CHANNEL
         return normalizedPeerChannel.isNotBlank() && normalizedPeerChannel == currentChannel
     }
+
+    fun matchesSnapshot(
+        currentChannel: String,
+        currentGeneration: Long,
+        peerChannel: String?,
+        connectionGeneration: Long
+    ): Boolean = currentGeneration == connectionGeneration && matches(currentChannel, peerChannel)
 }

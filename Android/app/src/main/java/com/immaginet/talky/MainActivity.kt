@@ -1,6 +1,7 @@
 package com.immaginet.talky
 
 import android.Manifest
+import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -81,7 +82,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.immaginet.talky.net.CrossPlatformPeer
-import com.immaginet.talky.net.CrossPlatformWalkieManager
 import com.immaginet.talky.net.TransmissionStartResult
 import com.google.firebase.FirebaseApp
 import com.immaginet.talky.ads.AdBanner
@@ -145,12 +145,16 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-private enum class AppMode { WALKIE, RADIO }
+internal enum class AppMode { WALKIE, RADIO }
+
+internal fun initialAppMode(savedMode: AppMode?, radioIsPlaying: Boolean): AppMode =
+    savedMode ?: if (radioIsPlaying) AppMode.RADIO else AppMode.WALKIE
 
 @Composable
 private fun TalkyRoot(service: TalkyForegroundService?) {
     val context = LocalContext.current
     var permissionsRequested by rememberSaveable { mutableStateOf(false) }
+    var appMode by rememberSaveable { mutableStateOf<AppMode?>(null) }
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
     ) { results ->
@@ -178,9 +182,19 @@ private fun TalkyRoot(service: TalkyForegroundService?) {
             microphoneGranted = hasPermission(context, Manifest.permission.RECORD_AUDIO),
             networkGranted = hasNearbyPermission(context)
         )
+        if (service != null && appMode == null) {
+            appMode = initialAppMode(appMode, service.radioStatus.isPlaying)
+        }
     }
 
-    if (service == null) {
+    LaunchedEffect(service?.isStopped) {
+        if (service?.isStopped == true) {
+            (context as? Activity)?.finish()
+        }
+    }
+
+    val resolvedMode = appMode
+    if (service == null || service.isStopped || resolvedMode == null) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -194,6 +208,15 @@ private fun TalkyRoot(service: TalkyForegroundService?) {
 
     TalkyApp(
         service = service,
+        appMode = resolvedMode,
+        onModeChange = { newMode ->
+            if (newMode == AppMode.WALKIE) {
+                service.stopRadio()
+            } else {
+                service.stopTransmitting()
+            }
+            appMode = newMode
+        },
         onRequestMicrophone = {
             permissionLauncher.launch(arrayOf(Manifest.permission.RECORD_AUDIO))
         }
@@ -218,12 +241,13 @@ private fun hasNearbyPermission(context: Context): Boolean =
 @Composable
 private fun TalkyApp(
     service: TalkyForegroundService,
+    appMode: AppMode,
+    onModeChange: (AppMode) -> Unit,
     onRequestMicrophone: () -> Unit
 ) {
     val walkieManager = service.walkieManager
     val radioManager = service.radioManager
-    var isTransmitting by remember { mutableStateOf(false) }
-    var appMode by remember { mutableStateOf(AppMode.WALKIE) }
+    val isTransmitting = service.isTransmitting
     val receivingAudio = walkieManager.remoteAudioActive
     val radioStatus = service.radioStatus
 
@@ -234,15 +258,6 @@ private fun TalkyApp(
     LaunchedEffect(receivingAudio) {
         if (!receivingAudio) {
             walkieManager.audioManager.stopPlayback()
-        }
-    }
-
-    LaunchedEffect(appMode) {
-        if (appMode == AppMode.WALKIE) {
-            service.stopRadio()
-        } else {
-            service.stopTransmitting()
-            isTransmitting = false
         }
     }
 
@@ -266,12 +281,16 @@ private fun TalkyApp(
                 radioStatus = radioStatus,
                 channel = walkieManager.currentChannel,
                 onModeToggle = {
-                    appMode = if (appMode == AppMode.WALKIE) AppMode.RADIO else AppMode.WALKIE
+                    onModeChange(
+                        if (appMode == AppMode.WALKIE) AppMode.RADIO else AppMode.WALKIE
+                    )
                 }
             )
 
             ModeToggle(appMode = appMode, onToggle = {
-                appMode = if (appMode == AppMode.WALKIE) AppMode.RADIO else AppMode.WALKIE
+                onModeChange(
+                    if (appMode == AppMode.WALKIE) AppMode.RADIO else AppMode.WALKIE
+                )
             })
 
             when (appMode) {
@@ -287,7 +306,6 @@ private fun TalkyApp(
                     onPTTPress = {
                         when (service.startTransmitting()) {
                             TransmissionStartResult.Started -> {
-                                isTransmitting = true
                                 FirebaseManager.trackPTTUsed(walkieManager.currentChannel)
                             }
                             TransmissionStartResult.PermissionDenied -> onRequestMicrophone()
@@ -296,7 +314,6 @@ private fun TalkyApp(
                     },
                     onPTTRelease = {
                         service.stopTransmitting()
-                        isTransmitting = false
                     },
                     onRestart = service::restartWalkie
                 )

@@ -26,4 +26,11 @@ class PeerChannelPolicyTest {
         assertFalse(PeerChannelPolicy.matches("public", ""))
         assertFalse(PeerChannelPolicy.matches("", "public"))
     }
+
+    @Test
+    fun staleConnectionGenerationIsRejectedEvenWhenChannelNameMatches() {
+        assertTrue(PeerChannelPolicy.matchesSnapshot("ch3", 4, "ch3", 4))
+        assertFalse(PeerChannelPolicy.matchesSnapshot("ch3", 5, "ch3", 4))
+        assertFalse(PeerChannelPolicy.matchesSnapshot("ch3", 5, "public", 5))
+    }
 }

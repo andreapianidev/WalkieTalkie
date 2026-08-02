@@ -7,6 +7,8 @@ enabled and bounded connection/read timeouts.
 - Streams responding on the first full probe: 333
 - Streams failing or timing out on the first full probe: 10
 - Catalog entries after remediation: 343
+- Streams responding after remediation: 343
+- Streams failing after compatible retry: 0
 
 Nine failed or unreliable endpoints were replaced with streams that returned
 audio or a valid HLS playlist during the verification pass. VOV1 timed out in
@@ -29,3 +31,13 @@ was intentionally left unchanged.
 `RadioCatalogHealthTest` preserves the catalog count and prevents these retired
 URLs from being reintroduced. This network probe is a point-in-time result;
 third-party radio endpoints can change independently of the app.
+
+## Final verification
+
+All 343 catalog entries were probed again after remediation with redirects,
+bounded connect/read timeouts, and a check that response bytes were actually
+received. The first pass used a bounded HTTP range and reported 331 successes.
+The remaining 12 endpoints (RAI, WALM Radio, and SomaFM streams) reject range
+requests; a MediaPlayer-compatible retry without `Range`, using an Android user
+agent and `Icy-MetaData: 1`, returned HTTP 200 plus audio bytes for every one of
+them. Final result: **343/343 responding, 0 failures**.
