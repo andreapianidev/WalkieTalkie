@@ -1,7 +1,6 @@
 package com.immaginet.talky.protocol
 
-import java.net.URLDecoder
-import java.net.URLEncoder
+import java.io.ByteArrayOutputStream
 import java.nio.charset.StandardCharsets
 
 enum class TalkyMessageType {
@@ -103,9 +102,46 @@ object TalkyProtocol {
         return TalkyMessage(type = type, fields = fields)
     }
 
-    private fun escape(value: String): String =
-        URLEncoder.encode(value, StandardCharsets.UTF_8.name())
+    private fun escape(value: String): String = buildString {
+        value.toByteArray(StandardCharsets.UTF_8).forEach { signedByte ->
+            val byte = signedByte.toInt() and 0xff
+            if (isUnreserved(byte)) {
+                append(byte.toChar())
+            } else {
+                append('%')
+                append(HEX_DIGITS[byte ushr 4])
+                append(HEX_DIGITS[byte and 0x0f])
+            }
+        }
+    }
 
-    private fun unescape(value: String): String =
-        URLDecoder.decode(value, StandardCharsets.UTF_8.name())
+    private fun unescape(value: String): String {
+        val output = ByteArrayOutputStream(value.length)
+        var index = 0
+        while (index < value.length) {
+            if (value[index] == '%' && index + 2 < value.length) {
+                val high = value[index + 1].digitToIntOrNull(16)
+                val low = value[index + 2].digitToIntOrNull(16)
+                if (high != null && low != null) {
+                    output.write((high shl 4) or low)
+                    index += 3
+                    continue
+                }
+            }
+
+            val codePoint = value.codePointAt(index)
+            val rawBytes = String(Character.toChars(codePoint)).toByteArray(StandardCharsets.UTF_8)
+            output.write(rawBytes)
+            index += Character.charCount(codePoint)
+        }
+        return output.toByteArray().toString(StandardCharsets.UTF_8)
+    }
+
+    private fun isUnreserved(byte: Int): Boolean =
+        byte in 'A'.code..'Z'.code ||
+            byte in 'a'.code..'z'.code ||
+            byte in '0'.code..'9'.code ||
+            byte == '-'.code || byte == '.'.code || byte == '_'.code || byte == '~'.code
+
+    private const val HEX_DIGITS = "0123456789ABCDEF"
 }
