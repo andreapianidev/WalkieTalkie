@@ -81,6 +81,12 @@ final class WalkieEngine: NSObject, ObservableObject {
     private var playbackEngine: AVAudioEngine?
     private var playbackNode: AVAudioPlayerNode?
     private var duckedRadioVolume: Float?
+    /// Generazione playback: il completion di scheduleBuffer scatta anche
+    /// sullo stop, quindi un buffer vecchio fermato da una nuova ricezione
+    /// invocherebbe finishPlayback() uccidendo il playback nuovo. Ogni
+    /// riproduzione incrementa la generazione e il completion di una
+    /// generazione stantia viene ignorato.
+    private var playbackGeneration = 0
 
     private var ownServiceName: String { "Talky Mac \(uid.prefix(4))" }
 
@@ -544,27 +550,33 @@ final class WalkieEngine: NSObject, ObservableObject {
         playbackEngine = engine
         playbackNode = node
 
-        // Duck della radio mentre parla un peer.
+        // Duck della radio mentre parla un peer. Il ripristino usa il volume
+        // persistito nelle Impostazioni (fonte di verità), così un tocco allo
+        // slider durante la ricezione non viene sovrascritto dal restore.
         if duckedRadioVolume == nil, RadioManager.shared.isPlaying {
-            duckedRadioVolume = RadioManager.shared.volume
+            duckedRadioVolume = SettingsManager.shared.radioVolume
             RadioManager.shared.setVolume((duckedRadioVolume ?? 0.5) * 0.2)
         }
 
         isReceiving = true
+        playbackGeneration += 1
+        let generation = playbackGeneration
         node.scheduleBuffer(buffer) { [weak self] in
             DispatchQueue.main.async {
-                self?.finishPlayback()
+                self?.finishPlayback(generation: generation)
             }
         }
         node.play()
         logger.logAudioInfo("Riproduzione audio ricevuto: \(frameCount) frames")
     }
 
-    private func finishPlayback() {
+    private func finishPlayback(generation: Int) {
+        // Completion di un buffer fermato da una ricezione più recente: ignora.
+        guard generation == playbackGeneration else { return }
         stopPlayback()
         isReceiving = false
-        if let restored = duckedRadioVolume {
-            RadioManager.shared.setVolume(restored)
+        if duckedRadioVolume != nil {
+            RadioManager.shared.setVolume(SettingsManager.shared.radioVolume)
             duckedRadioVolume = nil
         }
     }
