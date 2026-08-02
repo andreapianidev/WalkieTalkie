@@ -46,6 +46,12 @@ struct SettingsPane: View {
                 Toggle("Start network link at launch", isOn: $settings.autoStartNetwork)
                 Toggle("Resume last radio station at launch", isOn: $settings.autoResumeRadio)
             }
+            Section("Menu bar") {
+                Toggle("Show mini console in the menu bar", isOn: $settings.showMenuBarExtra)
+                Text("Push-to-talk, peers and radio controls always one click away — even with the main window closed.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
             Section {
                 Button("Reset all settings to defaults") {
                     settings.resetToDefaults()

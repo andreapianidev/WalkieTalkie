@@ -36,6 +36,11 @@ final class SettingsManager: ObservableObject {
         didSet { defaults.set(hasSeenOnboarding, forKey: "mac_has_seen_onboarding") }
     }
 
+    /// Mostra la mini-console nella menu bar.
+    @Published var showMenuBarExtra: Bool {
+        didSet { defaults.set(showMenuBarExtra, forKey: "mac_show_menubar_extra") }
+    }
+
     /// Nome mostrato agli altri peer TALKY1 (default: nome del Mac).
     @Published var deviceName: String {
         didSet { defaults.set(deviceName, forKey: Keys.deviceName) }
@@ -71,6 +76,7 @@ final class SettingsManager: ObservableObject {
         self.backdropRaw = defaults.string(forKey: Keys.backdrop) ?? "nightOps"
         self.autoResumeRadio = defaults.object(forKey: "mac_auto_resume_radio") as? Bool ?? false
         self.hasSeenOnboarding = defaults.object(forKey: "mac_has_seen_onboarding") as? Bool ?? false
+        self.showMenuBarExtra = defaults.object(forKey: "mac_show_menubar_extra") as? Bool ?? true
     }
 
     /// Nome effettivo pubblicato sulla rete (mai vuoto).

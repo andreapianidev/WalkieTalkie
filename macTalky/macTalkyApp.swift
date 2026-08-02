@@ -13,8 +13,13 @@ struct macTalkyApp: App {
     @StateObject private var iap = IAPManager.shared
     @StateObject private var settings = SettingsManager.shared
 
+    /// Stessa chiave usata da SettingsManager.showMenuBarExtra: @AppStorage è
+    /// il pattern supportato per `MenuBarExtra(isInserted:)` (un binding a
+    /// @StateObject qui non materializza la status item su macOS 26+).
+    @AppStorage("mac_show_menubar_extra") private var menuBarInserted = true
+
     var body: some Scene {
-        WindowGroup {
+        WindowGroup(id: "main") {
             ContentView()
                 .environmentObject(engine)
                 .environmentObject(radio)
@@ -75,7 +80,21 @@ struct macTalkyApp: App {
                 .environmentObject(engine)
                 .environmentObject(iap)
                 .environmentObject(settings)
+                .environmentObject(radio)
                 .preferredColorScheme(.dark)
         }
+
+        // Mini-console nella menu bar: PTT, stato peer e controlli radio
+        // sempre a portata di clic, anche a finestra chiusa.
+        MenuBarExtra(isInserted: $menuBarInserted) {
+            MenuBarPanel()
+                .environmentObject(engine)
+                .environmentObject(radio)
+                .environmentObject(settings)
+                .preferredColorScheme(.dark)
+        } label: {
+            MenuBarLabel()
+        }
+        .menuBarExtraStyle(.window)
     }
 }
