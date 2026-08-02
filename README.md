@@ -7,7 +7,7 @@
 [![Website](https://img.shields.io/badge/Website-walkie--talky.vercel.app-7cf9de.svg?style=flat&logo=vercel&logoColor=white)](https://walkie-talky.vercel.app)
 [![App Store](https://img.shields.io/badge/App%20Store-Free%20Download-0a84ff.svg?style=flat&logo=appstore&logoColor=white)](https://apps.apple.com/app/id6748584483)
 [![iOS](https://img.shields.io/badge/iOS-15.6+-blue.svg)](https://developer.apple.com/ios/)
-[![Android](https://img.shields.io/badge/Android-12+%20(Beta)-3ddc84.svg?logo=android&logoColor=white)](#-android-beta)
+[![Android APK](https://img.shields.io/badge/Android-Download%20APK-3ddc84.svg?logo=android&logoColor=white)](https://github.com/andreapianidev/WalkieTalkie/releases/download/android-v1.1/Talky-Android-v1.1.apk)
 [![macOS](https://img.shields.io/badge/macOS-26+%20(macTalky)-9aa0a6.svg?logo=apple&logoColor=white)](#-mactalky-macos)
 [![Swift](https://img.shields.io/badge/Swift-5.9+-orange.svg)](https://swift.org/)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.0+-7f52ff.svg?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
@@ -88,6 +88,8 @@
 
 Talky now ships an **Android port** too — it lives in [`Android/`](Android/) inside this same repo and is distributed under the **same [PolyForm Noncommercial License](LICENSE)** as the iOS app.
 
+> ⬇️ **[Download Talky for Android v1.1 (signed APK)](https://github.com/andreapianidev/WalkieTalkie/releases/download/android-v1.1/Talky-Android-v1.1.apk)** — Android 11/API 30 or newer. Android may ask you to authorize installation from your browser or file manager.
+
 > ⚠️ **Status: Beta.** The Android app is a younger, leaner port of the iOS original. The core experience (push-to-talk + radio) is functional and builds a **signed release APK**, but it does **not yet** have feature parity on the Pro tier (no IAP/paywall, no Live Activities, single base theme).
 
 ### What works today
@@ -122,7 +124,7 @@ cp keystore.properties.sample keystore.properties   # then edit values, or remov
 
 > 📣 **Ad units note** — for the open-source / sideload APK, [`AdConfig.kt`](Android/app/src/main/java/com/immaginet/talky/ads/AdConfig.kt) intentionally uses Google's **test** ad units (and a test AdMob App ID in the manifest). This is the policy-compliant choice for an APK that is **not** distributed via the Play Store. Replace the `LIVE_*` IDs and the manifest App ID with your own real AdMob IDs before any Play Store release — the config switches to live IDs automatically once real (non-placeholder) values are present in a release build.
 
-> 🚫 **Not on Google Play (yet).** This repo ships the Android **source + a signed APK via [GitHub Releases](https://github.com/andreapianidev/WalkieTalkie/releases)** for sideloading. A Play Store listing would additionally require real AdMob IDs and a Play Console upload.
+> 🚫 **Not on Google Play (yet).** This repo ships the Android **source + a [signed APK](https://github.com/andreapianidev/WalkieTalkie/releases/download/android-v1.1/Talky-Android-v1.1.apk) via [GitHub Releases](https://github.com/andreapianidev/WalkieTalkie/releases)** for sideloading. A Play Store listing would additionally require real AdMob IDs and a Play Console upload.
 
 ---
 
