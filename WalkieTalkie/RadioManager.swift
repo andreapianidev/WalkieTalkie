@@ -247,7 +247,7 @@ class RadioManager: NSObject, ObservableObject {
         // Turchia
         RadioStation(id: 92, name: "Power FM", country: "Turchia", frequency: "103.2", streamURL: "https://listen.powerapp.com.tr/powerfm/mpeg/icecast.audio", genre: "Pop"),
         // Israele
-        RadioStation(id: 93, name: "Galgalatz", country: "Israele", frequency: "91.8", streamURL: "https://glzwizzlv.bynetcdn.com/glglz_mp3", genre: "Rock"),
+        RadioStation(id: 93, name: "Galgalatz", country: "Israele", frequency: "91.8", streamURL: "https://glzicylv01.bynetcdn.com/glglz_mp3", genre: "Rock"),
         RadioStation(id: 94, name: "Kan Bet", country: "Israele", frequency: "95.5", streamURL: "https://25583.live.streamtheworld.com/KAN_BET.mp3", genre: "Talk"),
         // Portogallo
         RadioStation(id: 95, name: "Antena 1", country: "Portogallo", frequency: "95.7", streamURL: "http://streaming-live-app.rtp.pt/liveradio/antena180a/playlist.m3u8", genre: "Pop"),
@@ -497,7 +497,7 @@ class RadioManager: NSObject, ObservableObject {
         RadioStation(id: 254, name: "BBC Radio 5 Live", country: "UK", frequency: "909", streamURL: "http://as-hls-ww-live.akamaized.net/pool_89021708/live/ww/bbc_radio_five_live/bbc_radio_five_live.isml/bbc_radio_five_live-audio%3d128000.norewind.m3u8", genre: "Sport"),
         // Paesi con 1 sola stazione — seconda stazione
         RadioStation(id: 255, name: "RdMix Classic Rock", country: "Canada", frequency: "—", streamURL: "https://cast1.torontocast.com:4610/stream", genre: "Rock"),
-        RadioStation(id: 256, name: "Latvijas Radio 2", country: "Lettonia", frequency: "91.5", streamURL: "http://lr2mp1.latvijasradio.lv:8002/", genre: "Pop"),
+        RadioStation(id: 256, name: "Latvijas Radio 2", country: "Lettonia", frequency: "91.5", streamURL: "https://muste.latvijasradio.lv/shoutcast/mp4:lr2a.stream/playlist.m3u8", genre: "Pop"),
         RadioStation(id: 257, name: "Relax FM Lietuva", country: "Lituania", frequency: "—", streamURL: "https://stream1.relaxfm.lt/relaxfm128.mp3", genre: "Easy"),
         RadioStation(id: 258, name: "OK Radio", country: "Serbia", frequency: "—", streamURL: "https://sslstream.okradio.net/", genre: "Pop"),
         RadioStation(id: 259, name: "Ocean 89", country: "Bermuda", frequency: "89.1", streamURL: "https://us2.internet-radio.com/proxy/ocean89?mp=/stream", genre: "Pop"),
@@ -514,12 +514,12 @@ class RadioManager: NSObject, ObservableObject {
         RadioStation(id: 268, name: "France Culture", country: "Francia", frequency: "93.5", streamURL: "http://icecast.radiofrance.fr/franceculture-hifi.aac", genre: "Talk", isPro: false),
         RadioStation(id: 269, name: "Deutschlandfunk", country: "Germania", frequency: "101.8", streamURL: "https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3", genre: "News", isPro: false),
         RadioStation(id: 270, name: "SRo1 Rádio Slovensko", country: "Slovacchia", frequency: "93.9", streamURL: "http://live.slovakradio.sk:8000/Slovensko_256.mp3", genre: "News", isPro: false),
-        RadioStation(id: 271, name: "Sveriges Radio P1", country: "Svezia", frequency: "92.4", streamURL: "https://live1.sr.se/p1-mp3-192", genre: "Talk", isPro: false),
+        RadioStation(id: 271, name: "Sveriges Radio P1", country: "Svezia", frequency: "92.4", streamURL: "https://live1.sr.se/p1-mp3-96", genre: "Talk", isPro: false),
         RadioStation(id: 272, name: "DR P4 København", country: "Danimarca", frequency: "94.9", streamURL: "http://live-icy.gslb01.dr.dk/A/A08H.mp3", genre: "Pop", isPro: false),
         RadioStation(id: 273, name: "NRK P1", country: "Norvegia", frequency: "89.3", streamURL: "https://cdn0-47115-liveicecast0.dna.contentdelivery.net/p1_mp3_h", genre: "Pop", isPro: false),
-        RadioStation(id: 274, name: "MNM", country: "Belgio", frequency: "101.4", streamURL: "https://icecast.vrtcdn.be/mnm-high.mp3", genre: "Pop", isPro: false),
+        RadioStation(id: 274, name: "MNM", country: "Belgio", frequency: "101.4", streamURL: "https://quantumcast.vrtcdn.be/mnm/mp3-128/quantumcast.vrtcdn.be/", genre: "Pop", isPro: false),
         RadioStation(id: 275, name: "Radio Swiss Classic", country: "Svizzera", frequency: "—", streamURL: "http://stream.srg-ssr.ch/m/rsc_fr/mp3_128", genre: "Classical", isPro: false),
-        RadioStation(id: 276, name: "RTL2 France", country: "Francia", frequency: "103.5", streamURL: "http://streamer-02.rtl.fr/rtl2-1-44-128", genre: "Rock", isPro: false),
+        RadioStation(id: 276, name: "RTL2 France", country: "Francia", frequency: "103.5", streamURL: "https://icecast.rtl2.fr/rtl2-1-44-128", genre: "Rock", isPro: false),
         RadioStation(id: 277, name: "Rock Antenne", country: "Germania", frequency: "—", streamURL: "http://mp3channels.webradio.rockantenne.de/rockantenne", genre: "Rock", isPro: false),
 
         // MARK: - Pro aggiuntive (maggio 2026) — top radio-browser globali + nuovi paesi
@@ -528,7 +528,7 @@ class RadioManager: NSObject, ObservableObject {
         RadioStation(id: 280, name: "RFI Afrique", country: "Francia", frequency: "—", streamURL: "http://live02.rfi.fr/rfiafrique-64.mp3", genre: "World"),
         RadioStation(id: 281, name: "Mosaique FM", country: "Tunisia", frequency: "94.9", streamURL: "http://radio.mosaiquefm.net:8000/mosalive", genre: "World"),
         RadioStation(id: 282, name: "Antinea Radio", country: "Algeria", frequency: "—", streamURL: "https://listen.radioking.com/radio/6640/stream/347", genre: "World"),
-        RadioStation(id: 283, name: "Deep House Radio", country: "USA", frequency: "—", streamURL: "http://62.210.105.16:7000/stream", genre: "Electronic"),
+        RadioStation(id: 283, name: "Deep House Radio", country: "USA", frequency: "—", streamURL: "https://deephouse-radio.com/api/stream/free", genre: "Electronic"),
         RadioStation(id: 284, name: "Bassdrive", country: "USA", frequency: "—", streamURL: "http://stream.bassdrive.uk:8200", genre: "Electronic"),
         RadioStation(id: 285, name: "Christmas Vinyl HD", country: "USA", frequency: "—", streamURL: "https://icecast.walmradio.com:8443/christmas", genre: "Easy"),
         RadioStation(id: 286, name: "80s80s Radio", country: "Germania", frequency: "—", streamURL: "http://streams.80s80s.de/web/mp3-192/streams.80s80s.de/", genre: "Oldies"),
@@ -543,7 +543,7 @@ class RadioManager: NSObject, ObservableObject {
         RadioStation(id: 293, name: "Radio Mitre", country: "Argentina", frequency: "790", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/AM790_56.mp3", genre: "News", isPro: false),
         RadioStation(id: 294, name: "METRO 95.1", country: "Argentina", frequency: "95.1", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/METRO.mp3", genre: "Pop", isPro: false),
         RadioStation(id: 295, name: "Kronehit", country: "Austria", frequency: "105.8", streamURL: "https://secureonair.krone.at/kronehit.mp3", genre: "Pop", isPro: false),
-        RadioStation(id: 296, name: "Fun Radio France", country: "Francia", frequency: "101.9", streamURL: "http://streaming.radio.funradio.fr/fun-1-44-128", genre: "Pop", isPro: false),
+        RadioStation(id: 296, name: "Fun Radio France", country: "Francia", frequency: "101.9", streamURL: "https://icecast.funradio.fr/fun-1-44-128", genre: "Pop", isPro: false),
         RadioStation(id: 297, name: "CADENA 100", country: "Spagna", frequency: "100.0", streamURL: "https://cadena100-cope-rrcast.flumotion.com/cope/cadena100-low.mp3", genre: "Pop", isPro: false),
         RadioStation(id: 311, name: "CBS Music FM", country: "Corea del Sud", frequency: "—", streamURL: "https://m-aac.cbs.co.kr/mweb_cbs939/_definst_/cbs939.stream/playlist.m3u8", genre: "Classical", isPro: false),
         RadioStation(id: 312, name: "103 FM", country: "Costa Rica", frequency: "103.1", streamURL: "https://playerservices.streamtheworld.com/api/livestream-redirect/CRC_103_1AAC.aac", genre: "Pop", isPro: false),
@@ -570,7 +570,7 @@ class RadioManager: NSObject, ObservableObject {
         RadioStation(id: 310, name: "Antena 3 Portugal", country: "Portogallo", frequency: "100.3", streamURL: "http://streaming-live-app.rtp.pt/liveradio/antena380a/playlist.m3u8", genre: "Pop"),
         RadioStation(id: 319, name: "95.5 Jazz", country: "Costa Rica", frequency: "—", streamURL: "https://streaming.radio.co/s36bd2a451/listen", genre: "Jazz"),
         RadioStation(id: 320, name: "Radio Canela", country: "Ecuador", frequency: "—", streamURL: "https://canelaradio.makrodigital.com:9280/stream", genre: "Latin"),
-        RadioStation(id: 321, name: "L.A. Mega", country: "Panama", frequency: "98.1", streamURL: "https://www.streaming507.net:8152/stream", genre: "Latin"),
+        RadioStation(id: 321, name: "L.A. Mega", country: "Panama", frequency: "98.1", streamURL: "https://usest-mcp1.golivestream.net:19360/lamega981fm/lamega981fm.m3u8", genre: "Latin"),
         RadioStation(id: 322, name: "Bachata Radio", country: "Rep. Dominicana", frequency: "—", streamURL: "http://radio.domiplay.net:8002/", genre: "Bachata"),
         RadioStation(id: 323, name: "Adeem", country: "Libano", frequency: "—", streamURL: "https://usa19.fastcast4u.com/adeem", genre: "Arabic"),
         RadioStation(id: 324, name: "Free FM 80 Tokyo", country: "Giappone", frequency: "—", streamURL: "https://freefm80.radioca.st/", genre: "80s"),
@@ -596,7 +596,7 @@ class RadioManager: NSObject, ObservableObject {
         RadioStation(id: 340, name: "EuroDance 90", country: "Francia", frequency: "—", streamURL: "https://stream-eurodance90.fr/radio/8000/128.mp3", genre: "Dance", isPro: true),
         RadioStation(id: 341, name: "Radio Mirchi", country: "India", frequency: "—", streamURL: "https://eu8.fastcast4u.com/proxy/clyedupq/stream", genre: "Bollywood", isPro: true),
         RadioStation(id: 342, name: "Funky Radio", country: "USA", frequency: "—", streamURL: "https://funkyradio.streamingmedia.it/play.mp3", genre: "Urban", isPro: true),
-        RadioStation(id: 343, name: "ABC Lounge Radio", country: "Francia", frequency: "—", streamURL: "https://eu1.fastcast4u.com/proxy/kpmxz?mp=/1", genre: "Jazz", isPro: true)
+        RadioStation(id: 343, name: "ABC Lounge Radio", country: "Francia", frequency: "—", streamURL: "https://str1.openstream.co/589", genre: "Jazz", isPro: true)
     ]
     
     private override init() {
