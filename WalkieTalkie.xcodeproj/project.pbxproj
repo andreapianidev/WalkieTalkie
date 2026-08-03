@@ -532,6 +532,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WalkieTalkie/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Walkie Talkie";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Questa app utilizza il Bluetooth per scoprire e connettersi con dispositivi walkie talkie vicini.";
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Questa app utilizza il Bluetooth per essere scoperta da altri dispositivi walkie talkie.";
@@ -573,6 +574,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = WalkieTalkie/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Walkie Talkie";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Questa app utilizza il Bluetooth per scoprire e connettersi con dispositivi walkie talkie vicini.";
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Questa app utilizza il Bluetooth per essere scoperta da altri dispositivi walkie talkie.";
