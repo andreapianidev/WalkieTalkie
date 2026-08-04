@@ -8,7 +8,8 @@ enum class TalkyMessageType {
     HEARTBEAT,
     INVITE,
     ACCEPT,
-    AUDIO_META
+    AUDIO_META,
+    AUDIO_END
 }
 
 data class TalkyMessage(
@@ -44,6 +45,9 @@ data class TalkyMessage(
                     TalkyProtocol.Keys.ENCODING to encoding
                 )
             )
+
+        fun audioEnd(): TalkyMessage =
+            TalkyMessage(type = TalkyMessageType.AUDIO_END)
     }
 }
 

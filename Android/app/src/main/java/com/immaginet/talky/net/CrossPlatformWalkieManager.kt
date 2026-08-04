@@ -7,16 +7,19 @@ import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
 import android.net.wifi.WifiManager
 import android.os.Build
+import android.os.SystemClock
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import com.immaginet.talky.audio.AudioManager
+import com.immaginet.talky.audio.RemoteAudioPolicy
 import com.immaginet.talky.protocol.PeerChannelPolicy
 import com.immaginet.talky.protocol.PeerConnectionPolicy
 import com.immaginet.talky.protocol.TalkyMessage
 import com.immaginet.talky.protocol.TalkyMessageType
+import com.immaginet.talky.protocol.TalkyFrameWriter
 import com.immaginet.talky.protocol.TalkyProtocol
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CancellationException
@@ -27,6 +30,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.Closeable
@@ -52,7 +57,7 @@ data class CrossPlatformPeer(
 
 private data class PeerConnection(
     val socket: Socket,
-    val output: DataOutputStream,
+    val writer: TalkyFrameWriter,
     val peer: CrossPlatformPeer,
     val connectionId: Long,
     val channelGeneration: Long,
@@ -60,7 +65,7 @@ private data class PeerConnection(
 ) : Closeable {
     override fun close() {
         readerJob.cancel()
-        runCatching { output.close() }
+        runCatching { writer.close() }
         runCatching { socket.close() }
     }
 }
@@ -70,6 +75,7 @@ sealed interface TransmissionStartResult {
     data object NoPeer : TransmissionStartResult
     data object PermissionDenied : TransmissionStartResult
     data object AlreadyTransmitting : TransmissionStartResult
+    data object Receiving : TransmissionStartResult
 }
 
 class CrossPlatformWalkieManager(
@@ -83,7 +89,9 @@ class CrossPlatformWalkieManager(
     private val isClosed = AtomicBoolean(false)
     private val channelGeneration = AtomicLong(0)
     private val connectionSequence = AtomicLong(0)
+    private val remoteAudioActivitySequence = AtomicLong(0)
     private val channelLock = Any()
+    private val audioPlaybackMutex = Mutex()
     private val uid = UUID.randomUUID().toString()
     private val deviceName = "${Build.MANUFACTURER} ${Build.MODEL}".trim()
     private var serverSocket: ServerSocket? = null
@@ -92,6 +100,7 @@ class CrossPlatformWalkieManager(
     private var multicastLock: WifiManager.MulticastLock? = null
     private val peerConnections = ConcurrentHashMap<String, PeerConnection>()
     private var heartbeatJob: Job? = null
+    private var remoteAudioTimeoutJob: Job? = null
 
     val audioManager = AudioManager(context)
     private var audioStreamingJob: Job? = null
@@ -179,9 +188,15 @@ class CrossPlatformWalkieManager(
             return TransmissionStartResult.AlreadyTransmitting
         }
 
+        if (!RemoteAudioPolicy.canStartTransmission(remoteAudioActive)) {
+            addEvent("PTT bloccato durante la ricezione")
+            return TransmissionStartResult.Receiving
+        }
+
         transmissionError = null
         onTransmissionStateChanged?.invoke(true)
         audioStreamingJob = scope.launch {
+            var audioAnnounced = false
             try {
                 addEvent("Inizio trasmissione audio")
 
@@ -192,6 +207,7 @@ class CrossPlatformWalkieManager(
                     encoding = TalkyProtocol.PCM_ENCODING
                 )
                 broadcastMessage(metaMsg)
+                audioAnnounced = true
 
                 audioManager.startCapturing().collect { pcmData ->
                     broadcastRawAudio(pcmData)
@@ -203,6 +219,9 @@ class CrossPlatformWalkieManager(
                 addEvent("Trasmissione audio fallita: $transmissionError")
             } finally {
                 audioManager.stopCapturing()
+                if (audioAnnounced) {
+                    broadcastMessage(TalkyMessage.audioEnd())
+                }
                 addEvent("Fine trasmissione audio")
                 onTransmissionStateChanged?.invoke(false)
             }
@@ -257,12 +276,13 @@ class CrossPlatformWalkieManager(
             socket.soTimeout = HANDSHAKE_TIMEOUT_MS
             val (channelSnapshot, generationSnapshot) = channelSnapshot()
             val output = DataOutputStream(BufferedOutputStream(socket.getOutputStream()))
+            val writer = TalkyFrameWriter(output)
             val input = DataInputStream(BufferedInputStream(socket.getInputStream()))
 
             val helloLine = TalkyProtocol.encodeLine(
                 TalkyMessage.hello(uid = uid, name = deviceName, channel = channelSnapshot)
             )
-            writeFrame(output, helloLine.toByteArray())
+            writer.write(helloLine.toByteArray())
 
             val firstFrame = readFrame(input) ?: run {
                 socket.close()
@@ -316,7 +336,7 @@ class CrossPlatformWalkieManager(
 
             val connection = PeerConnection(
                 socket,
-                output,
+                writer,
                 peer,
                 connectionId,
                 generationSnapshot,
@@ -480,12 +500,13 @@ class CrossPlatformWalkieManager(
                     soTimeout = HANDSHAKE_TIMEOUT_MS
                 }.also { pendingSocket = it }
                 val output = DataOutputStream(BufferedOutputStream(socket.getOutputStream()))
+                val writer = TalkyFrameWriter(output)
                 val input = DataInputStream(BufferedInputStream(socket.getInputStream()))
 
                 val helloLine = TalkyProtocol.encodeLine(
                     TalkyMessage.hello(uid = uid, name = deviceName, channel = channelSnapshot)
                 )
-                writeFrame(output, helloLine.toByteArray())
+                writer.write(helloLine.toByteArray())
 
                 val firstFrame = readFrame(input) ?: run {
                     socket.close()
@@ -526,7 +547,7 @@ class CrossPlatformWalkieManager(
 
                 val connection = PeerConnection(
                     socket,
-                    output,
+                    writer,
                     validatedPeer,
                     connectionId,
                     generationSnapshot,
@@ -574,7 +595,7 @@ class CrossPlatformWalkieManager(
         }
     }
 
-    private fun handleProtocolMessage(
+    private suspend fun handleProtocolMessage(
         peer: CrossPlatformPeer,
         connectionGeneration: Long,
         connectionId: Long,
@@ -605,32 +626,63 @@ class CrossPlatformWalkieManager(
                 addEvent("ACCEPT da ${peer.name}")
             }
             TalkyMessageType.AUDIO_META -> {
-                synchronized(channelLock) {
+                audioPlaybackMutex.withLock {
                     if (!isConnectionCurrent(peer.channel, connectionGeneration)) return
                     addEvent("Audio in arrivo da ${peer.name}")
-                    prepareForIncomingAudio()
+                    audioManager.prepareTrack()
+                    noteRemoteAudioActivityLocked()
+                }
+            }
+            TalkyMessageType.AUDIO_END -> finishRemoteAudio()
+        }
+    }
+
+    private suspend fun handleAudioFrame(
+        peer: CrossPlatformPeer,
+        connectionGeneration: Long,
+        frame: ByteArray
+    ) {
+        audioPlaybackMutex.withLock {
+            if (!isConnectionCurrent(peer.channel, connectionGeneration)) return
+            audioManager.prepareTrack()
+            noteRemoteAudioActivityLocked()
+            audioManager.writeAudio(frame)
+            noteRemoteAudioActivityLocked()
+        }
+    }
+
+    private fun noteRemoteAudioActivityLocked() {
+        remoteAudioActive = true
+        val activitySequence = remoteAudioActivitySequence.incrementAndGet()
+        val lastActivityAtMillis = SystemClock.elapsedRealtime()
+        remoteAudioTimeoutJob?.cancel()
+        remoteAudioTimeoutJob = scope.launch {
+            delay(RemoteAudioPolicy.INACTIVITY_TIMEOUT_MS)
+            audioPlaybackMutex.withLock {
+                val isLatestActivity = remoteAudioActivitySequence.get() == activitySequence
+                val isStillActive = RemoteAudioPolicy.isActive(
+                    lastFrameAtMillis = lastActivityAtMillis,
+                    nowMillis = SystemClock.elapsedRealtime()
+                )
+                if (isLatestActivity && !isStillActive) {
+                    finishRemoteAudioLocked()
                 }
             }
         }
     }
 
-    private fun handleAudioFrame(
-        peer: CrossPlatformPeer,
-        connectionGeneration: Long,
-        frame: ByteArray
-    ) {
-        synchronized(channelLock) {
-            if (!isConnectionCurrent(peer.channel, connectionGeneration)) return
-            if (remoteAudioActive.not()) {
-                remoteAudioActive = true
-            }
-            audioManager.writeAudio(frame)
+    private suspend fun finishRemoteAudio() {
+        audioPlaybackMutex.withLock {
+            finishRemoteAudioLocked()
         }
     }
 
-    private fun prepareForIncomingAudio() {
-        remoteAudioActive = true
-        audioManager.prepareTrack()
+    private fun finishRemoteAudioLocked() {
+        remoteAudioActivitySequence.incrementAndGet()
+        remoteAudioTimeoutJob?.cancel()
+        remoteAudioTimeoutJob = null
+        remoteAudioActive = false
+        audioManager.stopPlayback()
     }
 
     private fun startHeartbeat() {
@@ -650,7 +702,9 @@ class CrossPlatformWalkieManager(
             .filter(::isConnectionCurrent)
             .forEach { conn ->
             runCatching {
-                writeFrame(conn.output, data)
+                conn.writer.write(data)
+            }.onFailure {
+                disconnectPeer(conn.peer.uid, conn.connectionId)
             }
         }
     }
@@ -660,7 +714,9 @@ class CrossPlatformWalkieManager(
         if (!isConnectionCurrent(conn)) return
         val line = TalkyProtocol.encodeLine(message)
         runCatching {
-            writeFrame(conn.output, line.toByteArray())
+            conn.writer.write(line.toByteArray())
+        }.onFailure {
+            disconnectPeer(conn.peer.uid, conn.connectionId)
         }
     }
 
@@ -669,21 +725,17 @@ class CrossPlatformWalkieManager(
             .filter(::isConnectionCurrent)
             .forEach { conn ->
             runCatching {
-                writeFrame(conn.output, pcmData)
+                conn.writer.write(pcmData)
+            }.onFailure {
+                disconnectPeer(conn.peer.uid, conn.connectionId)
             }
         }
-    }
-
-    private fun writeFrame(output: DataOutputStream, data: ByteArray) {
-        output.writeInt(data.size)
-        output.write(data)
-        output.flush()
     }
 
     private fun readFrame(input: DataInputStream): ByteArray? {
         return try {
             val length = input.readInt()
-            if (length <= 0 || length > 1024 * 1024) return null
+            if (length <= 0 || length > TalkyFrameWriter.MAX_PAYLOAD_BYTES) return null
             val data = ByteArray(length)
             input.readFully(data)
             data
@@ -706,7 +758,13 @@ class CrossPlatformWalkieManager(
         }
         if (peerConnections.isEmpty()) {
             remoteAudioActive = false
-            audioManager.stopPlayback()
+            scope.launch {
+                audioPlaybackMutex.withLock {
+                    if (peerConnections.isEmpty()) {
+                        finishRemoteAudioLocked()
+                    }
+                }
+            }
         }
     }
 
@@ -715,6 +773,7 @@ class CrossPlatformWalkieManager(
         peerConnections.clear()
         isConnected = false
         remoteAudioActive = false
+        scope.launch { finishRemoteAudio() }
     }
 
     private fun invalidateConnections() {

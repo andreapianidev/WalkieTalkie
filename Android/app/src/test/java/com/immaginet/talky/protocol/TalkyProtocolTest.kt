@@ -84,6 +84,14 @@ class TalkyProtocolTest {
     }
 
     @Test
+    fun audioEndUsesStableWireLine() {
+        val line = TalkyProtocol.encodeLine(TalkyMessage.audioEnd())
+
+        assertEquals("TALKY1|AUDIO_END\n", line)
+        assertEquals(TalkyMessageType.AUDIO_END, TalkyProtocol.decodeLine(line)?.type)
+    }
+
+    @Test
     fun decodeRejectsUnknownVersion() {
         val decoded = TalkyProtocol.decodeLine("TALKY2|HEARTBEAT\n")
 

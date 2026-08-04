@@ -255,12 +255,6 @@ private fun TalkyApp(
         listOf("public", "ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8")
     }
 
-    LaunchedEffect(receivingAudio) {
-        if (!receivingAudio) {
-            walkieManager.audioManager.stopPlayback()
-        }
-    }
-
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
@@ -585,6 +579,7 @@ private fun WalkieContent(
         PushToTalkPanel(
             isTransmitting = isTransmitting,
             isConnected = isConnected,
+            receivingAudio = receivingAudio,
             onPress = onPTTPress,
             onRelease = onPTTRelease
         )
@@ -648,6 +643,7 @@ private fun ReceivingIndicator() {
 private fun PushToTalkPanel(
     isTransmitting: Boolean,
     isConnected: Boolean,
+    receivingAudio: Boolean,
     onPress: () -> Unit,
     onRelease: () -> Unit
 ) {
@@ -672,7 +668,7 @@ private fun PushToTalkPanel(
                             isTransmitting -> Brush.radialGradient(
                                 colors = listOf(Color(0xFFFF4444), Color(0xFFCC2222), Color(0xFF330808))
                             )
-                            isConnected -> Brush.radialGradient(
+                            isConnected && !receivingAudio -> Brush.radialGradient(
                                 colors = listOf(Color(0xFF6CFF7A), Color(0xFF1E7C3B), Color(0xFF0C1711))
                             )
                             else -> Brush.radialGradient(
@@ -684,15 +680,15 @@ private fun PushToTalkPanel(
                         2.dp,
                         when {
                             isTransmitting -> Color(0xFFFF6666)
-                            isConnected -> Color(0xFFB9FFC2)
+                            isConnected && !receivingAudio -> Color(0xFFB9FFC2)
                             else -> Color(0xFF445544)
                         },
                         CircleShape
                     )
-                    .pointerInput(Unit) {
+                    .pointerInput(isConnected, receivingAudio) {
                         detectTapGestures(
                             onPress = {
-                                if (isConnected) {
+                                if (isConnected && !receivingAudio) {
                                     onPress()
                                     tryAwaitRelease()
                                     onRelease()
@@ -710,7 +706,12 @@ private fun PushToTalkPanel(
                         fontWeight = FontWeight.Black
                     )
                     Text(
-                        text = if (isTransmitting) "IN ONDA" else if (isConnected) "PREMI" else "---",
+                        text = when {
+                            isTransmitting -> "IN ONDA"
+                            receivingAudio -> "RX"
+                            isConnected -> "PREMI"
+                            else -> "---"
+                        },
                         color = Color(0xFF061009).copy(alpha = 0.7f),
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold
@@ -720,6 +721,7 @@ private fun PushToTalkPanel(
             Text(
                 text = when {
                     isTransmitting -> "IN TRASMISSIONE... RILASCIA PER FERMARE"
+                    receivingAudio -> "Ricezione in corso..."
                     isConnected -> "Tieni premuto per parlare"
                     else -> "In attesa connessione..."
                 },
