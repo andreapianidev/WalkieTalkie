@@ -37,6 +37,12 @@ final class WalkieEngine: NSObject, ObservableObject {
         /// Silenzio dopo l'ultimo frame oltre il quale la ricezione è conclusa
         /// (il protocollo TALKY1 non ha un marcatore di fine trasmissione).
         static let receiveTailSeconds: Double = 0.35
+        /// Margine oltre la durata dell'audio ancora in coda dopo il quale la
+        /// ricezione viene chiusa comunque. Serve da salvagente: se i completion
+        /// del player node non arrivano più (tipico se il device audio di output
+        /// cambia a metà ricezione) `isReceiving` resterebbe alto per sempre e,
+        /// essendo il PTT half-duplex, bloccherebbe il microfono fino al riavvio.
+        static let receiveHardTimeout: Double = 2
         /// Intervallo di riconciliazione dei peer scoperti ma non connessi.
         static let reconnectInterval: Double = 5
         /// Oltre questa attesa una connessione uscente è considerata persa e
@@ -729,6 +735,17 @@ final class WalkieEngine: NSObject, ObservableObject {
         }
 
         if playbackStarted, queuedFrames <= 0, idle >= Constant.receiveTailSeconds {
+            endReceiving()
+            return
+        }
+
+        // Salvagente contro una coda che non si svuota più. La soglia include la
+        // durata dell'audio ancora accodato, altrimenti troncherebbe le
+        // trasmissioni iOS, che arrivano in un frame unico da 10 s: lì `idle`
+        // cresce da subito mentre il buffer è ancora tutto da riprodurre.
+        let queuedSeconds = Double(max(queuedFrames, 0)) / Constant.sampleRate
+        if idle >= queuedSeconds + Constant.receiveHardTimeout {
+            logger.logAudioWarning("Ricezione chiusa dal timeout di sicurezza (coda non svuotata)")
             endReceiving()
         }
     }
