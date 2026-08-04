@@ -29,4 +29,20 @@ class RemoteAudioPolicyTest {
         assertFalse(RemoteAudioPolicy.canStartTransmission(remoteAudioActive = true))
         assertTrue(RemoteAudioPolicy.canStartTransmission(remoteAudioActive = false))
     }
+
+    @Test
+    fun `late audio end from another peer does not stop the active speaker`() {
+        assertFalse(
+            RemoteAudioPolicy.shouldFinish(
+                activePeerUid = "peer-b",
+                endingPeerUid = "peer-a"
+            )
+        )
+        assertTrue(
+            RemoteAudioPolicy.shouldFinish(
+                activePeerUid = "peer-b",
+                endingPeerUid = "peer-b"
+            )
+        )
+    }
 }

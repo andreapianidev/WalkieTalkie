@@ -1,17 +1,31 @@
 package com.immaginet.talky.radio
 
+import android.content.Context
 import android.media.AudioAttributes
+import android.media.AudioFocusRequest
+import android.media.AudioManager
 import android.media.MediaPlayer
+import android.os.PowerManager
 import java.io.Closeable
 
-class RadioManager : Closeable {
+class RadioManager(context: Context) : Closeable {
 
+    private val appContext = context.applicationContext
     private var mediaPlayer: MediaPlayer? = null
-    private var currentStationId: Int = -1
-    private var currentStationName: String = ""
-    private var currentStationCountry: String = ""
-    private var isPlayingState: Boolean = false
+    private var playbackState = RadioPlaybackState.idle()
     private var onStatusChanged: ((RadioStatus) -> Unit)? = null
+    private var resumeAfterTransientFocusLoss = false
+    private val systemAudioManager = appContext
+        .getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    private val playbackAudioAttributes = AudioAttributes.Builder()
+        .setUsage(AudioAttributes.USAGE_MEDIA)
+        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+        .build()
+    private val audioFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+        .setAudioAttributes(playbackAudioAttributes)
+        .setAcceptsDelayedFocusGain(false)
+        .setOnAudioFocusChangeListener(::onAudioFocusChanged)
+        .build()
 
     data class RadioStatus(
         val isPlaying: Boolean,
@@ -383,115 +397,156 @@ class RadioManager : Closeable {
 
     fun setStatusListener(listener: (RadioStatus) -> Unit) {
         onStatusChanged = listener
+        publishState(playbackState)
     }
 
     fun playStation(station: RadioStation) {
-        val sameStation = currentStationId == station.id
-        if (sameStation && isPlayingState) return
+        val sameStation = playbackState.stationId == station.id
+        if (sameStation && playbackState.isPlaying) return
 
         stop()
 
         val mp = MediaPlayer().apply {
-            setAudioAttributes(
-                AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                    .build()
-            )
-            setOnPreparedListener {
-                start()
-                isPlayingState = true
-                currentStationId = station.id
-                currentStationName = station.name
-                currentStationCountry = station.country
-                emitStatus(isBuffering = false)
+            setAudioAttributes(playbackAudioAttributes)
+            setWakeMode(appContext, PowerManager.PARTIAL_WAKE_LOCK)
+            setOnPreparedListener { preparedPlayer ->
+                if (mediaPlayer !== preparedPlayer) return@setOnPreparedListener
+                if (!requestAudioFocus()) {
+                    mediaPlayer = null
+                    runCatching { preparedPlayer.release() }
+                    publishState(playbackState.failed("Audio occupato da un'altra app"))
+                    return@setOnPreparedListener
+                }
+                runCatching { preparedPlayer.start() }
+                    .onSuccess {
+                        publishState(playbackState.playing(station))
+                    }
+                    .onFailure { error ->
+                        mediaPlayer = null
+                        abandonAudioFocus()
+                        runCatching { preparedPlayer.release() }
+                        publishState(
+                            playbackState.failed(
+                                "Riproduzione non disponibile: ${error.localizedMessage}"
+                            )
+                        )
+                    }
             }
             setOnErrorListener { failedPlayer, what, extra ->
-                if (mediaPlayer === failedPlayer) {
-                    mediaPlayer = null
-                    currentStationId = -1
-                    currentStationName = ""
-                    currentStationCountry = ""
-                    isPlayingState = false
-                }
+                if (mediaPlayer !== failedPlayer) return@setOnErrorListener true
+                mediaPlayer = null
+                abandonAudioFocus()
                 runCatching { failedPlayer.reset() }
                 runCatching { failedPlayer.release() }
-                emitStatus(
-                    isBuffering = false,
-                    error = "Errore streaming ($what/$extra)"
+                publishState(
+                    playbackState.failed("Errore streaming ($what/$extra)")
                 )
                 true
             }
-            setOnInfoListener { _, what, _ ->
+            setOnInfoListener { infoPlayer, what, _ ->
+                if (mediaPlayer !== infoPlayer) return@setOnInfoListener true
                 if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
-                    emitStatus(isBuffering = true)
+                    publishState(playbackState.withBuffering(true))
                 } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
-                    emitStatus(isBuffering = false)
+                    publishState(playbackState.withBuffering(false))
                 }
                 true
+            }
+            setOnCompletionListener { completedPlayer ->
+                if (mediaPlayer !== completedPlayer) return@setOnCompletionListener
+                mediaPlayer = null
+                abandonAudioFocus()
+                runCatching { completedPlayer.release() }
+                publishState(playbackState.stopped())
             }
         }
 
         mediaPlayer = mp
-        emitStatus(isBuffering = true)
+        publishState(playbackState.beginBuffering(station))
 
         try {
             mp.setDataSource(station.streamUrl)
             mp.prepareAsync()
         } catch (e: Exception) {
-            emitStatus(isBuffering = false, error = "URL non valido: ${e.message}")
-            runCatching { mp.release() }
             mediaPlayer = null
+            runCatching { mp.release() }
+            abandonAudioFocus()
+            publishState(playbackState.failed("URL non valido: ${e.message}"))
         }
     }
 
     fun stop() {
         mediaPlayer?.let { mp ->
-            try {
+            runCatching {
                 if (mp.isPlaying) mp.stop()
-            } catch (_: Exception) {}
-            mp.reset()
-            mp.release()
+            }
+            runCatching { mp.reset() }
+            runCatching { mp.release() }
         }
         mediaPlayer = null
-        currentStationId = -1
-        currentStationName = ""
-        currentStationCountry = ""
-        isPlayingState = false
-        emitStatus()
+        resumeAfterTransientFocusLoss = false
+        abandonAudioFocus()
+        publishState(playbackState.stopped())
     }
 
-    fun isPlaying(): Boolean = isPlayingState
+    fun isPlaying(): Boolean = playbackState.isPlaying
 
-    fun getCurrentStationId(): Int = currentStationId
+    fun getCurrentStationId(): Int = playbackState.stationId
 
     fun getNextStation(): RadioStation? {
-        val idx = stations.indexOfFirst { it.id == currentStationId }
+        val idx = stations.indexOfFirst { it.id == playbackState.stationId }
         if (idx < 0) return null
         return stations[(idx + 1) % stations.size]
     }
 
     fun getPreviousStation(): RadioStation? {
-        val idx = stations.indexOfFirst { it.id == currentStationId }
+        val idx = stations.indexOfFirst { it.id == playbackState.stationId }
         if (idx < 0) return null
         return stations[(idx - 1 + stations.size) % stations.size]
     }
 
-    private var lastBuffering = false
-    private var lastError: String? = null
-
-    private fun emitStatus(isBuffering: Boolean? = null, error: String? = null) {
-        if (isBuffering != null) lastBuffering = isBuffering
-        lastError = error
+    private fun publishState(state: RadioPlaybackState) {
+        playbackState = state
         onStatusChanged?.invoke(
             RadioStatus(
-                isPlaying = isPlayingState,
-                stationName = currentStationName,
-                stationCountry = currentStationCountry,
-                isBuffering = lastBuffering,
-                error = lastError
+                isPlaying = state.isPlaying,
+                stationName = state.stationName,
+                stationCountry = state.stationCountry,
+                isBuffering = state.isBuffering,
+                error = state.error
             )
         )
+    }
+
+    private fun requestAudioFocus(): Boolean =
+        systemAudioManager.requestAudioFocus(audioFocusRequest) ==
+            AudioManager.AUDIOFOCUS_REQUEST_GRANTED
+
+    private fun abandonAudioFocus() {
+        systemAudioManager.abandonAudioFocusRequest(audioFocusRequest)
+    }
+
+    private fun onAudioFocusChanged(change: Int) {
+        when (change) {
+            AudioManager.AUDIOFOCUS_GAIN -> {
+                runCatching { mediaPlayer?.setVolume(1f, 1f) }
+                if (resumeAfterTransientFocusLoss) {
+                    resumeAfterTransientFocusLoss = false
+                    runCatching { mediaPlayer?.start() }
+                }
+            }
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
+                runCatching { mediaPlayer?.setVolume(0.2f, 0.2f) }
+            }
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
+                val player = mediaPlayer
+                if (runCatching { player?.isPlaying == true }.getOrDefault(false)) {
+                    resumeAfterTransientFocusLoss = true
+                    runCatching { player?.pause() }
+                }
+            }
+            AudioManager.AUDIOFOCUS_LOSS -> stop()
+        }
     }
 
     override fun close() {

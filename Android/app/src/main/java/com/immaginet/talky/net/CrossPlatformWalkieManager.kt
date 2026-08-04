@@ -8,6 +8,7 @@ import android.net.nsd.NsdServiceInfo
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.SystemClock
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -52,7 +53,8 @@ data class CrossPlatformPeer(
     val name: String,
     val host: String,
     val port: Int,
-    val channel: String
+    val channel: String,
+    val serviceName: String? = null
 )
 
 private data class PeerConnection(
@@ -99,8 +101,14 @@ class CrossPlatformWalkieManager(
     private var discoveryListener: NsdManager.DiscoveryListener? = null
     private var multicastLock: WifiManager.MulticastLock? = null
     private val peerConnections = ConcurrentHashMap<String, PeerConnection>()
+    private val serviceInfoCallbacks =
+        ConcurrentHashMap<String, NsdManager.ServiceInfoCallback>()
+    private val reconnectJobs = ConcurrentHashMap<String, Job>()
+    private val reconnectAttempts = ConcurrentHashMap<String, Int>()
+    private val connectingPeerUids = ConcurrentHashMap.newKeySet<String>()
     private var heartbeatJob: Job? = null
     private var remoteAudioTimeoutJob: Job? = null
+    private var remoteAudioPeerUid: String? = null
 
     val audioManager = AudioManager(context)
     private var audioStreamingJob: Job? = null
@@ -404,8 +412,7 @@ class CrossPlatformWalkieManager(
             }
 
             override fun onServiceLost(serviceInfo: NsdServiceInfo) {
-                discoveredPeers.removeAll { it.name == serviceInfo.serviceName }
-                addEvent("Peer perso: ${serviceInfo.serviceName}")
+                handleServiceLost(serviceInfo.serviceName)
             }
 
             override fun onDiscoveryStopped(serviceType: String) {
@@ -430,6 +437,52 @@ class CrossPlatformWalkieManager(
     }
 
     private fun resolveService(serviceInfo: NsdServiceInfo) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            resolveServiceModern(serviceInfo)
+        } else {
+            resolveServiceLegacy(serviceInfo)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    private fun resolveServiceModern(serviceInfo: NsdServiceInfo) {
+        val serviceName = serviceInfo.serviceName
+        val callback = object : NsdManager.ServiceInfoCallback {
+            override fun onServiceInfoCallbackRegistrationFailed(errorCode: Int) {
+                serviceInfoCallbacks.remove(serviceName, this)
+                addEvent("Resolve fallito $serviceName: $errorCode")
+            }
+
+            override fun onServiceUpdated(info: NsdServiceInfo) {
+                processResolvedService(info, info.hostAddresses.firstOrNull()?.hostAddress)
+            }
+
+            override fun onServiceLost() {
+                serviceInfoCallbacks.remove(serviceName, this)
+                handleServiceLost(serviceName)
+                runCatching { nsdManager.unregisterServiceInfoCallback(this) }
+            }
+
+            override fun onServiceInfoCallbackUnregistered() {
+                serviceInfoCallbacks.remove(serviceName, this)
+            }
+        }
+
+        if (serviceInfoCallbacks.putIfAbsent(serviceName, callback) != null) return
+        runCatching {
+            nsdManager.registerServiceInfoCallback(
+                serviceInfo,
+                ContextCompat.getMainExecutor(appContext),
+                callback
+            )
+        }.onFailure { error ->
+            serviceInfoCallbacks.remove(serviceName, callback)
+            addEvent("Resolve fallito $serviceName: ${error.localizedMessage}")
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun resolveServiceLegacy(serviceInfo: NsdServiceInfo) {
         nsdManager.resolveService(
             serviceInfo,
             object : NsdManager.ResolveListener {
@@ -438,63 +491,70 @@ class CrossPlatformWalkieManager(
                 }
 
                 override fun onServiceResolved(info: NsdServiceInfo) {
-                    val (channelSnapshot, generationSnapshot) = channelSnapshot()
-                    val host = info.host?.hostAddress ?: return
-                    val proto = info.attributes[TalkyProtocol.TXT_PROTOCOL_KEY]
-                        ?.toString(Charsets.UTF_8)
-                    if (proto != TalkyProtocol.TXT_PROTOCOL_VALUE) {
-                        addEvent("Ignoro servizio non TALKY1: ${info.serviceName}")
-                        return
-                    }
-
-                    val peerUid = info.attributes[TalkyProtocol.Keys.UID]
-                        ?.toString(Charsets.UTF_8) ?: info.serviceName
-
-                    val peerChannel = info.attributes[TalkyProtocol.Keys.CHANNEL]
-                        ?.toString(Charsets.UTF_8)
-                    if (!PeerChannelPolicy.matches(channelSnapshot, peerChannel)) {
-                        discoveredPeers.removeAll { it.uid == peerUid }
-                        addEvent("Ignoro ${info.serviceName}: canale ${peerChannel ?: "public"}")
-                        return
-                    }
-
-                    if (peerConnections.containsKey(peerUid)) return
-
-                    val peer = CrossPlatformPeer(
-                        uid = peerUid,
-                        name = info.attributes[TalkyProtocol.Keys.NAME]?.toString(Charsets.UTF_8)
-                            ?: info.serviceName,
-                        host = host,
-                        port = info.port,
-                        channel = peerChannel ?: TalkyProtocol.DEFAULT_CHANNEL
-                    )
-                    val stillCurrent = synchronized(channelLock) {
-                        if (!PeerChannelPolicy.matchesSnapshot(
-                                currentChannel,
-                                channelGeneration.get(),
-                                peer.channel,
-                                generationSnapshot
-                            )
-                        ) {
-                            false
-                        } else {
-                            upsertPeer(peer)
-                            true
-                        }
-                    }
-                    if (!stillCurrent) return
-                    connectToPeer(peer)
+                    processResolvedService(info, info.host?.hostAddress)
                 }
             }
         )
     }
 
+    private fun processResolvedService(info: NsdServiceInfo, hostAddress: String?) {
+        val (channelSnapshot, generationSnapshot) = channelSnapshot()
+        val host = hostAddress ?: return
+        val proto = info.attributes[TalkyProtocol.TXT_PROTOCOL_KEY]
+            ?.toString(Charsets.UTF_8)
+        if (proto != TalkyProtocol.TXT_PROTOCOL_VALUE) {
+            addEvent("Ignoro servizio non TALKY1: ${info.serviceName}")
+            return
+        }
+
+        val peerUid = info.attributes[TalkyProtocol.Keys.UID]
+            ?.toString(Charsets.UTF_8) ?: info.serviceName
+        val peerChannel = info.attributes[TalkyProtocol.Keys.CHANNEL]
+            ?.toString(Charsets.UTF_8)
+        if (!PeerChannelPolicy.matches(channelSnapshot, peerChannel)) {
+            discoveredPeers.removeAll { it.uid == peerUid }
+            cancelReconnect(peerUid)
+            addEvent("Ignoro ${info.serviceName}: canale ${peerChannel ?: "public"}")
+            return
+        }
+
+        val peer = CrossPlatformPeer(
+            uid = peerUid,
+            name = info.attributes[TalkyProtocol.Keys.NAME]?.toString(Charsets.UTF_8)
+                ?: info.serviceName,
+            host = host,
+            port = info.port,
+            channel = peerChannel ?: TalkyProtocol.DEFAULT_CHANNEL,
+            serviceName = info.serviceName
+        )
+        val stillCurrent = synchronized(channelLock) {
+            if (!PeerChannelPolicy.matchesSnapshot(
+                    currentChannel,
+                    channelGeneration.get(),
+                    peer.channel,
+                    generationSnapshot
+                )
+            ) {
+                false
+            } else {
+                upsertPeer(peer)
+                true
+            }
+        }
+        if (!stillCurrent || peerConnections.containsKey(peerUid)) return
+        connectToPeer(peer)
+    }
+
     private fun connectToPeer(peer: CrossPlatformPeer) {
         val (channelSnapshot, generationSnapshot) = channelSnapshot()
         if (!PeerChannelPolicy.matches(channelSnapshot, peer.channel)) return
+        if (peerConnections.containsKey(peer.uid)) return
+        if (!connectingPeerUids.add(peer.uid)) return
         executor.execute {
             var pendingSocket: Socket? = null
-            runCatching {
+            var installed = false
+            var shouldRetry = true
+            try {
                 val socket = Socket().apply {
                     connect(InetSocketAddress(peer.host, peer.port), HANDSHAKE_TIMEOUT_MS)
                     soTimeout = HANDSHAKE_TIMEOUT_MS
@@ -516,6 +576,7 @@ class CrossPlatformWalkieManager(
                 val firstText = firstFrame.toString(Charsets.UTF_8)
                 val message = TalkyProtocol.decodeLine(firstText)
                 if (message?.type != TalkyMessageType.HELLO) {
+                    shouldRetry = false
                     socket.close()
                     return@execute
                 }
@@ -528,6 +589,7 @@ class CrossPlatformWalkieManager(
                         generationSnapshot
                     )
                 ) {
+                    shouldRetry = false
                     addEvent("Handshake rifiutato ${peer.name}: canale ${helloChannel ?: "public"}")
                     socket.close()
                     return@execute
@@ -554,14 +616,22 @@ class CrossPlatformWalkieManager(
                     readerJob
                 )
                 if (installConnection(connection)) {
+                    installed = true
+                    pendingSocket = null
                     readerJob.start()
                     addEvent("Connesso con ${validatedPeer.name}")
                 } else {
                     connection.close()
                 }
-            }.onFailure { error ->
+            } catch (error: Exception) {
                 runCatching { pendingSocket?.close() }
                 addEvent("Connessione fallita ${peer.name}: ${error.localizedMessage}")
+            } finally {
+                connectingPeerUids.remove(peer.uid)
+                if (!installed && shouldRetry) {
+                    runCatching { pendingSocket?.close() }
+                    scheduleReconnect(peer)
+                }
             }
         }
     }
@@ -590,8 +660,7 @@ class CrossPlatformWalkieManager(
                 addEvent("Peer ${peer.name} disconnesso: ${e.message}")
             }
         } finally {
-            disconnectPeer(peer.uid, connectionId)
-            isConnected = peerConnections.isNotEmpty()
+            disconnectPeer(peer.uid, connectionId, reconnect = true)
         }
     }
 
@@ -630,10 +699,10 @@ class CrossPlatformWalkieManager(
                     if (!isConnectionCurrent(peer.channel, connectionGeneration)) return
                     addEvent("Audio in arrivo da ${peer.name}")
                     audioManager.prepareTrack()
-                    noteRemoteAudioActivityLocked()
+                    noteRemoteAudioActivityLocked(peer.uid)
                 }
             }
-            TalkyMessageType.AUDIO_END -> finishRemoteAudio()
+            TalkyMessageType.AUDIO_END -> finishRemoteAudio(peer.uid)
         }
     }
 
@@ -645,13 +714,14 @@ class CrossPlatformWalkieManager(
         audioPlaybackMutex.withLock {
             if (!isConnectionCurrent(peer.channel, connectionGeneration)) return
             audioManager.prepareTrack()
-            noteRemoteAudioActivityLocked()
+            noteRemoteAudioActivityLocked(peer.uid)
             audioManager.writeAudio(frame)
-            noteRemoteAudioActivityLocked()
+            noteRemoteAudioActivityLocked(peer.uid)
         }
     }
 
-    private fun noteRemoteAudioActivityLocked() {
+    private fun noteRemoteAudioActivityLocked(peerUid: String) {
+        remoteAudioPeerUid = peerUid
         remoteAudioActive = true
         val activitySequence = remoteAudioActivitySequence.incrementAndGet()
         val lastActivityAtMillis = SystemClock.elapsedRealtime()
@@ -671,8 +741,15 @@ class CrossPlatformWalkieManager(
         }
     }
 
-    private suspend fun finishRemoteAudio() {
+    private suspend fun finishRemoteAudio(expectedPeerUid: String? = null) {
         audioPlaybackMutex.withLock {
+            if (expectedPeerUid != null && !RemoteAudioPolicy.shouldFinish(
+                    activePeerUid = remoteAudioPeerUid,
+                    endingPeerUid = expectedPeerUid
+                )
+            ) {
+                return@withLock
+            }
             finishRemoteAudioLocked()
         }
     }
@@ -681,6 +758,7 @@ class CrossPlatformWalkieManager(
         remoteAudioActivitySequence.incrementAndGet()
         remoteAudioTimeoutJob?.cancel()
         remoteAudioTimeoutJob = null
+        remoteAudioPeerUid = null
         remoteAudioActive = false
         audioManager.stopPlayback()
     }
@@ -704,7 +782,7 @@ class CrossPlatformWalkieManager(
             runCatching {
                 conn.writer.write(data)
             }.onFailure {
-                disconnectPeer(conn.peer.uid, conn.connectionId)
+                disconnectPeer(conn.peer.uid, conn.connectionId, reconnect = true)
             }
         }
     }
@@ -716,7 +794,7 @@ class CrossPlatformWalkieManager(
         runCatching {
             conn.writer.write(line.toByteArray())
         }.onFailure {
-            disconnectPeer(conn.peer.uid, conn.connectionId)
+            disconnectPeer(conn.peer.uid, conn.connectionId, reconnect = true)
         }
     }
 
@@ -727,7 +805,7 @@ class CrossPlatformWalkieManager(
             runCatching {
                 conn.writer.write(pcmData)
             }.onFailure {
-                disconnectPeer(conn.peer.uid, conn.connectionId)
+                disconnectPeer(conn.peer.uid, conn.connectionId, reconnect = true)
             }
         }
     }
@@ -744,7 +822,76 @@ class CrossPlatformWalkieManager(
         }
     }
 
-    private fun disconnectPeer(peerUid: String, expectedConnectionId: Long? = null) {
+    private fun handleServiceLost(serviceName: String) {
+        val lostPeers = discoveredPeers.filter { peer ->
+            PeerLifecyclePolicy.matchesLostService(peer.serviceName, serviceName)
+        }
+        if (lostPeers.isEmpty()) return
+
+        discoveredPeers.removeAll { peer ->
+            PeerLifecyclePolicy.matchesLostService(peer.serviceName, serviceName)
+        }
+        lostPeers.forEach { peer ->
+            cancelReconnect(peer.uid)
+            disconnectPeer(peer.uid)
+        }
+        addEvent("Peer perso: $serviceName")
+    }
+
+    private fun scheduleReconnect(peer: CrossPlatformPeer) {
+        if (!isReconnectEligible(peer)) return
+        if (reconnectJobs[peer.uid]?.isActive == true) return
+
+        val attempt = reconnectAttempts.merge(peer.uid, 1) { current, increment ->
+            current + increment
+        } ?: 1
+        val delayMillis = PeerLifecyclePolicy.reconnectDelayMillis(attempt)
+        lateinit var reconnectJob: Job
+        reconnectJob = scope.launch(start = CoroutineStart.LAZY) {
+            delay(delayMillis)
+            reconnectJobs.remove(peer.uid, reconnectJob)
+            if (isReconnectEligible(peer)) {
+                addEvent("Riconnessione a ${peer.name} (tentativo $attempt)")
+                connectToPeer(peer)
+            }
+        }
+
+        val existingJob = reconnectJobs.putIfAbsent(peer.uid, reconnectJob)
+        if (existingJob == null) {
+            reconnectJob.start()
+        } else {
+            reconnectJob.cancel()
+        }
+    }
+
+    private fun isReconnectEligible(peer: CrossPlatformPeer): Boolean {
+        if (isClosed.get() || peerConnections.containsKey(peer.uid)) return false
+        if (!PeerChannelPolicy.matches(currentChannel, peer.channel)) return false
+        return discoveredPeers.any { discovered ->
+            discovered.uid == peer.uid &&
+                discovered.serviceName == peer.serviceName &&
+                discovered.host == peer.host &&
+                discovered.port == peer.port
+        }
+    }
+
+    private fun cancelReconnect(peerUid: String) {
+        reconnectJobs.remove(peerUid)?.cancel()
+        reconnectAttempts.remove(peerUid)
+    }
+
+    private fun cancelAllReconnects() {
+        reconnectJobs.values.forEach(Job::cancel)
+        reconnectJobs.clear()
+        reconnectAttempts.clear()
+        connectingPeerUids.clear()
+    }
+
+    private fun disconnectPeer(
+        peerUid: String,
+        expectedConnectionId: Long? = null,
+        reconnect: Boolean = false
+    ) {
         val connection = peerConnections[peerUid] ?: return
         if (expectedConnectionId != null && !PeerConnectionPolicy.isSameConnection(
                 activeConnectionId = connection.connectionId,
@@ -755,6 +902,9 @@ class CrossPlatformWalkieManager(
         }
         if (peerConnections.remove(peerUid, connection)) {
             connection.close()
+            isConnected = peerConnections.isNotEmpty()
+            if (reconnect) scheduleReconnect(connection.peer)
+            scope.launch { finishRemoteAudio(expectedPeerUid = peerUid) }
         }
         if (peerConnections.isEmpty()) {
             remoteAudioActive = false
@@ -777,6 +927,7 @@ class CrossPlatformWalkieManager(
     }
 
     private fun invalidateConnections() {
+        cancelAllReconnects()
         synchronized(channelLock) {
             channelGeneration.incrementAndGet()
             disconnectAllPeers()
@@ -805,18 +956,32 @@ class CrossPlatformWalkieManager(
             disconnectPeer(connection.peer.uid)
             peerConnections[connection.peer.uid] = connection
             upsertPeer(connection.peer)
+            cancelReconnect(connection.peer.uid)
             isConnected = true
             true
         }
 
     private fun upsertPeer(peer: CrossPlatformPeer) {
+        val existingServiceName = discoveredPeers.firstOrNull { it.uid == peer.uid }?.serviceName
+        val mergedPeer = if (peer.serviceName == null && existingServiceName != null) {
+            peer.copy(serviceName = existingServiceName)
+        } else {
+            peer
+        }
         discoveredPeers.removeAll { it.uid == peer.uid }
-        discoveredPeers.add(peer)
+        discoveredPeers.add(mergedPeer)
     }
 
     private fun stopNetwork() {
         heartbeatJob?.cancel()
         heartbeatJob = null
+        cancelAllReconnects()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            unregisterServiceInfoCallbacksModern()
+        } else {
+            serviceInfoCallbacks.clear()
+        }
 
         discoveryListener?.let { listener ->
             runCatching { nsdManager.stopServiceDiscovery(listener) }
@@ -833,6 +998,14 @@ class CrossPlatformWalkieManager(
         localEndpoint = ""
         status = "Fermo"
         releaseMulticastLock()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+    private fun unregisterServiceInfoCallbacksModern() {
+        serviceInfoCallbacks.values.toList().forEach { callback ->
+            runCatching { nsdManager.unregisterServiceInfoCallback(callback) }
+        }
+        serviceInfoCallbacks.clear()
     }
 
     private fun acquireMulticastLock() {

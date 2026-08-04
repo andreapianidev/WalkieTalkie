@@ -7,4 +7,7 @@ object RemoteAudioPolicy {
         nowMillis - lastFrameAtMillis < INACTIVITY_TIMEOUT_MS
 
     fun canStartTransmission(remoteAudioActive: Boolean): Boolean = !remoteAudioActive
+
+    fun shouldFinish(activePeerUid: String?, endingPeerUid: String): Boolean =
+        activePeerUid == endingPeerUid
 }
