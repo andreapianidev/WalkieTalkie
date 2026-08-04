@@ -312,13 +312,18 @@ final class WalkieEngine: NSObject, ObservableObject {
         logger.logAudioInfo("Trasmissione PTT avviata (native SR \(nativeFormat.sampleRate) → 48000 mono)")
 
         transmitTimer?.invalidate()
-        transmitTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+        let timer = Timer(timeInterval: 0.1, repeats: true) { [weak self] _ in
             guard let self, let start = self.transmitStartDate else { return }
             self.transmitElapsed = Date().timeIntervalSince(start)
             if self.transmitElapsed >= Constant.maxTransmitSeconds {
                 self.stopTransmitting()
             }
         }
+        // `.common`: il PTT si tiene premuto col mouse, quindi il run loop è in
+        // event tracking e un timer in modalità default si fermerebbe proprio
+        // lì — cronometro fermo e cap dei 10 s che non scatta.
+        RunLoop.main.add(timer, forMode: .common)
+        transmitTimer = timer
     }
 
     func stopTransmitting() {
@@ -716,9 +721,14 @@ final class WalkieEngine: NSObject, ObservableObject {
         }
 
         receiveWatchdog?.invalidate()
-        receiveWatchdog = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+        let watchdog = Timer(timeInterval: 0.1, repeats: true) { [weak self] _ in
             self?.checkReceiveProgress()
         }
+        // `.common`: in modalità default il timer si ferma mentre il run loop è
+        // in event tracking (trascinamento, scroll) — cioè proprio mentre si
+        // tiene premuto il PTT — e la ricezione non si chiuderebbe in tempo.
+        RunLoop.main.add(watchdog, forMode: .common)
+        receiveWatchdog = watchdog
         logger.logAudioInfo("Ricezione audio avviata")
     }
 
