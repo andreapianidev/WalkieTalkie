@@ -96,7 +96,8 @@ struct MenuBarPanel: View {
         .gesture(
             DragGesture(minimumDistance: 0)
                 .onChanged { _ in
-                    guard !pttPressed else { return }
+                    // Half-duplex: niente TX mentre un peer sta trasmettendo.
+                    guard !pttPressed, !receiving else { return }
                     pttPressed = true
                     engine.startTransmitting()
                 }

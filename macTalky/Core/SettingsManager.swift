@@ -85,6 +85,8 @@ final class SettingsManager: ObservableObject {
         return trimmed.isEmpty ? (Host.current().localizedName ?? "Mac") : trimmed
     }
 
+    /// Riporta TUTTE le preferenze persistite ai valori di fabbrica, incluse
+    /// quelle non esposte nel tab General (menu bar, onboarding).
     func resetToDefaults() {
         deviceName = Host.current().localizedName ?? "Mac"
         autoStartNetwork = true
@@ -92,5 +94,7 @@ final class SettingsManager: ObservableObject {
         spacebarPTT = true
         backdropRaw = "nightOps"
         autoResumeRadio = false
+        showMenuBarExtra = true
+        hasSeenOnboarding = false
     }
 }

@@ -5,6 +5,49 @@
 //  Talky Android sulla rete locale via protocollo TALKY1 (Bonjour + TCP).
 
 import SwiftUI
+import AppKit
+
+/// Bootstrap di lancio: StoreKit, volume radio, permesso microfono, link di rete
+/// e auto-ripresa radio. Deve girare UNA volta per esecuzione dell'app — legarlo
+/// al `.task` della WindowGroup lo faceva ripartire a ogni riapertura della
+/// finestra, interrompendo lo stream radio in corso.
+@MainActor
+final class AppBootstrap {
+    static let shared = AppBootstrap()
+    private var didRun = false
+
+    private init() {}
+
+    func runOnce() async {
+        guard !didRun else { return }
+        didRun = true
+
+        let settings = SettingsManager.shared
+        let radio = RadioManager.shared
+        let engine = WalkieEngine.shared
+
+        await IAPManager.shared.bootstrap()
+        radio.setVolume(settings.radioVolume)
+        engine.refreshMicPermission()
+        if settings.autoStartNetwork {
+            engine.start()
+        }
+        // Auto-ripresa radio (impostazione utente) oppure launch argument
+        // `-mac_autoplay_radio YES` (screenshot/demo).
+        if settings.autoResumeRadio || UserDefaults.standard.bool(forKey: "mac_autoplay_radio") {
+            radio.playStation(radio.resumeStation)
+        }
+        // Launch argument `-mac_window_rect "x,y,w,h"` (punti, origine
+        // bottom-left): posiziona la finestra a un frame esatto per gli
+        // screenshot automatizzati.
+        if let rect = UserDefaults.standard.string(forKey: "mac_window_rect") {
+            let p = rect.split(separator: ",").compactMap { Double($0) }
+            if p.count == 4, let window = NSApp.windows.first(where: { $0.isVisible }) {
+                window.setFrame(NSRect(x: p[0], y: p[1], width: p[2], height: p[3]), display: true)
+            }
+        }
+    }
+}
 
 @main
 struct macTalkyApp: App {
@@ -27,29 +70,11 @@ struct macTalkyApp: App {
                 .environmentObject(settings)
                 .frame(minWidth: 880, minHeight: 600)
                 .preferredColorScheme(.dark)
-                .task {
-                    await iap.bootstrap()
-                    radio.setVolume(settings.radioVolume)
-                    engine.refreshMicPermission()
-                    if settings.autoStartNetwork {
-                        engine.start()
-                    }
-                    // Auto-ripresa radio (impostazione utente) oppure launch
-                    // argument `-mac_autoplay_radio YES` (screenshot/demo).
-                    if settings.autoResumeRadio || UserDefaults.standard.bool(forKey: "mac_autoplay_radio") {
-                        radio.playStation(radio.resumeStation)
-                    }
-                    // Launch argument `-mac_window_rect "x,y,w,h"` (punti,
-                    // origine bottom-left): posiziona la finestra a un frame
-                    // esatto per gli screenshot automatizzati.
-                    if let rect = UserDefaults.standard.string(forKey: "mac_window_rect") {
-                        let p = rect.split(separator: ",").compactMap { Double($0) }
-                        if p.count == 4, let window = NSApp.windows.first(where: { $0.isVisible }) {
-                            window.setFrame(NSRect(x: p[0], y: p[1], width: p[2], height: p[3]),
-                                            display: true)
-                        }
-                    }
-                }
+                // `.task` rigira a ogni ricostruzione della finestra: il
+                // bootstrap vero è idempotente e vive in AppBootstrap, così
+                // chiudere e riaprire la console non riavvia la radio né
+                // ripete il bootstrap StoreKit.
+                .task { await AppBootstrap.shared.runOnce() }
         }
         .windowStyle(.hiddenTitleBar)
         .commands {

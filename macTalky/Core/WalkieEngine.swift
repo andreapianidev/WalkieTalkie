@@ -29,6 +29,19 @@ final class WalkieEngine: NSObject, ObservableObject {
         /// Durata massima di una singola trasmissione PTT (una trasmissione = un frame,
         /// e il receiver iOS/Android scarta frame > 1 MB ≈ 10.9 s di PCM16 @48k).
         static let maxTransmitSeconds: Double = 10
+        /// Jitter buffer prima di far partire il player node su uno stream a
+        /// frame piccoli (Android). Sotto questa soglia si parte comunque dopo
+        /// `prerollTimeout` — le trasmissioni brevissime non devono restare in coda.
+        static let prerollSeconds: Double = 0.15
+        static let prerollTimeout: Double = 0.12
+        /// Silenzio dopo l'ultimo frame oltre il quale la ricezione è conclusa
+        /// (il protocollo TALKY1 non ha un marcatore di fine trasmissione).
+        static let receiveTailSeconds: Double = 0.35
+        /// Intervallo di riconciliazione dei peer scoperti ma non connessi.
+        static let reconnectInterval: Double = 5
+        /// Oltre questa attesa una connessione uscente è considerata persa e
+        /// il peer torna candidabile per un nuovo tentativo.
+        static let connectAttemptTimeout: Double = 10
     }
 
     struct Peer: Identifiable, Equatable {
@@ -70,6 +83,17 @@ final class WalkieEngine: NSObject, ObservableObject {
     private var started = false
     private var connections: [String: NWConnection] = [:]
 
+    // Roster di discovery (tutto isolato su `queue`). Bonjour annuncia un peer
+    // una volta sola: se il TCP cade, nessun nuovo evento `didFind` arriva, per
+    // cui la riconnessione deve partire da qui e non dal browser.
+    private var discovered: [String: Peer] = [:]
+    private var serviceNameToPeerID: [String: String] = [:]
+    /// peerID → tentativo di connessione uscente in volo. Tenere anche la
+    /// NWConnection permette di chiudere quella bloccata prima di riprovare,
+    /// altrimenti ogni giro del timer ne accumulerebbe una nuova.
+    private var connecting: [String: (started: Date, connection: NWConnection)] = [:]
+    private var reconnectTimer: DispatchSourceTimer?
+
     // Audio capture
     private var captureEngine: AVAudioEngine?
     private var captureConverter: AVAudioConverter?
@@ -77,16 +101,26 @@ final class WalkieEngine: NSObject, ObservableObject {
     private var transmitTimer: Timer?
     private var transmitStartDate: Date?
 
-    // Audio playback
+    // Audio playback (streaming, main thread)
+    //
+    // Android trasmette a raffica frame PCM piccoli (~2048 campioni ≈ 43 ms)
+    // per tutta la durata della pressione; iOS invia invece l'intera
+    // trasmissione in un frame solo. Un engine per frame spezzerebbe l'audio
+    // Android in continuazione, quindi engine e player node sono persistenti e
+    // i buffer vengono semplicemente accodati.
     private var playbackEngine: AVAudioEngine?
     private var playbackNode: AVAudioPlayerNode?
     private var duckedRadioVolume: Float?
-    /// Generazione playback: il completion di scheduleBuffer scatta anche
-    /// sullo stop, quindi un buffer vecchio fermato da una nuova ricezione
-    /// invocherebbe finishPlayback() uccidendo il playback nuovo. Ogni
-    /// riproduzione incrementa la generazione e il completion di una
-    /// generazione stantia viene ignorato.
-    private var playbackGeneration = 0
+    /// Frame accodati al player node e non ancora riprodotti.
+    private var queuedFrames = 0
+    /// True dopo il `play()` della ricezione corrente (post pre-roll).
+    private var playbackStarted = false
+    private var lastAudioArrival = Date.distantPast
+    private var receiveWatchdog: Timer?
+    private lazy var playbackFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32,
+                                                    sampleRate: Constant.sampleRate,
+                                                    channels: 1,
+                                                    interleaved: false)
 
     private var ownServiceName: String { "Talky Mac \(uid.prefix(4))" }
 
@@ -105,31 +139,53 @@ final class WalkieEngine: NSObject, ObservableObject {
         queue.async { [weak self] in
             guard let self, !self.started else { return }
             self.started = true
+            self.setStatus("Starting link…")
             self.startListener()
+            // Se il listener non è nemmeno partito, `startListener` ha già fatto
+            // teardown e azzerato `started`: non avviare browser e timer.
+            guard self.started else { return }
             self.startBrowsing()
+            self.startReconnectTimer()
         }
-        DispatchQueue.main.async { self.isNetworkActive = true }
+        // `isNetworkActive` NON viene alzato qui: la lampada NET deve accendersi
+        // solo quando il listener è davvero in `.ready` e Bonjour ha pubblicato,
+        // altrimenti un listener fallito resta indistinguibile da uno attivo.
     }
 
     func stop() {
         queue.async { [weak self] in
-            guard let self else { return }
-            self.listener?.cancel()
-            self.listener = nil
-            self.netService?.stop()
-            self.netService = nil
-            self.browser?.stop()
-            self.browser = nil
+            self?.teardown(status: "Standby")
+        }
+    }
+
+    /// Smonta listener, Bonjour, connessioni e timer. Da chiamare su `queue`.
+    private func teardown(status: String) {
+        listener?.cancel()
+        listener = nil
+        browser?.stop()
+        browser = nil
+        connections.values.forEach { $0.cancel() }
+        connections.removeAll()
+        discovered.removeAll()
+        serviceNameToPeerID.removeAll()
+        connecting.removeAll()
+        reconnectTimer?.cancel()
+        reconnectTimer = nil
+        publishConnectionCount()
+        started = false
+        setStatus(status)
+
+        // NetService è schedulato sul main runloop: va fermato lì.
+        let service = netService
+        netService = nil
+        DispatchQueue.main.async {
+            service?.stop()
+            // `resolvingServices` è toccato solo dai delegate NetService, che
+            // girano sul main runloop: svuotarlo da `queue` sarebbe una race.
             self.resolvingServices.removeAll()
-            self.connections.values.forEach { $0.cancel() }
-            self.connections.removeAll()
-            self.publishConnectionCount()
-            self.started = false
-            self.setStatus("Standby")
-            DispatchQueue.main.async {
-                self.peers.removeAll()
-                self.isNetworkActive = false
-            }
+            self.peers.removeAll()
+            self.isNetworkActive = false
+            self.endReceiving()
         }
     }
 
@@ -166,6 +222,12 @@ final class WalkieEngine: NSObject, ObservableObject {
         }
         guard connectedPeerCount > 0 else {
             setStatus("No peers connected")
+            return
+        }
+        // Half-duplex, come una radio vera: aprire il microfono mentre un peer
+        // sta parlando farebbe rientrare dagli altoparlanti la voce ricevuta.
+        guard !isReceiving else {
+            setStatus("Busy — a peer is talking")
             return
         }
 
@@ -322,17 +384,24 @@ final class WalkieEngine: NSObject, ObservableObject {
 
             listener.stateUpdateHandler = { [weak self] state in
                 guard let self else { return }
+                // Un cambio canale fa stop()+start(): senza questo controllo il
+                // `.cancelled` del listener vecchio potrebbe arrivare dopo il
+                // `.ready` di quello nuovo e spegnere la lampada NET.
+                guard self.listener === listener else { return }
                 switch state {
                 case .ready:
                     if let port = listener.port {
                         self.publishService(port: Int(port.rawValue))
                         self.setStatus("Ready on port \(port.rawValue)")
+                        DispatchQueue.main.async { self.isNetworkActive = true }
                     }
                 case .failed(let error):
                     self.logger.logNetworkError(error, context: "TALKY1 listener failed")
-                    self.setStatus("Listener failed")
+                    // Teardown completo: senza questo `started` resterebbe true e
+                    // il pulsante START LINK non potrebbe più riprovare.
+                    self.teardown(status: "Listener failed")
                 case .cancelled:
-                    break
+                    DispatchQueue.main.async { self.isNetworkActive = false }
                 default:
                     break
                 }
@@ -341,7 +410,7 @@ final class WalkieEngine: NSObject, ObservableObject {
             listener.start(queue: queue)
         } catch {
             logger.logNetworkError(error, context: "TALKY1 listener setup")
-            setStatus("Network unavailable")
+            teardown(status: "Network unavailable")
         }
     }
 
@@ -396,21 +465,65 @@ final class WalkieEngine: NSObject, ObservableObject {
         connection.start(queue: queue)
     }
 
-    private func connect(to peer: Peer) {
+    /// Registra un peer risolto via Bonjour e prova a connettersi. Su `queue`.
+    private func registerDiscovered(_ peer: Peer, serviceName: String) {
+        discovered[peer.id] = peer
+        serviceNameToPeerID[serviceName] = peer.id
+        upsert(peer)
+        connectIfNeeded(to: peer)
+    }
+
+    /// Apre una connessione uscente solo se non ce n'è già una viva o in volo.
+    private func connectIfNeeded(to peer: Peer) {
+        guard connections[peer.id] == nil else { return }
+        if let attempt = connecting[peer.id] {
+            guard Date().timeIntervalSince(attempt.started) >= Constant.connectAttemptTimeout else { return }
+            // Tentativo precedente mai andato a buon fine: chiuderlo, altrimenti
+            // resta appeso e se ne somma uno nuovo a ogni riconciliazione.
+            attempt.connection.cancel()
+            connecting.removeValue(forKey: peer.id)
+        }
+
         let endpointHost = NWEndpoint.Host(peer.host)
         guard let endpointPort = NWEndpoint.Port(rawValue: UInt16(peer.port)) else { return }
+
         let connection = NWConnection(host: endpointHost, port: endpointPort, using: .tcp)
         connection.stateUpdateHandler = { [weak self] state in
-            if case .ready = state {
-                self?.sendHello(on: connection)
-                self?.receiveFrame(on: connection)
-            } else if case .failed = state {
-                self?.remove(connection: connection)
-            } else if case .cancelled = state {
-                self?.remove(connection: connection)
+            guard let self else { return }
+            switch state {
+            case .ready:
+                self.sendHello(on: connection)
+                self.receiveFrame(on: connection)
+            case .failed, .cancelled:
+                // Solo se è ancora IL tentativo tracciato: il cancel di un
+                // tentativo vecchio arriva dopo che il nuovo è già registrato.
+                if self.connecting[peer.id]?.connection === connection {
+                    self.connecting.removeValue(forKey: peer.id)
+                }
+                self.remove(connection: connection)
+            default:
+                break
             }
         }
+        connecting[peer.id] = (Date(), connection)
         connection.start(queue: queue)
+    }
+
+    /// Riconciliazione periodica: Bonjour annuncia un peer una volta sola, quindi
+    /// dopo una caduta TCP nessun evento del browser rimetterebbe su il link.
+    private func startReconnectTimer() {
+        reconnectTimer?.cancel()
+        let timer = DispatchSource.makeTimerSource(queue: queue)
+        timer.schedule(deadline: .now() + Constant.reconnectInterval,
+                       repeating: Constant.reconnectInterval)
+        timer.setEventHandler { [weak self] in
+            guard let self, self.started else { return }
+            for (id, peer) in self.discovered where self.connections[id] == nil {
+                self.connectIfNeeded(to: peer)
+            }
+        }
+        reconnectTimer = timer
+        timer.resume()
     }
 
     private func sendHello(on connection: NWConnection) {
@@ -501,6 +614,11 @@ final class WalkieEngine: NSObject, ObservableObject {
                 existing.cancel()
             }
             connections[peer.id] = connection
+            // Se l'HELLO è arrivato su una connessione entrante mentre ne era in
+            // volo una uscente verso lo stesso peer, quest'ultima va chiusa.
+            if let attempt = connecting.removeValue(forKey: peer.id), attempt.connection !== connection {
+                attempt.connection.cancel()
+            }
             publishConnectionCount()
             upsert(peer)
             setStatus("Ready")
@@ -516,13 +634,11 @@ final class WalkieEngine: NSObject, ObservableObject {
 
     // MARK: - Playback (main thread)
 
+    /// Accoda un frame audio in arrivo. Non ferma mai la riproduzione in corso:
+    /// engine e player node restano vivi per tutta la ricezione, così uno stream
+    /// Android fatto di decine di frame da ~43 ms suona continuo.
     private func playReceivedAudio(_ floatPCM: Data) {
-        stopPlayback()
-
-        guard let format = AVAudioFormat(commonFormat: .pcmFormatFloat32,
-                                         sampleRate: Constant.sampleRate,
-                                         channels: 1,
-                                         interleaved: false) else { return }
+        guard let format = playbackFormat else { return }
 
         let frameCount = AVAudioFrameCount(floatPCM.count / MemoryLayout<Float32>.size)
         guard frameCount > 0,
@@ -535,20 +651,55 @@ final class WalkieEngine: NSObject, ObservableObject {
             dst.update(from: src, count: Int(frameCount))
         }
 
-        let engine = AVAudioEngine()
-        let node = AVAudioPlayerNode()
-        engine.attach(node)
-        engine.connect(node, to: engine.mainMixerNode, format: format)
+        guard let node = preparePlaybackNode(format: format) else { return }
 
-        do {
-            try engine.start()
-        } catch {
-            logger.logAudioError(error, context: "Avvio playback engine")
-            return
+        lastAudioArrival = Date()
+        if !isReceiving { beginReceiving() }
+
+        queuedFrames += Int(frameCount)
+        node.scheduleBuffer(buffer, at: nil, options: [], completionCallbackType: .dataPlayedBack) { [weak self] _ in
+            DispatchQueue.main.async {
+                guard let self else { return }
+                // Clamp: `endReceiving()` azzera la coda e i completion residui
+                // arriverebbero comunque, falsando il pre-roll successivo.
+                self.queuedFrames = max(0, self.queuedFrames - Int(frameCount))
+            }
         }
 
-        playbackEngine = engine
-        playbackNode = node
+        // Pre-roll: con frame piccoli conviene accumulare un minimo di jitter
+        // buffer prima di partire, altrimenti il node va in underrun a ogni
+        // esitazione della rete. Un frame unico (iOS) supera subito la soglia.
+        if !playbackStarted, Double(queuedFrames) / Constant.sampleRate >= Constant.prerollSeconds {
+            playbackStarted = true
+            node.play()
+        }
+    }
+
+    /// Crea (una volta sola) engine e player node e li rimette in moto se erano
+    /// stati fermati alla fine della ricezione precedente.
+    private func preparePlaybackNode(format: AVAudioFormat) -> AVAudioPlayerNode? {
+        if playbackEngine == nil {
+            let engine = AVAudioEngine()
+            let node = AVAudioPlayerNode()
+            engine.attach(node)
+            engine.connect(node, to: engine.mainMixerNode, format: format)
+            playbackEngine = engine
+            playbackNode = node
+        }
+        guard let engine = playbackEngine, let node = playbackNode else { return nil }
+        if !engine.isRunning {
+            do {
+                try engine.start()
+            } catch {
+                logger.logAudioError(error, context: "Avvio playback engine")
+                return nil
+            }
+        }
+        return node
+    }
+
+    private func beginReceiving() {
+        isReceiving = true
 
         // Duck della radio mentre parla un peer. Il ripristino usa il volume
         // persistito nelle Impostazioni (fonte di verità), così un tocco allo
@@ -558,34 +709,45 @@ final class WalkieEngine: NSObject, ObservableObject {
             RadioManager.shared.setVolume((duckedRadioVolume ?? 0.5) * 0.2)
         }
 
-        isReceiving = true
-        playbackGeneration += 1
-        let generation = playbackGeneration
-        node.scheduleBuffer(buffer) { [weak self] in
-            DispatchQueue.main.async {
-                self?.finishPlayback(generation: generation)
-            }
+        receiveWatchdog?.invalidate()
+        receiveWatchdog = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+            self?.checkReceiveProgress()
         }
-        node.play()
-        logger.logAudioInfo("Riproduzione audio ricevuto: \(frameCount) frames")
+        logger.logAudioInfo("Ricezione audio avviata")
     }
 
-    private func finishPlayback(generation: Int) {
-        // Completion di un buffer fermato da una ricezione più recente: ignora.
-        guard generation == playbackGeneration else { return }
-        stopPlayback()
+    /// TALKY1 non ha un marcatore di fine trasmissione: la ricezione si chiude
+    /// quando la coda è vuota e da un po' non arriva più nulla.
+    private func checkReceiveProgress() {
+        guard isReceiving else { return }
+        let idle = Date().timeIntervalSince(lastAudioArrival)
+
+        // Trasmissione più corta del pre-roll: parti comunque.
+        if !playbackStarted, queuedFrames > 0, idle >= Constant.prerollTimeout {
+            playbackStarted = true
+            playbackNode?.play()
+        }
+
+        if playbackStarted, queuedFrames <= 0, idle >= Constant.receiveTailSeconds {
+            endReceiving()
+        }
+    }
+
+    private func endReceiving() {
+        receiveWatchdog?.invalidate()
+        receiveWatchdog = nil
+        playbackNode?.stop()
+        playbackEngine?.stop()
+        playbackStarted = false
+        queuedFrames = 0
+
+        guard isReceiving else { return }
         isReceiving = false
         if duckedRadioVolume != nil {
             RadioManager.shared.setVolume(SettingsManager.shared.radioVolume)
             duckedRadioVolume = nil
         }
-    }
-
-    private func stopPlayback() {
-        playbackNode?.stop()
-        playbackEngine?.stop()
-        playbackNode = nil
-        playbackEngine = nil
+        logger.logAudioInfo("Ricezione audio conclusa")
     }
 
     // MARK: - PCM conversion (identica a iOS)
@@ -643,8 +805,12 @@ final class WalkieEngine: NSObject, ObservableObject {
         }
         publishConnectionCount()
 
+        // I peer ancora annunciati su Bonjour restano nel roster come
+        // "discovered": il timer di riconnessione riproverà il link.
+        let dropped = removedIDs.filter { discovered[$0] == nil }
+        guard !dropped.isEmpty else { return }
         DispatchQueue.main.async {
-            self.peers.removeAll { removedIDs.contains($0.id) }
+            self.peers.removeAll { dropped.contains($0.id) }
         }
     }
 
@@ -707,6 +873,10 @@ extension WalkieEngine: NetServiceDelegate {
 
     func netService(_ sender: NetService, didNotPublish errorDict: [String: NSNumber]) {
         logger.logNetworkWarning("TALKY1 service publish failed: \(errorDict)")
+        // Senza annuncio Bonjour nessuno ci trova: la lampada NET non deve
+        // restare accesa come se il link fosse operativo.
+        setStatus("Bonjour publish failed")
+        DispatchQueue.main.async { self.isNetworkActive = false }
     }
 
     func netServiceDidResolveAddress(_ sender: NetService) {
@@ -734,8 +904,10 @@ extension WalkieEngine: NetServiceDelegate {
             port: sender.port,
             channel: peerChannel
         )
-        upsert(peer)
-        connect(to: peer)
+        let serviceName = sender.name
+        queue.async { [weak self] in
+            self?.registerDiscovered(peer, serviceName: serviceName)
+        }
     }
 
     func netService(_ sender: NetService, didNotResolve errorDict: [String: NSNumber]) {
@@ -759,13 +931,24 @@ extension WalkieEngine: NetServiceBrowserDelegate {
     }
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didRemove service: NetService, moreComing: Bool) {
-        DispatchQueue.main.async {
-            self.peers.removeAll { $0.name == service.name }
+        // Il nome del servizio Bonjour non coincide con il nome del dispositivo:
+        // la rimozione passa dalla mappa serviceName → peerID.
+        let serviceName = service.name
+        queue.async { [weak self] in
+            guard let self, let peerID = self.serviceNameToPeerID.removeValue(forKey: serviceName) else { return }
+            self.discovered.removeValue(forKey: peerID)
+            self.connecting.removeValue(forKey: peerID)
+            self.connections.removeValue(forKey: peerID)?.cancel()
+            self.publishConnectionCount()
+            DispatchQueue.main.async {
+                self.peers.removeAll { $0.id == peerID }
+            }
         }
     }
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didNotSearch errorDict: [String: NSNumber]) {
         logger.logNetworkWarning("TALKY1 browser failed: \(errorDict)")
+        setStatus("Discovery unavailable")
     }
 }
 

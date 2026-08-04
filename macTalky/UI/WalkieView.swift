@@ -158,7 +158,8 @@ struct WalkieView: View {
         .gesture(
             DragGesture(minimumDistance: 0)
                 .onChanged { _ in
-                    guard !pttPressed else { return }
+                    // Half-duplex: mentre un peer parla il tasto non arma il mic.
+                    guard !pttPressed, !receiving else { return }
                     pttPressed = true
                     engine.startTransmitting()
                 }
@@ -167,6 +168,7 @@ struct WalkieView: View {
                     engine.stopTransmitting()
                 }
         )
+        .opacity(receiving ? 0.9 : 1)
         .animation(.easeOut(duration: 0.18), value: active)
         .animation(.easeOut(duration: 0.18), value: receiving)
     }
@@ -174,6 +176,7 @@ struct WalkieView: View {
     private var pttHint: String {
         if !engine.hasMicPermission { return "CLICK TO GRANT MICROPHONE ACCESS" }
         if engine.connectedPeerCount == 0 { return "WAITING FOR PEERS ON THE LOCAL NETWORK" }
+        if engine.isReceiving { return "CHANNEL BUSY — WAIT FOR THE PEER TO FINISH" }
         return settings.spacebarPTT ? "HOLD THE BUTTON OR THE SPACE BAR TO TALK" : "HOLD THE BUTTON TO TALK"
     }
 
@@ -285,7 +288,7 @@ struct WalkieView: View {
                 return event
             }
             if event.type == .keyDown {
-                if !event.isARepeat, !engine.isTransmitting {
+                if !event.isARepeat, !engine.isTransmitting, !engine.isReceiving {
                     pttPressed = true
                     engine.startTransmitting()
                 }
