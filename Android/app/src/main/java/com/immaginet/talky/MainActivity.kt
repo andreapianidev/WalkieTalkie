@@ -50,6 +50,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -58,8 +59,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -76,6 +80,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -87,6 +93,7 @@ import com.google.firebase.FirebaseApp
 import com.immaginet.talky.ads.AdBanner
 import com.immaginet.talky.ads.AdManager
 import com.immaginet.talky.firebase.FirebaseManager
+import com.immaginet.talky.protocol.PrivateChannelId
 import com.immaginet.talky.radio.RadioManager
 import com.immaginet.talky.radio.RadioStation
 import com.immaginet.talky.service.TalkyForegroundService
@@ -109,8 +116,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseManager.init(FirebaseApp.getInstance())
-        AdManager.initialize(this)
-        AdManager.requestConsent(this)
+        AdManager.gatherConsentAndInitialize(this)
         ContextCompat.startForegroundService(
             this,
             TalkyForegroundService.intent(applicationContext)
@@ -255,12 +261,6 @@ private fun TalkyApp(
         listOf("public", "ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8")
     }
 
-    LaunchedEffect(receivingAudio) {
-        if (!receivingAudio) {
-            walkieManager.audioManager.stopPlayback()
-        }
-    }
-
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
@@ -279,7 +279,11 @@ private fun TalkyApp(
                 isConnected = walkieManager.isConnected,
                 appMode = appMode,
                 radioStatus = radioStatus,
-                channel = walkieManager.currentChannel,
+                channel = if (walkieManager.currentChannel in channels) {
+                    walkieManager.currentChannel
+                } else {
+                    "Privato"
+                },
                 onModeToggle = {
                     onModeChange(
                         if (appMode == AppMode.WALKIE) AppMode.RADIO else AppMode.WALKIE
@@ -451,7 +455,12 @@ private fun StatusPill(text: String, isActive: Boolean) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ChannelChips(channel: String, channels: List<String>, onChannelChange: (String) -> Unit) {
+private fun ChannelChips(
+    channel: String,
+    channels: List<String>,
+    onChannelChange: (String) -> Unit,
+    onPrivateChannelClick: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -482,6 +491,23 @@ private fun ChannelChips(channel: String, channels: List<String>, onChannelChang
                 )
             )
         }
+        FilterChip(
+            selected = channel !in channels,
+            onClick = onPrivateChannelClick,
+            label = { Text("Privato", style = MaterialTheme.typography.labelSmall) },
+            colors = FilterChipDefaults.filterChipColors(
+                containerColor = Color(0xFF121A16),
+                selectedContainerColor = Color(0xFF1A3A1A),
+                labelColor = Color(0xFF9CB59A),
+                selectedLabelColor = Color(0xFF6CFF7A)
+            ),
+            border = FilterChipDefaults.filterChipBorder(
+                borderColor = Color(0xFF2A3A2A),
+                selectedBorderColor = Color(0xFF3A7A3A),
+                enabled = true,
+                selected = channel !in channels
+            )
+        )
     }
 }
 
@@ -497,7 +523,7 @@ private fun FrequencyDisplay(channel: String, isTransmitting: Boolean) {
         "ch6" -> "462.712"
         "ch7" -> "467.562"
         "ch8" -> "467.587"
-        else -> "462.562"
+        else -> "PRIVATO"
     }
     val displayColor = when {
         isTransmitting -> Color(0xFFFF4444)
@@ -522,7 +548,14 @@ private fun FrequencyDisplay(channel: String, isTransmitting: Boolean) {
                 fontWeight = FontWeight.Black
             )
             Text(
-                text = "MHz",
+                text = if (channel in listOf(
+                        "public", "ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8"
+                    )
+                ) {
+                    "MHz"
+                } else {
+                    "CAN."
+                },
                 color = displayColor.copy(alpha = 0.5f),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold
@@ -571,13 +604,16 @@ private fun WalkieContent(
     onPTTRelease: () -> Unit,
     onRestart: () -> Unit
 ) {
+    var showPrivateChannelDialog by rememberSaveable { mutableStateOf(false) }
+
     Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
         FrequencyDisplay(channel = channel, isTransmitting = isTransmitting)
 
         ChannelChips(
             channel = channel,
             channels = channels,
-            onChannelChange = onChannelChange
+            onChannelChange = onChannelChange,
+            onPrivateChannelClick = { showPrivateChannelDialog = true }
         )
 
         SpeakerGrid(modifier = Modifier.height(44.dp))
@@ -585,6 +621,7 @@ private fun WalkieContent(
         PushToTalkPanel(
             isTransmitting = isTransmitting,
             isConnected = isConnected,
+            receivingAudio = receivingAudio,
             onPress = onPTTPress,
             onRelease = onPTTRelease
         )
@@ -601,6 +638,66 @@ private fun WalkieContent(
 
         EventLog(events = events, onRestart = onRestart)
     }
+
+    if (showPrivateChannelDialog) {
+        PrivateChannelDialog(
+            onDismiss = { showPrivateChannelDialog = false },
+            onConfirm = { privateChannel ->
+                showPrivateChannelDialog = false
+                onChannelChange(privateChannel)
+            }
+        )
+    }
+}
+
+@Composable
+private fun PrivateChannelDialog(
+    onDismiss: () -> Unit,
+    onConfirm: (String) -> Unit
+) {
+    var password by remember { mutableStateOf("") }
+    val passwordIsValid = password.length >= PrivateChannelId.MIN_PASSWORD_LENGTH
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Canale con password") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text(
+                    "Usa la stessa password su iPhone, Mac e Android per entrare nello stesso canale."
+                )
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Password") },
+                    supportingText = {
+                        Text("Minimo ${PrivateChannelId.MIN_PASSWORD_LENGTH} caratteri")
+                    },
+                    singleLine = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                )
+                Text(
+                    "Il canale separa i peer sulla rete locale, ma il traffico TALKY1 non è cifrato.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFF8FA889)
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(
+                enabled = passwordIsValid,
+                onClick = { onConfirm(PrivateChannelId.fromPassword(password)) }
+            ) {
+                Text("Entra")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Annulla")
+            }
+        }
+    )
 }
 
 @Composable
@@ -648,6 +745,7 @@ private fun ReceivingIndicator() {
 private fun PushToTalkPanel(
     isTransmitting: Boolean,
     isConnected: Boolean,
+    receivingAudio: Boolean,
     onPress: () -> Unit,
     onRelease: () -> Unit
 ) {
@@ -672,7 +770,7 @@ private fun PushToTalkPanel(
                             isTransmitting -> Brush.radialGradient(
                                 colors = listOf(Color(0xFFFF4444), Color(0xFFCC2222), Color(0xFF330808))
                             )
-                            isConnected -> Brush.radialGradient(
+                            isConnected && !receivingAudio -> Brush.radialGradient(
                                 colors = listOf(Color(0xFF6CFF7A), Color(0xFF1E7C3B), Color(0xFF0C1711))
                             )
                             else -> Brush.radialGradient(
@@ -684,15 +782,15 @@ private fun PushToTalkPanel(
                         2.dp,
                         when {
                             isTransmitting -> Color(0xFFFF6666)
-                            isConnected -> Color(0xFFB9FFC2)
+                            isConnected && !receivingAudio -> Color(0xFFB9FFC2)
                             else -> Color(0xFF445544)
                         },
                         CircleShape
                     )
-                    .pointerInput(Unit) {
+                    .pointerInput(isConnected, receivingAudio) {
                         detectTapGestures(
                             onPress = {
-                                if (isConnected) {
+                                if (isConnected && !receivingAudio) {
                                     onPress()
                                     tryAwaitRelease()
                                     onRelease()
@@ -710,7 +808,12 @@ private fun PushToTalkPanel(
                         fontWeight = FontWeight.Black
                     )
                     Text(
-                        text = if (isTransmitting) "IN ONDA" else if (isConnected) "PREMI" else "---",
+                        text = when {
+                            isTransmitting -> "IN ONDA"
+                            receivingAudio -> "RX"
+                            isConnected -> "PREMI"
+                            else -> "---"
+                        },
                         color = Color(0xFF061009).copy(alpha = 0.7f),
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold
@@ -720,6 +823,7 @@ private fun PushToTalkPanel(
             Text(
                 text = when {
                     isTransmitting -> "IN TRASMISSIONE... RILASCIA PER FERMARE"
+                    receivingAudio -> "Ricezione in corso..."
                     isConnected -> "Tieni premuto per parlare"
                     else -> "In attesa connessione..."
                 },
@@ -828,13 +932,17 @@ private fun RadioContent(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
-                    text = if (status.isPlaying) status.stationName else "Seleziona una stazione",
+                    text = if (status.isPlaying || status.isBuffering) {
+                        status.stationName
+                    } else {
+                        "Seleziona una stazione"
+                    },
                     color = Color(0xFFEAF4D3),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
-                if (status.isPlaying) {
+                if (status.isPlaying || status.isBuffering) {
                     Text(
                         text = status.stationCountry,
                         color = Color(0xFF8FA889),
@@ -851,7 +959,7 @@ private fun RadioContent(
                 status.error?.let { err ->
                     Text(text = err, color = Color(0xFFFF6666), style = MaterialTheme.typography.bodySmall)
                 }
-                if (status.isPlaying) {
+                if (status.isPlaying || status.isBuffering) {
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         Button(
                             onClick = {

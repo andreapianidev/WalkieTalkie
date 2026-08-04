@@ -26,9 +26,9 @@ class RadioCatalogHealthTest {
 
     @Test
     fun playbackErrorsReleasePlayerAndClearActiveState() {
-        assertTrue(radioSource.contains("isPlayingState = false"))
+        assertTrue(radioSource.contains("mediaPlayer = null"))
         assertTrue(radioSource.contains("runCatching { failedPlayer.release() }"))
-        assertTrue(radioSource.contains("isBuffering = false,"))
+        assertTrue(radioSource.contains("playbackState.failed(\"Errore streaming"))
     }
 
     private companion object {

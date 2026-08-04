@@ -6,20 +6,12 @@ import org.junit.Test
 
 class TalkyWakeLockPolicyTest {
     @Test
-    fun idleServiceWithoutNetworkDoesNotKeepCpuAwake() {
-        assertFalse(
-            TalkyWakeLockPolicy.shouldHold(
-                walkieReady = false,
-                radioActive = false,
-                isTransmitting = false
-            )
-        )
+    fun `idle discovery and platform-managed playback do not hold a manual CPU lock`() {
+        assertFalse(TalkyWakeLockPolicy.shouldHold(isTransmitting = false))
     }
 
     @Test
-    fun activeAudioOrWalkieWorkKeepsCpuAwake() {
-        assertTrue(TalkyWakeLockPolicy.shouldHold(true, false, false))
-        assertTrue(TalkyWakeLockPolicy.shouldHold(false, true, false))
-        assertTrue(TalkyWakeLockPolicy.shouldHold(false, false, true))
+    fun `active microphone capture keeps CPU awake`() {
+        assertTrue(TalkyWakeLockPolicy.shouldHold(isTransmitting = true))
     }
 }

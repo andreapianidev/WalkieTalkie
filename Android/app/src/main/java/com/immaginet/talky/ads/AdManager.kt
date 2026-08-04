@@ -1,123 +1,207 @@
 package com.immaginet.talky.ads
 
+import android.app.Activity
 import android.content.Context
+import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
-import com.google.android.ump.ConsentForm
 import com.google.android.ump.ConsentInformation
 import com.google.android.ump.ConsentRequestParameters
 import com.google.android.ump.UserMessagingPlatform
-import java.util.concurrent.atomic.AtomicBoolean
 
 object AdManager {
+    private const val TAG = "AdManager"
 
-    private var isInitialized = AtomicBoolean(false)
+    private val requestGate = AdsRequestGate()
+    private var consentInformationRequested = false
+    private var mobileAdsInitialized = false
     private var consentInformation: ConsentInformation? = null
     private var interstitialAd: InterstitialAd? = null
     private var rewardedAd: RewardedAd? = null
-    private var interstitialCallback: (() -> Unit)? = null
-    private var rewardedCallback: ((Boolean) -> Unit)? = null
+    private var interstitialLoading = false
+    private var rewardedLoading = false
 
-    fun initialize(context: Context) {
-        if (isInitialized.getAndSet(true)) return
+    var canRequestAds by mutableStateOf(false)
+        private set
 
-        MobileAds.initialize(context) {
-            loadInterstitial(context)
-            loadRewarded(context)
-        }
-    }
+    var privacyOptionsRequired by mutableStateOf(false)
+        private set
 
-    fun requestConsent(activity: android.app.Activity) {
+    fun gatherConsentAndInitialize(activity: Activity) {
         val params = ConsentRequestParameters.Builder()
             .setTagForUnderAgeOfConsent(false)
             .build()
 
-        consentInformation = UserMessagingPlatform.getConsentInformation(activity)
-        consentInformation?.requestConsentInfoUpdate(activity, params, {
-            if (consentInformation?.isConsentFormAvailable == true) {
-                activity.runOnUiThread {
-                    loadConsentForm(activity)
-                }
-            }
-        }, { error ->
-            android.util.Log.e("AdManager", "Consent error: ${error.message}")
-        })
-    }
-
-    private fun loadConsentForm(activity: android.app.Activity) {
-        UserMessagingPlatform.loadConsentForm(activity, { form ->
-            form.show(activity) { error ->
-                if (error == null) {
-                    android.util.Log.d("AdManager", "Consent obtained")
-                }
-            }
-        }, { error ->
-            android.util.Log.e("AdManager", "Form load error: ${error.message}")
-        })
-    }
-
-    fun loadInterstitial(context: Context) {
-        InterstitialAd.load(context, AdConfig.interstitialId, AdRequest.Builder().build(),
-            object : InterstitialAdLoadCallback() {
-                override fun onAdLoaded(ad: InterstitialAd) {
-                    interstitialAd = ad
-                    interstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-                        override fun onAdDismissedFullScreenContent() {
-                            interstitialCallback?.invoke()
-                            interstitialCallback = null
-                            loadInterstitial(context)
-                        }
-                        override fun onAdFailedToShowFullScreenContent(error: AdError) {
-                            interstitialCallback?.invoke()
-                            interstitialCallback = null
-                        }
+        val information = UserMessagingPlatform.getConsentInformation(activity)
+        consentInformation = information
+        information.requestConsentInfoUpdate(
+            activity,
+            params,
+            {
+                consentInformationRequested = true
+                refreshPrivacyState()
+                refreshAdEligibility(activity.applicationContext)
+                UserMessagingPlatform.loadAndShowConsentFormIfRequired(activity) { error ->
+                    if (error != null) {
+                        Log.e(TAG, "Consent form error: ${error.message}")
                     }
+                    refreshPrivacyState()
+                    refreshAdEligibility(activity.applicationContext)
                 }
-                override fun onAdFailedToLoad(error: LoadAdError) {
-                    interstitialAd = null
-                }
-            })
+            },
+            { error ->
+                consentInformationRequested = true
+                Log.e(TAG, "Consent update error: ${error.message}")
+                refreshPrivacyState()
+                refreshAdEligibility(activity.applicationContext)
+            }
+        )
     }
 
-    fun showInterstitial(onDismissed: () -> Unit) {
-        if (interstitialAd != null) {
-            interstitialCallback = onDismissed
-            interstitialAd?.show(null as? android.app.Activity ?: return)
-        } else {
-            onDismissed()
+    fun showPrivacyOptions(activity: Activity) {
+        if (!privacyOptionsRequired) return
+        UserMessagingPlatform.showPrivacyOptionsForm(activity) { error ->
+            if (error != null) {
+                Log.e(TAG, "Privacy options error: ${error.message}")
+            }
+            refreshPrivacyState()
+            refreshAdEligibility(activity.applicationContext)
         }
     }
 
-    fun loadRewarded(context: Context) {
-        RewardedAd.load(context, AdConfig.rewardedId, AdRequest.Builder().build(),
-            object : RewardedAdLoadCallback() {
-                override fun onAdLoaded(ad: RewardedAd) {
-                    rewardedAd = ad
-                }
-                override fun onAdFailedToLoad(error: LoadAdError) {
-                    rewardedAd = null
-                }
-            })
+    private fun refreshPrivacyState() {
+        privacyOptionsRequired = consentInformation?.privacyOptionsRequirementStatus ==
+            ConsentInformation.PrivacyOptionsRequirementStatus.REQUIRED
     }
 
-    fun showRewarded(activity: android.app.Activity, onComplete: (Boolean) -> Unit) {
-        if (rewardedAd != null) {
-            rewardedCallback = onComplete
-            rewardedAd?.show(activity) { rewardItem ->
-                rewardedCallback?.invoke(true)
-                rewardedCallback = null
-                loadRewarded(activity)
+    private fun refreshAdEligibility(context: Context) {
+        val allowed = consentInformation?.canRequestAds() == true
+        canRequestAds = allowed
+        if (!allowed) {
+            interstitialAd = null
+            rewardedAd = null
+            return
+        }
+
+        if (requestGate.tryOpen(consentInformationRequested, canRequestAds)) {
+            MobileAds.initialize(context) {
+                mobileAdsInitialized = true
+                loadInterstitial(context)
+                loadRewarded(context)
             }
-        } else {
+        } else if (mobileAdsInitialized) {
+            if (interstitialAd == null) loadInterstitial(context)
+            if (rewardedAd == null) loadRewarded(context)
+        }
+    }
+
+    fun loadInterstitial(context: Context) {
+        if (!canRequestAds || interstitialLoading || interstitialAd != null) return
+        interstitialLoading = true
+        InterstitialAd.load(
+            context,
+            AdConfig.interstitialId,
+            AdRequest.Builder().build(),
+            object : InterstitialAdLoadCallback() {
+                override fun onAdLoaded(ad: InterstitialAd) {
+                    interstitialLoading = false
+                    if (canRequestAds) interstitialAd = ad
+                }
+
+                override fun onAdFailedToLoad(error: LoadAdError) {
+                    interstitialLoading = false
+                    interstitialAd = null
+                    Log.w(TAG, "Interstitial load failed: ${error.message}")
+                }
+            }
+        )
+    }
+
+    fun showInterstitial(activity: Activity, onDismissed: () -> Unit) {
+        val ad = interstitialAd
+        if (!canRequestAds || ad == null) {
+            onDismissed()
+            return
+        }
+
+        interstitialAd = null
+        ad.fullScreenContentCallback = object : FullScreenContentCallback() {
+            override fun onAdDismissedFullScreenContent() {
+                onDismissed()
+                loadInterstitial(activity.applicationContext)
+            }
+
+            override fun onAdFailedToShowFullScreenContent(error: AdError) {
+                Log.w(TAG, "Interstitial show failed: ${error.message}")
+                onDismissed()
+                loadInterstitial(activity.applicationContext)
+            }
+        }
+        ad.show(activity)
+    }
+
+    fun loadRewarded(context: Context) {
+        if (!canRequestAds || rewardedLoading || rewardedAd != null) return
+        rewardedLoading = true
+        RewardedAd.load(
+            context,
+            AdConfig.rewardedId,
+            AdRequest.Builder().build(),
+            object : RewardedAdLoadCallback() {
+                override fun onAdLoaded(ad: RewardedAd) {
+                    rewardedLoading = false
+                    if (canRequestAds) rewardedAd = ad
+                }
+
+                override fun onAdFailedToLoad(error: LoadAdError) {
+                    rewardedLoading = false
+                    rewardedAd = null
+                    Log.w(TAG, "Rewarded load failed: ${error.message}")
+                }
+            }
+        )
+    }
+
+    fun showRewarded(activity: Activity, onComplete: (Boolean) -> Unit) {
+        val ad = rewardedAd
+        if (!canRequestAds || ad == null) {
             onComplete(false)
+            return
+        }
+
+        rewardedAd = null
+        var completionDelivered = false
+        fun complete(earned: Boolean) {
+            if (!completionDelivered) {
+                completionDelivered = true
+                onComplete(earned)
+            }
+        }
+
+        ad.fullScreenContentCallback = object : FullScreenContentCallback() {
+            override fun onAdDismissedFullScreenContent() {
+                complete(false)
+                loadRewarded(activity.applicationContext)
+            }
+
+            override fun onAdFailedToShowFullScreenContent(error: AdError) {
+                Log.w(TAG, "Rewarded show failed: ${error.message}")
+                complete(false)
+                loadRewarded(activity.applicationContext)
+            }
+        }
+        ad.show(activity) {
+            complete(true)
         }
     }
 }

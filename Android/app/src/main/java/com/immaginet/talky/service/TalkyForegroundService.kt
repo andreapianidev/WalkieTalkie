@@ -90,7 +90,7 @@ class TalkyForegroundService : Service() {
             }
         walkieManager = CrossPlatformWalkieManager(applicationContext)
         walkieManager.setTransmissionStateListener(::onTransmissionStateChanged)
-        radioManager = RadioManager().also { manager ->
+        radioManager = RadioManager(applicationContext).also { manager ->
             manager.setStatusListener { status ->
                 runOnMainThread {
                     if (resourcesClosed || isStopped) return@runOnMainThread
@@ -207,7 +207,10 @@ class TalkyForegroundService : Service() {
             this,
             NOTIFICATION_ID,
             buildNotification(isTransmitting),
-            TalkyForegroundTypePolicy.types(canUseMicrophoneType)
+            TalkyForegroundTypePolicy.types(
+                isTransmitting = canUseMicrophoneType,
+                isRadioActive = radioStatus.isPlaying || radioStatus.isBuffering
+            )
         )
     }
 
@@ -284,11 +287,9 @@ class TalkyForegroundService : Service() {
     private fun updateWakeLock() {
         if (!::wakeLock.isInitialized) return
         mainHandler.removeCallbacks(wakeLockRefresh)
-        val shouldHold = !resourcesClosed && !isStopped && TalkyWakeLockPolicy.shouldHold(
-            walkieReady = walkieStarted && permissionPolicy.canReceive,
-            radioActive = radioStatus.isPlaying || radioStatus.isBuffering,
-            isTransmitting = isTransmitting
-        )
+        val shouldHold = !resourcesClosed &&
+            !isStopped &&
+            TalkyWakeLockPolicy.shouldHold(isTransmitting = isTransmitting)
         if (shouldHold && !wakeLock.isHeld) {
             wakeLock.acquire(WAKE_LOCK_TIMEOUT_MS)
         } else if (!shouldHold && wakeLock.isHeld) {
