@@ -434,7 +434,7 @@
 // MARK: - Pro upsell banner (added 2026-05-23)
 "paywall.brand_label" = "TALKY PRO";
 "upsell.title" = "Unlock Talky Pro";
-"upsell.subtitle" = "International radio, no ads";
+"upsell.subtitle" = "No ads · support one indie dev";
 "upsell.dismiss" = "Dismiss";
 
 // MARK: - Themes Pack (one-shot non-consumable, added 2026-05-23)
@@ -457,3 +457,10 @@
 "paywall.error.no_purchases" = "No purchases found to restore.";
 "paywall.error.restore_failed" = "Restore failed. Please try again.";
 "check_wifi_bluetooth" = "Check WiFi & Bluetooth";
+
+/* Paywall — supporter note: who is behind Talky and what Pro really pays for */
+"paywall.support.eyebrow" = "A NOTE FROM THE DEV";
+"paywall.support.title" = "Talky is built by one person";
+"paywall.support.body" = "I'm an independent developer and Talky's code is public on GitHub. Pro isn't a wall around the app: it's a contribution that covers the Apple developer account, the servers and the hours spent adding stations and features. If now isn't the right time, keep using Talky for free — it stays free.";
+"paywall.support.github" = "See the code on GitHub";
+"paywall.support.compact" = "Made by one independent developer — Talky's code is public on GitHub.";

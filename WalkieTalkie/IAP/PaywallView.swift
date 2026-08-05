@@ -25,9 +25,15 @@ struct PaywallView: View {
     /// Identifica da dove è stato aperto il paywall (es. "settings", "ad_limit", "feature_lock").
     let trigger: String
 
+    /// Repo pubblico di Talky. Linkato dalla nota "supporter" per rendere
+    /// verificabile l'affermazione "il codice è pubblico" — è un link
+    /// informativo, non un canale di pagamento alternativo all'IAP.
+    private static let repositoryURL = "https://github.com/andreapianidev/WalkieTalkie"
+
     // MARK: - Env
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.openURL) private var openURL
     @StateObject private var iap = IAPManager.shared
     @StateObject private var settingsManager = SettingsManager.shared
     @StateObject private var adManager = AdManager.shared
@@ -108,6 +114,7 @@ struct PaywallView: View {
                     hairlineDivider
                     featuresList
                     hairlineDivider
+                    supporterNote
                     priceCards
                     ctaButton
                     rewardedSecondaryCTA
@@ -277,6 +284,67 @@ struct PaywallView: View {
 
             Spacer(minLength: 0)
         }
+    }
+
+    // MARK: - Supporter note
+
+    /// Nota "chi c'è dietro l'app". Sta subito prima delle card prezzo perché
+    /// è il *perché* che dà senso al *quanto*: Talky è scritta da una persona
+    /// sola e il codice è pubblico, quindi Pro non è un lucchetto ma un
+    /// contributo. Volutamente sobria — nessun accent giallo pieno, nessun
+    /// bottone: se urla, sembra una raccolta fondi e perde credibilità.
+    private var supporterNote: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 8) {
+                Image(systemName: "heart.fill")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundColor(brand)
+
+                Text("paywall.support.eyebrow".localized)
+                    .font(.system(size: 10, weight: .heavy, design: .rounded))
+                    .tracking(2.0)
+                    .foregroundColor(inkSecondary)
+            }
+
+            Text("paywall.support.title".localized)
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .foregroundColor(ink)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Text("paywall.support.body".localized)
+                .font(.system(size: 13))
+                .foregroundColor(inkSecondary)
+                .lineSpacing(2)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Button {
+                Analytics.logEvent("paywall_github_tapped", parameters: ["trigger": trigger])
+                if let url = URL(string: Self.repositoryURL) {
+                    openURL(url)
+                }
+            } label: {
+                HStack(spacing: 5) {
+                    Image(systemName: "chevron.left.forwardslash.chevron.right")
+                        .font(.system(size: 11, weight: .semibold))
+                    Text("paywall.support.github".localized)
+                        .font(.system(size: 12, weight: .semibold))
+                }
+                .foregroundColor(ink.opacity(0.75))
+            }
+            .buttonStyle(.plain)
+            .padding(.top, 2)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 14)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(bgSubtle)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(hairline, lineWidth: 1)
+        )
     }
 
     // MARK: - Hairline divider

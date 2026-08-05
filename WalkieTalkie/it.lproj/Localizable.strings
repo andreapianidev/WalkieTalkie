@@ -434,7 +434,7 @@
 // MARK: - Pro upsell banner (added 2026-05-23)
 "paywall.brand_label" = "TALKY PRO";
 "upsell.title" = "Sblocca Talky Pro";
-"upsell.subtitle" = "Radio internazionali, niente pubblicità";
+"upsell.subtitle" = "Niente pubblicità · sostieni un dev indie";
 "upsell.dismiss" = "Chiudi";
 
 // MARK: - Themes Pack (one-shot non-consumable, added 2026-05-23)
@@ -457,3 +457,10 @@
 "paywall.error.no_purchases" = "Nessun acquisto trovato da ripristinare.";
 "paywall.error.restore_failed" = "Ripristino non riuscito. Riprova.";
 "check_wifi_bluetooth" = "Verifica WiFi e Bluetooth";
+
+/* Paywall — nota supporter: chi c'è dietro Talky e cosa paga davvero Pro */
+"paywall.support.eyebrow" = "DUE PAROLE DALLO SVILUPPATORE";
+"paywall.support.title" = "Talky la scrivo da solo";
+"paywall.support.body" = "Sono uno sviluppatore indipendente e il codice di Talky è pubblico su GitHub. Pro non è un muro intorno all'app: è un contributo che copre l'account sviluppatore Apple, i server e le ore passate ad aggiungere stazioni e funzioni. Se non è il momento, continua a usare Talky gratis — resta gratis.";
+"paywall.support.github" = "Guarda il codice su GitHub";
+"paywall.support.compact" = "Fatta da uno sviluppatore indipendente — il codice di Talky è pubblico su GitHub.";

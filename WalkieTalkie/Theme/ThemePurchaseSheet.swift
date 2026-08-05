@@ -81,6 +81,7 @@ struct ThemePurchaseSheet: View {
                     purchaseButton
                     orDivider
                     subscribeButton
+                    supporterNote
                     appleFooter
                     footerLinks
                     Spacer(minLength: 16)
@@ -261,6 +262,23 @@ struct ThemePurchaseSheet: View {
                     .stroke(brandYellow.opacity(0.5), lineWidth: 1.5)
             )
         }
+    }
+
+    /// Versione a una riga della nota "supporter" del paywall Pro: qui lo spazio
+    /// è poco e il pacchetto temi è un acquisto singolo, quindi basta dire chi
+    /// c'è dietro. Il testo lungo vive in `PaywallView`.
+    private var supporterNote: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "heart.fill")
+                .font(.system(size: 10, weight: .semibold))
+                .foregroundColor(brandYellow.opacity(0.8))
+            Text("paywall.support.compact".localized)
+                .font(.system(size: 11))
+                .foregroundColor(.white.opacity(0.55))
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(.horizontal, 8)
     }
 
     private var appleFooter: some View {

@@ -123,10 +123,14 @@ struct ProUpsellBanner: View {
                     .foregroundColor(ink)
                     .lineLimit(1)
 
+                // Il sottotitolo ora nomina anche lo sviluppatore singolo, quindi
+                // è più lungo di prima: scala leggermente invece di troncare
+                // sui device stretti (iPhone SE).
                 Text("upsell.subtitle".localized)
                     .font(.system(size: 12, weight: .regular))
                     .foregroundColor(inkSecondary)
                     .lineLimit(1)
+                    .minimumScaleFactor(0.8)
             }
 
             Spacer(minLength: 8)

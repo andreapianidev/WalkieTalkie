@@ -46,6 +46,9 @@ struct PaywallView: View {
             }
             .frame(width: 380)
 
+            supporterNote
+                .frame(width: 380)
+
             if iap.isProUser {
                 VStack(spacing: 8) {
                     Image(systemName: "checkmark.seal.fill")
@@ -119,6 +122,47 @@ struct PaywallView: View {
                     .padding(8)
             }
         }
+    }
+
+    /// Chi c'è dietro Talky. Sta fra le feature e i prezzi perché è il *perché*
+    /// che dà senso al *quanto*: l'app è scritta da una persona sola e il codice
+    /// è pubblico, quindi Pro è un contributo, non un lucchetto. Stesso testo
+    /// (tradotto) del paywall iOS — macTalky non è localizzata, resta in inglese.
+    private var supporterNote: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 6) {
+                Image(systemName: "heart.fill")
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundStyle(Talky.amber)
+                Text("A NOTE FROM THE DEV")
+                    .font(.vfd(9, weight: .bold))
+                    .kerning(1.6)
+                    .foregroundStyle(Talky.dim)
+            }
+
+            Text("Talky is built by one person. I'm an independent developer and Talky's code is public on GitHub. Pro isn't a wall around the app: it's a contribution that covers the Apple developer account, the servers and the hours spent adding stations and features. If now isn't the right time, keep using Talky for free — it stays free.")
+                .font(.system(size: 11, design: .rounded))
+                .foregroundStyle(Talky.text.opacity(0.8))
+                .lineSpacing(2)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Link("See the code on GitHub",
+                 destination: URL(string: "https://github.com/andreapianidev/WalkieTalkie")!)
+                .font(.system(size: 11, weight: .semibold, design: .rounded))
+                .foregroundStyle(Talky.dim)
+                .padding(.top, 2)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 12)
+        .background(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(Talky.panelRaised.opacity(0.5))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .strokeBorder(Talky.stroke, lineWidth: 1)
+        )
     }
 
     private func feature(_ icon: String, _ text: String) -> some View {
