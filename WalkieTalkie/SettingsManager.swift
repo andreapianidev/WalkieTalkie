@@ -143,6 +143,14 @@ class SettingsManager: ObservableObject {
         isLowPowerModeEnabled = false
         isDarkModeEnabled = false
         isLiveActivitiesEnabled = true
+
+        // Il conteggio delle trasmissioni riuscite riparte da zero come tutto il
+        // resto. La memoria di "prompt già mostrato" invece resta: resettare le
+        // impostazioni non deve diventare la scorciatoia per rivedere la
+        // richiesta di recensione.
+        Task { @MainActor in
+            ReviewPromptManager.shared.resetTransmissionCount()
+        }
     }
     
     /// Sincronizza le impostazioni con UserDefaults

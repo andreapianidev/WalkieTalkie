@@ -52,7 +52,7 @@
 
 // MARK: - Main Interface
 "frequency_owner" = "頻率擁有者";
-"radio_fm" = "FM 收音機";
+"radio_fm" = "世界電台";
 "walkie_talkie" = "對講機";
 "device" = "裝置";
 "status" = "狀態";
@@ -65,7 +65,7 @@
 "release" = "放開";
 "to_send" = "發送";
 "radio_mode" = "收音機";
-"radio_fm_caps" = "FM 模式";
+"radio_fm_caps" = "電台";
 "active" = "啟用";
 "no_connection" = "無連接";
 "devices_connected" = "裝置已連接";
@@ -421,7 +421,7 @@
 "sleep_timer" = "睡眠定時器";
 
 // MARK: - Mode Switch & Onboarding Radio
-"mode_switch_hint" = "點擊左上角按鈕在對講機與 FM 電台之間切換";
+"mode_switch_hint" = "點擊左上角按鈕在對講機與世界電台之間切換";
 "got_it" = "明白";
 "onboarding.radio_mode.title" = "對講機 + 電台";
 "onboarding.radio_mode.subtitle" = "一鍵切換兩種模式";

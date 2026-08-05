@@ -52,7 +52,7 @@
 
 // MARK: - Main Interface
 "frequency_owner" = "Frequency Owner";
-"radio_fm" = "Radio FM";
+"radio_fm" = "World Radio";
 "walkie_talkie" = "WalkieTalkie";
 "device" = "Device";
 "status" = "Status";
@@ -65,7 +65,7 @@
 "release" = "RELEASE";
 "to_send" = "TO SEND";
 "radio_mode" = "RADIO";
-"radio_fm_caps" = "FM MODE";
+"radio_fm_caps" = "RADIO";
 "active" = "ACTIVE";
 "no_connection" = "No connection";
 "devices_connected" = "devices connected";
@@ -419,7 +419,7 @@
 "sleep_timer" = "Sleep Timer";
 
 // MARK: - Mode Switch & Onboarding Radio
-"mode_switch_hint" = "Tap the top-left button to switch between Walkie Talkie and FM Radio";
+"mode_switch_hint" = "Tap the top-left button to switch between Walkie Talkie and World Radio";
 "got_it" = "Got it";
 "onboarding.radio_mode.title" = "Walkie-Talkie + Radio";
 "onboarding.radio_mode.subtitle" = "Switch between modes with one tap";

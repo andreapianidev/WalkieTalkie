@@ -688,6 +688,15 @@ class MultipeerManager: NSObject, ObservableObject {
             transmissionStartTime = nil
         }
 
+        // Una trasmissione conclusa CON almeno un peer connesso è l'unico momento
+        // in cui abbiamo la prova che l'app ha fatto il suo mestiere. È lì, e solo
+        // lì, che ha senso chiedere una recensione: il conteggio dei peer viene
+        // letto adesso perché dopo il teardown potrebbe già essere cambiato.
+        let peersAtEndOfTransmission = connectedPeers.count
+        Task { @MainActor in
+            ReviewPromptManager.shared.recordTransmission(connectedPeerCount: peersAtEndOfTransmission)
+        }
+
         audioManager.restoreBackgroundVolume()
         logger.logAudioInfo("Trasmissione audio arrestata.")
     }

@@ -52,7 +52,7 @@
 
 // MARK: - Main Interface
 "frequency_owner" = "Pemilik Frekuensi";
-"radio_fm" = "Radio FM";
+"radio_fm" = "Radio Dunia";
 "walkie_talkie" = "Walkie Talkie";
 "device" = "Peranti";
 "status" = "Status";
@@ -65,7 +65,7 @@
 "release" = "LEPASKAN";
 "to_send" = "UNTUK HANTAR";
 "radio_mode" = "RADIO";
-"radio_fm_caps" = "MOD FM";
+"radio_fm_caps" = "RADIO";
 "active" = "AKTIF";
 "no_connection" = "Tiada sambungan";
 "devices_connected" = "peranti disambung";
@@ -421,7 +421,7 @@
 "sleep_timer" = "Pemasa Tidur";
 
 // MARK: - Mode Switch & Onboarding Radio
-"mode_switch_hint" = "Ketuk butang kiri atas untuk bertukar antara Walkie Talkie dan Radio FM";
+"mode_switch_hint" = "Ketuk butang kiri atas untuk bertukar antara Walkie Talkie dan Radio Dunia";
 "got_it" = "Faham";
 "onboarding.radio_mode.title" = "Walkie-Talkie + Radio";
 "onboarding.radio_mode.subtitle" = "Bertukar mod dengan satu ketukan";
