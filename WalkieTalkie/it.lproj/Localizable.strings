@@ -464,3 +464,8 @@
 "paywall.support.body" = "Sono uno sviluppatore indipendente e il codice di Talky è pubblico su GitHub. Pro non è un muro intorno all'app: è un contributo che copre l'account sviluppatore Apple, i server e le ore passate ad aggiungere stazioni e funzioni. Se non è il momento, continua a usare Talky gratis — resta gratis.";
 "paywall.support.github" = "Guarda il codice su GitHub";
 "paywall.support.compact" = "Fatta da uno sviluppatore indipendente — il codice di Talky è pubblico su GitHub.";
+
+/* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
+"paywall.lifetime.cta" = "Paghi una volta ·";
+"paywall.lifetime.subtitle" = "Un pagamento. Tutto Pro per sempre, temi inclusi. Nessun abbonamento.";
+"paywall.lifetime.owned" = "È tuo per sempre. Grazie.";

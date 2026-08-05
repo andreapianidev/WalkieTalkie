@@ -20,9 +20,27 @@ enum ProductID: String, CaseIterable {
     /// (alternativa one-shot alla subscription). Prezzo target €4,99.
     static let themesPackID = "app.immaginet.talky.themes.allpack"
 
-    /// Tutti gli ID prodotto (subscription + themes pack) per `Product.products(for:)`.
+    /// Non-consumable che sblocca **tutto Talky Pro per sempre**, temi inclusi.
+    ///
+    /// Esiste perché tre recensioni App Store hanno chiesto esplicitamente di
+    /// poter pagare una volta sola invece di abbonarsi ("a pay once model would
+    /// be appreciated", "the addition of ads and subscription ruined it"). Su
+    /// un'app scritta da una persona sola, l'abbonamento settimanale è la forma
+    /// sbagliata del messaggio "dammi un contributo".
+    ///
+    /// €14,99 in area euro (≈ $12,99 USA). Il prezzo è ancorato al mercato:
+    /// myTuner Radio Pro chiede $10 una tantum per la sola radio, Voxer e
+    /// Walkie Talkie Intercom ~$30 **all'anno** per il solo push-to-talk.
+    static let lifetimeID = "app.immaginet.talky.pro.lifetime"
+
+    /// Tutti gli ID prodotto (subscription + non-consumable) per `Product.products(for:)`.
     static var allIDs: [String] {
-        return ProductID.allCases.map { $0.rawValue } + [themesPackID]
+        return ProductID.allCases.map { $0.rawValue } + [themesPackID, lifetimeID]
+    }
+
+    /// True se l'ID è l'acquisto una tantum "per sempre".
+    static func isLifetime(_ id: String) -> Bool {
+        return id == lifetimeID
     }
 
     /// Solo gli ID delle subscription auto-rinnovabili (Talky Pro).

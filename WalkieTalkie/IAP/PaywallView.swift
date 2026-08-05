@@ -101,6 +101,10 @@ struct PaywallView: View {
         iap.products.first(where: { $0.id == selectedProductID })
     }
 
+    private var lifetimeProduct: Product? {
+        iap.products.first(where: { $0.id == ProductID.lifetimeID })
+    }
+
     // MARK: - Body
 
     var body: some View {
@@ -117,6 +121,7 @@ struct PaywallView: View {
                     supporterNote
                     priceCards
                     ctaButton
+                    lifetimeOption
                     rewardedSecondaryCTA
                     appleLegalFooter
                     footerLinks
@@ -523,6 +528,69 @@ struct PaywallView: View {
         .accessibilityLabel("paywall.cta.start".localized)
     }
 
+    // MARK: - Acquisto a vita
+
+    /// L'alternativa "paga una volta e basta". Sta SOTTO il CTA principale, non
+    /// fra le card prezzo: è una scelta diversa in natura, non un terzo piano da
+    /// confrontare a colpo d'occhio con settimanale e annuale. Chi arriva qui
+    /// cercando l'abbonamento lo trova sopra; chi non vuole abbonarsi affatto
+    /// trova questo, e per lui è l'unica riga che conta.
+    ///
+    /// Esiste perché l'hanno chiesto gli utenti, testualmente: "a pay once model
+    /// would be appreciated", "the addition of ads and subscription ruined it".
+    @ViewBuilder
+    private var lifetimeOption: some View {
+        if iap.hasLifetime {
+            // Già comprato: niente da vendere, solo conferma.
+            HStack(spacing: 8) {
+                Image(systemName: "checkmark.seal.fill")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(successColor)
+                Text("paywall.lifetime.owned".localized)
+                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+                    .foregroundColor(ink)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 14)
+            .background(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(successColor.opacity(isAppDark ? 0.14 : 0.10))
+            )
+            .padding(.top, 4)
+        } else if let lifetime = lifetimeProduct {
+            Button {
+                Task { await performLifetimePurchase(lifetime) }
+            } label: {
+                VStack(spacing: 3) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "infinity")
+                            .font(.system(size: 13, weight: .bold))
+                        Text("paywall.lifetime.cta".localized)
+                            .font(.system(size: 15, weight: .bold, design: .rounded))
+                        Text(lifetime.displayPrice)
+                            .font(.system(size: 15, weight: .heavy, design: .rounded))
+                            .monospacedDigit()
+                    }
+                    .foregroundColor(ink)
+
+                    Text("paywall.lifetime.subtitle".localized)
+                        .font(.system(size: 11))
+                        .foregroundColor(inkSecondary)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 13)
+                .background(
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .stroke(ink.opacity(isAppDark ? 0.22 : 0.18), lineWidth: 1.5)
+                )
+            }
+            .buttonStyle(.plain)
+            .disabled(isPurchasing)
+            .opacity(isPurchasing ? 0.5 : 1.0)
+            .padding(.top, 4)
+        }
+    }
+
     // MARK: - Rewarded fallback
 
     /// CTA secondario e volutamente sottotono: chi non è pronto ad abbonarsi può
@@ -634,6 +702,21 @@ struct PaywallView: View {
         do {
             let success = try await iap.purchase(product)
             if success {
+                dismiss()
+            }
+        } catch {
+            errorMessage = "paywall.error.purchase_failed".localized
+            showErrorAlert = true
+        }
+    }
+
+    private func performLifetimePurchase(_ product: Product) async {
+        isPurchasing = true
+        defer { isPurchasing = false }
+
+        Analytics.logEvent("lifetime_purchase_initiated", parameters: ["trigger": trigger])
+        do {
+            if try await iap.purchase(product) {
                 dismiss()
             }
         } catch {

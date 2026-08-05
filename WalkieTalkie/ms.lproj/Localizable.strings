@@ -466,3 +466,8 @@
 "paywall.support.body" = "Saya pembangun bebas dan kod Talky terbuka kepada umum di GitHub. Pro bukan tembok di sekeliling apl ini: ia sumbangan yang menampung akaun pembangun Apple, pelayan dan jam yang dihabiskan untuk menambah stesen serta ciri baharu. Kalau belum sesuai masanya, teruskan guna Talky secara percuma — ia kekal percuma.";
 "paywall.support.github" = "Lihat kod di GitHub";
 "paywall.support.compact" = "Dibina oleh seorang pembangun bebas — kod Talky terbuka di GitHub.";
+
+/* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
+"paywall.lifetime.cta" = "Bayar sekali ·";
+"paywall.lifetime.subtitle" = "Satu bayaran. Semua Pro selamanya, termasuk tema. Tanpa langganan.";
+"paywall.lifetime.owned" = "Milik anda selamanya. Terima kasih.";
