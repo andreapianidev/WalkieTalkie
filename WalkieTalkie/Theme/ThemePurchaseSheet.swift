@@ -268,10 +268,13 @@ struct ThemePurchaseSheet: View {
     /// è poco e il pacchetto temi è un acquisto singolo, quindi basta dire chi
     /// c'è dietro. Il testo lungo vive in `PaywallView`.
     private var supporterNote: some View {
-        HStack(spacing: 6) {
+        // .top e non il centro: in italiano e spagnolo il testo va a due righe
+        // e il cuore centrato verticalmente si stacca dalla prima riga.
+        HStack(alignment: .top, spacing: 6) {
             Image(systemName: "heart.fill")
                 .font(.system(size: 10, weight: .semibold))
                 .foregroundColor(brandYellow.opacity(0.8))
+                .padding(.top, 2)
             Text("paywall.support.compact".localized)
                 .font(.system(size: 11))
                 .foregroundColor(.white.opacity(0.55))

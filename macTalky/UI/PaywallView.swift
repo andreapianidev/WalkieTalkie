@@ -126,8 +126,11 @@ struct PaywallView: View {
 
     /// Chi c'è dietro Talky. Sta fra le feature e i prezzi perché è il *perché*
     /// che dà senso al *quanto*: l'app è scritta da una persona sola e il codice
-    /// è pubblico, quindi Pro è un contributo, non un lucchetto. Stesso testo
-    /// (tradotto) del paywall iOS — macTalky non è localizzata, resta in inglese.
+    /// è pubblico, quindi Pro è un contributo, non un lucchetto. macTalky non è
+    /// localizzata, quindi resta in inglese; ed è deliberatamente più corto del
+    /// testo iOS, perché questo pannello non ha ScrollView e la sua altezza è
+    /// quella della sheet: un paragrafo di sei righe a 11pt lo farebbe sembrare
+    /// una EULA invece di una console.
     private var supporterNote: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 6) {
@@ -140,7 +143,7 @@ struct PaywallView: View {
                     .foregroundStyle(Talky.dim)
             }
 
-            Text("Talky is built by one person. I'm an independent developer and Talky's code is public on GitHub. Pro isn't a wall around the app: it's a contribution that covers the Apple developer account, the servers and the hours spent adding stations and features. If now isn't the right time, keep using Talky for free — it stays free.")
+            Text("Talky is built by one independent developer, and its code is public on GitHub. Pro is a contribution that keeps it alive — Talky stays free for everyone else.")
                 .font(.system(size: 11, design: .rounded))
                 .foregroundStyle(Talky.text.opacity(0.8))
                 .lineSpacing(2)
