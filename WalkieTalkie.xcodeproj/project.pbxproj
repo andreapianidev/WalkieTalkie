@@ -632,7 +632,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Andrea-Piani.WalkieTalkie";
 				PRODUCT_NAME = Talky;
 				REGISTER_APP_GROUPS = YES;
@@ -674,7 +674,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Andrea-Piani.WalkieTalkie";
 				PRODUCT_NAME = Talky;
 				REGISTER_APP_GROUPS = YES;
