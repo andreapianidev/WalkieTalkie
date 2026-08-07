@@ -621,7 +621,7 @@
 				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "macTalky-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = macTalky;
+				INFOPLIST_KEY_CFBundleDisplayName = Talky;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Andrea Piani — Immaginet Srl";
@@ -634,7 +634,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Andrea-Piani.WalkieTalkie";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Talky;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -663,7 +663,7 @@
 				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "macTalky-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = macTalky;
+				INFOPLIST_KEY_CFBundleDisplayName = Talky;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Andrea Piani — Immaginet Srl";
@@ -676,7 +676,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Andrea-Piani.WalkieTalkie";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Talky;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;

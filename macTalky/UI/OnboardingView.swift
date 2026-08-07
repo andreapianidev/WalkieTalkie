@@ -12,7 +12,7 @@ import SwiftUI
 /// Stringhe dell'onboarding per lingua. Chiave = code ISO 639-1 (+ script per il cinese).
 private enum OBString {
     case welcomeTitle, welcomeBody
-    case networkTitle, networkBody, micButton, micGranted
+    case networkTitle, networkBody, micGranted
     case radioTitle, radioBody
     case proNote
     case next, back, start, skip
@@ -37,8 +37,7 @@ private enum OBString {
             .welcomeTitle: "Your Mac is now a walkie-talkie",
             .welcomeBody: "Hold the big TALK key — or the Space bar — to speak. Release to listen. One voice at a time, like a real radio.",
             .networkTitle: "No internet. No accounts.",
-            .networkBody: "macTalky finds Talky devices (iPhone, Android, Mac) on your Wi-Fi network automatically. Grant microphone access to transmit your voice.",
-            .micButton: "Enable microphone",
+            .networkBody: "Talky finds Talky devices (iPhone, Android, Mac) on your Wi-Fi network automatically. Grant microphone access to transmit your voice.",
             .micGranted: "Microphone authorized",
             .radioTitle: "343 world radio stations",
             .radioBody: "Switch to the Radio module for verified stations from 50+ countries, with favorites, filters and media keys.",
@@ -49,8 +48,7 @@ private enum OBString {
             .welcomeTitle: "Il tuo Mac ora è un walkie-talkie",
             .welcomeBody: "Tieni premuto il grande tasto TALK — o la barra spaziatrice — per parlare. Rilascia per ascoltare. Una voce alla volta, come una radio vera.",
             .networkTitle: "Niente internet. Niente account.",
-            .networkBody: "macTalky trova i dispositivi Talky (iPhone, Android, Mac) sulla tua rete Wi-Fi automaticamente. Concedi il microfono per trasmettere la voce.",
-            .micButton: "Attiva microfono",
+            .networkBody: "Talky trova i dispositivi Talky (iPhone, Android, Mac) sulla tua rete Wi-Fi automaticamente. Concedi il microfono per trasmettere la voce.",
             .micGranted: "Microfono autorizzato",
             .radioTitle: "343 stazioni radio dal mondo",
             .radioBody: "Passa al modulo Radio per stazioni verificate da oltre 50 Paesi, con preferiti, filtri e tasti multimediali.",
@@ -61,8 +59,7 @@ private enum OBString {
             .welcomeTitle: "Dein Mac ist jetzt ein Funkgerät",
             .welcomeBody: "Halte die große TALK-Taste — oder die Leertaste — gedrückt, um zu sprechen. Loslassen zum Zuhören. Eine Stimme nach der anderen, wie bei einem echten Funkgerät.",
             .networkTitle: "Kein Internet. Keine Konten.",
-            .networkBody: "macTalky findet Talky-Geräte (iPhone, Android, Mac) in deinem WLAN automatisch. Erlaube den Mikrofonzugriff, um deine Stimme zu übertragen.",
-            .micButton: "Mikrofon aktivieren",
+            .networkBody: "Talky findet Talky-Geräte (iPhone, Android, Mac) in deinem WLAN automatisch. Erlaube den Mikrofonzugriff, um deine Stimme zu übertragen.",
             .micGranted: "Mikrofon autorisiert",
             .radioTitle: "343 Radiosender aus aller Welt",
             .radioBody: "Wechsle zum Radio-Modul: verifizierte Sender aus über 50 Ländern, mit Favoriten, Filtern und Medientasten.",
@@ -73,8 +70,7 @@ private enum OBString {
             .welcomeTitle: "Tu Mac ahora es un walkie-talkie",
             .welcomeBody: "Mantén pulsada la gran tecla TALK — o la barra espaciadora — para hablar. Suelta para escuchar. Una voz a la vez, como una radio de verdad.",
             .networkTitle: "Sin internet. Sin cuentas.",
-            .networkBody: "macTalky encuentra automáticamente los dispositivos Talky (iPhone, Android, Mac) en tu red Wi-Fi. Concede acceso al micrófono para transmitir tu voz.",
-            .micButton: "Activar micrófono",
+            .networkBody: "Talky encuentra automáticamente los dispositivos Talky (iPhone, Android, Mac) en tu red Wi-Fi. Concede acceso al micrófono para transmitir tu voz.",
             .micGranted: "Micrófono autorizado",
             .radioTitle: "343 emisoras de radio del mundo",
             .radioBody: "Cambia al módulo Radio: emisoras verificadas de más de 50 países, con favoritos, filtros y teclas multimedia.",
@@ -85,8 +81,7 @@ private enum OBString {
             .welcomeTitle: "Votre Mac est maintenant un talkie-walkie",
             .welcomeBody: "Maintenez la grande touche TALK — ou la barre d'espace — pour parler. Relâchez pour écouter. Une voix à la fois, comme une vraie radio.",
             .networkTitle: "Pas d'internet. Pas de compte.",
-            .networkBody: "macTalky trouve automatiquement les appareils Talky (iPhone, Android, Mac) sur votre réseau Wi-Fi. Autorisez le micro pour transmettre votre voix.",
-            .micButton: "Activer le micro",
+            .networkBody: "Talky trouve automatiquement les appareils Talky (iPhone, Android, Mac) sur votre réseau Wi-Fi. Autorisez le micro pour transmettre votre voix.",
             .micGranted: "Micro autorisé",
             .radioTitle: "343 stations de radio du monde",
             .radioBody: "Passez au module Radio : stations vérifiées de plus de 50 pays, avec favoris, filtres et touches multimédia.",
@@ -97,8 +92,7 @@ private enum OBString {
             .welcomeTitle: "Macがトランシーバーに",
             .welcomeBody: "大きなTALKキー、またはスペースキーを押し続けて話します。離すと受信。本物の無線機のように、一度に一人ずつ。",
             .networkTitle: "インターネット不要。アカウント不要。",
-            .networkBody: "macTalkyはWi-Fiネットワーク上のTalkyデバイス(iPhone、Android、Mac)を自動で見つけます。声を送信するにはマイクを許可してください。",
-            .micButton: "マイクを有効にする",
+            .networkBody: "TalkyはWi-Fiネットワーク上のTalkyデバイス(iPhone、Android、Mac)を自動で見つけます。声を送信するにはマイクを許可してください。",
             .micGranted: "マイク許可済み",
             .radioTitle: "世界343のラジオ局",
             .radioBody: "ラジオモジュールに切り替えると、50か国以上の検証済みステーションをお気に入り・フィルタ・メディアキーで楽しめます。",
@@ -109,8 +103,7 @@ private enum OBString {
             .welcomeTitle: "Mac이 워키토키가 됩니다",
             .welcomeBody: "큰 TALK 버튼이나 스페이스바를 누른 채 말하세요. 놓으면 수신합니다. 진짜 무전기처럼 한 번에 한 명씩.",
             .networkTitle: "인터넷 불필요. 계정 불필요.",
-            .networkBody: "macTalky는 Wi-Fi 네트워크의 Talky 기기(iPhone, Android, Mac)를 자동으로 찾습니다. 음성을 전송하려면 마이크를 허용하세요.",
-            .micButton: "마이크 활성화",
+            .networkBody: "Talky는 Wi-Fi 네트워크의 Talky 기기(iPhone, Android, Mac)를 자동으로 찾습니다. 음성을 전송하려면 마이크를 허용하세요.",
             .micGranted: "마이크 허용됨",
             .radioTitle: "세계 343개 라디오 방송국",
             .radioBody: "라디오 모듈로 전환하면 50개국 이상의 검증된 방송국을 즐겨찾기, 필터, 미디어 키와 함께 들을 수 있습니다.",
@@ -121,8 +114,7 @@ private enum OBString {
             .welcomeTitle: "Seu Mac agora é um walkie-talkie",
             .welcomeBody: "Segure a grande tecla TALK — ou a barra de espaço — para falar. Solte para ouvir. Uma voz por vez, como um rádio de verdade.",
             .networkTitle: "Sem internet. Sem contas.",
-            .networkBody: "O macTalky encontra automaticamente os dispositivos Talky (iPhone, Android, Mac) na sua rede Wi-Fi. Conceda o microfone para transmitir sua voz.",
-            .micButton: "Ativar microfone",
+            .networkBody: "O Talky encontra automaticamente os dispositivos Talky (iPhone, Android, Mac) na sua rede Wi-Fi. Conceda o microfone para transmitir sua voz.",
             .micGranted: "Microfone autorizado",
             .radioTitle: "343 estações de rádio do mundo",
             .radioBody: "Mude para o módulo Rádio: estações verificadas de mais de 50 países, com favoritos, filtros e teclas de mídia.",
@@ -133,8 +125,7 @@ private enum OBString {
             .welcomeTitle: "Mac ของคุณคือวิทยุสื่อสารแล้ว",
             .welcomeBody: "กดปุ่ม TALK ขนาดใหญ่ — หรือแป้น Space — ค้างไว้เพื่อพูด ปล่อยเพื่อฟัง ทีละเสียงเหมือนวิทยุจริง",
             .networkTitle: "ไม่ต้องใช้อินเทอร์เน็ต ไม่ต้องมีบัญชี",
-            .networkBody: "macTalky ค้นหาอุปกรณ์ Talky (iPhone, Android, Mac) บนเครือข่าย Wi-Fi โดยอัตโนมัติ อนุญาตไมโครโฟนเพื่อส่งเสียงของคุณ",
-            .micButton: "เปิดใช้ไมโครโฟน",
+            .networkBody: "Talky ค้นหาอุปกรณ์ Talky (iPhone, Android, Mac) บนเครือข่าย Wi-Fi โดยอัตโนมัติ อนุญาตไมโครโฟนเพื่อส่งเสียงของคุณ",
             .micGranted: "อนุญาตไมโครโฟนแล้ว",
             .radioTitle: "วิทยุ 343 สถานีทั่วโลก",
             .radioBody: "สลับไปที่โมดูลวิทยุ: สถานีที่ตรวจสอบแล้วจากกว่า 50 ประเทศ พร้อมรายการโปรด ตัวกรอง และปุ่มมีเดีย",
@@ -145,8 +136,7 @@ private enum OBString {
             .welcomeTitle: "Mac'iniz artık bir telsiz",
             .welcomeBody: "Konuşmak için büyük TALK tuşunu — veya boşluk tuşunu — basılı tutun. Dinlemek için bırakın. Gerçek bir telsiz gibi, aynı anda tek ses.",
             .networkTitle: "İnternet yok. Hesap yok.",
-            .networkBody: "macTalky, Wi-Fi ağınızdaki Talky cihazlarını (iPhone, Android, Mac) otomatik bulur. Sesinizi iletmek için mikrofona izin verin.",
-            .micButton: "Mikrofonu etkinleştir",
+            .networkBody: "Talky, Wi-Fi ağınızdaki Talky cihazlarını (iPhone, Android, Mac) otomatik bulur. Sesinizi iletmek için mikrofona izin verin.",
             .micGranted: "Mikrofon izni verildi",
             .radioTitle: "Dünyadan 343 radyo istasyonu",
             .radioBody: "Radyo modülüne geçin: 50'den fazla ülkeden doğrulanmış istasyonlar, favoriler, filtreler ve medya tuşlarıyla.",
@@ -157,8 +147,7 @@ private enum OBString {
             .welcomeTitle: "Mac của bạn giờ là bộ đàm",
             .welcomeBody: "Giữ phím TALK lớn — hoặc phím Space — để nói. Thả ra để nghe. Mỗi lần một giọng nói, như bộ đàm thật.",
             .networkTitle: "Không cần internet. Không cần tài khoản.",
-            .networkBody: "macTalky tự động tìm các thiết bị Talky (iPhone, Android, Mac) trên mạng Wi-Fi của bạn. Cho phép micrô để truyền giọng nói.",
-            .micButton: "Bật micrô",
+            .networkBody: "Talky tự động tìm các thiết bị Talky (iPhone, Android, Mac) trên mạng Wi-Fi của bạn. Cho phép micrô để truyền giọng nói.",
             .micGranted: "Đã cho phép micrô",
             .radioTitle: "343 đài radio khắp thế giới",
             .radioBody: "Chuyển sang mô-đun Radio: các đài đã xác minh từ hơn 50 quốc gia, với yêu thích, bộ lọc và phím media.",
@@ -169,8 +158,7 @@ private enum OBString {
             .welcomeTitle: "Mac anda kini walkie-talkie",
             .welcomeBody: "Tahan kekunci TALK besar — atau bar Space — untuk bercakap. Lepaskan untuk mendengar. Satu suara pada satu masa, seperti radio sebenar.",
             .networkTitle: "Tiada internet. Tiada akaun.",
-            .networkBody: "macTalky mencari peranti Talky (iPhone, Android, Mac) pada rangkaian Wi-Fi anda secara automatik. Benarkan mikrofon untuk menghantar suara anda.",
-            .micButton: "Aktifkan mikrofon",
+            .networkBody: "Talky mencari peranti Talky (iPhone, Android, Mac) pada rangkaian Wi-Fi anda secara automatik. Benarkan mikrofon untuk menghantar suara anda.",
             .micGranted: "Mikrofon dibenarkan",
             .radioTitle: "343 stesen radio dunia",
             .radioBody: "Tukar ke modul Radio: stesen yang disahkan dari lebih 50 negara, dengan kegemaran, penapis dan kekunci media.",
@@ -181,8 +169,7 @@ private enum OBString {
             .welcomeTitle: "你的 Mac 现在是一台对讲机",
             .welcomeBody: "按住大大的 TALK 键——或空格键——即可说话。松开即收听。一次一个声音,就像真正的对讲机。",
             .networkTitle: "无需互联网。无需账号。",
-            .networkBody: "macTalky 会自动发现 Wi-Fi 网络中的 Talky 设备(iPhone、Android、Mac)。授权麦克风即可传输语音。",
-            .micButton: "启用麦克风",
+            .networkBody: "Talky 会自动发现 Wi-Fi 网络中的 Talky 设备(iPhone、Android、Mac)。授权麦克风即可传输语音。",
             .micGranted: "麦克风已授权",
             .radioTitle: "343 个全球电台",
             .radioBody: "切换到电台模块:来自 50 多个国家的经过验证的电台,支持收藏、筛选和媒体键。",
@@ -193,8 +180,7 @@ private enum OBString {
             .welcomeTitle: "你的 Mac 現在是一台對講機",
             .welcomeBody: "按住大大的 TALK 鍵——或空白鍵——即可說話。放開即收聽。一次一個聲音,就像真正的對講機。",
             .networkTitle: "無需網際網路。無需帳號。",
-            .networkBody: "macTalky 會自動發現 Wi-Fi 網路中的 Talky 裝置(iPhone、Android、Mac)。授權麥克風即可傳送語音。",
-            .micButton: "啟用麥克風",
+            .networkBody: "Talky 會自動發現 Wi-Fi 網路中的 Talky 裝置(iPhone、Android、Mac)。授權麥克風即可傳送語音。",
             .micGranted: "麥克風已授權",
             .radioTitle: "343 個全球電台",
             .radioBody: "切換到電台模組:來自 50 多個國家的已驗證電台,支援收藏、篩選與媒體鍵。",
@@ -309,7 +295,12 @@ struct OnboardingView: View {
                     .font(.system(size: 12, weight: .semibold, design: .rounded))
                     .foregroundStyle(Talky.signal)
             } else {
-                Button(OBString.micButton.text) { engine.requestMicPermission() }
+                // Guideline 5.1.1(iv): il bottone che precede il prompt di sistema
+                // non deve spingere verso il "sì" — Apple ha respinto la 1.1.1 (76)
+                // per l'etichetta "Enable microphone" e chiede "Continue"/"Next".
+                // Si riusa `.next`, che e' gia' tradotto in tutte le lingue: cosi'
+                // non esiste piu' una stringa direttiva da poter reintrodurre.
+                Button(OBString.next.text) { engine.requestMicPermission() }
                     .buttonStyle(ChipButtonStyle(accent: Talky.amber, filled: true))
             }
         }
