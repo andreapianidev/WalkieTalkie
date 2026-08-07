@@ -57,6 +57,14 @@ struct WalkieTalkieApp: App {
             .task {
                 // IAP bootstrap deve precedere AdManager: i guard !isProUser dipendono dallo stato Pro.
                 await iapManager.bootstrap()
+                // Dopo il bootstrap IAP e non prima: `registerSession` deve poter
+                // leggere lo stato Pro aggiornato, altrimenti alla seconda
+                // sessione un abbonato si vedrebbe proporre l'abbonamento.
+                // Solo a onboarding concluso: il paywall non va messo davanti a
+                // chi non ha ancora finito di configurare l'app.
+                if isOnboardingComplete {
+                    PaywallTriggerManager.shared.registerSession()
+                }
                 await adManager.bootstrap()
                 // Cold start app-open ad after consent + first UI frame.
                 // Delayed: the user may already be interacting with the UI, so
@@ -71,6 +79,15 @@ struct WalkieTalkieApp: App {
                 LiveActivityDeepLink.handle(url)
             }
             .onChange(of: scenePhase) { newPhase in
+                if newPhase == .active {
+                    // Rilegge gli entitlement a ogni rientro in primo piano.
+                    // `Transaction.updates` copre acquisti e rimborsi, ma non la
+                    // scadenza naturale di un abbonamento: se scade mentre l'app
+                    // è in background, senza questo controllo l'utente resterebbe
+                    // Pro fino al riavvio — e chi ha disdetto continuerebbe a non
+                    // vedere pubblicità.
+                    Task { await iapManager.updateEntitlements() }
+                }
                 if newPhase == .active {
                     // Only re-show when truly coming back from background.
                     if isOnboardingComplete {

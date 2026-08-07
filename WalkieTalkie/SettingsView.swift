@@ -14,6 +14,10 @@ struct SettingsView: View {
     @State private var showingInstructions = false
     @State private var showingPerformance = false
     @State private var showPaywall = false
+    /// Provenienza dell'apertura. Prima era la costante "settings_manual" per
+    /// ogni sorgente, quindi nei dati le funzioni bloccate erano indistinguibili
+    /// fra loro e dal tocco volontario sul banner Pro.
+    @State private var paywallTrigger = "settings_manual"
     @State private var didLogSettingsRewardImpression = false
     @State private var showThemeSelector = false
     @State private var showHistory = false
@@ -78,7 +82,7 @@ struct SettingsView: View {
         }
         .background(Color("BackgroundColor"))
         .fullScreenCover(isPresented: $showPaywall) {
-            PaywallView(trigger: "settings_manual")
+            PaywallView(trigger: paywallTrigger)
         }
         .sheet(isPresented: $showThemeSelector) {
             ThemeSelectorView(onLockedTap: { tappedTheme in
@@ -93,7 +97,7 @@ struct SettingsView: View {
             ThemePurchaseSheet(theme: triggerTheme, onSubscribeTap: {
                 // L'utente preferisce la subscription al pack: apriamo il paywall.
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                    showPaywall = true
+                    presentPaywall("settings_manual")
                 }
             })
         }
@@ -101,7 +105,7 @@ struct SettingsView: View {
             TransmissionHistoryView(onUnlockTap: {
                 showHistory = false
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-                    showPaywall = true
+                    presentPaywall("history_locked")
                 }
             })
         }
@@ -109,7 +113,7 @@ struct SettingsView: View {
             SleepTimerSheet(onUnlockTap: {
                 showSleepTimer = false
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-                    showPaywall = true
+                    presentPaywall("sleep_timer_locked")
                 }
             })
         }
@@ -117,7 +121,7 @@ struct SettingsView: View {
             EqualizerView(onLockedTap: {
                 showEqualizer = false
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-                    showPaywall = true
+                    presentPaywall("equalizer_locked")
                 }
             })
         }
@@ -125,7 +129,7 @@ struct SettingsView: View {
             RecordingsListView(onUnlockTap: {
                 showRecordings = false
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-                    showPaywall = true
+                    presentPaywall("recording_attempt")
                 }
             })
         }
@@ -133,7 +137,7 @@ struct SettingsView: View {
             PrivateChannelSheet(onLockedTap: {
                 showPrivateChannels = false
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
-                    showPaywall = true
+                    presentPaywall("private_channel_attempt")
                 }
             })
         }
@@ -225,7 +229,7 @@ struct SettingsView: View {
     /// Card unlock: replica il linguaggio visivo della Paywall (icona brand-square
     /// + brand capsule CTA), così l'utente vede coerenza fra Settings e Paywall.
     private var proUnlockCard: some View {
-        Button(action: { showPaywall = true }) {
+        Button(action: { presentPaywall("settings_manual") }) {
             HStack(spacing: 12) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 10, style: .continuous)
@@ -385,6 +389,19 @@ struct SettingsView: View {
 
     /// Riga riutilizzabile per feature Pro nella sezione Personalizzazione.
     /// Mostra il badge "PRO" se l'utente non è abbonato.
+    /// Apre il paywall registrando da dove è partito.
+    ///
+    /// Presenta SettingsView e non ContentView di proposito: quando Impostazioni
+    /// è in primo piano, una notifica gestita da ContentView non aprirebbe nulla,
+    /// perché la schermata coperta non presenta fogli. Al manager resta la sola
+    /// strumentazione, che è quello che serve per sapere quale funzione bloccata
+    /// porta davvero all'acquisto.
+    private func presentPaywall(_ trigger: String) {
+        paywallTrigger = trigger
+        PaywallTriggerManager.shared.noteReactivePresentation(trigger)
+        showPaywall = true
+    }
+
     private func proRow(icon: String, title: String, subtitle: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack {

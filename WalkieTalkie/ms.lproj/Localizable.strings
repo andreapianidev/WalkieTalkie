@@ -269,7 +269,9 @@
 "paywall.plan.yearly" = "Tahunan";
 "paywall.plan.yearly_suffix" = "/tahun";
 "paywall.badge.most_popular" = "PALING POPULAR";
-"paywall.badge.save" = "Jimat 81%";
+"paywall.badge.save" = "Jimat %d%%";
+"paywall.compare.weekly_vs_yearly" = "%1$@ setahun. Bayar mingguan anda akan belanja %2$@.";
+"paywall.trial.badge" = "%1$d hari percuma, kemudian %2$@ setahun";
 "paywall.cta.start" = "Mula Talky Pro";
 "paywall.apple_footer" = "Langganan diperbaharui secara automatik. Anda boleh batal pada bila-bila masa daripada Tetapan Apple ID anda. Bayaran akan dikenakan kepada Apple ID anda apabila pembelian disahkan.";
 "paywall.link.restore" = "Pulihkan";

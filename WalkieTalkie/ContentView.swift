@@ -29,6 +29,10 @@ struct ContentView: View {
     @State private var showBrowser = false
     @State private var showSleepTimer = false
     @State private var showPaywall = false
+    /// Da dove è stato aperto il paywall. Serve alla strumentazione: senza,
+    /// ogni apertura risulterebbe "radio_pro_station" e i quattro trigger nuovi
+    /// sarebbero indistinguibili nei dati.
+    @State private var paywallTrigger = "radio_pro_station"
     @State private var showModeSwitchHint = false
     @AppStorage("isOnboardingComplete") private var isOnboardingComplete = false
     
@@ -995,13 +999,23 @@ struct ContentView: View {
         .fullScreenCover(isPresented: $showPaywall, onDismiss: {
             radioManager.blockedByPaywall = false
         }) {
-            PaywallView(trigger: "radio_pro_station")
+            PaywallView(trigger: paywallTrigger)
         }
         .onReceive(radioManager.$blockedByPaywall) { blocked in
             // Se la radio segnala paywall e il browser non è in primo piano, mostralo qui.
             if blocked && !showBrowser {
+                paywallTrigger = "radio_pro_station"
                 showPaywall = true
             }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: PaywallTriggerManager.presentRequest)) { note in
+            // I trigger nascono nei manager, che non conoscono la gerarchia
+            // SwiftUI: arrivano qui via NotificationCenter. Se c'è già un
+            // paywall o un foglio aperto si lascia perdere — sovrapporre due
+            // schermate modali è peggio che non mostrarne nessuna.
+            guard !showPaywall, !showBrowser, !showSleepTimer else { return }
+            paywallTrigger = note.userInfo?["trigger"] as? String ?? "unknown"
+            showPaywall = true
         }
         .onAppear {
             // Inizializza l'indice della frequenza corrente

@@ -631,6 +631,13 @@ class MultipeerManager: NSObject, ObservableObject {
         // Registra l'inizio della trasmissione per il tracking
         transmissionStartTime = Date()
 
+        // Da qui e fino a fine trasmissione nessun paywall può aprirsi: un
+        // walkie-talkie che interrompe chi sta parlando per vendergli qualcosa
+        // è esattamente il motivo per cui si prendono le stelle singole.
+        Task { @MainActor in
+            PaywallTriggerManager.shared.isConversationActive = true
+        }
+
         // Ferma e resetta l'audio engine se già attivo
         if let audioEngine = audioEngine, audioEngine.isRunning {
             inputNode?.removeTap(onBus: 0)
@@ -695,6 +702,12 @@ class MultipeerManager: NSObject, ObservableObject {
         let peersAtEndOfTransmission = connectedPeers.count
         Task { @MainActor in
             ReviewPromptManager.shared.recordTransmission(connectedPeerCount: peersAtEndOfTransmission)
+            // La conversazione è finita: da qui il paywall può tornare a parlare.
+            // Va rilasciato prima di registrare la trasmissione, altrimenti il
+            // traguardo delle 20 scatterebbe con il flag ancora alzato e verrebbe
+            // scartato da solo.
+            PaywallTriggerManager.shared.isConversationActive = false
+            PaywallTriggerManager.shared.registerTransmission(connectedPeerCount: peersAtEndOfTransmission)
         }
 
         audioManager.restoreBackgroundVolume()

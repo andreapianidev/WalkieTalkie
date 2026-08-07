@@ -269,7 +269,9 @@
 "paywall.plan.yearly" = "每年";
 "paywall.plan.yearly_suffix" = "/年";
 "paywall.badge.most_popular" = "最受歡迎";
-"paywall.badge.save" = "省 81%";
+"paywall.badge.save" = "省 %d%%";
+"paywall.compare.weekly_vs_yearly" = "每年 %1$@。改用每週付費一年要花 %2$@。";
+"paywall.trial.badge" = "免費 %1$d 天，之後每年 %2$@";
 "paywall.cta.start" = "開始使用 Talky Pro";
 "paywall.apple_footer" = "訂閱會自動續訂。您隨時可以從 Apple ID 設定中取消。確認購買後，款項將從您的 Apple ID 扣款。";
 "paywall.link.restore" = "還原";

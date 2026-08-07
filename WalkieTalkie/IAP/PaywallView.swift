@@ -105,6 +105,62 @@ struct PaywallView: View {
         iap.products.first(where: { $0.id == ProductID.lifetimeID })
     }
 
+    // MARK: - Confronto annuale / settimanale
+    //
+    // Tutto calcolato dai prezzi veri di StoreKit, mai scritto a mano: la
+    // percentuale di risparmio era una stringa fissa ("Save 81%") ed è rimasta
+    // ferma quando il listino è cambiato, cioè ha iniziato a dire il falso a
+    // schermo. Derivandola dai `Product` non può più divergere dal listino,
+    // qualunque cosa si decida su App Store Connect.
+
+    /// Quanto costerebbe un anno pagando alla settimana, nella valuta dell'utente.
+    private var yearlyCostIfPaidWeekly: Decimal? {
+        guard let weekly = weeklyProduct else { return nil }
+        return weekly.price * 52
+    }
+
+    /// Risparmio percentuale dell'annuale rispetto al settimanale, arrotondato.
+    /// `nil` se manca un prodotto o se l'annuale non conviene davvero: in quel
+    /// caso il badge sparisce invece di vantare uno sconto inesistente.
+    private var yearlySavingsPercent: Int? {
+        guard let yearly = yearlyProduct?.price,
+              let weeklyYear = yearlyCostIfPaidWeekly,
+              weeklyYear > 0, yearly < weeklyYear else { return nil }
+        let ratio = (weeklyYear - yearly) / weeklyYear * 100
+        let percent = Int(NSDecimalNumber(decimal: ratio).doubleValue.rounded())
+        return percent > 0 ? percent : nil
+    }
+
+    /// "€155,48" — il costo annuo pagando a settimana, formattato nella valuta
+    /// del prodotto così da restare coerente con `displayPrice`.
+    private var weeklyYearlyEquivalentText: String? {
+        guard let weekly = weeklyProduct, let total = yearlyCostIfPaidWeekly else { return nil }
+        return total.formatted(weekly.priceFormatStyle)
+    }
+
+    /// Durata di un periodo StoreKit espressa in giorni. Serve solo per dire
+    /// "3 giorni gratis" a schermo, quindi mese = 30 e anno = 365 vanno bene:
+    /// le prove gratuite di Talky si misurano in giorni, gli altri casi ci sono
+    /// per non far dipendere il badge da un'assunzione sulla configurazione.
+    private static func days(in period: Product.SubscriptionPeriod) -> Int {
+        switch period.unit {
+        case .day:   return period.value
+        case .week:  return period.value * 7
+        case .month: return period.value * 30
+        case .year:  return period.value * 365
+        @unknown default: return period.value
+        }
+    }
+
+    /// Durata della prova gratuita dell'annuale, se configurata su ASC.
+    /// Letta da StoreKit e non scritta nel codice: se un giorno l'offerta viene
+    /// tolta o cambiata, il badge segue senza bisogno di una nuova build.
+    private var yearlyIntroOffer: Product.SubscriptionOffer? {
+        guard let offer = yearlyProduct?.subscription?.introductoryOffer,
+              offer.paymentMode == .freeTrial else { return nil }
+        return offer
+    }
+
     // MARK: - Body
 
     var body: some View {
@@ -120,6 +176,8 @@ struct PaywallView: View {
                     hairlineDivider
                     supporterNote
                     priceCards
+                    yearlyComparisonLine
+                    freeTrialBadge
                     ctaButton
                     lifetimeOption
                     rewardedSecondaryCTA
@@ -136,6 +194,11 @@ struct PaywallView: View {
         // Palette segue le preferenze dell'app, NON il colorScheme di sistema.
         .preferredColorScheme(isAppDark ? .dark : .light)
         .onAppear {
+            // Blocca l'app-open finché il paywall è a schermo: un annuncio a
+            // tutto schermo sopra la pagina che vende "niente pubblicità" è il
+            // modo più diretto per perdere sia la vendita sia la recensione.
+            adManager.isPaywallVisible = true
+            adManager.appOpen.suppressNextResume = true
             Analytics.logEvent("paywall_shown", parameters: ["trigger": trigger])
             if iap.products.isEmpty {
                 Task { try? await iap.loadProducts() }
@@ -146,7 +209,17 @@ struct PaywallView: View {
             }
         }
         .onDisappear {
+            adManager.isPaywallVisible = false
             Analytics.logEvent("paywall_dismissed", parameters: ["trigger": trigger])
+            // Chiuso senza comprare: si registra anche QUALE prodotto era
+            // selezionato. È il numero che distingue "il prezzo non convince"
+            // da "non ha capito cosa stava comprando", e senza di lui ogni
+            // modifica al paywall sarebbe fatta al buio. Se nel frattempo
+            // l'utente è diventato Pro, l'uscita non è un abbandono.
+            if !iap.isProUser && !iap.hasLifetime {
+                PaywallTriggerManager.shared.recordDismissedWithoutPurchase(
+                    trigger: trigger, selectedProductID: selectedProductID)
+            }
         }
         .alert("paywall.error_title".localized, isPresented: $showErrorAlert) {
             Button("OK", role: .cancel) {}
@@ -384,6 +457,48 @@ struct PaywallView: View {
         .padding(.top, 8)
     }
 
+    /// Ancoraggio del prezzo: da solo "€19,99 all'anno" non dice niente, accanto
+    /// a quanto costerebbe la stessa cosa pagata a settimana diventa un confronto.
+    /// Compare solo se entrambi i prodotti sono caricati, così una paywall aperta
+    /// offline non mostra una frase monca.
+    @ViewBuilder
+    private var yearlyComparisonLine: some View {
+        if let equivalent = weeklyYearlyEquivalentText,
+           let yearly = yearlyProduct?.displayPrice {
+            HStack(spacing: 5) {
+                Image(systemName: "equal.circle")
+                    .font(.system(size: 11, weight: .semibold))
+                Text(String(format: "paywall.compare.weekly_vs_yearly".localized,
+                            yearly, equivalent))
+                    .font(.system(size: 11))
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .foregroundColor(inkSecondary)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .padding(.top, -8)
+        }
+    }
+
+    /// "3 giorni gratis, poi €19,99 all'anno". La durata arriva dall'offerta
+    /// StoreKit, non da una costante: l'offerta vive su App Store Connect e può
+    /// cambiare senza passare da qui.
+    @ViewBuilder
+    private var freeTrialBadge: some View {
+        if let offer = yearlyIntroOffer,
+           let yearly = yearlyProduct?.displayPrice {
+            let days = Self.days(in: offer.period)
+            HStack(spacing: 5) {
+                Image(systemName: "gift.fill")
+                    .font(.system(size: 11, weight: .bold))
+                Text(String(format: "paywall.trial.badge".localized, days, yearly))
+                    .font(.system(size: 12, weight: .semibold, design: .rounded))
+            }
+            .foregroundColor(successColor)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .padding(.top, -4)
+        }
+    }
+
     private func priceCard(title: String,
                            product: Product?,
                            periodSuffix: String,
@@ -423,8 +538,8 @@ struct PaywallView: View {
                                  ? selectedFG(isYearly: isYearly).opacity(0.65)
                                  : inkSecondary)
 
-            if isYearly {
-                Text("paywall.badge.save".localized)
+            if isYearly, let percent = yearlySavingsPercent {
+                Text(String(format: "paywall.badge.save".localized, percent))
                     .font(.system(size: 10, weight: .heavy, design: .rounded))
                     .tracking(0.8)
                     .foregroundColor(.white)

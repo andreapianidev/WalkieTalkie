@@ -111,12 +111,21 @@ final class AdManager: ObservableObject {
         interstitial.showAdIfAllowed()
     }
 
+    /// Vero mentre il paywall è a schermo o sta per aprirsi.
+    ///
+    /// Un app-open che atterra sopra il paywall — o un attimo prima — non solo
+    /// copre la schermata che deve vendere, ma mette un annuncio a tutto schermo
+    /// esattamente nel momento in cui si sta chiedendo all'utente di pagare per
+    /// non vederne più. Costa la vendita e la stella.
+    var isPaywallVisible: Bool = false
+
     func showAppOpenIfAllowed(afterDelay: Bool = false) {
         guard !IAPManager.shared.isProUser else { return }
         guard !adsRemoved else { return }
         // Idem per l'app-open al rientro in foreground: se la radio sta suonando
         // (anche da background) non sovrapporre un annuncio a schermo intero.
         guard !RadioManager.shared.isPlaying else { return }
+        guard !isPaywallVisible else { return }
         appOpen.showAdIfAvailable(afterDelay: afterDelay)
     }
 

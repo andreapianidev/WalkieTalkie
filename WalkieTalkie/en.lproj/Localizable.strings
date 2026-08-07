@@ -278,7 +278,9 @@
 "paywall.plan.yearly" = "Yearly";
 "paywall.plan.yearly_suffix" = "/year";
 "paywall.badge.most_popular" = "MOST POPULAR";
-"paywall.badge.save" = "Save 81%";
+"paywall.badge.save" = "Save %d%%";
+"paywall.compare.weekly_vs_yearly" = "%1$@ per year. Paying weekly you would spend %2$@.";
+"paywall.trial.badge" = "%1$d days free, then %2$@ per year";
 "paywall.cta.start" = "Start Talky Pro";
 "paywall.apple_footer" = "Subscription auto-renews. You can cancel anytime from your Apple ID Settings. Payment will be charged to your Apple ID at confirmation of purchase.";
 "paywall.link.restore" = "Restore";

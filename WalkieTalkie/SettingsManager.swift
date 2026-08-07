@@ -150,6 +150,11 @@ class SettingsManager: ObservableObject {
         // richiesta di recensione.
         Task { @MainActor in
             ReviewPromptManager.shared.resetTransmissionCount()
+            // Anche i traguardi del paywall tornano a zero: "ripristina
+            // impostazioni" deve riportare l'app allo stato di partenza, e
+            // lasciare i one-shot già scattati significherebbe che quei due
+            // trigger non si rivedrebbero mai più su quel dispositivo.
+            PaywallTriggerManager.shared.reset()
         }
     }
     

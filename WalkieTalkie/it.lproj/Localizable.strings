@@ -278,7 +278,9 @@
 "paywall.plan.yearly" = "Annuale";
 "paywall.plan.yearly_suffix" = "/anno";
 "paywall.badge.most_popular" = "PIÙ POPOLARE";
-"paywall.badge.save" = "Risparmi 81%";
+"paywall.badge.save" = "Risparmi %d%%";
+"paywall.compare.weekly_vs_yearly" = "%1$@ all'anno. Pagando a settimana spenderesti %2$@.";
+"paywall.trial.badge" = "%1$d giorni gratis, poi %2$@ all'anno";
 "paywall.cta.start" = "Inizia Talky Pro";
 "paywall.apple_footer" = "L'abbonamento si rinnova automaticamente. Puoi annullarlo in qualsiasi momento dalle Impostazioni del tuo Apple ID. Il pagamento sarà addebitato sul tuo Apple ID al momento della conferma dell'acquisto.";
 "paywall.link.restore" = "Ripristina";
