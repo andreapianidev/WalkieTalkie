@@ -674,7 +674,7 @@ struct PaywallView: View {
 
             Text("·").foregroundColor(inkSecondary.opacity(0.5))
 
-            Link(destination: URL(string: "https://www.andreapiani.com/terms")!) {
+            Link(destination: URL(string: "https://walkie-talky.vercel.app/terms")!) {
                 Text("paywall.link.terms".localized)
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundColor(inkSecondary)
@@ -682,7 +682,7 @@ struct PaywallView: View {
 
             Text("·").foregroundColor(inkSecondary.opacity(0.5))
 
-            Link(destination: URL(string: "https://www.andreapiani.com/privacy")!) {
+            Link(destination: URL(string: "https://walkie-talky.vercel.app/privacy")!) {
                 Text("paywall.link.privacy".localized)
                     .font(.system(size: 12, weight: .semibold))
                     .foregroundColor(inkSecondary)

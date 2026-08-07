@@ -112,6 +112,28 @@ struct PaywallView: View {
                 Button("CLOSE") { dismiss() }
                     .buttonStyle(ChipButtonStyle(accent: Talky.dim))
             }
+
+            // Guideline 3.1.2: un'app con abbonamenti auto-rinnovabili deve
+            // esporre Terms of Use e Privacy Policy raggiungibili *dalla paywall*,
+            // non solo nella descrizione su App Store — ed e' esattamente il link
+            // mancante che ha fatto respingere la 1.1.1 lato metadati. Testo in
+            // inglese perche' macTalky non e' localizzata; 10pt per non rubare
+            // altezza a una sheet che non ha ScrollView.
+            VStack(spacing: 4) {
+                HStack(spacing: 6) {
+                    Link("Terms of Use (EULA)",
+                         destination: URL(string: "https://walkie-talky.vercel.app/terms")!)
+                    Text("·").foregroundStyle(Talky.dim.opacity(0.5))
+                    Link("Privacy Policy",
+                         destination: URL(string: "https://walkie-talky.vercel.app/privacy")!)
+                }
+                Text("Subscriptions renew automatically unless cancelled at least 24 hours before the end of the period. Manage them in your Apple Account settings.")
+                    .frame(width: 380)
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(Talky.dim.opacity(0.7))
+            }
+            .font(.system(size: 10, design: .rounded))
+            .foregroundStyle(Talky.dim)
             .padding(.bottom, 24)
         }
         .frame(width: 470)
