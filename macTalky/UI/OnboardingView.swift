@@ -15,7 +15,7 @@ private enum OBString {
     case networkTitle, networkBody, micGranted
     case radioTitle, radioBody
     case proNote
-    case next, back, start, skip
+    case next, back, start
 
     var text: String {
         let lang = Self.languageKey
@@ -42,7 +42,7 @@ private enum OBString {
             .radioTitle: "343 world radio stations",
             .radioBody: "Switch to the Radio module for verified stations from 50+ countries, with favorites, filters and media keys.",
             .proNote: "Talky Pro and the Themes Pack are shared with the iOS app: one purchase unlocks iPhone, iPad and Mac.",
-            .next: "Continue", .back: "Back", .start: "Start", .skip: "Skip",
+            .next: "Continue", .back: "Back", .start: "Start",
         ],
         "it": [
             .welcomeTitle: "Il tuo Mac ora è un walkie-talkie",
@@ -53,7 +53,7 @@ private enum OBString {
             .radioTitle: "343 stazioni radio dal mondo",
             .radioBody: "Passa al modulo Radio per stazioni verificate da oltre 50 Paesi, con preferiti, filtri e tasti multimediali.",
             .proNote: "Talky Pro e il Pacchetto Temi sono condivisi con l'app iOS: un solo acquisto sblocca iPhone, iPad e Mac.",
-            .next: "Continua", .back: "Indietro", .start: "Inizia", .skip: "Salta",
+            .next: "Continua", .back: "Indietro", .start: "Inizia",
         ],
         "de": [
             .welcomeTitle: "Dein Mac ist jetzt ein Funkgerät",
@@ -64,7 +64,7 @@ private enum OBString {
             .radioTitle: "343 Radiosender aus aller Welt",
             .radioBody: "Wechsle zum Radio-Modul: verifizierte Sender aus über 50 Ländern, mit Favoriten, Filtern und Medientasten.",
             .proNote: "Talky Pro und das Themes-Paket werden mit der iOS-App geteilt: Ein Kauf schaltet iPhone, iPad und Mac frei.",
-            .next: "Weiter", .back: "Zurück", .start: "Los geht's", .skip: "Überspringen",
+            .next: "Weiter", .back: "Zurück", .start: "Los geht's",
         ],
         "es": [
             .welcomeTitle: "Tu Mac ahora es un walkie-talkie",
@@ -75,7 +75,7 @@ private enum OBString {
             .radioTitle: "343 emisoras de radio del mundo",
             .radioBody: "Cambia al módulo Radio: emisoras verificadas de más de 50 países, con favoritos, filtros y teclas multimedia.",
             .proNote: "Talky Pro y el Pack de Temas se comparten con la app de iOS: una sola compra desbloquea iPhone, iPad y Mac.",
-            .next: "Continuar", .back: "Atrás", .start: "Empezar", .skip: "Saltar",
+            .next: "Continuar", .back: "Atrás", .start: "Empezar",
         ],
         "fr": [
             .welcomeTitle: "Votre Mac est maintenant un talkie-walkie",
@@ -86,7 +86,7 @@ private enum OBString {
             .radioTitle: "343 stations de radio du monde",
             .radioBody: "Passez au module Radio : stations vérifiées de plus de 50 pays, avec favoris, filtres et touches multimédia.",
             .proNote: "Talky Pro et le Pack de thèmes sont partagés avec l'app iOS : un seul achat débloque iPhone, iPad et Mac.",
-            .next: "Continuer", .back: "Retour", .start: "Commencer", .skip: "Passer",
+            .next: "Continuer", .back: "Retour", .start: "Commencer",
         ],
         "ja": [
             .welcomeTitle: "Macがトランシーバーに",
@@ -97,7 +97,7 @@ private enum OBString {
             .radioTitle: "世界343のラジオ局",
             .radioBody: "ラジオモジュールに切り替えると、50か国以上の検証済みステーションをお気に入り・フィルタ・メディアキーで楽しめます。",
             .proNote: "Talky ProとテーマパックはiOSアプリと共通。1回の購入でiPhone・iPad・Macすべてで使えます。",
-            .next: "続ける", .back: "戻る", .start: "開始", .skip: "スキップ",
+            .next: "続ける", .back: "戻る", .start: "開始",
         ],
         "ko": [
             .welcomeTitle: "Mac이 워키토키가 됩니다",
@@ -108,7 +108,7 @@ private enum OBString {
             .radioTitle: "세계 343개 라디오 방송국",
             .radioBody: "라디오 모듈로 전환하면 50개국 이상의 검증된 방송국을 즐겨찾기, 필터, 미디어 키와 함께 들을 수 있습니다.",
             .proNote: "Talky Pro와 테마 팩은 iOS 앱과 공유됩니다. 한 번 구매로 iPhone, iPad, Mac 모두 잠금 해제.",
-            .next: "계속", .back: "뒤로", .start: "시작", .skip: "건너뛰기",
+            .next: "계속", .back: "뒤로", .start: "시작",
         ],
         "pt": [
             .welcomeTitle: "Seu Mac agora é um walkie-talkie",
@@ -119,7 +119,7 @@ private enum OBString {
             .radioTitle: "343 estações de rádio do mundo",
             .radioBody: "Mude para o módulo Rádio: estações verificadas de mais de 50 países, com favoritos, filtros e teclas de mídia.",
             .proNote: "O Talky Pro e o Pacote de Temas são compartilhados com o app iOS: uma compra desbloqueia iPhone, iPad e Mac.",
-            .next: "Continuar", .back: "Voltar", .start: "Começar", .skip: "Pular",
+            .next: "Continuar", .back: "Voltar", .start: "Começar",
         ],
         "th": [
             .welcomeTitle: "Mac ของคุณคือวิทยุสื่อสารแล้ว",
@@ -130,7 +130,7 @@ private enum OBString {
             .radioTitle: "วิทยุ 343 สถานีทั่วโลก",
             .radioBody: "สลับไปที่โมดูลวิทยุ: สถานีที่ตรวจสอบแล้วจากกว่า 50 ประเทศ พร้อมรายการโปรด ตัวกรอง และปุ่มมีเดีย",
             .proNote: "Talky Pro และแพ็กธีมใช้ร่วมกับแอป iOS: ซื้อครั้งเดียวปลดล็อกทั้ง iPhone, iPad และ Mac",
-            .next: "ต่อไป", .back: "ย้อนกลับ", .start: "เริ่ม", .skip: "ข้าม",
+            .next: "ต่อไป", .back: "ย้อนกลับ", .start: "เริ่ม",
         ],
         "tr": [
             .welcomeTitle: "Mac'iniz artık bir telsiz",
@@ -141,7 +141,7 @@ private enum OBString {
             .radioTitle: "Dünyadan 343 radyo istasyonu",
             .radioBody: "Radyo modülüne geçin: 50'den fazla ülkeden doğrulanmış istasyonlar, favoriler, filtreler ve medya tuşlarıyla.",
             .proNote: "Talky Pro ve Tema Paketi iOS uygulamasıyla ortaktır: tek satın alma iPhone, iPad ve Mac'i açar.",
-            .next: "Devam", .back: "Geri", .start: "Başla", .skip: "Atla",
+            .next: "Devam", .back: "Geri", .start: "Başla",
         ],
         "vi": [
             .welcomeTitle: "Mac của bạn giờ là bộ đàm",
@@ -152,7 +152,7 @@ private enum OBString {
             .radioTitle: "343 đài radio khắp thế giới",
             .radioBody: "Chuyển sang mô-đun Radio: các đài đã xác minh từ hơn 50 quốc gia, với yêu thích, bộ lọc và phím media.",
             .proNote: "Talky Pro và Gói chủ đề dùng chung với ứng dụng iOS: mua một lần, mở khóa iPhone, iPad và Mac.",
-            .next: "Tiếp tục", .back: "Quay lại", .start: "Bắt đầu", .skip: "Bỏ qua",
+            .next: "Tiếp tục", .back: "Quay lại", .start: "Bắt đầu",
         ],
         "ms": [
             .welcomeTitle: "Mac anda kini walkie-talkie",
@@ -163,7 +163,7 @@ private enum OBString {
             .radioTitle: "343 stesen radio dunia",
             .radioBody: "Tukar ke modul Radio: stesen yang disahkan dari lebih 50 negara, dengan kegemaran, penapis dan kekunci media.",
             .proNote: "Talky Pro dan Pek Tema dikongsi dengan apl iOS: satu pembelian membuka iPhone, iPad dan Mac.",
-            .next: "Teruskan", .back: "Kembali", .start: "Mula", .skip: "Langkau",
+            .next: "Teruskan", .back: "Kembali", .start: "Mula",
         ],
         "zh-Hans": [
             .welcomeTitle: "你的 Mac 现在是一台对讲机",
@@ -174,7 +174,7 @@ private enum OBString {
             .radioTitle: "343 个全球电台",
             .radioBody: "切换到电台模块:来自 50 多个国家的经过验证的电台,支持收藏、筛选和媒体键。",
             .proNote: "Talky Pro 和主题包与 iOS 应用通用:一次购买,解锁 iPhone、iPad 和 Mac。",
-            .next: "继续", .back: "返回", .start: "开始", .skip: "跳过",
+            .next: "继续", .back: "返回", .start: "开始",
         ],
         "zh-Hant": [
             .welcomeTitle: "你的 Mac 現在是一台對講機",
@@ -185,7 +185,7 @@ private enum OBString {
             .radioTitle: "343 個全球電台",
             .radioBody: "切換到電台模組:來自 50 多個國家的已驗證電台,支援收藏、篩選與媒體鍵。",
             .proNote: "Talky Pro 與主題包與 iOS 應用程式通用:一次購買,解鎖 iPhone、iPad 與 Mac。",
-            .next: "繼續", .back: "返回", .start: "開始", .skip: "略過",
+            .next: "繼續", .back: "返回", .start: "開始",
         ],
     ]
 }
@@ -228,10 +228,16 @@ struct OnboardingView: View {
             .padding(.bottom, 18)
 
             // Controls
+            //
+            // Guideline 5.1.1(iv): dalla pagina che spiega il microfono si esce
+            // **solo** passando per il prompt di sistema. Apple ha respinto la
+            // 1.1.1 (77) perche' il bottone "Skip" permetteva di chiudere il
+            // messaggio rinviando la richiesta: "the user should always proceed
+            // to the permission request after the message". Skip e' quindi
+            // sparito del tutto — la sheet ha gia' `.interactiveDismissDisabled()`,
+            // quindi ora l'unico modo di finire l'onboarding e' attraversare
+            // `micPage`, e li' il prompt parte sempre.
             HStack {
-                Button(OBString.skip.text) { finish() }
-                    .buttonStyle(ChipButtonStyle(accent: Talky.dim))
-
                 Spacer()
 
                 if page > 0 {
@@ -242,11 +248,7 @@ struct OnboardingView: View {
                 }
 
                 Button(page == pageCount - 1 ? OBString.start.text : OBString.next.text) {
-                    if page == pageCount - 1 {
-                        finish()
-                    } else {
-                        withAnimation(.easeOut(duration: 0.18)) { page += 1 }
-                    }
+                    advance()
                 }
                 .buttonStyle(ChipButtonStyle(filled: true))
                 .keyboardShortcut(.defaultAction)
@@ -261,6 +263,30 @@ struct OnboardingView: View {
     private func finish() {
         onFinish()
         dismiss()
+    }
+
+    /// Indice della pagina che spiega a cosa serve il microfono.
+    private var micPage: Int { 1 }
+
+    /// Avanza di una pagina. Uscendo da `micPage` con il permesso ancora da
+    /// decidere si presenta prima il prompt di sistema e si aspetta la risposta,
+    /// cosi' la richiesta arriva mentre il messaggio che la spiega e' ancora a
+    /// schermo. Se l'utente aveva gia' negato, `requestAccess` ritorna subito e
+    /// non lo si blocca: la sua decisione resta quella.
+    private func advance() {
+        guard page == micPage, !engine.hasMicPermission, !engine.micPermissionDenied else {
+            step()
+            return
+        }
+        engine.requestMicPermission { step() }
+    }
+
+    private func step() {
+        if page == pageCount - 1 {
+            finish()
+        } else {
+            withAnimation(.easeOut(duration: 0.18)) { page += 1 }
+        }
     }
 
     // MARK: - Pages
@@ -290,18 +316,16 @@ struct OnboardingView: View {
                      tint: Talky.teal,
                      title: OBString.networkTitle.text,
                      body: OBString.networkBody.text)
+            // Nessun bottone dedicato al microfono: la richiesta parte dal
+            // "Continue" in fondo alla sheet (vedi `advance()`). Prima ce n'era
+            // uno etichettato "Enable microphone", respinto dalla 5.1.1(iv)
+            // perche' spingeva verso il "si'"; sostituirlo con un secondo
+            // "Continue" avrebbe messo due bottoni identici nella stessa
+            // schermata, quindi la pagina ora si limita a spiegare.
             if engine.hasMicPermission {
                 Label(OBString.micGranted.text, systemImage: "checkmark.circle.fill")
                     .font(.system(size: 12, weight: .semibold, design: .rounded))
                     .foregroundStyle(Talky.signal)
-            } else {
-                // Guideline 5.1.1(iv): il bottone che precede il prompt di sistema
-                // non deve spingere verso il "sì" — Apple ha respinto la 1.1.1 (76)
-                // per l'etichetta "Enable microphone" e chiede "Continue"/"Next".
-                // Si riusa `.next`, che e' gia' tradotto in tutte le lingue: cosi'
-                // non esiste piu' una stringa direttiva da poter reintrodurre.
-                Button(OBString.next.text) { engine.requestMicPermission() }
-                    .buttonStyle(ChipButtonStyle(accent: Talky.amber, filled: true))
             }
         }
     }

@@ -68,6 +68,15 @@ final class WalkieEngine: NSObject, ObservableObject {
     @Published private(set) var isTransmitting = false
     @Published private(set) var isReceiving = false
     @Published private(set) var hasMicPermission = false
+
+    /// Vero quando l'utente ha gia' detto di no. Conta perche' da quel momento
+    /// `requestAccess` ritorna subito `false` senza mostrare nulla: il prompt di
+    /// sistema si presenta una volta sola, quindi un bottone che "chiede il
+    /// permesso" diventa un vicolo cieco e va sostituito da un rimando alle
+    /// Impostazioni di Sistema. Deve essere @Published e non calcolato: dopo un
+    /// rifiuto `hasMicPermission` resta false — non cambia — quindi da solo non
+    /// farebbe ridisegnare la vista che deve cambiare bottone.
+    @Published private(set) var micPermissionDenied = false
     /// Livello RMS 0...1 del microfono durante la trasmissione (per il VU meter).
     @Published private(set) var inputLevel: Float = 0
     /// Secondi trascorsi dall'inizio della trasmissione corrente.
@@ -206,14 +215,21 @@ final class WalkieEngine: NSObject, ObservableObject {
     // MARK: - Microphone permission
 
     func refreshMicPermission() {
-        hasMicPermission = AVCaptureDevice.authorizationStatus(for: .audio) == .authorized
+        let status = AVCaptureDevice.authorizationStatus(for: .audio)
+        hasMicPermission = status == .authorized
+        micPermissionDenied = status == .denied || status == .restricted
     }
 
-    func requestMicPermission() {
+    /// `completion` viene chiamato sul main thread **dopo** che l'utente ha
+    /// risposto al prompt di sistema. Serve all'onboarding, che non deve
+    /// avanzare prima della risposta (guideline 5.1.1(iv)).
+    func requestMicPermission(completion: (() -> Void)? = nil) {
         AVCaptureDevice.requestAccess(for: .audio) { [weak self] granted in
             DispatchQueue.main.async {
                 self?.hasMicPermission = granted
+                self?.micPermissionDenied = !granted
                 self?.logger.logAudioInfo("Permesso microfono macOS: \(granted ? "concesso" : "negato")")
+                completion?()
             }
         }
     }

@@ -77,6 +77,15 @@ struct SettingsPane: View {
                     if engine.hasMicPermission {
                         Label("Authorized", systemImage: "checkmark.circle.fill")
                             .foregroundStyle(.green)
+                    } else if engine.micPermissionDenied {
+                        // Il prompt di sistema non si ripresenta dopo un rifiuto:
+                        // un bottone "chiedi accesso" qui sarebbe un vicolo cieco.
+                        Button("Open System Settings") {
+                            if let url = URL(string:
+                                "x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone") {
+                                NSWorkspace.shared.open(url)
+                            }
+                        }
                     } else {
                         Button("Request access") { engine.requestMicPermission() }
                     }

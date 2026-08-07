@@ -245,14 +245,41 @@ struct WalkieView: View {
 
                 Spacer(minLength: 0)
 
+                // Guideline 5.1.1(iv): niente etichette che spingono a concedere
+                // il permesso. E se l'utente ha gia' negato, un bottone che
+                // "chiede" non fa nulla — macOS mostra il prompt una volta sola —
+                // quindi in quel caso si rimanda alle Impostazioni di Sistema,
+                // che e' il rimedio suggerito da Apple.
                 if !engine.hasMicPermission {
-                    Button("ENABLE MICROPHONE") { engine.requestMicPermission() }
-                        .buttonStyle(ChipButtonStyle(accent: Talky.amber, filled: true))
-                        .frame(maxWidth: .infinity)
+                    VStack(spacing: 6) {
+                        Text("Push-to-talk needs the microphone. The Radio module works without it.")
+                            .font(.system(size: 11, design: .rounded))
+                            .foregroundStyle(Talky.dim)
+                            .multilineTextAlignment(.center)
+                            .fixedSize(horizontal: false, vertical: true)
+
+                        if engine.micPermissionDenied {
+                            Button("Open System Settings") { openMicrophoneSettings() }
+                                .buttonStyle(ChipButtonStyle(accent: Talky.dim, filled: true))
+                        } else {
+                            Button("Continue") { engine.requestMicPermission() }
+                                .buttonStyle(ChipButtonStyle(accent: Talky.dim, filled: true))
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
                 }
             }
         }
         .frame(maxHeight: .infinity)
+    }
+
+    /// Apre Impostazioni di Sistema > Privacy e sicurezza > Microfono. È l'unica
+    /// strada quando il permesso è già stato negato: il prompt non ritorna.
+    private func openMicrophoneSettings() {
+        guard let url = URL(string:
+            "x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone")
+        else { return }
+        NSWorkspace.shared.open(url)
     }
 
     private func peerRow(_ peer: WalkieEngine.Peer) -> some View {
