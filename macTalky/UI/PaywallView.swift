@@ -94,6 +94,30 @@ struct PaywallView: View {
                 }
             }
 
+            // "Paghi una volta e basta". Sta sotto le card prezzo e non fra
+            // loro: e' una scelta diversa in natura, non un terzo piano da
+            // confrontare a colpo d'occhio. Stessa logica della paywall iOS.
+            if iap.hasLifetime {
+                Text("YOURS FOREVER · THANK YOU")
+                    .font(.vfd(10, weight: .bold))
+                    .kerning(1.4)
+                    .foregroundStyle(Talky.signal)
+            } else if let lifetime = iap.products.first(where: { $0.id == ProductID.lifetimeID }) {
+                VStack(spacing: 3) {
+                    Button {
+                        buy { try await iap.purchase(lifetime) }
+                    } label: {
+                        Text("PAY ONCE · \(lifetime.displayPrice) FOREVER")
+                    }
+                    .buttonStyle(ChipButtonStyle(accent: Talky.amber))
+                    .disabled(purchasing)
+
+                    Text("One payment. Everything Pro, themes included. No subscription.")
+                        .font(.system(size: 10, design: .rounded))
+                        .foregroundStyle(Talky.dim)
+                }
+            }
+
             if let errorMessage {
                 Text(errorMessage)
                     .font(.system(size: 11))

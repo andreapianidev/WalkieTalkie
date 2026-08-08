@@ -31,6 +31,11 @@ final class IAPManager: ObservableObject {
     /// Le View possono osservarlo per aggiornare l'UI dei badge "PRO" sui temi.
     @Published var hasThemesPack: Bool = false
 
+    /// Acquisto "per sempre" posseduto. Distinto da `isProUser` — che è vero
+    /// anche per gli abbonati — perché la paywall deve poter dire "è già tuo"
+    /// invece di riproporre un acquisto.
+    @Published var hasLifetime: Bool = false
+
     // MARK: - Private
 
     private let logger = Logger.shared
@@ -44,6 +49,10 @@ final class IAPManager: ObservableObject {
     /// per validare l'accesso senza importare IAPManager.
     private static let fastBootThemesPackKey = "fastboot_hasThemesPack"
 
+    /// Stessa chiave usata da iOS: i due target condividono il bundle id e
+    /// quindi il valore ha lo stesso significato su entrambe le piattaforme.
+    private static let fastBootLifetimeKey = "fastboot_hasLifetime"
+
     #if DEBUG && targetEnvironment(simulator)
     private var debugSimulatedProOverride: Bool? = nil
     #endif
@@ -53,6 +62,7 @@ final class IAPManager: ObservableObject {
     private init() {
         self.isProUser = UserDefaults.standard.bool(forKey: Self.fastBootKey)
         self.hasThemesPack = UserDefaults.standard.bool(forKey: Self.fastBootThemesPackKey)
+        self.hasLifetime = UserDefaults.standard.bool(forKey: Self.fastBootLifetimeKey)
 
         self.transactionListenerTask = Task { [weak self] in
             await self?.listenForTransactions()
@@ -70,6 +80,7 @@ final class IAPManager: ObservableObject {
     func bootstrap() async {
         self.isProUser = UserDefaults.standard.bool(forKey: Self.fastBootKey)
         self.hasThemesPack = UserDefaults.standard.bool(forKey: Self.fastBootThemesPackKey)
+        self.hasLifetime = UserDefaults.standard.bool(forKey: Self.fastBootLifetimeKey)
 
         do {
             try await loadProducts()
@@ -241,6 +252,7 @@ final class IAPManager: ObservableObject {
         var foundActiveProduct: Product? = nil
         var isPro = false
         var packOwned = false
+        var lifetimeOwned = false
 
         for await result in Transaction.currentEntitlements {
             guard case .verified(let transaction) = result else { continue }
@@ -266,14 +278,29 @@ final class IAPManager: ObservableObject {
                 }
                 continue
             }
+
+            // Caso C: acquisto "per sempre". Vale Pro E temi, come su iOS: chi
+            // paga una volta sola non deve ritrovarsi un secondo paywall per i
+            // temi, altrimenti "per sempre" e' una bugia. Un non-consumable non
+            // scade, puo' solo essere revocato per rimborso.
+            if ProductID.isLifetime(transaction.productID) {
+                if transaction.revocationDate == nil {
+                    isPro = true
+                    packOwned = true
+                    lifetimeOwned = true
+                }
+                continue
+            }
         }
 
         self.isProUser = isPro
         self.activeSubscription = foundActiveProduct
         self.hasThemesPack = packOwned
+        self.hasLifetime = lifetimeOwned
 
         UserDefaults.standard.set(isPro, forKey: Self.fastBootKey)
         UserDefaults.standard.set(packOwned, forKey: Self.fastBootThemesPackKey)
+        UserDefaults.standard.set(lifetimeOwned, forKey: Self.fastBootLifetimeKey)
 
         logger.logInfo("IAPManager: updateEntitlements isProUser=\(isPro) product=\(foundActiveProduct?.id ?? "nil") hasThemesPack=\(packOwned)")
 

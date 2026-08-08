@@ -17,12 +17,26 @@ enum ProductID: String, CaseIterable {
     case yearly = "ProAnnualWT"
 
     /// Singolo non-consumable che sblocca tutti i temi Pro-locked
-    /// (alternativa one-shot alla subscription). Prezzo target €4,99.
+    /// (alternativa one-shot alla subscription).
     static let themesPackID = "app.immaginet.talky.themes.allpack"
 
-    /// Tutti gli ID prodotto (subscription + themes pack) per `Product.products(for:)`.
+    /// Acquisto una tantum che vale Pro **e** temi, per sempre.
+    ///
+    /// Condivide il bundle identifier con l'app iOS, quindi e' un universal
+    /// purchase: comprato da Mac sblocca anche iPhone e iPad, e viceversa. Fino
+    /// alla 1.1.1 macTalky non lo conosceva affatto — un utente Mac vedeva la
+    /// paywall senza l'opzione "paghi una volta", pur essendo un prodotto suo a
+    /// tutti gli effetti.
+    static let lifetimeID = "app.immaginet.talky.pro.lifetime"
+
+    /// Tutti gli ID prodotto (subscription + themes pack + lifetime).
     static var allIDs: [String] {
-        return ProductID.allCases.map { $0.rawValue } + [themesPackID]
+        return ProductID.allCases.map { $0.rawValue } + [themesPackID, lifetimeID]
+    }
+
+    /// True se l'ID è l'acquisto "per sempre".
+    static func isLifetime(_ id: String) -> Bool {
+        return id == lifetimeID
     }
 
     /// Solo gli ID delle subscription auto-rinnovabili (Talky Pro).
