@@ -11,3 +11,4 @@
 "NSBluetoothAlwaysUsageDescription" = "Esta aplicación utiliza Bluetooth para descubrir y conectarse con dispositivos walkie talkie cercanos.";
 "NSBluetoothPeripheralUsageDescription" = "Esta aplicación utiliza Bluetooth para ser descubierta por otros dispositivos walkie talkie.";
 "NSNetworkVolumesUsageDescription" = "Esta aplicación accede a la red para la comunicación walkie talkie entre dispositivos.";
+"NSUserTrackingUsageDescription" = "El identificador se usará para mostrarte anuncios más relevantes y apoyar el desarrollo gratuito de la app.";

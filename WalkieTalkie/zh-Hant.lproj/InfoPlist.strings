@@ -11,3 +11,4 @@
 "NSBluetoothAlwaysUsageDescription" = "此應用程式使用藍牙來發現並連接附近的對講機裝置。";
 "NSBluetoothPeripheralUsageDescription" = "此應用程式使用藍牙讓其他對講機裝置可發現此裝置。";
 "NSNetworkVolumesUsageDescription" = "此應用程式存取網路以進行裝置之間的對講機通訊。";
+"NSUserTrackingUsageDescription" = "此識別碼將用於向你顯示更相關的廣告，並支持這款 App 的免費開發。";

@@ -752,22 +752,22 @@
 		</dict>
 	</dict>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Talky usa il Bluetooth per comunicare con altri dispositivi vicini quando il Wi-Fi non è disponibile.</string>
+	<string>Talky uses Bluetooth to communicate with nearby devices when Wi-Fi is not available.</string>
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_walkie-talkie._tcp</string>
 		<string>_walkie-talkie._udp</string>
 	</array>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>Talky usa la rete locale per scoprire dispositivi vicini con cui parlare via walkie-talkie. Non viene inviato nulla su internet.</string>
+	<string>Talky uses the local network to discover nearby devices to talk to over walkie-talkie. Nothing is sent over the internet.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Talky usa il microfono per trasmettere la tua voce agli altri dispositivi connessi quando tieni premuto il pulsante per parlare.</string>
+	<string>Talky uses the microphone to transmit your voice to connected devices while you hold the push-to-talk button.</string>
 	<key>NSSupportsLiveActivities</key>
 	<true/>
 	<key>NSUserNotificationAlertStyle</key>
 	<string>alert</string>
 	<key>NSUserTrackingUsageDescription</key>
-	<string>L'identificatore verrà usato per mostrarti annunci più pertinenti e supportare lo sviluppo gratuito dell'app.</string>
+	<string>The identifier will be used to show you more relevant ads and to support the free development of the app.</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>

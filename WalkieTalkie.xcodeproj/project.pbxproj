@@ -534,11 +534,11 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Walkie Talkie";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Questa app utilizza il Bluetooth per scoprire e connettersi con dispositivi walkie talkie vicini.";
-				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Questa app utilizza il Bluetooth per essere scoperta da altri dispositivi walkie talkie.";
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Questa app utilizza la rete locale per connettersi con dispositivi vicini per la comunicazione walkie talkie.";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "L'app necessita dell'accesso al microfono per poter trasmettere la tua voce agli altri dispositivi collegati.";
-				INFOPLIST_KEY_NSNetworkVolumesUsageDescription = "Questa app accede alla rete per la comunicazione walkie talkie tra dispositivi.";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Talky uses Bluetooth to communicate with nearby devices when Wi-Fi is not available.";
+				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Talky uses Bluetooth so other walkie-talkie devices can discover this one.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Talky uses the local network to discover nearby devices to talk to over walkie-talkie. Nothing is sent over the internet.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Talky uses the microphone to transmit your voice to connected devices while you hold the push-to-talk button.";
+				INFOPLIST_KEY_NSNetworkVolumesUsageDescription = "Talky accesses the network for walkie-talkie communication between devices.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -576,11 +576,11 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Walkie Talkie";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Questa app utilizza il Bluetooth per scoprire e connettersi con dispositivi walkie talkie vicini.";
-				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Questa app utilizza il Bluetooth per essere scoperta da altri dispositivi walkie talkie.";
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Questa app utilizza la rete locale per connettersi con dispositivi vicini per la comunicazione walkie talkie.";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "L'app necessita dell'accesso al microfono per poter trasmettere la tua voce agli altri dispositivi collegati.";
-				INFOPLIST_KEY_NSNetworkVolumesUsageDescription = "Questa app accede alla rete per la comunicazione walkie talkie tra dispositivi.";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Talky uses Bluetooth to communicate with nearby devices when Wi-Fi is not available.";
+				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "Talky uses Bluetooth so other walkie-talkie devices can discover this one.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Talky uses the local network to discover nearby devices to talk to over walkie-talkie. Nothing is sent over the internet.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Talky uses the microphone to transmit your voice to connected devices while you hold the push-to-talk button.";
+				INFOPLIST_KEY_NSNetworkVolumesUsageDescription = "Talky accesses the network for walkie-talkie communication between devices.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -625,8 +625,8 @@
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Andrea Piani — Immaginet Srl";
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "macTalky uses the local network to discover and talk to other Talky devices (iPhone, Android, Mac) around you.";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "macTalky needs the microphone to transmit your voice to connected walkie-talkie devices.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Talky uses the local network to discover nearby devices to talk to over walkie-talkie. Nothing is sent over the internet.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Talky uses the microphone to transmit your voice to connected devices while you hold the push-to-talk button.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -667,8 +667,8 @@
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Andrea Piani — Immaginet Srl";
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "macTalky uses the local network to discover and talk to other Talky devices (iPhone, Android, Mac) around you.";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "macTalky needs the microphone to transmit your voice to connected walkie-talkie devices.";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Talky uses the local network to discover nearby devices to talk to over walkie-talkie. Nothing is sent over the internet.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Talky uses the microphone to transmit your voice to connected devices while you hold the push-to-talk button.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",

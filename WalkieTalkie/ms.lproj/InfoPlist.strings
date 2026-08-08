@@ -11,3 +11,4 @@
 "NSBluetoothAlwaysUsageDescription" = "Aplikasi ini menggunakan Bluetooth untuk menemui dan menyambung dengan peranti walkie talkie berdekatan.";
 "NSBluetoothPeripheralUsageDescription" = "Aplikasi ini menggunakan Bluetooth untuk ditemui oleh peranti walkie talkie lain.";
 "NSNetworkVolumesUsageDescription" = "Aplikasi ini mengakses rangkaian untuk komunikasi walkie talkie antara peranti.";
+"NSUserTrackingUsageDescription" = "Pengecam ini akan digunakan untuk menunjukkan iklan yang lebih relevan dan menyokong pembangunan percuma aplikasi ini.";
