@@ -1,0 +1,482 @@
+/* 
+   Localizable.strings (Turkish)
+   WalkieTalkie
+   
+   Created by Andrea Piani on 12/07/25.
+*/
+
+// MARK: - General
+"coming_soon" = "Yakında";
+"ok" = "Tamam";
+"cancel" = "İptal";
+"error" = "Hata";
+"accept" = "Kabul et";
+"decline" = "Reddet";
+"disconnect" = "Bağlantıyı kes";
+"settings" = "Ayarlar";
+"retry" = "Yeniden dene";
+"unknown" = "Bilinmiyor";
+"version" = "Sürüm";
+"developed_by" = "Geliştiren";
+"website" = "Web sitesi";
+"open_source" = "Açık kaynak";
+"view_on_github" = "GitHub'da görüntüle";
+"license" = "Lisans";
+
+// MARK: - Peak App Promotion
+"download_peak" = "Peak'i ücretsiz indir";
+"peak_app_subtitle" = "Telsiz özelliği yerleşik, eksiksiz bir yükseklik ölçer uygulaması";
+
+// MARK: - Notifications
+"new_device_detected" = "Yeni cihaz bulundu";
+"device_detected_message" = "Yakınlarda %@ bulundu";
+"connection_established" = "Bağlantı kuruldu";
+"connected_to_device" = "%@ cihazına bağlanıldı";
+"connection_lost" = "Bağlantı koptu";
+"disconnected_from_device" = "%@ ile bağlantı kesildi";
+"incoming_transmission" = "Gelen yayın";
+"receiving_audio_message" = "Ses mesajı alınıyor";
+"background_scan" = "Arka planda tarama";
+"scanning_for_devices" = "Yakındaki cihazlar aranıyor";
+"notifications" = "Bildirimler";
+"enable_notifications" = "Bildirimleri aç";
+"disable_notifications" = "Bildirimleri kapat";
+"notification_description" = "Yeni cihaz bulunduğunda veya yayın sırasında bildirim al";
+"notifications_enabled" = "Bildirimler açıldı";
+"notifications_activated_message" = "Artık cihaz bulma ve yayınlar için bildirim alacaksın";
+
+// MARK: - Battery Status
+"charging" = "Şarj oluyor";
+"full" = "Dolu";
+"unplugged" = "Fişten çıkarıldı";
+
+// MARK: - Main Interface
+"frequency_owner" = "Frekans sahibi";
+"radio_fm" = "Dünya Radyosu";
+"walkie_talkie" = "WalkieTalkie";
+"device" = "Cihaz";
+"status" = "Durum";
+"no_error" = "hata yok";
+"channel_1" = "Kanal 1";
+"en" = "TR";
+"hold" = "BASILI TUT";
+"pressed" = "BASILI";
+"to_talk" = "KONUŞMAK İÇİN";
+"release" = "BIRAK";
+"to_send" = "GÖNDERMEK İÇİN";
+"radio_mode" = "RADYO";
+"radio_fm_caps" = "RADYO";
+"active" = "ETKİN";
+"no_connection" = "Bağlantı yok";
+"devices_connected" = "cihaz bağlı";
+"status.connected_crossplatform" = "Bağlı · Mac/Android (%d)";
+"status.connected_mixed" = "Bağlı (%1$d · %2$d Mac/Android)";
+"status.disconnected" = "Bağlı değil";
+"status.connected" = "Bağlı";
+"status.connected_count" = "Bağlı (%d)";
+"status.advertising" = "Diğerlerine görünür";
+"status.searching" = "Aranıyor…";
+"status.connecting" = "Bağlanıyor…";
+"transmission_in_progress" = "YAYIN SÜRÜYOR";
+"reception_in_progress" = "ALIM SÜRÜYOR";
+"no_transmission" = "yayın yok";
+
+// MARK: - Tab Bar
+"talk" = "Konuş";
+"explore" = "Keşfet";
+"connections" = "Bağlantılar";
+"settings_tab" = "Ayarlar";
+"performance" = "Performans";
+
+// MARK: - Performance
+"performance_title" = "Performans";
+"high_traffic" = "Yoğun trafik";
+"normal_performance" = "Normal performans";
+"memory_usage" = "Bellek";
+"network_latency" = "Ort. gecikme";
+"connection_time" = "Bağlantı süresi";
+"active_connections" = "Bağlantılar";
+"performance_trends" = "Performans eğilimleri";
+"recommendations" = "Öneriler";
+"connections_active" = "etkin bağlantı";
+"updated_now" = "Az önce güncellendi";
+"optimized_mode" = "İyileştirilmiş mod";
+"audio_cache" = "Ses önbelleği";
+"current_recommendations" = "Güncel öneriler";
+"no_recommendations" = "Şu an bir öneri yok. Performans en iyi durumda!";
+"full_report" = "Tam rapor";
+"close" = "Kapat";
+"too_many_connections_warning" = "Çok fazla bağlantı var (%d) — en iyi performans için 6-8 ile sınırlamak daha iyi";
+
+// MARK: - Radio
+"station" = "İstasyon";
+"no_station" = "İstasyon yok";
+"buffering" = "Arabelleğe alınıyor…";
+"genre" = "Tür";
+"country" = "Ülke";
+"scanning" = "Aranıyor…";
+
+// MARK: - Connections View
+"connections_title" = "Bağlantılar";
+"manage_connections" = "Telsiz bağlantılarını yönet";
+"connected_devices" = "Bağlı cihazlar";
+"scanning_in_progress" = "Aranıyor…";
+"offline" = "Çevrimdışı";
+"online" = "Çevrimiçi";
+"advertising" = "Görünür";
+"browsing" = "Aranıyor";
+"on" = "AÇIK";
+"off" = "KAPALI";
+"connected_devices_count" = "Bağlı cihazlar";
+"no_devices_connected" = "Bağlı cihaz yok";
+"devices_nearby_hint" = "Diğer cihazların yakında olduğundan, uygulamanın açık olduğundan ve aynı Wi-Fi ağında bulunduğundan emin ol";
+"connected" = "Bağlı";
+"disconnect_all" = "Tümünün bağlantısını kes";
+"restart_discovery" = "Aramayı yeniden başlat";
+"disconnect_device" = "Cihaz bağlantısını kes";
+"disconnect_confirmation" = "Tüm cihazlarla bağlantıyı kesmek istediğine emin misin?";
+
+// MARK: - Explore View
+"explore_title" = "Keşfet";
+"scan_nearby_devices" = "Yakındaki cihazları ara";
+"detected_devices" = "Bulunan cihazlar";
+"no_devices_detected" = "Cihaz bulunamadı";
+"ensure_devices_open" = "Diğer cihazlarda uygulamanın açık olduğundan ve aynı Wi-Fi ağında bulunduğundan emin ol";
+"available" = "Uygun";
+"tap_plus_to_invite" = "Bir iPhone veya iPad'e istek göndermek için + simgesine dokun; karşı cihazın kabul etmesi gerekir. Mac ve Android kendiliğinden bağlanır.";
+"send_connection_request" = "Bağlantı isteği gönder";
+"invitation_sent" = "İstek gönderildi";
+"strong" = "Güçlü";
+"medium" = "Orta";
+"weak" = "Zayıf";
+
+// MARK: - Settings View
+"settings_title" = "Ayarlar";
+"configure_app" = "Uygulamanı yapılandır";
+"audio" = "Ses";
+"white_noise" = "Beyaz gürültü";
+"background_audio" = "Taklit telsiz efekti (ortam sesi, gerçek iletişim değil)";
+"background_audio_description" = "Kullanım sırasında arka plan sesi";
+"noise_volume" = "Gürültü seviyesi";
+"adjust_background_volume" = "Arka plan gürültüsünün seviyesini ayarla";
+"haptic_feedback" = "Dokunsal geri bildirim";
+"vibration_on_buttons" = "Düğmelere basınca titreşim";
+"auto_connect" = "Otomatik bağlan";
+"auto_connect_description" = "Bilinen cihazlara otomatik bağlan";
+"voice_activation" = "Sesle etkinleştirme";
+"voice_activation_description" = "Konuşunca otomatik yayın yap";
+"voice_sensitivity" = "Ses hassasiyeti";
+"voice_sensitivity_description" = "Sesle etkinleştirmenin hassasiyetini ayarla";
+"low_power_mode" = "Düşük güç modu";
+"low_power_mode_description" = "Pil tüketimini azaltır";
+"reset_settings" = "Ayarları sıfırla";
+"how_to_use" = "Uygulama nasıl kullanılır";
+"instruction_1_title" = "Tüm cihazlarda uygulamayı aç";
+"instruction_1_description" = "Tüm cihazlarda WalkieTalkie uygulamasının açık ve etkin olduğundan emin ol.";
+"instruction_2_title" = "Keşfet'e git";
+"instruction_2_description" = "Yakındaki uygun cihazları görmek için \"Keşfet\" sekmesine dokun.";
+"instruction_3_title" = "Cihazları bağla";
+"instruction_3_description" = "İstek göndermek için bir iPhone ya da iPad'in yanındaki + simgesine dokun. Mac ve Android aynı Wi-Fi ağında kendiliğinden bağlanır.";
+"instruction_4_title" = "Aynı kanal";
+"instruction_4_description" = "Herkes ortak kanaldan başlar, yani ayarlanacak bir şey yok. Özel kanal yalnızca aynı parolayı giren cihazları birbirine bağlar.";
+"instruction_5_title" = "Konuşmak için basılı tut";
+"instruction_5_description" = "Yayın yapmak için ortadaki düğmeyi basılı tut. Dinlemek için bırak.";
+"app_info" = "Uygulama bilgileri";
+"support_development" = "Geliştirmeyi destekle";
+"buy_me_coffee" = "Bana bir kahve ısmarla";
+"support_description" = "Bu uygulamayı beğendiysen geliştiriciyi desteklemeyi düşünebilirsin";
+"view_performance" = "Performans istatistiklerini gör";
+
+// MARK: - Background Audio
+"background_playback" = "Arka planda çalma";
+"background_playback_description" = "Uygulama arka plandayken radyoyu çalmayı sürdür";
+"now_playing" = "Şimdi çalıyor";
+"control_center_info" = "Çalmayı Denetim Merkezi'nden ve kilit ekranından yönet";
+
+// MARK: - Appearance
+"appearance" = "Görünüm";
+"dark_mode" = "Koyu mod";
+"dark_mode_description" = "Uygulama arayüzünde koyu temayı kullan";
+
+// MARK: - Peak App
+"peak_app_title" = "Peak: yürüyüşçüler için yükseklik ölçer";
+"peak_app_description" = "Yapay zekâlı ve telsizli, yürüyüşçüler için ücretsiz yükseklik ölçer";
+"download_peak_app" = "Peak uygulamasını indir";
+"peak_altimeter_free" = "Ücretsiz yükseklik ölçer";
+"peak_walkie_ai_description" = "telsiz ve yapay zekâ ile";
+
+// MARK: - Alerts
+"connection_request" = "Bağlantı isteği";
+"wants_to_connect" = "bağlanmak istiyor";
+"microphone_permission_required" = "Mikrofon izni gerekli";
+"microphone_permission_message" = "WalkieTalkie uygulamasının düzgün çalışması için mikrofon erişimi gerekir. Bu izin olmadan ses gönderemezsin.";
+"audio_transmission_error" = "Ses gönderilirken hata oluştu. Lütfen yeniden dene.";
+
+// MARK: - Errors
+"no_connected_peers" = "Bağlı cihaz yok";
+
+// MARK: - Onboarding
+"onboarding_p1_title" = "iPhone'unun içinde bir telsiz";
+"onboarding_p1_subtitle" = "Dağda, festivalde, kalabalık bir meydanda: sinyalin olmadığı yerlerde bile arkadaşlarınla konuş.";
+
+"onboarding_p2_no_internet_title" = "İnternet yok, SIM yok";
+"onboarding_p2_no_internet_body" = "iPhone ile iPad arasında ses, Wi-Fi ve Bluetooth üzerinden doğrudan cihazdan cihaza gider: yönlendirici yok, sunucu yok, hesap yok.";
+"onboarding_p2_range_caveat" = "Duvarlar, tepeler ve yükseklik farkı menzili kısaltır.";
+"onboarding_p2_same_wifi" = "Bir Mac'e ya da Android telefona ulaşmak için tüm cihazları aynı Wi-Fi ağına bağla: bu bağlantı yerel ağ üzerinden gider.";
+"onboarding_p2_multi_platform" = "Talky iPad, Mac ve Android'de de çalışır — aynı uygulama, tüm cihazların aynı sohbette.";
+
+"onboarding_p3_ptt_title" = "Konuşmak için basılı tut";
+"onboarding_p3_ptt_body" = "Tıpkı gerçek bir telsiz gibi: konuşmak için ortadaki düğmeyi basılı tut, dinlemek için bırak.";
+"onboarding_p3_ptt_rule" = "Aynı kanalda aynı anda yalnızca bir kişi konuşabilir.";
+
+"onboarding_p4_frequency_title" = "Tek kanal, herkes seni duyuyor";
+"onboarding_p4_frequency_analogy" = "Eşleştirilecek bir şey yok: her Talky ortak kanaldan başlar, bu yüzden yakındaki cihazlar birbirini kendiliğinden bulur.";
+"onboarding_p4_change_freq_hint" = "‹ ve › düğmeleri ekrandaki frekanslar arasında gezinir. Yayın home frekansından yapılır — geri dönmek için yeşil HOME düğmesine bas.";
+"onboarding_p4_private_channels_teaser" = "Yalnızca kendi grubuna özel bir kanal mı istiyorsun? Parolalı bir Özel Kanal oluştur: seni yalnızca aynı parolayı yazanlar bulur — iPhone'da, Mac'te ve Android'de aynı şekilde.";
+
+"onboarding_p5_steps_title" = "Hazır mısın? Yalnızca 3 adım";
+"onboarding_p5_step1" = "Yakındaki ikinci bir cihazda Talky'yi aç: iPhone, iPad, Mac ya da Android";
+"onboarding_p5_step2" = "iPhone ve iPad'de Keşfet'i aç, cihazın yanındaki + simgesine dokun, sonra diğerinde kabul et. Mac ve Android aynı Wi-Fi'de kendiliğinden bağlanır";
+"onboarding_p5_step3" = "Bağlandıktan sonra (yeşil nokta), konuşmak için ortadaki düğmeyi basılı tut, dinlemek için bırak";
+
+"onboarding_permissions_title" = "İki izin ve hazırız";
+"onboarding_permissions_description" = "Talky'nin çalışması için bunlar gerekli.";
+"onboarding_microphone_permission" = "Mikrofon";
+"onboarding_permission_mic_why" = "Konuşmak için bastığında sesini almak için.";
+"onboarding_notification_permission" = "Bildirimler";
+"onboarding_permission_notif_why" = "Uygulama kapalıyken biri seni çağırdığında haber vermek için.";
+"onboarding_permission_open_settings" = "iOS Ayarları'nı aç";
+
+"onboarding_continue" = "Devam";
+"onboarding_get_started" = "Başlayalım";
+"onboarding_allow_permissions" = "İzin ver";
+"onboarding_skip" = "Atla";
+"onboarding_back" = "Geri";
+
+// MARK: - First Run Coach
+"coach_no_peers_title" = "İlk adım";
+"coach_no_peers_body" = "Aynı Wi-Fi'deki yakındaki başka bir cihazda Talky'yi aç, sonra aşağıdaki \"Keşfet\"e dokun.";
+"coach_press_ptt_title" = "Şimdi burayı basılı tut";
+"coach_press_ptt_body" = "Konuşmak için ortadaki düğmeyi basılı tut, dinlemek için bırak.";
+"coach_dismiss" = "Anladım";
+"ads_section_title" = "Reklam ve gizlilik";
+"watch_ad_remove_ads" = "Video izle, reklam olmasın";
+"watch_ad_remove_ads_subtitle" = "1 saat boyunca reklamsız";
+"ads_removed_active" = "Reklamlar kapatıldı";
+"ads_removed_remaining" = "Kalan: %d dk";
+"manage_privacy" = "Gizlilik tercihlerini yönet";
+
+/* MARK: - Talky Pro features (added 2026-05) */
+
+// Paywall
+"paywall.close" = "Kapat";
+"paywall.title" = "Talky Pro'nun kilidini aç";
+"paywall.subtitle" = "Talky'nin tamamı, sınırsız";
+"paywall.error_title" = "Satın alma başarısız";
+"paywall.feature.no_ads" = "Reklamsız";
+"paywall.feature.unlimited_stations" = "Sınırsız radyo istasyonu";
+"paywall.feature.premium_international" = "Premium uluslararası radyolar";
+"paywall.feature.record_transmissions" = "Kendi yayınlarını kaydet";
+"paywall.feature.private_channels" = "Özel telsiz kanalları";
+"paywall.feature.custom_themes" = "Özel temalar";
+"paywall.feature.history" = "Yayın geçmişi";
+"paywall.feature.sleep_timer" = "Radyo uyku zamanlayıcısı";
+"paywall.feature.equalizer" = "Premium ses ekolayzırı";
+"paywall.plan.weekly" = "Haftalık";
+"paywall.plan.weekly_suffix" = "/hafta";
+"paywall.plan.yearly" = "Yıllık";
+"paywall.plan.yearly_suffix" = "/yıl";
+"paywall.badge.most_popular" = "EN POPÜLER";
+"paywall.badge.save" = "%%%d tasarruf";
+"paywall.compare.weekly_vs_yearly" = "Yılda %1$@. Haftalık ödeseydin %2$@ harcardın.";
+"paywall.trial.badge" = "%1$d gün ücretsiz, sonra yılda %2$@";
+"paywall.cta.start" = "Talky Pro'yu başlat";
+"paywall.apple_footer" = "Abonelik otomatik yenilenir. Apple Kimliği ayarlarından istediğin zaman iptal edebilirsin. Ödeme, satın alma onaylandığında Apple Kimliğinden tahsil edilir.";
+"paywall.link.restore" = "Geri yükle";
+"paywall.link.terms" = "Koşullar";
+"paywall.link.privacy" = "Gizlilik";
+"paywall.error.purchase_failed" = "Satın alma tamamlanamadı. Bağlantını kontrol edip yeniden dene.";
+"paywall.error.no_purchases" = "Bu Apple Kimliğinde önceki bir satın alma bulunamadı.";
+"paywall.error.restore_failed" = "Satın alımların geri yüklenemedi. Lütfen daha sonra yeniden dene.";
+
+// Transmission history
+"history.title" = "Yayın geçmişi";
+"history.delete" = "Sil";
+"history.clear_confirm_title" = "Geçmiş temizlensin mi?";
+"history.clear_all" = "Tümünü temizle";
+"history.cancel" = "İptal";
+"history.paywall_message" = "Yayın geçmişini görmek için Talky Pro'nun kilidini aç";
+"history.unlock_pro" = "Pro'nun kilidini aç";
+"history.empty" = "Henüz alınan bir yayın yok";
+
+// Themes
+"theme.title" = "Temalar";
+"theme.subtitle" = "Uygulamanın rengini değiştir";
+"theme.name.default" = "Varsayılan";
+"theme.name.ocean" = "Okyanus";
+"theme.name.forest" = "Orman";
+"theme.name.sunset" = "Gün batımı";
+"theme.name.midnight" = "Gece yarısı";
+"theme.name.military" = "Askeri";
+"theme.name.retro80s" = "Retro 80'ler";
+"theme.name.vintageRadio" = "Vintage radyo";
+"theme.name.cyberpunk" = "Cyberpunk";
+"theme.name.stealth" = "Gizli";
+"theme.name.aurora" = "Kutup ışığı";
+"theme.name.submarine" = "Denizaltı";
+"theme.name.hamRadio" = "Amatör telsiz";
+"theme.name.festival" = "Festival";
+"theme.name.blackHole" = "Kara delik";
+"theme.name.galaxy" = "Galaksi";
+"theme.name.hacker" = "Hacker";
+"theme.name.wildfire" = "Orman yangını";
+"theme.name.arctic" = "Arktik";
+
+// Sleep timer
+"sleep_timer.title" = "Radyo uyku zamanlayıcısı";
+"sleep_timer.close" = "Kapat";
+"sleep_timer.paywall_message" = "Radyo uyku zamanlayıcısını kullanmak için Talky Pro'nun kilidini aç";
+"sleep_timer.unlock_pro" = "Pro'nun kilidini aç";
+"sleep_timer.countdown_label" = "Radyo şu süre sonra duracak";
+"sleep_timer.cancel" = "Zamanlayıcıyı iptal et";
+"sleep_timer.picker_prompt" = "Ne kadar süre dinlemek istersin?";
+
+// Equalizer
+"equalizer.title" = "Ekolayzır";
+"equalizer.subtitle" = "Bir ses ön ayarı seç";
+"equalizer.active_preset" = "Etkin ön ayar";
+"equalizer.preset.flat" = "Düz";
+"equalizer.preset.bass" = "Bas";
+"equalizer.preset.vocal" = "Vokal";
+"equalizer.preset.rock" = "Rock";
+"equalizer.preset.pop" = "Pop";
+
+// Recordings
+"recordings.title" = "Kayıtlar";
+"recordings.delete_all_title" = "Tüm kayıtlar silinsin mi?";
+"recordings.delete_all" = "Tümünü sil";
+"recordings.delete_all_message" = "Bu işlem geri alınamaz.";
+"recordings.cancel" = "İptal";
+"recordings.pro_feature" = "Pro özelliği";
+"recordings.paywall_message" = "Kendi yayınlarını ve gelenleri kaydedip yeniden dinlemek için Talky Pro'nun kilidini aç.";
+"recordings.unlock_pro" = "Pro'nun kilidini aç";
+"recordings.empty_title" = "Kayıt yok";
+"recordings.empty_message" = "Gönderdiğin ve aldığın yayınlar burada görünecek.";
+"recordings.privacy_notice" = "Kayıtlar yalnızca cihazında saklanır. Yerel gizlilik yasalarına uygun kullanımdan sen sorumlusun.";
+"recordings.own_transmission" = "Senin yayının";
+
+// Private channels
+"private_channels.title" = "Özel kanallar";
+"private_channels.close" = "Kapat";
+"private_channels.channel_fallback" = "Kanal";
+"private_channels.public_state_title" = "Ortak moddasın";
+"private_channels.public_state_description" = "Yakındaki her Talky kullanıcısı seni bulabilir. Yalnızca parolayı bilenlerle konuşmak için özel bir kanal oluştur.";
+"private_channels.create_or_join" = "Özel kanal oluştur veya katıl";
+"private_channels.private_state_title" = "Özel kanal etkin";
+"private_channels.private_state_description" = "Yalnızca parolayı bilenler seni bulabilir ve seninle konuşabilir.";
+"private_channels.leave" = "Kanaldan ayrıl";
+"private_channels.form.title" = "Bir kanala katıl";
+"private_channels.form.name_label" = "Kanal adı";
+"private_channels.form.name_placeholder" = "Örn. Yılmaz Ailesi";
+"private_channels.form.password_label" = "Parola";
+"private_channels.form.password_placeholder" = "En az 4 karakter";
+"private_channels.form.submit" = "Katıl";
+"private_channels.form.hint" = "Yalnızca aynı parolayı giren cihazlar birbirini bulur ve konuşabilir.";
+"private_channels.paywall.pro_feature" = "Pro özelliği";
+"private_channels.paywall.headline" = "Parola korumalı kanallar";
+"private_channels.paywall.description" = "Parola korumalı telsiz kanalları oluştur: yalnızca parolayı bilenler seni bulabilir ve seninle konuşabilir.";
+"private_channels.paywall.cta" = "Talky Pro ile kilidini aç";
+"private_channels.error.empty_name" = "Lütfen bir kanal adı gir.";
+"private_channels.error.password_min" = "Parola en az %d karakter olmalı.";
+"private_channels.error.join_failed" = "Kanala katılınamadı. Talky Pro'nun etkin olduğundan emin ol.";
+
+// Settings - Pro section
+"settings.pro.title" = "Talky Pro";
+"settings.pro.title_active" = "Talky Pro etkin";
+"settings.pro.manage_subscription" = "Aboneliği yönet";
+"settings.pro.manage_subscription_subtitle" = "Apple Kimliğinden değiştir veya iptal et";
+"settings.pro.unlock" = "Talky Pro'nun kilidini aç";
+"settings.pro.unlock_subtitle" = "Reklamsız, sınırsız";
+"settings.pro.restore_purchases" = "Satın alımları geri yükle";
+
+// Settings - Personalization section
+"settings.personalization.title" = "Kişiselleştirme";
+"settings.personalization.themes" = "Temalar";
+"settings.personalization.history.title" = "Yayın geçmişi";
+"settings.personalization.history.subtitle" = "Sana kimin ulaştığını gör";
+"settings.personalization.sleep_timer.title" = "Radyo uyku zamanlayıcısı";
+"settings.personalization.sleep_timer.subtitle" = "Radyoyu X dakika sonra kapat";
+"settings.personalization.equalizer.title" = "Ekolayzır";
+"settings.personalization.equalizer.subtitle" = "Premium ses ön ayarları";
+"settings.personalization.recordings.title" = "Kayıtlar";
+"settings.personalization.recordings.subtitle" = "Yayınlarını yeniden dinle";
+"settings.personalization.private_channels.title" = "Özel kanallar";
+"settings.personalization.private_channels.subtitle" = "Parola korumalı telsiz";
+
+// MARK: - Station Browser & Sleep Timer
+"browse_stations" = "İstasyonlara göz at";
+"search_stations" = "İstasyon ara…";
+"all_stations" = "Tümü";
+"favorites" = "Favoriler";
+"recents" = "Son dinlenenler";
+"nearby" = "Yakında";
+"by_country" = "Ülkeye göre";
+"by_genre" = "Türe göre";
+"no_favorites_hint" = "Henüz favori yok. Eklemek için bir istasyona uzun bas.";
+"no_recents" = "Son dinlenen istasyon yok.";
+"no_search_results" = "İstasyon bulunamadı.";
+"now_playing_short" = "ŞİMDİ";
+"pro_badge" = "PRO";
+"sleep_timer" = "Uyku zamanlayıcısı";
+
+// MARK: - Mode Switch & Onboarding Radio
+"mode_switch_hint" = "Telsiz ile Dünya Radyosu arasında geçiş yapmak için sol üstteki düğmeye dokun";
+"got_it" = "Anladım";
+"onboarding.radio_mode.title" = "Telsiz + radyo";
+"onboarding.radio_mode.subtitle" = "Modlar arasında tek dokunuşla geçiş yap";
+"onboarding.radio_mode.body" = "Sol üstteki düğme, arkadaşlarınla konuştuğun telsiz ile yüzlerce uluslararası istasyonun bulunduğu internet radyosu arasında geçiş yapmanı sağlar.";
+"onboarding.radio_mode.streaming_note" = "Radyo internet yayını kullanır — fiziksel bir FM anteni değil. Etkin bir veri bağlantısı (Wi-Fi ya da hücresel) gerekir.";
+
+// MARK: - Live Activities
+"live_activities.title" = "Canlı Etkinlikler";
+"live_activities.toggle" = "Arka planda göster";
+"live_activities.description" = "Uygulama arka plana geçtiğinde radyo ve telsiz denetimlerini Dynamic Island'da ve kilit ekranında göster.";
+
+// MARK: - Pro upsell banner (added 2026-05-23)
+"paywall.brand_label" = "TALKY PRO";
+"upsell.title" = "Talky Pro'nun kilidini aç";
+"upsell.subtitle" = "Reklamsız · bağımsız bir geliştiriciyi destekle";
+"upsell.dismiss" = "Kapat";
+
+// MARK: - Themes Pack (one-shot non-consumable, added 2026-05-23)
+"themes_pack.title" = "Tüm temaların kilidini aç";
+"themes_pack.subtitle" = "Tek seferlik alım, sonsuza dek senin";
+"themes_pack.cta_buy" = "Tüm temaların kilidini aç";
+"themes_pack.prop.all_themes" = "11 premium tema (Identity + animasyonlu)";
+"themes_pack.prop.forever" = "Abonelik yok, sonsuza dek senin";
+"themes_pack.prop.one_time" = "Tek seferlik ödeme";
+"theme_purchase.or" = "Ya da";
+"theme_purchase.subscribe_title" = "Bunun yerine Talky Pro'ya geç";
+"theme_purchase.subscribe_subtitle" = "Temalar + uluslararası radyo + reklamsız";
+"theme_purchase.apple_footer" = "Ödeme Apple tarafından işlenir. Tema paketi otomatik yenilenmez.";
+"paywall.close" = "Kapat";
+"paywall.link.restore" = "Geri yükle";
+"paywall.link.terms" = "Koşullar";
+"paywall.link.privacy" = "Gizlilik";
+"paywall.error_title" = "Satın alma başarısız";
+"paywall.error.purchase_failed" = "Satın alma tamamlanamadı. Bağlantını kontrol edip yeniden dene.";
+"paywall.error.no_purchases" = "Bu Apple Kimliğinde önceki bir satın alma bulunamadı.";
+"paywall.error.restore_failed" = "Satın alımların geri yüklenemedi. Lütfen daha sonra yeniden dene.";
+"check_wifi_bluetooth" = "Wi-Fi ve Bluetooth'u kontrol et";
+
+/* Paywall — supporter note: who is behind Talky and what Pro really pays for */
+"paywall.support.eyebrow" = "GELİŞTİRİCİDEN BİR NOT";
+"paywall.support.title" = "Talky'yi tek bir kişi yapıyor";
+"paywall.support.body" = "Bağımsız bir geliştiriciyim ve Talky'nin kodu GitHub'da herkese açık. Pro, uygulamanın etrafındaki bir duvar değil: Apple geliştirici hesabını, sunucuları ve istasyon ile özellik eklemeye harcanan saatleri karşılayan bir katkı. Şimdi doğru zaman değilse Talky'yi ücretsiz kullanmayı sürdür — ücretsiz kalmaya devam ediyor.";
+"paywall.support.github" = "Kodu GitHub'da gör";
+"paywall.support.compact" = "Bağımsız tek bir geliştirici tarafından yapıldı — Talky'nin kodu GitHub'da herkese açık.";
+
+/* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
+"paywall.lifetime.cta" = "Bir kez öde ·";
+"paywall.lifetime.subtitle" = "Tek ödeme. Pro'nun tamamı, sonsuza dek — temalar dahil. Abonelik yok.";
+"paywall.lifetime.owned" = "Sonsuza dek senin. Teşekkürler.";

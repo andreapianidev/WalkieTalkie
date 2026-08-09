@@ -47,7 +47,7 @@ class MultipeerManager: NSObject, ObservableObject {
     @Published var receivedInvitation: (MCPeerID, MCSession)?
     private var pendingInvitationHandler: ((Bool, MCSession?) -> Void)?
     @Published var lastError: WalkieTalkieError?
-    @Published var connectionStatus: String = "Disconnesso"
+    @Published var connectionStatus: String = "status.disconnected".localized
     
     // MARK: - Connection Management Properties
     private var connectionTimeout: TimeInterval = 15.0 // Timeout personalizzabile
@@ -159,7 +159,7 @@ class MultipeerManager: NSObject, ObservableObject {
         // warnings if a future caller invokes this from a non-main context.
         runOnMain {
             self.isAdvertising = true
-            self.connectionStatus = "In advertising"
+            self.connectionStatus = "status.advertising".localized
         }
     }
 
@@ -173,7 +173,7 @@ class MultipeerManager: NSObject, ObservableObject {
         advertiser.stopAdvertisingPeer()
         runOnMain {
             self.isAdvertising = false
-            self.connectionStatus = self.connectedPeers.isEmpty ? "Disconnesso" : "Connesso"
+            self.connectionStatus = self.connectedPeers.isEmpty ? "status.disconnected".localized : "status.connected".localized
         }
     }
 
@@ -187,7 +187,7 @@ class MultipeerManager: NSObject, ObservableObject {
         browser.startBrowsingForPeers()
         runOnMain {
             self.isBrowsing = true
-            self.connectionStatus = "Ricerca in corso"
+            self.connectionStatus = "status.searching".localized
         }
     }
 
@@ -201,7 +201,7 @@ class MultipeerManager: NSObject, ObservableObject {
         browser.stopBrowsingForPeers()
         runOnMain {
             self.isBrowsing = false
-            self.connectionStatus = self.connectedPeers.isEmpty ? "Disconnesso" : "Connesso"
+            self.connectionStatus = self.connectedPeers.isEmpty ? "status.disconnected".localized : "status.connected".localized
         }
     }
 
@@ -405,7 +405,7 @@ class MultipeerManager: NSObject, ObservableObject {
             self.disconnectedPeers.removeAll()
             self.retryAttempts.removeAll()
             self.connectionThrottle.removeAll()
-            self.connectionStatus = "Disconnesso"
+            self.connectionStatus = "status.disconnected".localized
         }
 
         // Ricrea advertiser con il nuovo discoveryInfo (browser non richiede ricreazione)
@@ -485,7 +485,7 @@ class MultipeerManager: NSObject, ObservableObject {
             self.currentTalkerName = nil
             self.isAdvertising = false
             self.isBrowsing = false
-            self.connectionStatus = "Disconnesso"
+            self.connectionStatus = "status.disconnected".localized
             self.syncWalkieLiveActivity()
         }
 
@@ -891,7 +891,7 @@ extension MultipeerManager: MCSessionDelegate {
                 }
                 self.disconnectedPeers.remove(peerID)
                 self.retryAttempts.removeValue(forKey: peerID) // Reset retry counter on successful connection
-                self.connectionStatus = "Connesso (\(self.connectedPeers.count))"
+                self.connectionStatus = String(format: "status.connected_count".localized, self.connectedPeers.count)
 
                 // Avvia heartbeat quando si connette il primo peer
                 if self.connectedPeers.count == 1 {
@@ -904,7 +904,7 @@ extension MultipeerManager: MCSessionDelegate {
                 let wasConnected = self.connectedPeers.contains(peerID)
                 self.connectedPeers.removeAll { $0 == peerID }
                 self.logger.logNetworkInfo("Peer \(peerID.displayName) disconnesso. Totale connessi: \(self.connectedPeers.count)")
-                self.connectionStatus = self.connectedPeers.isEmpty ? "Disconnesso" : "Connesso (\(self.connectedPeers.count))"
+                self.connectionStatus = self.connectedPeers.isEmpty ? "status.disconnected".localized : String(format: "status.connected_count".localized, self.connectedPeers.count)
                 
                 // Aggiorna il monitoraggio delle performance
                 self.performanceMonitor.updateConnectionCount(self.connectedPeers.count)
@@ -936,7 +936,7 @@ extension MultipeerManager: MCSessionDelegate {
 
             case .connecting:
                 self.logger.logNetworkDebug("Connessione in corso con \(peerID.displayName)")
-                self.connectionStatus = "Connessione in corso..."
+                self.connectionStatus = "status.connecting".localized
                 
             @unknown default:
                 self.logger.logNetworkWarning("Stato sconosciuto per peer \(peerID.displayName): \(state.rawValue)")

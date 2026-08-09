@@ -80,6 +80,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.font.FontWeight
@@ -97,6 +98,9 @@ import com.immaginet.talky.protocol.PrivateChannelId
 import com.immaginet.talky.radio.RadioManager
 import com.immaginet.talky.radio.RadioStation
 import com.immaginet.talky.service.TalkyForegroundService
+import com.immaginet.talky.ui.OnboardingScreen
+import com.immaginet.talky.ui.hasSeenOnboarding
+import com.immaginet.talky.ui.markOnboardingSeen
 import com.immaginet.talky.ui.theme.WalkieTalkieAndroidTheme
 
 class MainActivity : ComponentActivity() {
@@ -161,6 +165,10 @@ private fun TalkyRoot(service: TalkyForegroundService?) {
     val context = LocalContext.current
     var permissionsRequested by rememberSaveable { mutableStateOf(false) }
     var appMode by rememberSaveable { mutableStateOf<AppMode?>(null) }
+    // L'onboarding precede i prompt di sistema: spiega a cosa serve il microfono
+    // prima che Android lo chieda, ed e' l'unico posto in cui l'utente legge che
+    // serve la stessa rete Wi-Fi.
+    var onboardingDone by rememberSaveable { mutableStateOf(hasSeenOnboarding(context)) }
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
     ) { results ->
@@ -176,8 +184,8 @@ private fun TalkyRoot(service: TalkyForegroundService?) {
         )
     }
 
-    LaunchedEffect(Unit) {
-        if (!permissionsRequested) {
+    LaunchedEffect(onboardingDone) {
+        if (onboardingDone && !permissionsRequested) {
             permissionsRequested = true
             permissionLauncher.launch(requiredPermissions())
         }
@@ -199,6 +207,14 @@ private fun TalkyRoot(service: TalkyForegroundService?) {
         }
     }
 
+    if (!onboardingDone) {
+        OnboardingScreen(onFinish = {
+            markOnboardingSeen(context)
+            onboardingDone = true
+        })
+        return
+    }
+
     val resolvedMode = appMode
     if (service == null || service.isStopped || resolvedMode == null) {
         Box(
@@ -207,7 +223,7 @@ private fun TalkyRoot(service: TalkyForegroundService?) {
                 .background(Color(0xFF0C1117)),
             contentAlignment = Alignment.Center
         ) {
-            Text("Avvio Talky…", color = Color(0xFFEAF4D3))
+            Text(stringResource(R.string.app_starting), color = Color(0xFFEAF4D3))
         }
         return
     }
@@ -260,6 +276,7 @@ private fun TalkyApp(
     val channels = remember {
         listOf("public", "ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8")
     }
+    val privateChannelLabel = stringResource(R.string.channel_private)
 
     Scaffold { innerPadding ->
         Column(
@@ -282,7 +299,7 @@ private fun TalkyApp(
                 channel = if (walkieManager.currentChannel in channels) {
                     walkieManager.currentChannel
                 } else {
-                    "Privato"
+                    privateChannelLabel
                 },
                 onModeToggle = {
                     onModeChange(
@@ -349,14 +366,14 @@ private fun ModeToggle(appMode: AppMode, onToggle: () -> Unit) {
         ) {
             Box(modifier = Modifier.weight(1f)) {
                 ModeTab(
-                    text = "WALKIE-TALKIE",
+                    text = stringResource(R.string.mode_walkie),
                     isActive = appMode == AppMode.WALKIE,
                     onClick = { if (appMode != AppMode.WALKIE) onToggle() }
                 )
             }
             Box(modifier = Modifier.weight(1f)) {
                 ModeTab(
-                    text = "RADIO FM",
+                    text = stringResource(R.string.mode_radio),
                     isActive = appMode == AppMode.RADIO,
                     onClick = { if (appMode != AppMode.RADIO) onToggle() }
                 )
@@ -409,14 +426,18 @@ private fun Header(
                 StatusPill(text = status, isActive = isConnected)
             } else {
                 StatusPill(
-                    text = if (radioStatus.isPlaying) radioStatus.stationName else "FM Radio",
+                    text = if (radioStatus.isPlaying) {
+                        radioStatus.stationName
+                    } else {
+                        stringResource(R.string.header_radio_idle)
+                    },
                     isActive = radioStatus.isPlaying
                 )
             }
         }
         if (appMode == AppMode.WALKIE && channel.isNotBlank()) {
             Text(
-                text = "Canale: $channel",
+                text = stringResource(R.string.header_channel, channel),
                 color = Color(0xFF8FA889),
                 style = MaterialTheme.typography.bodySmall
             )
@@ -494,7 +515,12 @@ private fun ChannelChips(
         FilterChip(
             selected = channel !in channels,
             onClick = onPrivateChannelClick,
-            label = { Text("Privato", style = MaterialTheme.typography.labelSmall) },
+            label = {
+                Text(
+                    stringResource(R.string.channel_private),
+                    style = MaterialTheme.typography.labelSmall
+                )
+            },
             colors = FilterChipDefaults.filterChipColors(
                 containerColor = Color(0xFF121A16),
                 selectedContainerColor = Color(0xFF1A3A1A),
@@ -523,7 +549,7 @@ private fun FrequencyDisplay(channel: String, isTransmitting: Boolean) {
         "ch6" -> "462.712"
         "ch7" -> "467.562"
         "ch8" -> "467.587"
-        else -> "PRIVATO"
+        else -> stringResource(R.string.channel_private_caps)
     }
     val displayColor = when {
         isTransmitting -> Color(0xFFFF4444)
@@ -552,9 +578,9 @@ private fun FrequencyDisplay(channel: String, isTransmitting: Boolean) {
                         "public", "ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8"
                     )
                 ) {
-                    "MHz"
+                    stringResource(R.string.freq_unit_mhz)
                 } else {
-                    "CAN."
+                    stringResource(R.string.freq_unit_channel)
                 },
                 color = displayColor.copy(alpha = 0.5f),
                 fontSize = 12.sp,
@@ -660,25 +686,30 @@ private fun PrivateChannelDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Canale con password") },
+        title = { Text(stringResource(R.string.private_dialog_title)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
-                    "Usa la stessa password su iPhone, Mac e Android per entrare nello stesso canale."
+                    stringResource(R.string.private_dialog_body)
                 )
                 OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
-                    label = { Text("Password") },
+                    label = { Text(stringResource(R.string.private_dialog_password)) },
                     supportingText = {
-                        Text("Minimo ${PrivateChannelId.MIN_PASSWORD_LENGTH} caratteri")
+                        Text(
+                            stringResource(
+                                R.string.private_dialog_password_hint,
+                                PrivateChannelId.MIN_PASSWORD_LENGTH
+                            )
+                        )
                     },
                     singleLine = true,
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                 )
                 Text(
-                    "Il canale separa i peer sulla rete locale, ma il traffico TALKY1 non è cifrato.",
+                    stringResource(R.string.private_dialog_warning),
                     style = MaterialTheme.typography.bodySmall,
                     color = Color(0xFF8FA889)
                 )
@@ -689,12 +720,12 @@ private fun PrivateChannelDialog(
                 enabled = passwordIsValid,
                 onClick = { onConfirm(PrivateChannelId.fromPassword(password)) }
             ) {
-                Text("Entra")
+                Text(stringResource(R.string.private_dialog_join))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Annulla")
+                Text(stringResource(R.string.private_dialog_cancel))
             }
         }
     )
@@ -732,7 +763,7 @@ private fun ReceivingIndicator() {
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "RICEZIONE IN CORSO",
+                text = stringResource(R.string.rx_in_progress),
                 color = Color(0xFFFF6666).copy(alpha = alpha),
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold
@@ -802,18 +833,22 @@ private fun PushToTalkPanel(
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = if (isTransmitting) "TX" else "PTT",
+                        text = stringResource(
+                            if (isTransmitting) R.string.ptt_tx else R.string.ptt_idle
+                        ),
                         color = Color(0xFF061009),
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Black
                     )
                     Text(
-                        text = when {
-                            isTransmitting -> "IN ONDA"
-                            receivingAudio -> "RX"
-                            isConnected -> "PREMI"
-                            else -> "---"
-                        },
+                        text = stringResource(
+                            when {
+                                isTransmitting -> R.string.ptt_badge_on_air
+                                receivingAudio -> R.string.ptt_badge_rx
+                                isConnected -> R.string.ptt_badge_press
+                                else -> R.string.ptt_badge_none
+                            }
+                        ),
                         color = Color(0xFF061009).copy(alpha = 0.7f),
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold
@@ -821,12 +856,14 @@ private fun PushToTalkPanel(
                 }
             }
             Text(
-                text = when {
-                    isTransmitting -> "IN TRASMISSIONE... RILASCIA PER FERMARE"
-                    receivingAudio -> "Ricezione in corso..."
-                    isConnected -> "Tieni premuto per parlare"
-                    else -> "In attesa connessione..."
-                },
+                text = stringResource(
+                    when {
+                        isTransmitting -> R.string.ptt_hint_transmitting
+                        receivingAudio -> R.string.ptt_hint_receiving
+                        isConnected -> R.string.ptt_hint_ready
+                        else -> R.string.ptt_hint_waiting
+                    }
+                ),
                 color = if (isTransmitting) Color(0xFFFFAAAA) else Color(0xFF9CB59A),
                 style = MaterialTheme.typography.bodySmall,
                 textAlign = TextAlign.Center
@@ -845,7 +882,7 @@ private fun PeerList(peers: List<CrossPlatformPeer>) {
         Column(modifier = Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text(
-                    text = "Dispositivi",
+                    text = stringResource(R.string.peers_title),
                     color = Color(0xFFEAF4D3),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
@@ -856,7 +893,7 @@ private fun PeerList(peers: List<CrossPlatformPeer>) {
             }
             if (peers.isEmpty()) {
                 Text(
-                    text = "In attesa di iPhone o Android sulla stessa rete locale.",
+                    text = stringResource(R.string.peers_empty),
                     color = Color(0xFF87968B),
                     style = MaterialTheme.typography.bodyMedium
                 )
@@ -897,12 +934,12 @@ private fun EventLog(events: List<String>, onRestart: () -> Unit) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Log", color = Color(0xFFEAF4D3), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.log_title), color = Color(0xFFEAF4D3), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 Button(
                     onClick = onRestart,
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1A2E1A)),
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
-                ) { Text("Riavvia", fontSize = 12.sp) }
+                ) { Text(stringResource(R.string.log_restart), fontSize = 12.sp) }
             }
             LazyColumn(modifier = Modifier.height(100.dp), reverseLayout = true) {
                 items(events.reversed()) { event ->
@@ -935,7 +972,7 @@ private fun RadioContent(
                     text = if (status.isPlaying || status.isBuffering) {
                         status.stationName
                     } else {
-                        "Seleziona una stazione"
+                        stringResource(R.string.radio_select_station)
                     },
                     color = Color(0xFFEAF4D3),
                     style = MaterialTheme.typography.titleLarge,
@@ -951,7 +988,7 @@ private fun RadioContent(
                 }
                 if (status.isBuffering) {
                     Text(
-                        text = "Buffering...",
+                        text = stringResource(R.string.radio_buffering),
                         color = Color(0xFFFFB347),
                         style = MaterialTheme.typography.bodySmall
                     )
@@ -966,24 +1003,24 @@ private fun RadioContent(
                                 radioManager.getPreviousStation()?.let(onStationPlay)
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1A2E1A))
-                        ) { Text("Prec") }
+                        ) { Text(stringResource(R.string.radio_prev)) }
                         Button(
                             onClick = onRadioStop,
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3A1A1A))
-                        ) { Text("Stop") }
+                        ) { Text(stringResource(R.string.radio_stop)) }
                         Button(
                             onClick = {
                                 radioManager.getNextStation()?.let(onStationPlay)
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1A2E1A))
-                        ) { Text("Succ") }
+                        ) { Text(stringResource(R.string.radio_next)) }
                     }
                 }
             }
         }
 
         Text(
-            text = "Stazioni (${RadioManager.stations.size})",
+            text = stringResource(R.string.radio_stations_count, RadioManager.stations.size),
             color = Color(0xFFEAF4D3),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold

@@ -1,11 +1,95 @@
 <resources>
-    <string name="app_name">Talky</string>
-    <string name="notification_channel_name">Talky in background</string>
-    <string name="notification_channel_description">Radio e walkie-talkie attivi in background</string>
-    <string name="notification_title">Talky attivo</string>
-    <string name="notification_transmitting">Trasmissione walkie-talkie in corso</string>
+    <!-- Il nome dell'app resta "Talky" in ogni lingua: e' il marchio, non una
+         stringa da tradurre. Senza translatable="false" lint fallisce con
+         MissingTranslation appena esiste piu' di una locale. -->
+    <string name="app_name" translatable="false">Talky</string>
+
+    <!-- Foreground service notification -->
+    <string name="notification_channel_name">Talky in the background</string>
+    <string name="notification_channel_description">Radio and walkie-talkie running in the background</string>
+    <string name="notification_title">Talky is running</string>
+    <string name="notification_transmitting">Walkie-talkie transmission in progress</string>
     <string name="notification_radio_playing">Radio: %1$s</string>
-    <string name="notification_walkie_ready">Walkie in ascolto sul canale %1$s</string>
-    <string name="notification_radio_ready">Radio pronta</string>
-    <string name="notification_stop">Interrompi</string>
+    <string name="notification_walkie_ready">Walkie listening on channel %1$s</string>
+    <string name="notification_radio_ready">Radio ready</string>
+    <string name="notification_stop">Stop</string>
+
+    <!-- Onboarding: shown once on first launch, before the permission prompts.
+         Page 2 spells out the same-Wi-Fi requirement and page 4 says the pairing
+         is automatic — the two things that were missing and that account for most
+         of the "it doesn't connect" reports. -->
+    <string name="ob_p1_title">A walkie-talkie inside your phone</string>
+    <string name="ob_p1_body">On a mountain, at a festival, in a busy square: talk to the people next to you without going through the internet.</string>
+
+    <string name="ob_p2_title">One Wi-Fi network, no accounts</string>
+    <string name="ob_p2_body">Talky finds the other Talky devices — Android, iPhone, iPad, Mac — on its own. No server, no sign-up, no phone number.</string>
+    <string name="ob_p2_wifi">Every device must be on the same Wi-Fi network: the voice travels over the local network, never over the internet.</string>
+
+    <string name="ob_p3_title">Hold to talk</string>
+    <string name="ob_p3_body">Just like a real walkie-talkie: hold the big central button to speak, release to listen.</string>
+    <string name="ob_p3_rule">Only one voice at a time on the same channel.</string>
+
+    <string name="ob_p4_title">Ready? Just 3 steps</string>
+    <string name="ob_p4_step1">Open Talky on a second device nearby, on the same Wi-Fi network</string>
+    <string name="ob_p4_step2">Wait a few seconds: the devices pair up on their own and appear under “Devices”. There is nothing to accept</string>
+    <string name="ob_p4_step3">Hold the central button to talk, release to listen</string>
+    <string name="ob_p4_channel_note">Everyone starts on the public channel. To keep the conversation to your group, open “Private” and use the same password on every device — it works with iPhone and Mac too.</string>
+
+    <string name="ob_continue">Continue</string>
+    <string name="ob_back">Back</string>
+    <string name="ob_start">Let\'s start</string>
+    <string name="ob_skip">Skip</string>
+
+    <!-- Main interface -->
+    <string name="app_starting">Starting Talky…</string>
+    <string name="mode_walkie">WALKIE-TALKIE</string>
+    <string name="mode_radio">WORLD RADIO</string>
+    <string name="header_radio_idle">Radio</string>
+    <string name="header_channel">Channel: %1$s</string>
+    <string name="channel_private">Private</string>
+    <string name="channel_private_caps">PRIVATE</string>
+    <string name="freq_unit_mhz">MHz</string>
+    <string name="freq_unit_channel">CH.</string>
+
+    <!-- Private channel dialog -->
+    <string name="private_dialog_title">Password channel</string>
+    <string name="private_dialog_body">Use the same password on iPhone, Mac and Android to join the same channel.</string>
+    <string name="private_dialog_password">Password</string>
+    <string name="private_dialog_password_hint">At least %1$d characters</string>
+    <string name="private_dialog_warning">The channel separates peers on the local network, but TALKY1 traffic is not encrypted.</string>
+    <string name="private_dialog_join">Join</string>
+    <string name="private_dialog_cancel">Cancel</string>
+
+    <!-- Push to talk -->
+    <string name="rx_in_progress">RECEIVING</string>
+    <string name="ptt_tx">TX</string>
+    <string name="ptt_idle">PTT</string>
+    <string name="ptt_badge_on_air">ON AIR</string>
+    <string name="ptt_badge_rx">RX</string>
+    <string name="ptt_badge_press">PRESS</string>
+    <string name="ptt_badge_none">---</string>
+    <string name="ptt_hint_transmitting">TRANSMITTING… RELEASE TO STOP</string>
+    <string name="ptt_hint_receiving">Receiving…</string>
+    <string name="ptt_hint_ready">Hold to talk</string>
+    <string name="ptt_hint_waiting">Waiting for a connection…</string>
+
+    <!-- Peers -->
+    <string name="peers_title">Devices</string>
+    <string name="peers_empty">Waiting for an iPhone, Mac or Android on the same Wi-Fi network.</string>
+
+    <!-- Event log -->
+    <string name="log_title">Log</string>
+    <string name="log_restart">Restart</string>
+
+    <!-- Radio -->
+    <string name="radio_select_station">Pick a station</string>
+    <string name="radio_buffering">Buffering…</string>
+    <string name="radio_prev">Prev</string>
+    <string name="radio_stop">Stop</string>
+    <string name="radio_next">Next</string>
+    <string name="radio_stations_count">Stations (%1$d)</string>
+
+    <!-- Connection status -->
+    <string name="status_advertising">Visible · searching</string>
+    <string name="status_stopped">Stopped</string>
 </resources>

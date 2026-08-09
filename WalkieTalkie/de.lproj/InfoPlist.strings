@@ -1,0 +1,12 @@
+/* 
+   InfoPlist.strings (German)
+   WalkieTalkie
+*/
+
+// MARK: - Permission Descriptions
+"NSMicrophoneUsageDescription" = "Diese App benötigt Zugriff auf das Mikrofon, um Sprachnachrichten per Funk zu übertragen.";
+"NSLocalNetworkUsageDescription" = "Diese App nutzt das lokale Netzwerk, um sich für die Funkverbindung mit Geräten in der Nähe zu verbinden.";
+"NSBluetoothAlwaysUsageDescription" = "Diese App nutzt Bluetooth, um Funkgeräte in der Nähe zu finden und sich mit ihnen zu verbinden.";
+"NSBluetoothPeripheralUsageDescription" = "Diese App nutzt Bluetooth, um von anderen Funkgeräten gefunden zu werden.";
+"NSNetworkVolumesUsageDescription" = "Diese App greift für die Funkverbindung zwischen Geräten auf das Netzwerk zu.";
+"NSUserTrackingUsageDescription" = "Die Kennung wird verwendet, um dir relevantere Werbung zu zeigen und die kostenlose Entwicklung der App zu unterstützen.";

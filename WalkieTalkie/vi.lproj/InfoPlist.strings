@@ -1,0 +1,12 @@
+/* 
+   InfoPlist.strings (Vietnamese)
+   WalkieTalkie
+*/
+
+// MARK: - Permission Descriptions
+"NSMicrophoneUsageDescription" = "Ứng dụng này cần quyền truy cập micro để truyền tin nhắn thoại qua bộ đàm.";
+"NSLocalNetworkUsageDescription" = "Ứng dụng này dùng mạng nội bộ để kết nối với các thiết bị ở gần cho việc liên lạc bộ đàm.";
+"NSBluetoothAlwaysUsageDescription" = "Ứng dụng này dùng Bluetooth để tìm và kết nối với các thiết bị bộ đàm ở gần.";
+"NSBluetoothPeripheralUsageDescription" = "Ứng dụng này dùng Bluetooth để các thiết bị bộ đàm khác có thể tìm thấy nó.";
+"NSNetworkVolumesUsageDescription" = "Ứng dụng này truy cập mạng để liên lạc bộ đàm giữa các thiết bị.";
+"NSUserTrackingUsageDescription" = "Mã định danh sẽ được dùng để hiển thị quảng cáo phù hợp hơn và hỗ trợ việc phát triển miễn phí của ứng dụng.";

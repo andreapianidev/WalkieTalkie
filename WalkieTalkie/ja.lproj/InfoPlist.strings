@@ -1,0 +1,12 @@
+/* 
+   InfoPlist.strings (Japanese)
+   WalkieTalkie
+*/
+
+// MARK: - Permission Descriptions
+"NSMicrophoneUsageDescription" = "トランシーバーで音声を送るために、マイクへのアクセスが必要です。";
+"NSLocalNetworkUsageDescription" = "近くの端末とトランシーバーでつながるために、ローカルネットワークを使用します。";
+"NSBluetoothAlwaysUsageDescription" = "近くのトランシーバー端末を見つけて接続するために、Bluetoothを使用します。";
+"NSBluetoothPeripheralUsageDescription" = "他のトランシーバー端末から見つけてもらうために、Bluetoothを使用します。";
+"NSNetworkVolumesUsageDescription" = "端末どうしのトランシーバー通信のためにネットワークを利用します。";
+"NSUserTrackingUsageDescription" = "この識別子は、より関連性の高い広告を表示し、アプリの無料での開発を支えるために使われます。";

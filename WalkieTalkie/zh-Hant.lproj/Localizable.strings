@@ -114,7 +114,7 @@
 "off" = "關閉";
 "connected_devices_count" = "已連接裝置";
 "no_devices_connected" = "無裝置連接";
-"devices_nearby_hint" = "確保其他裝置在附近且已開啟應用程式";
+"devices_nearby_hint" = "請確認其他裝置就在附近、已開啟 App，並連到同一個 Wi-Fi 網路";
 "connected" = "已連接";
 "disconnect_all" = "全部斷開";
 "restart_discovery" = "重新搜尋";
@@ -126,9 +126,9 @@
 "scan_nearby_devices" = "掃描附近裝置";
 "detected_devices" = "偵測到的裝置";
 "no_devices_detected" = "未偵測到裝置";
-"ensure_devices_open" = "確保其他裝置已開啟應用程式";
+"ensure_devices_open" = "請確認其他裝置已開啟 App，並連到同一個 Wi-Fi 網路";
 "available" = "可用";
-"tap_plus_to_invite" = "點一下 + 送出連接請求。另一台裝置必須接受。";
+"tap_plus_to_invite" = "點 + 向 iPhone 或 iPad 送出請求，對方必須接受。Mac 和 Android 會自動連線。";
 "send_connection_request" = "送出連接請求";
 "invitation_sent" = "請求已送出";
 "strong" = "強";
@@ -161,9 +161,9 @@
 "instruction_2_title" = "前往探索";
 "instruction_2_description" = "點擊「探索」標籤查看附近的可用裝置。";
 "instruction_3_title" = "連接裝置";
-"instruction_3_description" = "點一下裝置旁的 + 送出連接請求。";
-"instruction_4_title" = "選擇頻率";
-"instruction_4_description" = "所有連接的裝置必須使用相同的頻率才能通信。";
+"instruction_3_description" = "點 iPhone 或 iPad 旁的 + 送出連線請求。Mac 和 Android 在同一個 Wi-Fi 網路上會自己連上。";
+"instruction_4_title" = "同一個頻道";
+"instruction_4_description" = "所有人都從公開頻道開始，不需要設定任何東西。私人頻道只會連上輸入了相同密碼的裝置。";
 "instruction_5_title" = "按住說話";
 "instruction_5_description" = "按住中央按鈕進行傳輸。放開以聆聽。";
 "app_info" = "應用程式資訊";
@@ -203,22 +203,20 @@
 "onboarding_p1_subtitle" = "登山、廣場、演唱會：即使沒有訊號，也能與朋友對話。";
 
 "onboarding_p2_no_internet_title" = "無需網路，無需 SIM 卡";
-"onboarding_p2_no_internet_body" = "聲音會透過藍牙、Wi-Fi 與本機網路在附近裝置之間直接傳送。不需要網際網路伺服器，只要在本機範圍內即可使用。";
+"onboarding_p2_no_internet_body" = "在 iPhone 與 iPad 之間，聲音透過 Wi-Fi 和藍牙直接在裝置間傳遞：不需路由器、不需伺服器、不需帳號。";
 "onboarding_p2_range_caveat" = "牆壁、山丘與高低差會降低傳輸距離。";
-"onboarding_p2_multi_platform" = "也支援 iPad 與 Apple Silicon Mac — 同一個 App，你的所有裝置都能互相通話。";
-
+"onboarding_p2_multi_platform" = "Talky 也能在 iPad、Mac 和 Android 上執行——同一個 App，你所有的裝置都在同一場對話裡。";
 "onboarding_p3_ptt_title" = "按住即可說話";
 "onboarding_p3_ptt_body" = "就像真正的對講機：按住中央按鈕說話，放開後聆聽。";
 "onboarding_p3_ptt_rule" = "同一頻道上同一時間只能有一個人說話。";
 
-"onboarding_p4_frequency_title" = "相同頻率，同一段對話";
-"onboarding_p4_frequency_analogy" = "就像 FM 收音機：如果你在 146.520 而朋友在 150.000，你們聽不到彼此。請設定相同頻率才能對話。";
-"onboarding_p4_change_freq_hint" = "使用 ‹ 和 › 按鈕切換頻率，或按 Home 鍵回到預設頻率。";
-"onboarding_p4_private_channels_teaser" = "想要僅限你的群組使用的頻道？從選單建立有密碼保護的私人頻道。";
-
+"onboarding_p4_frequency_title" = "同一個頻道，大家都聽得到";
+"onboarding_p4_frequency_analogy" = "沒有什麼需要對齊：每台 Talky 都從公開頻道開始，附近的裝置會自己找到彼此。";
+"onboarding_p4_change_freq_hint" = "‹ 和 › 按鍵用來瀏覽顯示器上的頻率。發話一律從 home 頻率送出：按綠色 HOME 鍵即可回到該頻率。";
+"onboarding_p4_private_channels_teaser" = "想要只屬於你們這群人的頻道嗎？用密碼建立私人頻道：只有輸入相同密碼的人才找得到你——iPhone、Mac 和 Android 都一樣。";
 "onboarding_p5_steps_title" = "準備好了嗎？只需 3 步";
-"onboarding_p5_step1" = "在附近的第二台裝置開啟 Talky：iPhone、iPad、Apple Silicon Mac 或相容的 Android 用戶端";
-"onboarding_p5_step2" = "開啟探索，點一下附近裝置旁的 +，然後在另一台裝置接受請求";
+"onboarding_p5_step1" = "在附近的第二台裝置上開啟 Talky：iPhone、iPad、Mac 或 Android";
+"onboarding_p5_step2" = "在 iPhone 和 iPad 上開啟「探索」，點裝置旁的 +，再到另一台上接受。Mac 和 Android 會自己連上，只要在同一個 Wi-Fi";
 "onboarding_p5_step3" = "連線成功（綠點）後，按住中央按鈕說話，放開即可聆聽";
 
 "onboarding_permissions_title" = "兩個權限，馬上就好";
@@ -237,7 +235,7 @@
 
 // MARK: - First Run Coach
 "coach_no_peers_title" = "第一步";
-"coach_no_peers_body" = "在附近的另一台裝置開啟 Talky，然後點擊下方的「探索」。";
+"coach_no_peers_body" = "在同一個 Wi-Fi 下的另一台鄰近裝置上開啟 Talky，然後點下方的「探索」。";
 "coach_press_ptt_title" = "現在按住這裡";
 "coach_press_ptt_body" = "按住中央按鈕說話，放開後聆聽。";
 "coach_dismiss" = "我知道了";
@@ -473,3 +471,14 @@
 "paywall.lifetime.cta" = "一次買斷 ·";
 "paywall.lifetime.subtitle" = "付一次，永久擁有全部 Pro 功能，主題也包含在內。無需訂閱。";
 "paywall.lifetime.owned" = "已永久擁有，謝謝你。";
+
+// MARK: - Connection status & cross-platform (2026-08)
+"onboarding_p2_same_wifi" = "若要連上 Mac 或 Android 手機，請讓所有裝置連到同一個 Wi-Fi 網路：這條連線走的是區域網路。";
+"status.connected_crossplatform" = "已連線 · Mac/Android (%d)";
+"status.connected_mixed" = "已連線 (%1$d · %2$d Mac/Android)";
+"status.disconnected" = "已中斷連線";
+"status.connected" = "已連線";
+"status.connected_count" = "已連線 (%d)";
+"status.advertising" = "其他人看得到你";
+"status.searching" = "搜尋中…";
+"status.connecting" = "連線中…";

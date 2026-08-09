@@ -37,13 +37,17 @@ struct OnboardingView: View {
 
                 Spacer(minLength: 12)
 
+                // Ogni pagina scorre invece di essere tagliata: su iPhone SE le
+                // pagine piu' dense (rete, passi) non ci stanno in altezza, e la
+                // UI troncata su schermi corti e' gia' costata recensioni da una
+                // stella. Su schermi grandi lo ScrollView non si vede.
                 TabView(selection: $currentPage) {
-                    OnboardingHookPage().tag(0)
-                    OnboardingNoInternetPage().tag(1)
-                    OnboardingPTTPage().tag(2)
-                    OnboardingFrequencyPage().tag(3)
-                    OnboardingRadioModePage().tag(4)
-                    OnboardingStepsPage().tag(5)
+                    ScrollableOnboardingPage { OnboardingHookPage() }.tag(0)
+                    ScrollableOnboardingPage { OnboardingNoInternetPage() }.tag(1)
+                    ScrollableOnboardingPage { OnboardingPTTPage() }.tag(2)
+                    ScrollableOnboardingPage { OnboardingFrequencyPage() }.tag(3)
+                    ScrollableOnboardingPage { OnboardingRadioModePage() }.tag(4)
+                    ScrollableOnboardingPage { OnboardingStepsPage() }.tag(5)
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                 .animation(.easeInOut, value: currentPage)
@@ -137,6 +141,25 @@ private struct OnboardingHookPage: View {
     }
 }
 
+// MARK: - Contenitore scrollabile
+
+/// Centra la pagina quando ci sta e la lascia scorrere quando non ci sta.
+/// `minHeight` legato all'altezza disponibile evita che le pagine corte si
+/// incollino in alto, che e' l'effetto collaterale tipico di uno ScrollView.
+private struct ScrollableOnboardingPage<Content: View>: View {
+    @ViewBuilder var content: Content
+
+    var body: some View {
+        GeometryReader { proxy in
+            ScrollView(.vertical, showsIndicators: false) {
+                content
+                    .frame(maxWidth: .infinity)
+                    .frame(minHeight: proxy.size.height)
+            }
+        }
+    }
+}
+
 // MARK: - Page 2: No internet
 
 private struct OnboardingNoInternetPage: View {
@@ -175,6 +198,20 @@ private struct OnboardingNoInternetPage: View {
                 }
                 .foregroundColor(Color("PrimaryTextColor").opacity(0.6))
                 .padding(.top, 6)
+
+                // Mac e Android parlano solo via TALKY1 su Bonjour/TCP: serve la
+                // stessa rete Wi-Fi, a differenza del link Apple-to-Apple.
+                HStack(alignment: .top, spacing: 8) {
+                    Image(systemName: "wifi")
+                        .font(.footnote)
+                    Text(OnboardingStrings.p2SameWiFi)
+                        .font(.footnote)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .foregroundColor(Color("PrimaryTextColor").opacity(0.6))
+                .padding(.horizontal, 24)
+                .padding(.top, 4)
 
                 HStack(alignment: .top, spacing: 8) {
                     Image(systemName: "ipad.and.iphone")

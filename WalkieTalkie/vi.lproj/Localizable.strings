@@ -1,0 +1,482 @@
+/* 
+   Localizable.strings (Vietnamese)
+   WalkieTalkie
+   
+   Created by Andrea Piani on 12/07/25.
+*/
+
+// MARK: - General
+"coming_soon" = "Sắp có";
+"ok" = "OK";
+"cancel" = "Huỷ";
+"error" = "Lỗi";
+"accept" = "Chấp nhận";
+"decline" = "Từ chối";
+"disconnect" = "Ngắt kết nối";
+"settings" = "Cài đặt";
+"retry" = "Thử lại";
+"unknown" = "Không rõ";
+"version" = "Phiên bản";
+"developed_by" = "Phát triển bởi";
+"website" = "Trang web";
+"open_source" = "Mã nguồn mở";
+"view_on_github" = "Xem trên GitHub";
+"license" = "Giấy phép";
+
+// MARK: - Peak App Promotion
+"download_peak" = "Tải Peak miễn phí";
+"peak_app_subtitle" = "Ứng dụng đo độ cao đầy đủ, tích hợp sẵn bộ đàm";
+
+// MARK: - Notifications
+"new_device_detected" = "Phát hiện thiết bị mới";
+"device_detected_message" = "Đã thấy %@ ở gần";
+"connection_established" = "Đã kết nối";
+"connected_to_device" = "Đã kết nối với %@";
+"connection_lost" = "Mất kết nối";
+"disconnected_from_device" = "Đã ngắt kết nối khỏi %@";
+"incoming_transmission" = "Đang có tín hiệu đến";
+"receiving_audio_message" = "Đang nhận tin nhắn thoại";
+"background_scan" = "Quét nền";
+"scanning_for_devices" = "Đang tìm thiết bị ở gần";
+"notifications" = "Thông báo";
+"enable_notifications" = "Bật thông báo";
+"disable_notifications" = "Tắt thông báo";
+"notification_description" = "Nhận thông báo khi phát hiện thiết bị mới hoặc trong lúc truyền tín hiệu";
+"notifications_enabled" = "Đã bật thông báo";
+"notifications_activated_message" = "Từ giờ bạn sẽ nhận thông báo khi phát hiện thiết bị và khi có tín hiệu";
+
+// MARK: - Battery Status
+"charging" = "Đang sạc";
+"full" = "Đầy";
+"unplugged" = "Chưa cắm sạc";
+
+// MARK: - Main Interface
+"frequency_owner" = "Chủ tần số";
+"radio_fm" = "Radio thế giới";
+"walkie_talkie" = "WalkieTalkie";
+"device" = "Thiết bị";
+"status" = "Trạng thái";
+"no_error" = "không có lỗi";
+"channel_1" = "Kênh 1";
+"en" = "VI";
+"hold" = "GIỮ";
+"pressed" = "ĐANG NHẤN";
+"to_talk" = "ĐỂ NÓI";
+"release" = "THẢ";
+"to_send" = "ĐỂ GỬI";
+"radio_mode" = "RADIO";
+"radio_fm_caps" = "RADIO";
+"active" = "ĐANG BẬT";
+"no_connection" = "Không có kết nối";
+"devices_connected" = "thiết bị đã kết nối";
+"status.connected_crossplatform" = "Đã kết nối · Mac/Android (%d)";
+"status.connected_mixed" = "Đã kết nối (%1$d · %2$d Mac/Android)";
+"status.disconnected" = "Chưa kết nối";
+"status.connected" = "Đã kết nối";
+"status.connected_count" = "Đã kết nối (%d)";
+"status.advertising" = "Người khác thấy được bạn";
+"status.searching" = "Đang tìm…";
+"status.connecting" = "Đang kết nối…";
+"transmission_in_progress" = "ĐANG TRUYỀN";
+"reception_in_progress" = "ĐANG NHẬN";
+"no_transmission" = "không có tín hiệu";
+
+// MARK: - Tab Bar
+"talk" = "Nói";
+"explore" = "Khám phá";
+"connections" = "Kết nối";
+"settings_tab" = "Cài đặt";
+"performance" = "Hiệu năng";
+
+// MARK: - Performance
+"performance_title" = "Hiệu năng";
+"high_traffic" = "Lưu lượng cao";
+"normal_performance" = "Hiệu năng bình thường";
+"memory_usage" = "Bộ nhớ";
+"network_latency" = "Độ trễ TB";
+"connection_time" = "Thời gian kết nối";
+"active_connections" = "Kết nối";
+"performance_trends" = "Xu hướng hiệu năng";
+"recommendations" = "Gợi ý";
+"connections_active" = "kết nối đang hoạt động";
+"updated_now" = "Vừa cập nhật";
+"optimized_mode" = "Chế độ tối ưu";
+"audio_cache" = "Bộ đệm âm thanh";
+"current_recommendations" = "Gợi ý hiện tại";
+"no_recommendations" = "Hiện chưa có gợi ý nào. Hiệu năng đang rất tốt!";
+"full_report" = "Báo cáo đầy đủ";
+"close" = "Đóng";
+"too_many_connections_warning" = "Quá nhiều kết nối (%d) — nên giới hạn ở 6-8 để có hiệu năng tốt nhất";
+
+// MARK: - Radio
+"station" = "Đài";
+"no_station" = "Không có đài";
+"buffering" = "Đang tải…";
+"genre" = "Thể loại";
+"country" = "Quốc gia";
+"scanning" = "Đang tìm…";
+
+// MARK: - Connections View
+"connections_title" = "Kết nối";
+"manage_connections" = "Quản lý kết nối bộ đàm";
+"connected_devices" = "Thiết bị đã kết nối";
+"scanning_in_progress" = "Đang tìm…";
+"offline" = "Ngoại tuyến";
+"online" = "Trực tuyến";
+"advertising" = "Đang hiển thị";
+"browsing" = "Đang tìm";
+"on" = "BẬT";
+"off" = "TẮT";
+"connected_devices_count" = "Thiết bị đã kết nối";
+"no_devices_connected" = "Chưa có thiết bị nào kết nối";
+"devices_nearby_hint" = "Hãy chắc chắn các thiết bị khác ở gần, đang mở ứng dụng và cùng một mạng Wi-Fi";
+"connected" = "Đã kết nối";
+"disconnect_all" = "Ngắt tất cả";
+"restart_discovery" = "Tìm lại từ đầu";
+"disconnect_device" = "Ngắt kết nối thiết bị";
+"disconnect_confirmation" = "Bạn có chắc muốn ngắt kết nối với tất cả thiết bị không?";
+
+// MARK: - Explore View
+"explore_title" = "Khám phá";
+"scan_nearby_devices" = "Tìm thiết bị ở gần";
+"detected_devices" = "Thiết bị đã tìm thấy";
+"no_devices_detected" = "Không tìm thấy thiết bị nào";
+"ensure_devices_open" = "Hãy chắc chắn các thiết bị khác đang mở ứng dụng và cùng một mạng Wi-Fi";
+"available" = "Sẵn sàng";
+"tap_plus_to_invite" = "Chạm + để gửi yêu cầu tới một iPhone hoặc iPad; thiết bị kia phải chấp nhận. Mac và Android tự kết nối.";
+"send_connection_request" = "Gửi yêu cầu kết nối";
+"invitation_sent" = "Đã gửi yêu cầu";
+"strong" = "Mạnh";
+"medium" = "Trung bình";
+"weak" = "Yếu";
+
+// MARK: - Settings View
+"settings_title" = "Cài đặt";
+"configure_app" = "Thiết lập ứng dụng của bạn";
+"audio" = "Âm thanh";
+"white_noise" = "Tiếng ồn trắng";
+"background_audio" = "Hiệu ứng radio mô phỏng (âm nền, không phải liên lạc thật)";
+"background_audio_description" = "Âm nền khi đang dùng";
+"noise_volume" = "Âm lượng tiếng ồn";
+"adjust_background_volume" = "Điều chỉnh âm lượng tiếng ồn nền";
+"haptic_feedback" = "Phản hồi rung";
+"vibration_on_buttons" = "Rung khi nhấn nút";
+"auto_connect" = "Tự động kết nối";
+"auto_connect_description" = "Tự động kết nối với các thiết bị đã biết";
+"voice_activation" = "Kích hoạt bằng giọng nói";
+"voice_activation_description" = "Tự động truyền khi bạn nói";
+"voice_sensitivity" = "Độ nhạy giọng nói";
+"voice_sensitivity_description" = "Điều chỉnh độ nhạy khi kích hoạt bằng giọng nói";
+"low_power_mode" = "Chế độ tiết kiệm pin";
+"low_power_mode_description" = "Giảm mức tiêu thụ pin";
+"reset_settings" = "Đặt lại cài đặt";
+"how_to_use" = "Cách dùng ứng dụng";
+"instruction_1_title" = "Mở ứng dụng trên mọi thiết bị";
+"instruction_1_description" = "Hãy chắc chắn mọi thiết bị đều đang mở và chạy ứng dụng WalkieTalkie.";
+"instruction_2_title" = "Vào Khám phá";
+"instruction_2_description" = "Chạm tab \"Khám phá\" để xem các thiết bị khả dụng ở gần.";
+"instruction_3_title" = "Kết nối các thiết bị";
+"instruction_3_description" = "Chạm + bên cạnh một iPhone hoặc iPad để gửi yêu cầu. Mac và Android tự kết nối trong cùng mạng Wi-Fi.";
+"instruction_4_title" = "Cùng một kênh";
+"instruction_4_description" = "Mọi người đều bắt đầu ở kênh công khai nên không có gì phải cài đặt. Kênh riêng chỉ kết nối những thiết bị nhập cùng một mật khẩu.";
+"instruction_5_title" = "Giữ để nói";
+"instruction_5_description" = "Giữ nút ở giữa để truyền. Thả ra để nghe.";
+"app_info" = "Thông tin ứng dụng";
+"support_development" = "Ủng hộ việc phát triển";
+"buy_me_coffee" = "Mời tôi một ly cà phê";
+"support_description" = "Nếu bạn thích ứng dụng này, hãy cân nhắc ủng hộ nhà phát triển";
+"view_performance" = "Xem thống kê hiệu năng";
+
+// MARK: - Background Audio
+"background_playback" = "Phát ở chế độ nền";
+"background_playback_description" = "Tiếp tục phát radio khi ứng dụng chạy nền";
+"now_playing" = "Đang phát";
+"control_center_info" = "Điều khiển phát từ Trung tâm điều khiển và màn hình khoá";
+
+// MARK: - Appearance
+"appearance" = "Giao diện";
+"dark_mode" = "Chế độ tối";
+"dark_mode_description" = "Dùng giao diện tối cho ứng dụng";
+
+// MARK: - Peak App
+"peak_app_title" = "Peak: máy đo độ cao cho người đi bộ đường dài";
+"peak_app_description" = "Máy đo độ cao miễn phí cho người đi bộ đường dài, có AI và bộ đàm tích hợp";
+"download_peak_app" = "Tải ứng dụng Peak";
+"peak_altimeter_free" = "Máy đo độ cao miễn phí";
+"peak_walkie_ai_description" = "kèm bộ đàm và AI";
+
+// MARK: - Alerts
+"connection_request" = "Yêu cầu kết nối";
+"wants_to_connect" = "muốn kết nối";
+"microphone_permission_required" = "Cần quyền micro";
+"microphone_permission_message" = "Ứng dụng WalkieTalkie cần quyền truy cập micro để hoạt động. Không có quyền này bạn sẽ không truyền được âm thanh.";
+"audio_transmission_error" = "Lỗi khi truyền âm thanh. Vui lòng thử lại.";
+
+// MARK: - Errors
+"no_connected_peers" = "Chưa có thiết bị nào kết nối";
+
+// MARK: - Onboarding
+"onboarding_p1_title" = "Một chiếc bộ đàm ngay trong iPhone";
+"onboarding_p1_subtitle" = "Trên núi, ở lễ hội, giữa quảng trường đông người: nói chuyện với bạn bè ngay cả nơi không có sóng.";
+
+"onboarding_p2_no_internet_title" = "Không internet, không SIM";
+"onboarding_p2_no_internet_body" = "Giữa iPhone và iPad, giọng nói đi thẳng từ máy này sang máy kia qua Wi-Fi và Bluetooth: không router, không máy chủ, không tài khoản.";
+"onboarding_p2_range_caveat" = "Tường, đồi và chênh lệch độ cao làm giảm tầm phủ.";
+"onboarding_p2_same_wifi" = "Để nối tới máy Mac hoặc điện thoại Android, hãy đặt tất cả thiết bị vào cùng một mạng Wi-Fi: đường truyền đó đi qua mạng nội bộ.";
+"onboarding_p2_multi_platform" = "Talky cũng chạy trên iPad, Mac và Android — cùng một ứng dụng, mọi thiết bị của bạn trong cùng cuộc trò chuyện.";
+
+"onboarding_p3_ptt_title" = "Giữ để nói";
+"onboarding_p3_ptt_body" = "Y như bộ đàm thật: giữ nút ở giữa để nói, thả ra để nghe.";
+"onboarding_p3_ptt_rule" = "Trên cùng một kênh, mỗi lần chỉ một người nói.";
+
+"onboarding_p4_frequency_title" = "Một kênh duy nhất, ai cũng nghe thấy bạn";
+"onboarding_p4_frequency_analogy" = "Không có gì phải khớp cả: mọi Talky đều bắt đầu ở kênh công khai, nên các thiết bị ở gần tự tìm thấy nhau.";
+"onboarding_p4_change_freq_hint" = "Nút ‹ và › dùng để lướt qua các tần số trên màn hình. Việc truyền diễn ra ở tần số home — nhấn nút HOME màu xanh để quay lại.";
+"onboarding_p4_private_channels_teaser" = "Muốn một kênh riêng cho nhóm của bạn? Hãy tạo Kênh riêng có mật khẩu: chỉ ai nhập đúng mật khẩu đó mới tìm thấy bạn — trên iPhone, Mac và Android như nhau.";
+
+"onboarding_p5_steps_title" = "Sẵn sàng chưa? Chỉ 3 bước";
+"onboarding_p5_step1" = "Mở Talky trên một thiết bị thứ hai ở gần: iPhone, iPad, Mac hoặc Android";
+"onboarding_p5_step2" = "Trên iPhone và iPad, mở Khám phá rồi chạm + bên cạnh thiết bị, sau đó chấp nhận trên máy kia. Mac và Android tự kết nối, trong cùng mạng Wi-Fi";
+"onboarding_p5_step3" = "Khi đã kết nối (chấm xanh), giữ nút ở giữa để nói, thả ra để nghe";
+
+"onboarding_permissions_title" = "Hai quyền nữa là xong";
+"onboarding_permissions_description" = "Talky cần chúng để hoạt động.";
+"onboarding_microphone_permission" = "Micro";
+"onboarding_permission_mic_why" = "Để thu giọng của bạn khi bạn nhấn để nói.";
+"onboarding_notification_permission" = "Thông báo";
+"onboarding_permission_notif_why" = "Để báo cho bạn khi có người gọi lúc ứng dụng đang đóng.";
+"onboarding_permission_open_settings" = "Mở Cài đặt iOS";
+
+"onboarding_continue" = "Tiếp tục";
+"onboarding_get_started" = "Bắt đầu nào";
+"onboarding_allow_permissions" = "Cho phép";
+"onboarding_skip" = "Bỏ qua";
+"onboarding_back" = "Quay lại";
+
+// MARK: - First Run Coach
+"coach_no_peers_title" = "Bước đầu tiên";
+"coach_no_peers_body" = "Mở Talky trên một thiết bị khác ở gần trong cùng mạng Wi-Fi, rồi chạm \"Khám phá\" bên dưới.";
+"coach_press_ptt_title" = "Giờ hãy giữ ở đây";
+"coach_press_ptt_body" = "Giữ nút ở giữa để nói, thả ra để nghe.";
+"coach_dismiss" = "Đã hiểu";
+"ads_section_title" = "Quảng cáo và quyền riêng tư";
+"watch_ad_remove_ads" = "Xem một video, hết quảng cáo";
+"watch_ad_remove_ads_subtitle" = "Không quảng cáo trong 1 giờ";
+"ads_removed_active" = "Đã tắt quảng cáo";
+"ads_removed_remaining" = "Còn lại: %d phút";
+"manage_privacy" = "Quản lý tuỳ chọn quyền riêng tư";
+
+/* MARK: - Talky Pro features (added 2026-05) */
+
+// Paywall
+"paywall.close" = "Đóng";
+"paywall.title" = "Mở khoá Talky Pro";
+"paywall.subtitle" = "Trọn bộ Talky, không giới hạn";
+"paywall.error_title" = "Mua không thành công";
+"paywall.feature.no_ads" = "Không quảng cáo";
+"paywall.feature.unlimited_stations" = "Không giới hạn đài radio";
+"paywall.feature.premium_international" = "Đài quốc tế cao cấp";
+"paywall.feature.record_transmissions" = "Ghi lại tín hiệu bạn phát";
+"paywall.feature.private_channels" = "Kênh bộ đàm riêng";
+"paywall.feature.custom_themes" = "Giao diện tuỳ chỉnh";
+"paywall.feature.history" = "Lịch sử liên lạc";
+"paywall.feature.sleep_timer" = "Hẹn giờ tắt radio";
+"paywall.feature.equalizer" = "Bộ chỉnh âm cao cấp";
+"paywall.plan.weekly" = "Hằng tuần";
+"paywall.plan.weekly_suffix" = "/tuần";
+"paywall.plan.yearly" = "Hằng năm";
+"paywall.plan.yearly_suffix" = "/năm";
+"paywall.badge.most_popular" = "ĐƯỢC CHỌN NHIỀU NHẤT";
+"paywall.badge.save" = "Tiết kiệm %d%%";
+"paywall.compare.weekly_vs_yearly" = "%1$@ mỗi năm. Trả theo tuần bạn sẽ tốn %2$@.";
+"paywall.trial.badge" = "Miễn phí %1$d ngày, sau đó %2$@ mỗi năm";
+"paywall.cta.start" = "Bắt đầu Talky Pro";
+"paywall.apple_footer" = "Gói đăng ký tự động gia hạn. Bạn có thể huỷ bất cứ lúc nào trong Cài đặt Apple ID. Khoản thanh toán sẽ được tính vào Apple ID khi bạn xác nhận mua.";
+"paywall.link.restore" = "Khôi phục";
+"paywall.link.terms" = "Điều khoản";
+"paywall.link.privacy" = "Quyền riêng tư";
+"paywall.error.purchase_failed" = "Không hoàn tất được giao dịch. Hãy kiểm tra kết nối và thử lại.";
+"paywall.error.no_purchases" = "Không tìm thấy giao dịch nào trước đây trên Apple ID này.";
+"paywall.error.restore_failed" = "Không khôi phục được giao dịch. Vui lòng thử lại sau.";
+
+// Transmission history
+"history.title" = "Lịch sử liên lạc";
+"history.delete" = "Xoá";
+"history.clear_confirm_title" = "Xoá lịch sử?";
+"history.clear_all" = "Xoá tất cả";
+"history.cancel" = "Huỷ";
+"history.paywall_message" = "Mở khoá Talky Pro để xem lịch sử liên lạc của bạn";
+"history.unlock_pro" = "Mở khoá Pro";
+"history.empty" = "Chưa nhận được tín hiệu nào";
+
+// Themes
+"theme.title" = "Giao diện";
+"theme.subtitle" = "Đổi màu ứng dụng";
+"theme.name.default" = "Mặc định";
+"theme.name.ocean" = "Đại dương";
+"theme.name.forest" = "Rừng";
+"theme.name.sunset" = "Hoàng hôn";
+"theme.name.midnight" = "Nửa đêm";
+"theme.name.military" = "Quân đội";
+"theme.name.retro80s" = "Retro thập niên 80";
+"theme.name.vintageRadio" = "Radio cổ điển";
+"theme.name.cyberpunk" = "Cyberpunk";
+"theme.name.stealth" = "Tàng hình";
+"theme.name.aurora" = "Cực quang";
+"theme.name.submarine" = "Tàu ngầm";
+"theme.name.hamRadio" = "Radio nghiệp dư";
+"theme.name.festival" = "Lễ hội";
+"theme.name.blackHole" = "Hố đen";
+"theme.name.galaxy" = "Thiên hà";
+"theme.name.hacker" = "Hacker";
+"theme.name.wildfire" = "Cháy rừng";
+"theme.name.arctic" = "Bắc Cực";
+
+// Sleep timer
+"sleep_timer.title" = "Hẹn giờ tắt radio";
+"sleep_timer.close" = "Đóng";
+"sleep_timer.paywall_message" = "Mở khoá Talky Pro để dùng hẹn giờ tắt radio";
+"sleep_timer.unlock_pro" = "Mở khoá Pro";
+"sleep_timer.countdown_label" = "Radio sẽ dừng sau";
+"sleep_timer.cancel" = "Huỷ hẹn giờ";
+"sleep_timer.picker_prompt" = "Bạn muốn nghe trong bao lâu?";
+
+// Equalizer
+"equalizer.title" = "Bộ chỉnh âm";
+"equalizer.subtitle" = "Chọn một thiết lập âm thanh";
+"equalizer.active_preset" = "Thiết lập đang dùng";
+"equalizer.preset.flat" = "Phẳng";
+"equalizer.preset.bass" = "Âm trầm";
+"equalizer.preset.vocal" = "Giọng hát";
+"equalizer.preset.rock" = "Rock";
+"equalizer.preset.pop" = "Pop";
+
+// Recordings
+"recordings.title" = "Bản ghi";
+"recordings.delete_all_title" = "Xoá tất cả bản ghi?";
+"recordings.delete_all" = "Xoá tất cả";
+"recordings.delete_all_message" = "Không thể hoàn tác thao tác này.";
+"recordings.cancel" = "Huỷ";
+"recordings.pro_feature" = "Tính năng Pro";
+"recordings.paywall_message" = "Mở khoá Talky Pro để ghi và nghe lại cả tín hiệu bạn phát lẫn tín hiệu nhận được.";
+"recordings.unlock_pro" = "Mở khoá Pro";
+"recordings.empty_title" = "Chưa có bản ghi";
+"recordings.empty_message" = "Các tín hiệu bạn phát và nhận sẽ xuất hiện ở đây.";
+"recordings.privacy_notice" = "Bản ghi chỉ được lưu trên thiết bị của bạn. Bạn tự chịu trách nhiệm sử dụng chúng theo luật về quyền riêng tư ở địa phương.";
+"recordings.own_transmission" = "Tín hiệu của bạn";
+
+// Private channels
+"private_channels.title" = "Kênh riêng";
+"private_channels.close" = "Đóng";
+"private_channels.channel_fallback" = "Kênh";
+"private_channels.public_state_title" = "Bạn đang ở chế độ công khai";
+"private_channels.public_state_description" = "Bất kỳ người dùng Talky nào ở gần cũng tìm thấy bạn. Hãy tạo kênh riêng để chỉ nói chuyện với những người biết mật khẩu.";
+"private_channels.create_or_join" = "Tạo hoặc tham gia kênh riêng";
+"private_channels.private_state_title" = "Kênh riêng đang bật";
+"private_channels.private_state_description" = "Chỉ những người biết mật khẩu mới tìm thấy và nói chuyện được với bạn.";
+"private_channels.leave" = "Rời kênh";
+"private_channels.form.title" = "Tham gia một kênh";
+"private_channels.form.name_label" = "Tên kênh";
+"private_channels.form.name_placeholder" = "Ví dụ: Gia đình Nguyễn";
+"private_channels.form.password_label" = "Mật khẩu";
+"private_channels.form.password_placeholder" = "Ít nhất 4 ký tự";
+"private_channels.form.submit" = "Tham gia";
+"private_channels.form.hint" = "Chỉ những thiết bị nhập cùng một mật khẩu mới tìm thấy nhau và nói chuyện được.";
+"private_channels.paywall.pro_feature" = "Tính năng Pro";
+"private_channels.paywall.headline" = "Kênh được bảo vệ bằng mật khẩu";
+"private_channels.paywall.description" = "Tạo các kênh bộ đàm có mật khẩu: chỉ người biết mật khẩu mới tìm thấy và nói chuyện được với bạn.";
+"private_channels.paywall.cta" = "Mở khoá bằng Talky Pro";
+"private_channels.error.empty_name" = "Vui lòng nhập tên kênh.";
+"private_channels.error.password_min" = "Mật khẩu phải có ít nhất %d ký tự.";
+"private_channels.error.join_failed" = "Không tham gia được kênh. Hãy kiểm tra xem Talky Pro có đang bật không.";
+
+// Settings - Pro section
+"settings.pro.title" = "Talky Pro";
+"settings.pro.title_active" = "Talky Pro đang bật";
+"settings.pro.manage_subscription" = "Quản lý gói đăng ký";
+"settings.pro.manage_subscription_subtitle" = "Thay đổi hoặc huỷ từ Apple ID của bạn";
+"settings.pro.unlock" = "Mở khoá Talky Pro";
+"settings.pro.unlock_subtitle" = "Không quảng cáo, không giới hạn";
+"settings.pro.restore_purchases" = "Khôi phục giao dịch";
+
+// Settings - Personalization section
+"settings.personalization.title" = "Cá nhân hoá";
+"settings.personalization.themes" = "Giao diện";
+"settings.personalization.history.title" = "Lịch sử liên lạc";
+"settings.personalization.history.subtitle" = "Xem ai đã liên lạc với bạn";
+"settings.personalization.sleep_timer.title" = "Hẹn giờ tắt radio";
+"settings.personalization.sleep_timer.subtitle" = "Tắt radio sau X phút";
+"settings.personalization.equalizer.title" = "Bộ chỉnh âm";
+"settings.personalization.equalizer.subtitle" = "Thiết lập âm thanh cao cấp";
+"settings.personalization.recordings.title" = "Bản ghi";
+"settings.personalization.recordings.subtitle" = "Nghe lại các tín hiệu của bạn";
+"settings.personalization.private_channels.title" = "Kênh riêng";
+"settings.personalization.private_channels.subtitle" = "Bộ đàm có mật khẩu";
+
+// MARK: - Station Browser & Sleep Timer
+"browse_stations" = "Duyệt các đài";
+"search_stations" = "Tìm đài…";
+"all_stations" = "Tất cả";
+"favorites" = "Yêu thích";
+"recents" = "Gần đây";
+"nearby" = "Ở gần";
+"by_country" = "Theo quốc gia";
+"by_genre" = "Theo thể loại";
+"no_favorites_hint" = "Chưa có mục yêu thích. Nhấn giữ một đài để thêm vào.";
+"no_recents" = "Chưa có đài nào nghe gần đây.";
+"no_search_results" = "Không tìm thấy đài nào.";
+"now_playing_short" = "ĐANG PHÁT";
+"pro_badge" = "PRO";
+"sleep_timer" = "Hẹn giờ tắt";
+
+// MARK: - Mode Switch & Onboarding Radio
+"mode_switch_hint" = "Chạm nút góc trên bên trái để chuyển giữa bộ đàm và Radio thế giới";
+"got_it" = "Đã hiểu";
+"onboarding.radio_mode.title" = "Bộ đàm + radio";
+"onboarding.radio_mode.subtitle" = "Chuyển chế độ chỉ với một lần chạm";
+"onboarding.radio_mode.body" = "Nút góc trên bên trái cho phép bạn chuyển giữa bộ đàm để nói chuyện với bạn bè và radio internet với hàng trăm đài quốc tế.";
+"onboarding.radio_mode.streaming_note" = "Radio dùng luồng phát qua internet — không phải ăng-ten FM thật. Cần có kết nối dữ liệu (Wi-Fi hoặc di động).";
+
+// MARK: - Live Activities
+"live_activities.title" = "Hoạt động trực tiếp";
+"live_activities.toggle" = "Hiển thị khi chạy nền";
+"live_activities.description" = "Hiển thị điều khiển radio và bộ đàm trên Dynamic Island và màn hình khoá khi ứng dụng chạy nền.";
+
+// MARK: - Pro upsell banner (added 2026-05-23)
+"paywall.brand_label" = "TALKY PRO";
+"upsell.title" = "Mở khoá Talky Pro";
+"upsell.subtitle" = "Không quảng cáo · ủng hộ một nhà phát triển độc lập";
+"upsell.dismiss" = "Bỏ qua";
+
+// MARK: - Themes Pack (one-shot non-consumable, added 2026-05-23)
+"themes_pack.title" = "Mở khoá tất cả giao diện";
+"themes_pack.subtitle" = "Mua một lần, thuộc về bạn mãi mãi";
+"themes_pack.cta_buy" = "Mở khoá tất cả giao diện";
+"themes_pack.prop.all_themes" = "11 giao diện cao cấp (Identity + hoạt hình)";
+"themes_pack.prop.forever" = "Không cần đăng ký, thuộc về bạn mãi mãi";
+"themes_pack.prop.one_time" = "Thanh toán một lần";
+"theme_purchase.or" = "Hoặc";
+"theme_purchase.subscribe_title" = "Chọn Talky Pro thay vì vậy";
+"theme_purchase.subscribe_subtitle" = "Giao diện + radio quốc tế + không quảng cáo";
+"theme_purchase.apple_footer" = "Thanh toán do Apple xử lý. Gói giao diện không tự động gia hạn.";
+"paywall.close" = "Đóng";
+"paywall.link.restore" = "Khôi phục";
+"paywall.link.terms" = "Điều khoản";
+"paywall.link.privacy" = "Quyền riêng tư";
+"paywall.error_title" = "Mua không thành công";
+"paywall.error.purchase_failed" = "Không hoàn tất được giao dịch. Hãy kiểm tra kết nối và thử lại.";
+"paywall.error.no_purchases" = "Không tìm thấy giao dịch nào trước đây trên Apple ID này.";
+"paywall.error.restore_failed" = "Không khôi phục được giao dịch. Vui lòng thử lại sau.";
+"check_wifi_bluetooth" = "Kiểm tra Wi-Fi và Bluetooth";
+
+/* Paywall — supporter note: who is behind Talky and what Pro really pays for */
+"paywall.support.eyebrow" = "ĐÔI LỜI TỪ NHÀ PHÁT TRIỂN";
+"paywall.support.title" = "Talky do một người làm ra";
+"paywall.support.body" = "Tôi là nhà phát triển độc lập và mã nguồn của Talky được công khai trên GitHub. Pro không phải bức tường vây quanh ứng dụng: đó là khoản đóng góp giúp trang trải tài khoản nhà phát triển Apple, chi phí máy chủ và thời gian bỏ ra để thêm đài và tính năng. Nếu bây giờ chưa phải lúc, cứ tiếp tục dùng Talky miễn phí — nó vẫn miễn phí.";
+"paywall.support.github" = "Xem mã nguồn trên GitHub";
+"paywall.support.compact" = "Do một nhà phát triển độc lập làm ra — mã nguồn Talky công khai trên GitHub.";
+
+/* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
+"paywall.lifetime.cta" = "Trả một lần ·";
+"paywall.lifetime.subtitle" = "Một lần thanh toán. Trọn bộ Pro, mãi mãi — gồm cả giao diện. Không cần đăng ký.";
+"paywall.lifetime.owned" = "Thuộc về bạn mãi mãi. Cảm ơn bạn.";

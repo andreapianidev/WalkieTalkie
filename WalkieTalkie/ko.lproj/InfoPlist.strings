@@ -1,0 +1,12 @@
+/* 
+   InfoPlist.strings (Korean)
+   WalkieTalkie
+*/
+
+// MARK: - Permission Descriptions
+"NSMicrophoneUsageDescription" = "무전기로 음성을 보내려면 마이크 접근 권한이 필요합니다.";
+"NSLocalNetworkUsageDescription" = "근처 기기와 무전으로 연결하기 위해 로컬 네트워크를 사용합니다.";
+"NSBluetoothAlwaysUsageDescription" = "근처의 무전기 기기를 찾아 연결하기 위해 블루투스를 사용합니다.";
+"NSBluetoothPeripheralUsageDescription" = "다른 무전기 기기가 이 기기를 찾을 수 있도록 블루투스를 사용합니다.";
+"NSNetworkVolumesUsageDescription" = "기기 간 무전 통신을 위해 네트워크에 접근합니다.";
+"NSUserTrackingUsageDescription" = "이 식별자는 더 관련성 높은 광고를 보여주고 앱의 무료 개발을 지원하는 데 사용됩니다.";

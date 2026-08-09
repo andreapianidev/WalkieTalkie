@@ -1,0 +1,12 @@
+/* 
+   InfoPlist.strings (Turkish)
+   WalkieTalkie
+*/
+
+// MARK: - Permission Descriptions
+"NSMicrophoneUsageDescription" = "Bu uygulamanın telsizle sesli mesaj göndermesi için mikrofon erişimi gerekir.";
+"NSLocalNetworkUsageDescription" = "Bu uygulama, telsiz iletişimi için yakındaki cihazlara bağlanmak üzere yerel ağı kullanır.";
+"NSBluetoothAlwaysUsageDescription" = "Bu uygulama, yakındaki telsiz cihazlarını bulmak ve onlara bağlanmak için Bluetooth'u kullanır.";
+"NSBluetoothPeripheralUsageDescription" = "Bu uygulama, diğer telsiz cihazları tarafından bulunabilmek için Bluetooth'u kullanır.";
+"NSNetworkVolumesUsageDescription" = "Bu uygulama, cihazlar arası telsiz iletişimi için ağa erişir.";
+"NSUserTrackingUsageDescription" = "Bu tanımlayıcı, sana daha ilgili reklamlar göstermek ve uygulamanın ücretsiz geliştirilmesini desteklemek için kullanılacak.";

@@ -1,0 +1,12 @@
+/* 
+   InfoPlist.strings (Chinese (Simplified))
+   WalkieTalkie
+*/
+
+// MARK: - Permission Descriptions
+"NSMicrophoneUsageDescription" = "此 App 需要访问麦克风，以便通过对讲功能发送语音。";
+"NSLocalNetworkUsageDescription" = "此 App 使用局域网与附近的设备建立对讲连接。";
+"NSBluetoothAlwaysUsageDescription" = "此 App 使用蓝牙发现附近的对讲设备并与之连接。";
+"NSBluetoothPeripheralUsageDescription" = "此 App 使用蓝牙，以便被其他对讲设备发现。";
+"NSNetworkVolumesUsageDescription" = "此 App 访问网络，用于设备之间的对讲通信。";
+"NSUserTrackingUsageDescription" = "该标识符将用于向你展示更相关的广告，并支持此 App 的免费开发。";

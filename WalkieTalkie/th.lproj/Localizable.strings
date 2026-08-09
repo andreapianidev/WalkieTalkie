@@ -1,0 +1,482 @@
+/* 
+   Localizable.strings (Thai)
+   WalkieTalkie
+   
+   Created by Andrea Piani on 12/07/25.
+*/
+
+// MARK: - General
+"coming_soon" = "เร็ว ๆ นี้";
+"ok" = "ตกลง";
+"cancel" = "ยกเลิก";
+"error" = "ข้อผิดพลาด";
+"accept" = "ยอมรับ";
+"decline" = "ปฏิเสธ";
+"disconnect" = "ตัดการเชื่อมต่อ";
+"settings" = "การตั้งค่า";
+"retry" = "ลองอีกครั้ง";
+"unknown" = "ไม่ทราบ";
+"version" = "เวอร์ชัน";
+"developed_by" = "พัฒนาโดย";
+"website" = "เว็บไซต์";
+"open_source" = "โอเพนซอร์ส";
+"view_on_github" = "ดูบน GitHub";
+"license" = "สัญญาอนุญาต";
+
+// MARK: - Peak App Promotion
+"download_peak" = "ดาวน์โหลด Peak ฟรี";
+"peak_app_subtitle" = "แอปวัดความสูงครบเครื่อง พร้อมวิทยุสื่อสารในตัว";
+
+// MARK: - Notifications
+"new_device_detected" = "พบอุปกรณ์ใหม่";
+"device_detected_message" = "พบ %@ อยู่ใกล้ ๆ";
+"connection_established" = "เชื่อมต่อแล้ว";
+"connected_to_device" = "เชื่อมต่อกับ %@ แล้ว";
+"connection_lost" = "การเชื่อมต่อหลุด";
+"disconnected_from_device" = "ตัดการเชื่อมต่อจาก %@ แล้ว";
+"incoming_transmission" = "กำลังรับสัญญาณ";
+"receiving_audio_message" = "กำลังรับข้อความเสียง";
+"background_scan" = "ค้นหาเบื้องหลัง";
+"scanning_for_devices" = "กำลังค้นหาอุปกรณ์ใกล้เคียง";
+"notifications" = "การแจ้งเตือน";
+"enable_notifications" = "เปิดการแจ้งเตือน";
+"disable_notifications" = "ปิดการแจ้งเตือน";
+"notification_description" = "รับการแจ้งเตือนเมื่อพบอุปกรณ์ใหม่หรือระหว่างการส่งสัญญาณ";
+"notifications_enabled" = "เปิดการแจ้งเตือนแล้ว";
+"notifications_activated_message" = "จากนี้คุณจะได้รับการแจ้งเตือนเมื่อพบอุปกรณ์และเมื่อมีการส่งสัญญาณ";
+
+// MARK: - Battery Status
+"charging" = "กำลังชาร์จ";
+"full" = "เต็ม";
+"unplugged" = "ไม่ได้เสียบสายชาร์จ";
+
+// MARK: - Main Interface
+"frequency_owner" = "เจ้าของความถี่";
+"radio_fm" = "วิทยุโลก";
+"walkie_talkie" = "WalkieTalkie";
+"device" = "อุปกรณ์";
+"status" = "สถานะ";
+"no_error" = "ไม่มีข้อผิดพลาด";
+"channel_1" = "ช่อง 1";
+"en" = "TH";
+"hold" = "กดค้าง";
+"pressed" = "กำลังกด";
+"to_talk" = "เพื่อพูด";
+"release" = "ปล่อย";
+"to_send" = "เพื่อส่ง";
+"radio_mode" = "วิทยุ";
+"radio_fm_caps" = "วิทยุ";
+"active" = "ทำงานอยู่";
+"no_connection" = "ไม่มีการเชื่อมต่อ";
+"devices_connected" = "อุปกรณ์ที่เชื่อมต่อ";
+"status.connected_crossplatform" = "เชื่อมต่อแล้ว · Mac/Android (%d)";
+"status.connected_mixed" = "เชื่อมต่อแล้ว (%1$d · Mac/Android %2$d)";
+"status.disconnected" = "ไม่ได้เชื่อมต่อ";
+"status.connected" = "เชื่อมต่อแล้ว";
+"status.connected_count" = "เชื่อมต่อแล้ว (%d)";
+"status.advertising" = "ผู้อื่นมองเห็นคุณ";
+"status.searching" = "กำลังค้นหา…";
+"status.connecting" = "กำลังเชื่อมต่อ…";
+"transmission_in_progress" = "กำลังส่งสัญญาณ";
+"reception_in_progress" = "กำลังรับสัญญาณ";
+"no_transmission" = "ไม่มีการส่งสัญญาณ";
+
+// MARK: - Tab Bar
+"talk" = "พูด";
+"explore" = "สำรวจ";
+"connections" = "การเชื่อมต่อ";
+"settings_tab" = "การตั้งค่า";
+"performance" = "ประสิทธิภาพ";
+
+// MARK: - Performance
+"performance_title" = "ประสิทธิภาพ";
+"high_traffic" = "ทราฟฟิกสูง";
+"normal_performance" = "ประสิทธิภาพปกติ";
+"memory_usage" = "หน่วยความจำ";
+"network_latency" = "ความหน่วงเฉลี่ย";
+"connection_time" = "เวลาเชื่อมต่อ";
+"active_connections" = "การเชื่อมต่อ";
+"performance_trends" = "แนวโน้มประสิทธิภาพ";
+"recommendations" = "คำแนะนำ";
+"connections_active" = "การเชื่อมต่อที่ใช้งานอยู่";
+"updated_now" = "อัปเดตเมื่อครู่นี้";
+"optimized_mode" = "โหมดปรับให้เหมาะสม";
+"audio_cache" = "แคชเสียง";
+"current_recommendations" = "คำแนะนำปัจจุบัน";
+"no_recommendations" = "ยังไม่มีคำแนะนำ ประสิทธิภาพอยู่ในเกณฑ์ดีเยี่ยม!";
+"full_report" = "รายงานฉบับเต็ม";
+"close" = "ปิด";
+"too_many_connections_warning" = "การเชื่อมต่อมากเกินไป (%d) — ควรจำกัดไว้ที่ 6-8 เครื่องเพื่อประสิทธิภาพที่ดีที่สุด";
+
+// MARK: - Radio
+"station" = "สถานี";
+"no_station" = "ไม่มีสถานี";
+"buffering" = "กำลังบัฟเฟอร์…";
+"genre" = "แนวเพลง";
+"country" = "ประเทศ";
+"scanning" = "กำลังค้นหา…";
+
+// MARK: - Connections View
+"connections_title" = "การเชื่อมต่อ";
+"manage_connections" = "จัดการการเชื่อมต่อวิทยุสื่อสาร";
+"connected_devices" = "อุปกรณ์ที่เชื่อมต่อ";
+"scanning_in_progress" = "กำลังค้นหา…";
+"offline" = "ออฟไลน์";
+"online" = "ออนไลน์";
+"advertising" = "มองเห็นได้";
+"browsing" = "กำลังค้นหา";
+"on" = "เปิด";
+"off" = "ปิด";
+"connected_devices_count" = "อุปกรณ์ที่เชื่อมต่อ";
+"no_devices_connected" = "ไม่มีอุปกรณ์ที่เชื่อมต่อ";
+"devices_nearby_hint" = "ตรวจสอบว่าอุปกรณ์อื่นอยู่ใกล้ ๆ เปิดแอปอยู่ และอยู่บนเครือข่าย Wi-Fi เดียวกัน";
+"connected" = "เชื่อมต่อแล้ว";
+"disconnect_all" = "ตัดการเชื่อมต่อทั้งหมด";
+"restart_discovery" = "เริ่มค้นหาใหม่";
+"disconnect_device" = "ตัดการเชื่อมต่ออุปกรณ์";
+"disconnect_confirmation" = "แน่ใจหรือไม่ว่าต้องการตัดการเชื่อมต่อจากทุกอุปกรณ์";
+
+// MARK: - Explore View
+"explore_title" = "สำรวจ";
+"scan_nearby_devices" = "ค้นหาอุปกรณ์ใกล้เคียง";
+"detected_devices" = "อุปกรณ์ที่พบ";
+"no_devices_detected" = "ไม่พบอุปกรณ์";
+"ensure_devices_open" = "ตรวจสอบว่าอุปกรณ์อื่นเปิดแอปอยู่ และอยู่บนเครือข่าย Wi-Fi เดียวกัน";
+"available" = "พร้อมใช้งาน";
+"tap_plus_to_invite" = "แตะ + เพื่อส่งคำขอไปยัง iPhone หรือ iPad อีกเครื่องต้องกดยอมรับ ส่วน Mac และ Android จะเชื่อมต่อเองอัตโนมัติ";
+"send_connection_request" = "ส่งคำขอเชื่อมต่อ";
+"invitation_sent" = "ส่งคำขอแล้ว";
+"strong" = "แรง";
+"medium" = "ปานกลาง";
+"weak" = "อ่อน";
+
+// MARK: - Settings View
+"settings_title" = "การตั้งค่า";
+"configure_app" = "ตั้งค่าแอปของคุณ";
+"audio" = "เสียง";
+"white_noise" = "ไวต์นอยส์";
+"background_audio" = "เอฟเฟกต์วิทยุจำลอง (เสียงบรรยากาศ ไม่ใช่การสื่อสารจริง)";
+"background_audio_description" = "เสียงพื้นหลังระหว่างใช้งาน";
+"noise_volume" = "ระดับเสียงรบกวน";
+"adjust_background_volume" = "ปรับระดับเสียงรบกวนพื้นหลัง";
+"haptic_feedback" = "การตอบสนองแบบสัมผัส";
+"vibration_on_buttons" = "สั่นเมื่อกดปุ่ม";
+"auto_connect" = "เชื่อมต่ออัตโนมัติ";
+"auto_connect_description" = "เชื่อมต่อกับอุปกรณ์ที่รู้จักโดยอัตโนมัติ";
+"voice_activation" = "สั่งงานด้วยเสียง";
+"voice_activation_description" = "ส่งสัญญาณอัตโนมัติเมื่อพูด";
+"voice_sensitivity" = "ความไวของเสียง";
+"voice_sensitivity_description" = "ปรับความไวของการสั่งงานด้วยเสียง";
+"low_power_mode" = "โหมดประหยัดพลังงาน";
+"low_power_mode_description" = "ลดการใช้แบตเตอรี่";
+"reset_settings" = "รีเซ็ตการตั้งค่า";
+"how_to_use" = "วิธีใช้แอป";
+"instruction_1_title" = "เปิดแอปบนทุกอุปกรณ์";
+"instruction_1_description" = "ตรวจสอบว่าทุกอุปกรณ์เปิดแอป WalkieTalkie อยู่และทำงานอยู่";
+"instruction_2_title" = "ไปที่ สำรวจ";
+"instruction_2_description" = "แตะแท็บ \"สำรวจ\" เพื่อดูอุปกรณ์ที่พร้อมใช้งานอยู่ใกล้ ๆ";
+"instruction_3_title" = "เชื่อมต่ออุปกรณ์";
+"instruction_3_description" = "แตะ + ข้าง iPhone หรือ iPad เพื่อส่งคำขอ ส่วน Mac และ Android จะเชื่อมต่อเองบนเครือข่าย Wi-Fi เดียวกัน";
+"instruction_4_title" = "ช่องเดียวกัน";
+"instruction_4_description" = "ทุกคนเริ่มต้นที่ช่องสาธารณะ จึงไม่ต้องตั้งค่าอะไร ช่องส่วนตัวจะเชื่อมเฉพาะอุปกรณ์ที่ใส่รหัสผ่านเดียวกันเท่านั้น";
+"instruction_5_title" = "กดค้างเพื่อพูด";
+"instruction_5_description" = "กดปุ่มตรงกลางค้างไว้เพื่อส่ง ปล่อยเพื่อฟัง";
+"app_info" = "ข้อมูลแอป";
+"support_development" = "สนับสนุนการพัฒนา";
+"buy_me_coffee" = "เลี้ยงกาแฟสักแก้ว";
+"support_description" = "ถ้าคุณชอบแอปนี้ ลองสนับสนุนผู้พัฒนาดูสิ";
+"view_performance" = "ดูสถิติประสิทธิภาพ";
+
+// MARK: - Background Audio
+"background_playback" = "เล่นเบื้องหลัง";
+"background_playback_description" = "เล่นวิทยุต่อเมื่อแอปอยู่เบื้องหลัง";
+"now_playing" = "กำลังเล่น";
+"control_center_info" = "ควบคุมการเล่นได้จากศูนย์ควบคุมและหน้าจอล็อก";
+
+// MARK: - Appearance
+"appearance" = "ลักษณะที่ปรากฏ";
+"dark_mode" = "โหมดมืด";
+"dark_mode_description" = "ใช้ธีมมืดกับหน้าตาแอป";
+
+// MARK: - Peak App
+"peak_app_title" = "Peak: เครื่องวัดความสูงสำหรับนักเดินป่า";
+"peak_app_description" = "เครื่องวัดความสูงฟรีสำหรับนักเดินป่า พร้อม AI และวิทยุสื่อสารในตัว";
+"download_peak_app" = "ดาวน์โหลดแอป Peak";
+"peak_altimeter_free" = "เครื่องวัดความสูงฟรี";
+"peak_walkie_ai_description" = "พร้อมวิทยุสื่อสารและ AI";
+
+// MARK: - Alerts
+"connection_request" = "คำขอเชื่อมต่อ";
+"wants_to_connect" = "ต้องการเชื่อมต่อ";
+"microphone_permission_required" = "ต้องขออนุญาตใช้ไมโครโฟน";
+"microphone_permission_message" = "แอป WalkieTalkie ต้องเข้าถึงไมโครโฟนจึงจะทำงานได้ หากไม่อนุญาต คุณจะส่งเสียงไม่ได้";
+"audio_transmission_error" = "ส่งเสียงไม่สำเร็จ กรุณาลองอีกครั้ง";
+
+// MARK: - Errors
+"no_connected_peers" = "ไม่มีอุปกรณ์ที่เชื่อมต่อ";
+
+// MARK: - Onboarding
+"onboarding_p1_title" = "วิทยุสื่อสารใน iPhone ของคุณ";
+"onboarding_p1_subtitle" = "บนภูเขา ในเทศกาล หรือกลางลานที่คนแน่น: คุยกับเพื่อนได้แม้ในที่ที่ไม่มีสัญญาณ";
+
+"onboarding_p2_no_internet_title" = "ไม่ต้องมีอินเทอร์เน็ต ไม่ต้องมีซิม";
+"onboarding_p2_no_internet_body" = "ระหว่าง iPhone กับ iPad เสียงจะวิ่งตรงจากเครื่องหนึ่งไปอีกเครื่องผ่าน Wi-Fi และบลูทูธ ไม่ต้องมีเราเตอร์ ไม่ต้องมีเซิร์ฟเวอร์ ไม่ต้องมีบัญชี";
+"onboarding_p2_range_caveat" = "กำแพง เนินเขา และความต่างระดับทำให้ระยะสั้นลง";
+"onboarding_p2_same_wifi" = "หากต้องการเชื่อมกับ Mac หรือโทรศัพท์ Android ให้ทุกเครื่องอยู่บนเครือข่าย Wi-Fi เดียวกัน เพราะการเชื่อมต่อนั้นวิ่งผ่านเครือข่ายท้องถิ่น";
+"onboarding_p2_multi_platform" = "Talky ใช้ได้บน iPad, Mac และ Android ด้วย — แอปเดียวกัน ทุกอุปกรณ์ของคุณอยู่ในบทสนทนาเดียวกัน";
+
+"onboarding_p3_ptt_title" = "กดค้างเพื่อพูด";
+"onboarding_p3_ptt_body" = "เหมือนวิทยุสื่อสารของจริง: กดปุ่มตรงกลางค้างไว้เพื่อพูด ปล่อยเพื่อฟัง";
+"onboarding_p3_ptt_rule" = "ในช่องเดียวกัน พูดได้ทีละคนเท่านั้น";
+
+"onboarding_p4_frequency_title" = "ช่องเดียว ทุกคนได้ยินคุณ";
+"onboarding_p4_frequency_analogy" = "ไม่มีอะไรต้องตั้งให้ตรงกัน Talky ทุกเครื่องเริ่มที่ช่องสาธารณะ อุปกรณ์ที่อยู่ใกล้กันจึงหากันเจอเอง";
+"onboarding_p4_change_freq_hint" = "ปุ่ม ‹ และ › ใช้เลื่อนดูความถี่บนหน้าจอ การส่งสัญญาณทำจากความถี่ home กดปุ่มสีเขียว HOME เพื่อกลับมา";
+"onboarding_p4_private_channels_teaser" = "อยากได้ช่องเฉพาะกลุ่มของคุณไหม สร้างช่องส่วนตัวพร้อมรหัสผ่าน แล้วจะมีแค่คนที่พิมพ์รหัสผ่านเดียวกันที่หาคุณเจอ — ทั้งบน iPhone, Mac และ Android";
+
+"onboarding_p5_steps_title" = "พร้อมไหม แค่ 3 ขั้นตอน";
+"onboarding_p5_step1" = "เปิด Talky บนอุปกรณ์เครื่องที่สองที่อยู่ใกล้ ๆ: iPhone, iPad, Mac หรือ Android";
+"onboarding_p5_step2" = "บน iPhone และ iPad ให้เปิด สำรวจ แล้วแตะ + ข้างอุปกรณ์ จากนั้นกดยอมรับบนอีกเครื่อง ส่วน Mac และ Android จะเชื่อมต่อเองบน Wi-Fi เดียวกัน";
+"onboarding_p5_step3" = "เมื่อเชื่อมต่อแล้ว (จุดสีเขียว) ให้กดปุ่มตรงกลางค้างไว้เพื่อพูด ปล่อยเพื่อฟัง";
+
+"onboarding_permissions_title" = "ขออนุญาตสองอย่าง แล้วเริ่มได้เลย";
+"onboarding_permissions_description" = "Talky ต้องใช้สิ่งเหล่านี้จึงจะทำงานได้";
+"onboarding_microphone_permission" = "ไมโครโฟน";
+"onboarding_permission_mic_why" = "เพื่อรับเสียงของคุณเมื่อคุณกดพูด";
+"onboarding_notification_permission" = "การแจ้งเตือน";
+"onboarding_permission_notif_why" = "เพื่อแจ้งคุณเมื่อมีคนเรียกขณะที่แอปปิดอยู่";
+"onboarding_permission_open_settings" = "เปิดการตั้งค่า iOS";
+
+"onboarding_continue" = "ต่อไป";
+"onboarding_get_started" = "เริ่มกันเลย";
+"onboarding_allow_permissions" = "อนุญาต";
+"onboarding_skip" = "ข้าม";
+"onboarding_back" = "ย้อนกลับ";
+
+// MARK: - First Run Coach
+"coach_no_peers_title" = "ขั้นแรก";
+"coach_no_peers_body" = "เปิด Talky บนอุปกรณ์อีกเครื่องที่อยู่ใกล้ ๆ บน Wi-Fi เดียวกัน แล้วแตะ \"สำรวจ\" ด้านล่าง";
+"coach_press_ptt_title" = "กดค้างตรงนี้";
+"coach_press_ptt_body" = "กดปุ่มตรงกลางค้างไว้เพื่อพูด ปล่อยเพื่อฟัง";
+"coach_dismiss" = "เข้าใจแล้ว";
+"ads_section_title" = "โฆษณาและความเป็นส่วนตัว";
+"watch_ad_remove_ads" = "ดูวิดีโอ แล้วไม่มีโฆษณา";
+"watch_ad_remove_ads_subtitle" = "ไม่มีโฆษณา 1 ชั่วโมง";
+"ads_removed_active" = "ปิดโฆษณาแล้ว";
+"ads_removed_remaining" = "เหลืออีก %d นาที";
+"manage_privacy" = "จัดการการตั้งค่าความเป็นส่วนตัว";
+
+/* MARK: - Talky Pro features (added 2026-05) */
+
+// Paywall
+"paywall.close" = "ปิด";
+"paywall.title" = "ปลดล็อก Talky Pro";
+"paywall.subtitle" = "Talky ทั้งหมด ไม่มีขีดจำกัด";
+"paywall.error_title" = "ซื้อไม่สำเร็จ";
+"paywall.feature.no_ads" = "ไม่มีโฆษณา";
+"paywall.feature.unlimited_stations" = "สถานีวิทยุไม่จำกัด";
+"paywall.feature.premium_international" = "วิทยุต่างประเทศระดับพรีเมียม";
+"paywall.feature.record_transmissions" = "บันทึกการส่งสัญญาณของคุณ";
+"paywall.feature.private_channels" = "ช่องส่วนตัว";
+"paywall.feature.custom_themes" = "ธีมที่ปรับแต่งเอง";
+"paywall.feature.history" = "ประวัติการส่งสัญญาณ";
+"paywall.feature.sleep_timer" = "ตัวตั้งเวลาปิดวิทยุ";
+"paywall.feature.equalizer" = "อีควอไลเซอร์ระดับพรีเมียม";
+"paywall.plan.weekly" = "รายสัปดาห์";
+"paywall.plan.weekly_suffix" = "/สัปดาห์";
+"paywall.plan.yearly" = "รายปี";
+"paywall.plan.yearly_suffix" = "/ปี";
+"paywall.badge.most_popular" = "ยอดนิยมที่สุด";
+"paywall.badge.save" = "ประหยัด %d%%";
+"paywall.compare.weekly_vs_yearly" = "%1$@ ต่อปี ถ้าจ่ายรายสัปดาห์คุณจะเสีย %2$@";
+"paywall.trial.badge" = "ฟรี %1$d วัน จากนั้น %2$@ ต่อปี";
+"paywall.cta.start" = "เริ่มใช้ Talky Pro";
+"paywall.apple_footer" = "การสมัครสมาชิกจะต่ออายุอัตโนมัติ คุณยกเลิกได้ทุกเมื่อจากการตั้งค่า Apple ID ระบบจะเรียกเก็บเงินผ่าน Apple ID เมื่อยืนยันการซื้อ";
+"paywall.link.restore" = "กู้คืน";
+"paywall.link.terms" = "ข้อกำหนด";
+"paywall.link.privacy" = "ความเป็นส่วนตัว";
+"paywall.error.purchase_failed" = "ทำรายการซื้อไม่สำเร็จ ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง";
+"paywall.error.no_purchases" = "ไม่พบการซื้อก่อนหน้านี้บน Apple ID นี้";
+"paywall.error.restore_failed" = "กู้คืนการซื้อไม่สำเร็จ กรุณาลองใหม่ภายหลัง";
+
+// Transmission history
+"history.title" = "ประวัติการส่งสัญญาณ";
+"history.delete" = "ลบ";
+"history.clear_confirm_title" = "ล้างประวัติหรือไม่";
+"history.clear_all" = "ล้างทั้งหมด";
+"history.cancel" = "ยกเลิก";
+"history.paywall_message" = "ปลดล็อก Talky Pro เพื่อดูประวัติการส่งสัญญาณของคุณ";
+"history.unlock_pro" = "ปลดล็อก Pro";
+"history.empty" = "ยังไม่ได้รับการส่งสัญญาณใด ๆ";
+
+// Themes
+"theme.title" = "ธีม";
+"theme.subtitle" = "เปลี่ยนสีของแอป";
+"theme.name.default" = "ค่าเริ่มต้น";
+"theme.name.ocean" = "มหาสมุทร";
+"theme.name.forest" = "ป่า";
+"theme.name.sunset" = "อาทิตย์อัสดง";
+"theme.name.midnight" = "เที่ยงคืน";
+"theme.name.military" = "ทหาร";
+"theme.name.retro80s" = "เรโทรยุค 80";
+"theme.name.vintageRadio" = "วิทยุวินเทจ";
+"theme.name.cyberpunk" = "ไซเบอร์พังก์";
+"theme.name.stealth" = "ล่องหน";
+"theme.name.aurora" = "ออโรรา";
+"theme.name.submarine" = "เรือดำน้ำ";
+"theme.name.hamRadio" = "วิทยุสมัครเล่น";
+"theme.name.festival" = "เทศกาล";
+"theme.name.blackHole" = "หลุมดำ";
+"theme.name.galaxy" = "กาแล็กซี";
+"theme.name.hacker" = "แฮ็กเกอร์";
+"theme.name.wildfire" = "ไฟป่า";
+"theme.name.arctic" = "อาร์กติก";
+
+// Sleep timer
+"sleep_timer.title" = "ตัวตั้งเวลาปิดวิทยุ";
+"sleep_timer.close" = "ปิด";
+"sleep_timer.paywall_message" = "ปลดล็อก Talky Pro เพื่อใช้ตัวตั้งเวลาปิดวิทยุ";
+"sleep_timer.unlock_pro" = "ปลดล็อก Pro";
+"sleep_timer.countdown_label" = "วิทยุจะหยุดในอีก";
+"sleep_timer.cancel" = "ยกเลิกตัวตั้งเวลา";
+"sleep_timer.picker_prompt" = "คุณอยากฟังนานแค่ไหน";
+
+// Equalizer
+"equalizer.title" = "อีควอไลเซอร์";
+"equalizer.subtitle" = "เลือกค่าเสียงที่ตั้งไว้";
+"equalizer.active_preset" = "ค่าที่ใช้อยู่";
+"equalizer.preset.flat" = "แบน";
+"equalizer.preset.bass" = "เสียงเบส";
+"equalizer.preset.vocal" = "เสียงร้อง";
+"equalizer.preset.rock" = "ร็อก";
+"equalizer.preset.pop" = "ป็อป";
+
+// Recordings
+"recordings.title" = "การบันทึก";
+"recordings.delete_all_title" = "ลบการบันทึกทั้งหมดหรือไม่";
+"recordings.delete_all" = "ลบทั้งหมด";
+"recordings.delete_all_message" = "การกระทำนี้ย้อนกลับไม่ได้";
+"recordings.cancel" = "ยกเลิก";
+"recordings.pro_feature" = "ฟีเจอร์ Pro";
+"recordings.paywall_message" = "ปลดล็อก Talky Pro เพื่อบันทึกและฟังซ้ำทั้งเสียงที่คุณส่งและที่ได้รับ";
+"recordings.unlock_pro" = "ปลดล็อก Pro";
+"recordings.empty_title" = "ไม่มีการบันทึก";
+"recordings.empty_message" = "เสียงที่คุณส่งและที่ได้รับจะแสดงที่นี่";
+"recordings.privacy_notice" = "การบันทึกถูกเก็บไว้บนอุปกรณ์ของคุณเท่านั้น คุณเป็นผู้รับผิดชอบการใช้งานให้เป็นไปตามกฎหมายความเป็นส่วนตัวในท้องถิ่น";
+"recordings.own_transmission" = "การส่งสัญญาณของคุณ";
+
+// Private channels
+"private_channels.title" = "ช่องส่วนตัว";
+"private_channels.close" = "ปิด";
+"private_channels.channel_fallback" = "ช่อง";
+"private_channels.public_state_title" = "คุณอยู่ในโหมดสาธารณะ";
+"private_channels.public_state_description" = "ผู้ใช้ Talky คนใดที่อยู่ใกล้ ๆ ก็หาคุณเจอ สร้างช่องส่วนตัวเพื่อคุยเฉพาะกับคนที่รู้รหัสผ่าน";
+"private_channels.create_or_join" = "สร้างหรือเข้าร่วมช่องส่วนตัว";
+"private_channels.private_state_title" = "ช่องส่วนตัวกำลังใช้งาน";
+"private_channels.private_state_description" = "เฉพาะคนที่รู้รหัสผ่านเท่านั้นที่จะหาคุณเจอและคุยกับคุณได้";
+"private_channels.leave" = "ออกจากช่อง";
+"private_channels.form.title" = "เข้าร่วมช่อง";
+"private_channels.form.name_label" = "ชื่อช่อง";
+"private_channels.form.name_placeholder" = "เช่น ครอบครัวสมิธ";
+"private_channels.form.password_label" = "รหัสผ่าน";
+"private_channels.form.password_placeholder" = "อย่างน้อย 4 ตัวอักษร";
+"private_channels.form.submit" = "เข้าร่วม";
+"private_channels.form.hint" = "เฉพาะอุปกรณ์ที่ใส่รหัสผ่านเดียวกันเท่านั้นที่จะหากันเจอและคุยกันได้";
+"private_channels.paywall.pro_feature" = "ฟีเจอร์ Pro";
+"private_channels.paywall.headline" = "ช่องที่ป้องกันด้วยรหัสผ่าน";
+"private_channels.paywall.description" = "สร้างช่องวิทยุสื่อสารที่ป้องกันด้วยรหัสผ่าน เฉพาะคนที่รู้รหัสผ่านเท่านั้นที่จะหาคุณเจอและคุยกับคุณได้";
+"private_channels.paywall.cta" = "ปลดล็อกด้วย Talky Pro";
+"private_channels.error.empty_name" = "กรุณาใส่ชื่อช่อง";
+"private_channels.error.password_min" = "รหัสผ่านต้องมีอย่างน้อย %d ตัวอักษร";
+"private_channels.error.join_failed" = "เข้าร่วมช่องไม่สำเร็จ ตรวจสอบว่า Talky Pro เปิดใช้งานอยู่";
+
+// Settings - Pro section
+"settings.pro.title" = "Talky Pro";
+"settings.pro.title_active" = "Talky Pro เปิดใช้งานอยู่";
+"settings.pro.manage_subscription" = "จัดการการสมัครสมาชิก";
+"settings.pro.manage_subscription_subtitle" = "แก้ไขหรือยกเลิกจาก Apple ID ของคุณ";
+"settings.pro.unlock" = "ปลดล็อก Talky Pro";
+"settings.pro.unlock_subtitle" = "ไม่มีโฆษณา ไม่จำกัด";
+"settings.pro.restore_purchases" = "กู้คืนการซื้อ";
+
+// Settings - Personalization section
+"settings.personalization.title" = "การปรับแต่ง";
+"settings.personalization.themes" = "ธีม";
+"settings.personalization.history.title" = "ประวัติการส่งสัญญาณ";
+"settings.personalization.history.subtitle" = "ดูว่าใครติดต่อคุณบ้าง";
+"settings.personalization.sleep_timer.title" = "ตัวตั้งเวลาปิดวิทยุ";
+"settings.personalization.sleep_timer.subtitle" = "ปิดวิทยุหลังจาก X นาที";
+"settings.personalization.equalizer.title" = "อีควอไลเซอร์";
+"settings.personalization.equalizer.subtitle" = "ค่าเสียงระดับพรีเมียม";
+"settings.personalization.recordings.title" = "การบันทึก";
+"settings.personalization.recordings.subtitle" = "ฟังการส่งสัญญาณของคุณซ้ำ";
+"settings.personalization.private_channels.title" = "ช่องส่วนตัว";
+"settings.personalization.private_channels.subtitle" = "วิทยุสื่อสารที่ป้องกันด้วยรหัสผ่าน";
+
+// MARK: - Station Browser & Sleep Timer
+"browse_stations" = "เลือกดูสถานี";
+"search_stations" = "ค้นหาสถานี…";
+"all_stations" = "ทั้งหมด";
+"favorites" = "รายการโปรด";
+"recents" = "ล่าสุด";
+"nearby" = "ใกล้เคียง";
+"by_country" = "ตามประเทศ";
+"by_genre" = "ตามแนวเพลง";
+"no_favorites_hint" = "ยังไม่มีรายการโปรด กดสถานีค้างไว้เพื่อเพิ่ม";
+"no_recents" = "ยังไม่มีสถานีที่ฟังล่าสุด";
+"no_search_results" = "ไม่พบสถานี";
+"now_playing_short" = "ตอนนี้";
+"pro_badge" = "PRO";
+"sleep_timer" = "ตัวตั้งเวลาปิด";
+
+// MARK: - Mode Switch & Onboarding Radio
+"mode_switch_hint" = "แตะปุ่มมุมบนซ้ายเพื่อสลับระหว่างวิทยุสื่อสารกับวิทยุโลก";
+"got_it" = "เข้าใจแล้ว";
+"onboarding.radio_mode.title" = "วิทยุสื่อสาร + วิทยุ";
+"onboarding.radio_mode.subtitle" = "สลับโหมดได้ด้วยการแตะครั้งเดียว";
+"onboarding.radio_mode.body" = "ปุ่มมุมบนซ้ายให้คุณสลับระหว่างวิทยุสื่อสารสำหรับคุยกับเพื่อน กับวิทยุออนไลน์ที่มีสถานีต่างประเทศหลายร้อยสถานี";
+"onboarding.radio_mode.streaming_note" = "วิทยุใช้การสตรีมผ่านอินเทอร์เน็ต ไม่ใช่เสาอากาศ FM จริง จึงต้องมีการเชื่อมต่อข้อมูล (Wi-Fi หรือมือถือ)";
+
+// MARK: - Live Activities
+"live_activities.title" = "กิจกรรมสด";
+"live_activities.toggle" = "แสดงเมื่ออยู่เบื้องหลัง";
+"live_activities.description" = "แสดงปุ่มควบคุมวิทยุและวิทยุสื่อสารใน Dynamic Island และหน้าจอล็อกเมื่อแอปไปอยู่เบื้องหลัง";
+
+// MARK: - Pro upsell banner (added 2026-05-23)
+"paywall.brand_label" = "TALKY PRO";
+"upsell.title" = "ปลดล็อก Talky Pro";
+"upsell.subtitle" = "ไม่มีโฆษณา · สนับสนุนนักพัฒนาอิสระ";
+"upsell.dismiss" = "ปิดไว้";
+
+// MARK: - Themes Pack (one-shot non-consumable, added 2026-05-23)
+"themes_pack.title" = "ปลดล็อกทุกธีม";
+"themes_pack.subtitle" = "ซื้อครั้งเดียว เป็นของคุณตลอดไป";
+"themes_pack.cta_buy" = "ปลดล็อกทุกธีม";
+"themes_pack.prop.all_themes" = "11 ธีมพรีเมียม (Identity + แบบเคลื่อนไหว)";
+"themes_pack.prop.forever" = "ไม่ต้องสมัครสมาชิก เป็นของคุณตลอดไป";
+"themes_pack.prop.one_time" = "จ่ายครั้งเดียว";
+"theme_purchase.or" = "หรือ";
+"theme_purchase.subscribe_title" = "เลือก Talky Pro แทน";
+"theme_purchase.subscribe_subtitle" = "ธีม + วิทยุต่างประเทศ + ไม่มีโฆษณา";
+"theme_purchase.apple_footer" = "การชำระเงินดำเนินการโดย Apple ชุดธีมไม่ต่ออายุอัตโนมัติ";
+"paywall.close" = "ปิด";
+"paywall.link.restore" = "กู้คืน";
+"paywall.link.terms" = "ข้อกำหนด";
+"paywall.link.privacy" = "ความเป็นส่วนตัว";
+"paywall.error_title" = "ซื้อไม่สำเร็จ";
+"paywall.error.purchase_failed" = "ทำรายการซื้อไม่สำเร็จ ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง";
+"paywall.error.no_purchases" = "ไม่พบการซื้อก่อนหน้านี้บน Apple ID นี้";
+"paywall.error.restore_failed" = "กู้คืนการซื้อไม่สำเร็จ กรุณาลองใหม่ภายหลัง";
+"check_wifi_bluetooth" = "ตรวจสอบ Wi-Fi และบลูทูธ";
+
+/* Paywall — supporter note: who is behind Talky and what Pro really pays for */
+"paywall.support.eyebrow" = "ข้อความจากผู้พัฒนา";
+"paywall.support.title" = "Talky สร้างโดยคนคนเดียว";
+"paywall.support.body" = "ผมเป็นนักพัฒนาอิสระ และโค้ดของ Talky เปิดเป็นสาธารณะบน GitHub Pro ไม่ใช่กำแพงล้อมแอป แต่เป็นการสนับสนุนที่ช่วยจ่ายค่าบัญชีนักพัฒนา Apple ค่าเซิร์ฟเวอร์ และเวลาที่ใช้เพิ่มสถานีและฟีเจอร์ ถ้าตอนนี้ยังไม่สะดวก ใช้ Talky ฟรีต่อไปได้เลย — มันยังฟรีเหมือนเดิม";
+"paywall.support.github" = "ดูโค้ดบน GitHub";
+"paywall.support.compact" = "สร้างโดยนักพัฒนาอิสระคนเดียว — โค้ดของ Talky เปิดเป็นสาธารณะบน GitHub";
+
+/* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
+"paywall.lifetime.cta" = "จ่ายครั้งเดียว ·";
+"paywall.lifetime.subtitle" = "จ่ายครั้งเดียว ได้ทุกอย่างของ Pro ตลอดไป รวมธีมด้วย ไม่ต้องสมัครสมาชิก";
+"paywall.lifetime.owned" = "เป็นของคุณตลอดไป ขอบคุณครับ";

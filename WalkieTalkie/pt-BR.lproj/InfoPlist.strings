@@ -1,0 +1,12 @@
+/* 
+   InfoPlist.strings (Portuguese (Brazil))
+   WalkieTalkie
+*/
+
+// MARK: - Permission Descriptions
+"NSMicrophoneUsageDescription" = "Este app precisa de acesso ao microfone para transmitir mensagens de voz pelo walkie-talkie.";
+"NSLocalNetworkUsageDescription" = "Este app usa a rede local para se conectar a aparelhos por perto na comunicação de walkie-talkie.";
+"NSBluetoothAlwaysUsageDescription" = "Este app usa o Bluetooth para encontrar aparelhos com walkie-talkie por perto e se conectar a eles.";
+"NSBluetoothPeripheralUsageDescription" = "Este app usa o Bluetooth para ser encontrado por outros aparelhos com walkie-talkie.";
+"NSNetworkVolumesUsageDescription" = "Este app acessa a rede para a comunicação de walkie-talkie entre aparelhos.";
+"NSUserTrackingUsageDescription" = "O identificador será usado para mostrar anúncios mais relevantes e apoiar o desenvolvimento gratuito do app.";

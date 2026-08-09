@@ -1,0 +1,12 @@
+/* 
+   InfoPlist.strings (French)
+   WalkieTalkie
+*/
+
+// MARK: - Permission Descriptions
+"NSMicrophoneUsageDescription" = "Cette app a besoin d'accéder au micro pour transmettre des messages vocaux en talkie-walkie.";
+"NSLocalNetworkUsageDescription" = "Cette app utilise le réseau local pour se connecter aux appareils proches en talkie-walkie.";
+"NSBluetoothAlwaysUsageDescription" = "Cette app utilise le Bluetooth pour découvrir les talkies-walkies proches et s'y connecter.";
+"NSBluetoothPeripheralUsageDescription" = "Cette app utilise le Bluetooth pour être découverte par d'autres talkies-walkies.";
+"NSNetworkVolumesUsageDescription" = "Cette app accède au réseau pour la communication talkie-walkie entre appareils.";
+"NSUserTrackingUsageDescription" = "L'identifiant servira à vous montrer des publicités plus pertinentes et à soutenir le développement gratuit de l'app.";

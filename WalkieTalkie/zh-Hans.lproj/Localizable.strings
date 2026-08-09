@@ -1,0 +1,482 @@
+/* 
+   Localizable.strings (Chinese (Simplified))
+   WalkieTalkie
+   
+   Created by Andrea Piani on 12/07/25.
+*/
+
+// MARK: - General
+"coming_soon" = "敬请期待";
+"ok" = "好";
+"cancel" = "取消";
+"error" = "错误";
+"accept" = "接受";
+"decline" = "拒绝";
+"disconnect" = "断开连接";
+"settings" = "设置";
+"retry" = "重试";
+"unknown" = "未知";
+"version" = "版本";
+"developed_by" = "开发者";
+"website" = "网站";
+"open_source" = "开源";
+"view_on_github" = "在 GitHub 上查看";
+"license" = "许可协议";
+
+// MARK: - Peak App Promotion
+"download_peak" = "免费下载 Peak";
+"peak_app_subtitle" = "内置对讲功能的完整海拔测量 App";
+
+// MARK: - Notifications
+"new_device_detected" = "发现新设备";
+"device_detected_message" = "在附近发现 %@";
+"connection_established" = "已建立连接";
+"connected_to_device" = "已连接到 %@";
+"connection_lost" = "连接已断开";
+"disconnected_from_device" = "已与 %@ 断开连接";
+"incoming_transmission" = "正在接收";
+"receiving_audio_message" = "正在接收语音消息";
+"background_scan" = "后台搜索";
+"scanning_for_devices" = "正在搜索附近的设备";
+"notifications" = "通知";
+"enable_notifications" = "开启通知";
+"disable_notifications" = "关闭通知";
+"notification_description" = "发现新设备或有语音往来时接收通知";
+"notifications_enabled" = "通知已开启";
+"notifications_activated_message" = "今后你会收到设备发现和语音往来的通知";
+
+// MARK: - Battery Status
+"charging" = "充电中";
+"full" = "已充满";
+"unplugged" = "未接电源";
+
+// MARK: - Main Interface
+"frequency_owner" = "频率占用者";
+"radio_fm" = "世界电台";
+"walkie_talkie" = "WalkieTalkie";
+"device" = "设备";
+"status" = "状态";
+"no_error" = "无错误";
+"channel_1" = "频道 1";
+"en" = "ZH";
+"hold" = "按住";
+"pressed" = "按下中";
+"to_talk" = "讲话";
+"release" = "松开";
+"to_send" = "发送";
+"radio_mode" = "电台";
+"radio_fm_caps" = "电台";
+"active" = "运行中";
+"no_connection" = "未连接";
+"devices_connected" = "台设备已连接";
+"status.connected_crossplatform" = "已连接 · Mac/Android (%d)";
+"status.connected_mixed" = "已连接 (%1$d · 其中 Mac/Android %2$d)";
+"status.disconnected" = "未连接";
+"status.connected" = "已连接";
+"status.connected_count" = "已连接 (%d)";
+"status.advertising" = "别人能看到你";
+"status.searching" = "搜索中…";
+"status.connecting" = "连接中…";
+"transmission_in_progress" = "正在发送";
+"reception_in_progress" = "正在接收";
+"no_transmission" = "没有发送";
+
+// MARK: - Tab Bar
+"talk" = "通话";
+"explore" = "探索";
+"connections" = "连接";
+"settings_tab" = "设置";
+"performance" = "性能";
+
+// MARK: - Performance
+"performance_title" = "性能";
+"high_traffic" = "流量偏高";
+"normal_performance" = "性能正常";
+"memory_usage" = "内存";
+"network_latency" = "平均延迟";
+"connection_time" = "连接时长";
+"active_connections" = "连接数";
+"performance_trends" = "性能趋势";
+"recommendations" = "建议";
+"connections_active" = "个活动连接";
+"updated_now" = "刚刚更新";
+"optimized_mode" = "优化模式";
+"audio_cache" = "音频缓存";
+"current_recommendations" = "当前建议";
+"no_recommendations" = "暂无建议，性能状态很好！";
+"full_report" = "完整报告";
+"close" = "关闭";
+"too_many_connections_warning" = "连接过多 (%d)，建议控制在 6-8 台以获得最佳性能";
+
+// MARK: - Radio
+"station" = "电台";
+"no_station" = "无电台";
+"buffering" = "缓冲中…";
+"genre" = "类型";
+"country" = "国家";
+"scanning" = "搜索中…";
+
+// MARK: - Connections View
+"connections_title" = "连接";
+"manage_connections" = "管理对讲连接";
+"connected_devices" = "已连接的设备";
+"scanning_in_progress" = "搜索中…";
+"offline" = "离线";
+"online" = "在线";
+"advertising" = "可被发现";
+"browsing" = "搜索中";
+"on" = "开";
+"off" = "关";
+"connected_devices_count" = "已连接的设备";
+"no_devices_connected" = "没有已连接的设备";
+"devices_nearby_hint" = "请确认其他设备就在附近、已打开 App，并连接到同一个 Wi-Fi 网络";
+"connected" = "已连接";
+"disconnect_all" = "全部断开";
+"restart_discovery" = "重新搜索";
+"disconnect_device" = "断开设备";
+"disconnect_confirmation" = "确定要断开与所有设备的连接吗？";
+
+// MARK: - Explore View
+"explore_title" = "探索";
+"scan_nearby_devices" = "搜索附近的设备";
+"detected_devices" = "发现的设备";
+"no_devices_detected" = "未发现设备";
+"ensure_devices_open" = "请确认其他设备已打开 App，并连接到同一个 Wi-Fi 网络";
+"available" = "可用";
+"tap_plus_to_invite" = "点 + 向 iPhone 或 iPad 发送请求，对方需要接受。Mac 和 Android 会自动连接。";
+"send_connection_request" = "发送连接请求";
+"invitation_sent" = "请求已发送";
+"strong" = "强";
+"medium" = "中";
+"weak" = "弱";
+
+// MARK: - Settings View
+"settings_title" = "设置";
+"configure_app" = "设置你的 App";
+"audio" = "音频";
+"white_noise" = "白噪声";
+"background_audio" = "模拟电台音效（环境音，并非真实通信）";
+"background_audio_description" = "使用过程中的背景音";
+"noise_volume" = "噪声音量";
+"adjust_background_volume" = "调整背景噪声的音量";
+"haptic_feedback" = "触感反馈";
+"vibration_on_buttons" = "按下按钮时震动";
+"auto_connect" = "自动连接";
+"auto_connect_description" = "自动连接已知设备";
+"voice_activation" = "语音激活";
+"voice_activation_description" = "说话时自动发送";
+"voice_sensitivity" = "语音灵敏度";
+"voice_sensitivity_description" = "调整语音激活的灵敏度";
+"low_power_mode" = "低电量模式";
+"low_power_mode_description" = "降低电量消耗";
+"reset_settings" = "重置设置";
+"how_to_use" = "如何使用这个 App";
+"instruction_1_title" = "在所有设备上打开 App";
+"instruction_1_description" = "确认所有设备都已打开并正在运行 WalkieTalkie App。";
+"instruction_2_title" = "进入「探索」";
+"instruction_2_description" = "点「探索」标签，查看附近可用的设备。";
+"instruction_3_title" = "连接设备";
+"instruction_3_description" = "点 iPhone 或 iPad 旁边的 + 发送请求。Mac 和 Android 在同一个 Wi-Fi 网络下会自动连接。";
+"instruction_4_title" = "同一个频道";
+"instruction_4_description" = "所有人都从公开频道开始，不需要设置任何东西。私人频道只会连接输入了相同密码的设备。";
+"instruction_5_title" = "按住讲话";
+"instruction_5_description" = "按住中间的按钮发送，松开即可收听。";
+"app_info" = "App 信息";
+"support_development" = "支持开发";
+"buy_me_coffee" = "请我喝杯咖啡";
+"support_description" = "如果你喜欢这个 App，欢迎支持开发者";
+"view_performance" = "查看性能统计";
+
+// MARK: - Background Audio
+"background_playback" = "后台播放";
+"background_playback_description" = "App 进入后台后继续播放电台";
+"now_playing" = "正在播放";
+"control_center_info" = "可在控制中心和锁定屏幕上控制播放";
+
+// MARK: - Appearance
+"appearance" = "外观";
+"dark_mode" = "深色模式";
+"dark_mode_description" = "App 界面使用深色主题";
+
+// MARK: - Peak App
+"peak_app_title" = "Peak：徒步者的海拔表";
+"peak_app_description" = "面向徒步者的免费海拔表，带 AI 和内置对讲";
+"download_peak_app" = "下载 Peak App";
+"peak_altimeter_free" = "免费海拔表";
+"peak_walkie_ai_description" = "带对讲和 AI";
+
+// MARK: - Alerts
+"connection_request" = "连接请求";
+"wants_to_connect" = "想要连接";
+"microphone_permission_required" = "需要麦克风权限";
+"microphone_permission_message" = "WalkieTalkie App 需要访问麦克风才能正常工作。没有该权限你将无法发送语音。";
+"audio_transmission_error" = "语音发送出错，请重试。";
+
+// MARK: - Errors
+"no_connected_peers" = "没有已连接的设备";
+
+// MARK: - Onboarding
+"onboarding_p1_title" = "把对讲机装进 iPhone";
+"onboarding_p1_subtitle" = "在山上、在音乐节、在拥挤的广场：就算没有信号，也能和朋友说话。";
+
+"onboarding_p2_no_internet_title" = "不用网络，不用 SIM 卡";
+"onboarding_p2_no_internet_body" = "在 iPhone 和 iPad 之间，声音通过 Wi-Fi 和蓝牙直接从一台设备传到另一台：不需要路由器、不需要服务器、不需要账号。";
+"onboarding_p2_range_caveat" = "墙壁、山丘和高度差会缩短通信距离。";
+"onboarding_p2_same_wifi" = "要连上 Mac 或 Android 手机，请让所有设备连到同一个 Wi-Fi 网络：这条链路走的是局域网。";
+"onboarding_p2_multi_platform" = "Talky 也能在 iPad、Mac 和 Android 上运行——同一个 App，你所有的设备都在同一场对话里。";
+
+"onboarding_p3_ptt_title" = "按住讲话";
+"onboarding_p3_ptt_body" = "和真正的对讲机一样：按住中间的按钮讲话，松开就能收听。";
+"onboarding_p3_ptt_rule" = "同一个频道里，一次只能有一个人讲话。";
+
+"onboarding_p4_frequency_title" = "一个频道，大家都听得到";
+"onboarding_p4_frequency_analogy" = "没有什么需要对齐：每台 Talky 都从公开频道开始，附近的设备会自己找到彼此。";
+"onboarding_p4_change_freq_hint" = "‹ 和 › 按键用来浏览屏幕上的频率。发话一律从 home 频率发出：按绿色 HOME 键即可回到该频率。";
+"onboarding_p4_private_channels_teaser" = "想要只属于你们这群人的频道吗？用密码创建私人频道：只有输入相同密码的人才找得到你——iPhone、Mac 和 Android 都一样。";
+
+"onboarding_p5_steps_title" = "准备好了？只要 3 步";
+"onboarding_p5_step1" = "在附近的第二台设备上打开 Talky：iPhone、iPad、Mac 或 Android";
+"onboarding_p5_step2" = "在 iPhone 和 iPad 上打开「探索」，点设备旁的 +，再到另一台上接受。Mac 和 Android 会自己连上，只要在同一个 Wi-Fi";
+"onboarding_p5_step3" = "连接成功后（绿点），按住中间的按钮讲话，松开即可收听";
+
+"onboarding_permissions_title" = "两个权限就好";
+"onboarding_permissions_description" = "Talky 需要它们才能工作。";
+"onboarding_microphone_permission" = "麦克风";
+"onboarding_permission_mic_why" = "在你按下讲话时采集你的声音。";
+"onboarding_notification_permission" = "通知";
+"onboarding_permission_notif_why" = "App 关闭时有人呼叫你，会及时提醒你。";
+"onboarding_permission_open_settings" = "打开 iOS 设置";
+
+"onboarding_continue" = "继续";
+"onboarding_get_started" = "开始吧";
+"onboarding_allow_permissions" = "允许权限";
+"onboarding_skip" = "跳过";
+"onboarding_back" = "返回";
+
+// MARK: - First Run Coach
+"coach_no_peers_title" = "第一步";
+"coach_no_peers_body" = "在同一个 Wi-Fi 下的另一台附近设备上打开 Talky，然后点下方的\"探索\"。";
+"coach_press_ptt_title" = "现在按住这里";
+"coach_press_ptt_body" = "按住中间的按钮讲话，松开即可收听。";
+"coach_dismiss" = "知道了";
+"ads_section_title" = "广告与隐私";
+"watch_ad_remove_ads" = "看个视频，免广告";
+"watch_ad_remove_ads_subtitle" = "1 小时无广告";
+"ads_removed_active" = "广告已关闭";
+"ads_removed_remaining" = "剩余 %d 分钟";
+"manage_privacy" = "管理隐私偏好";
+
+/* MARK: - Talky Pro features (added 2026-05) */
+
+// Paywall
+"paywall.close" = "关闭";
+"paywall.title" = "解锁 Talky Pro";
+"paywall.subtitle" = "完整的 Talky，没有限制";
+"paywall.error_title" = "购买失败";
+"paywall.feature.no_ads" = "无广告";
+"paywall.feature.unlimited_stations" = "电台数量不限";
+"paywall.feature.premium_international" = "高级国际电台";
+"paywall.feature.record_transmissions" = "录下你的通话";
+"paywall.feature.private_channels" = "私人对讲频道";
+"paywall.feature.custom_themes" = "自定义主题";
+"paywall.feature.history" = "通话记录";
+"paywall.feature.sleep_timer" = "电台睡眠定时";
+"paywall.feature.equalizer" = "高级均衡器";
+"paywall.plan.weekly" = "按周";
+"paywall.plan.weekly_suffix" = "/周";
+"paywall.plan.yearly" = "按年";
+"paywall.plan.yearly_suffix" = "/年";
+"paywall.badge.most_popular" = "最受欢迎";
+"paywall.badge.save" = "省 %d%%";
+"paywall.compare.weekly_vs_yearly" = "每年 %1$@。按周付要花 %2$@。";
+"paywall.trial.badge" = "免费 %1$d 天，之后每年 %2$@";
+"paywall.cta.start" = "开启 Talky Pro";
+"paywall.apple_footer" = "订阅会自动续期。你可以随时在 Apple ID 设置中取消。确认购买时将通过你的 Apple ID 扣款。";
+"paywall.link.restore" = "恢复";
+"paywall.link.terms" = "条款";
+"paywall.link.privacy" = "隐私";
+"paywall.error.purchase_failed" = "购买未能完成。请检查网络后重试。";
+"paywall.error.no_purchases" = "在这个 Apple ID 上没有找到以往的购买记录。";
+"paywall.error.restore_failed" = "未能恢复你的购买，请稍后再试。";
+
+// Transmission history
+"history.title" = "通话记录";
+"history.delete" = "删除";
+"history.clear_confirm_title" = "要清空记录吗？";
+"history.clear_all" = "全部清空";
+"history.cancel" = "取消";
+"history.paywall_message" = "解锁 Talky Pro 查看你的通话记录";
+"history.unlock_pro" = "解锁 Pro";
+"history.empty" = "还没有收到任何通话";
+
+// Themes
+"theme.title" = "主题";
+"theme.subtitle" = "更换 App 的配色";
+"theme.name.default" = "默认";
+"theme.name.ocean" = "海洋";
+"theme.name.forest" = "森林";
+"theme.name.sunset" = "日落";
+"theme.name.midnight" = "午夜";
+"theme.name.military" = "军事";
+"theme.name.retro80s" = "复古 80s";
+"theme.name.vintageRadio" = "复古电台";
+"theme.name.cyberpunk" = "赛博朋克";
+"theme.name.stealth" = "隐形";
+"theme.name.aurora" = "极光";
+"theme.name.submarine" = "潜艇";
+"theme.name.hamRadio" = "业余无线电";
+"theme.name.festival" = "音乐节";
+"theme.name.blackHole" = "黑洞";
+"theme.name.galaxy" = "星系";
+"theme.name.hacker" = "黑客";
+"theme.name.wildfire" = "野火";
+"theme.name.arctic" = "北极";
+
+// Sleep timer
+"sleep_timer.title" = "电台睡眠定时";
+"sleep_timer.close" = "关闭";
+"sleep_timer.paywall_message" = "解锁 Talky Pro 使用电台睡眠定时";
+"sleep_timer.unlock_pro" = "解锁 Pro";
+"sleep_timer.countdown_label" = "电台将在以下时间后停止";
+"sleep_timer.cancel" = "取消定时";
+"sleep_timer.picker_prompt" = "你想听多久？";
+
+// Equalizer
+"equalizer.title" = "均衡器";
+"equalizer.subtitle" = "选一个音效预设";
+"equalizer.active_preset" = "当前预设";
+"equalizer.preset.flat" = "平直";
+"equalizer.preset.bass" = "低音";
+"equalizer.preset.vocal" = "人声";
+"equalizer.preset.rock" = "摇滚";
+"equalizer.preset.pop" = "流行";
+
+// Recordings
+"recordings.title" = "录音";
+"recordings.delete_all_title" = "要删除所有录音吗？";
+"recordings.delete_all" = "全部删除";
+"recordings.delete_all_message" = "此操作无法撤销。";
+"recordings.cancel" = "取消";
+"recordings.pro_feature" = "Pro 功能";
+"recordings.paywall_message" = "解锁 Talky Pro，录下并回放你发出的和收到的通话。";
+"recordings.unlock_pro" = "解锁 Pro";
+"recordings.empty_title" = "没有录音";
+"recordings.empty_message" = "你发出的和收到的通话会显示在这里。";
+"recordings.privacy_notice" = "录音只保存在你的设备上。你需自行负责在符合当地隐私法律的前提下使用它们。";
+"recordings.own_transmission" = "你的通话";
+
+// Private channels
+"private_channels.title" = "私人频道";
+"private_channels.close" = "关闭";
+"private_channels.channel_fallback" = "频道";
+"private_channels.public_state_title" = "你正处于公开模式";
+"private_channels.public_state_description" = "附近任何 Talky 用户都能找到你。创建私人频道，只和知道密码的人通话。";
+"private_channels.create_or_join" = "创建或加入私人频道";
+"private_channels.private_state_title" = "私人频道已启用";
+"private_channels.private_state_description" = "只有知道密码的人才能找到你并和你通话。";
+"private_channels.leave" = "离开频道";
+"private_channels.form.title" = "加入频道";
+"private_channels.form.name_label" = "频道名称";
+"private_channels.form.name_placeholder" = "例如：张家";
+"private_channels.form.password_label" = "密码";
+"private_channels.form.password_placeholder" = "至少 4 个字符";
+"private_channels.form.submit" = "加入";
+"private_channels.form.hint" = "只有输入相同密码的设备才能互相找到并通话。";
+"private_channels.paywall.pro_feature" = "Pro 功能";
+"private_channels.paywall.headline" = "带密码保护的频道";
+"private_channels.paywall.description" = "创建带密码保护的对讲频道：只有知道密码的人才能找到你并和你通话。";
+"private_channels.paywall.cta" = "用 Talky Pro 解锁";
+"private_channels.error.empty_name" = "请输入频道名称。";
+"private_channels.error.password_min" = "密码至少需要 %d 个字符。";
+"private_channels.error.join_failed" = "未能加入频道。请确认 Talky Pro 已启用。";
+
+// Settings - Pro section
+"settings.pro.title" = "Talky Pro";
+"settings.pro.title_active" = "Talky Pro 已启用";
+"settings.pro.manage_subscription" = "管理订阅";
+"settings.pro.manage_subscription_subtitle" = "在 Apple ID 中修改或取消";
+"settings.pro.unlock" = "解锁 Talky Pro";
+"settings.pro.unlock_subtitle" = "无广告，无限制";
+"settings.pro.restore_purchases" = "恢复购买";
+
+// Settings - Personalization section
+"settings.personalization.title" = "个性化";
+"settings.personalization.themes" = "主题";
+"settings.personalization.history.title" = "通话记录";
+"settings.personalization.history.subtitle" = "看看谁联系过你";
+"settings.personalization.sleep_timer.title" = "电台睡眠定时";
+"settings.personalization.sleep_timer.subtitle" = "X 分钟后关闭电台";
+"settings.personalization.equalizer.title" = "均衡器";
+"settings.personalization.equalizer.subtitle" = "高级音效预设";
+"settings.personalization.recordings.title" = "录音";
+"settings.personalization.recordings.subtitle" = "回放你的通话";
+"settings.personalization.private_channels.title" = "私人频道";
+"settings.personalization.private_channels.subtitle" = "带密码保护的对讲";
+
+// MARK: - Station Browser & Sleep Timer
+"browse_stations" = "浏览电台";
+"search_stations" = "搜索电台…";
+"all_stations" = "全部";
+"favorites" = "收藏";
+"recents" = "最近";
+"nearby" = "附近";
+"by_country" = "按国家";
+"by_genre" = "按类型";
+"no_favorites_hint" = "还没有收藏。长按一个电台即可加入。";
+"no_recents" = "最近没有听过的电台。";
+"no_search_results" = "没有找到电台。";
+"now_playing_short" = "正在播";
+"pro_badge" = "PRO";
+"sleep_timer" = "睡眠定时";
+
+// MARK: - Mode Switch & Onboarding Radio
+"mode_switch_hint" = "点左上角的按钮，在对讲和世界电台之间切换";
+"got_it" = "知道了";
+"onboarding.radio_mode.title" = "对讲 + 电台";
+"onboarding.radio_mode.subtitle" = "一点即可切换模式";
+"onboarding.radio_mode.body" = "左上角的按钮可以在与朋友通话的对讲模式，和拥有数百个国际电台的网络电台之间切换。";
+"onboarding.radio_mode.streaming_note" = "电台使用网络流媒体，而不是真正的 FM 天线，需要可用的数据连接（Wi-Fi 或蜂窝网络）。";
+
+// MARK: - Live Activities
+"live_activities.title" = "实时活动";
+"live_activities.toggle" = "在后台显示";
+"live_activities.description" = "App 进入后台时，在灵动岛和锁定屏幕上显示电台与对讲的控制。";
+
+// MARK: - Pro upsell banner (added 2026-05-23)
+"paywall.brand_label" = "TALKY PRO";
+"upsell.title" = "解锁 Talky Pro";
+"upsell.subtitle" = "无广告 · 支持一位独立开发者";
+"upsell.dismiss" = "关闭";
+
+// MARK: - Themes Pack (one-shot non-consumable, added 2026-05-23)
+"themes_pack.title" = "解锁全部主题";
+"themes_pack.subtitle" = "一次购买，永久拥有";
+"themes_pack.cta_buy" = "解锁全部主题";
+"themes_pack.prop.all_themes" = "11 个高级主题（Identity + 动态）";
+"themes_pack.prop.forever" = "无需订阅，永久拥有";
+"themes_pack.prop.one_time" = "一次性付款";
+"theme_purchase.or" = "或者";
+"theme_purchase.subscribe_title" = "不如选 Talky Pro";
+"theme_purchase.subscribe_subtitle" = "主题 + 国际电台 + 无广告";
+"theme_purchase.apple_footer" = "付款由 Apple 处理。主题包不会自动续期。";
+"paywall.close" = "关闭";
+"paywall.link.restore" = "恢复";
+"paywall.link.terms" = "条款";
+"paywall.link.privacy" = "隐私";
+"paywall.error_title" = "购买失败";
+"paywall.error.purchase_failed" = "购买未能完成。请检查网络后重试。";
+"paywall.error.no_purchases" = "在这个 Apple ID 上没有找到以往的购买记录。";
+"paywall.error.restore_failed" = "未能恢复你的购买，请稍后再试。";
+"check_wifi_bluetooth" = "请检查 Wi-Fi 和蓝牙";
+
+/* Paywall — supporter note: who is behind Talky and what Pro really pays for */
+"paywall.support.eyebrow" = "开发者的话";
+"paywall.support.title" = "Talky 是一个人做的";
+"paywall.support.body" = "我是独立开发者，Talky 的代码公开在 GitHub 上。Pro 不是围住 App 的一道墙，而是一份支持，用来支付 Apple 开发者账号、服务器，以及不断增加电台和功能所花的时间。如果现在不方便，继续免费用就好——它会一直免费。";
+"paywall.support.github" = "在 GitHub 上看代码";
+"paywall.support.compact" = "由一位独立开发者制作——Talky 的代码公开在 GitHub 上。";
+
+/* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
+"paywall.lifetime.cta" = "一次付清 ·";
+"paywall.lifetime.subtitle" = "付一次，永久拥有 Pro 的一切，包含主题。无需订阅。";
+"paywall.lifetime.owned" = "永久属于你，谢谢。";

@@ -93,7 +93,7 @@
 "off" = "APAGADO";
 "connected_devices_count" = "Dispositivos Conectados";
 "no_devices_connected" = "No hay dispositivos conectados";
-"devices_nearby_hint" = "Asegúrate de que otros dispositivos estén cerca y tengan la app abierta";
+"devices_nearby_hint" = "Asegúrate de que los otros dispositivos estén cerca con la app abierta y en la misma red Wi-Fi";
 "connected" = "Conectado";
 "disconnect_all" = "Desconectar Todo";
 "restart_discovery" = "Reiniciar Búsqueda";
@@ -105,9 +105,9 @@
 "scan_nearby_devices" = "Escanear dispositivos cercanos";
 "detected_devices" = "Dispositivos Detectados";
 "no_devices_detected" = "Ningún dispositivo detectado";
-"ensure_devices_open" = "Asegúrate de que otros dispositivos tengan la app abierta";
+"ensure_devices_open" = "Asegúrate de que los otros dispositivos tengan la app abierta y estén en la misma red Wi-Fi";
 "available" = "Disponible";
-"tap_plus_to_invite" = "Toca + para enviar una solicitud de conexión. El otro dispositivo debe aceptarla.";
+"tap_plus_to_invite" = "Toca + para enviar una solicitud a un iPhone o iPad; el otro dispositivo debe aceptarla. Mac y Android se conectan automáticamente.";
 "send_connection_request" = "Enviar solicitud de conexión";
 "invitation_sent" = "Solicitud enviada";
 "strong" = "Fuerte";
@@ -140,9 +140,9 @@
 "instruction_2_title" = "Ve a Explorar";
 "instruction_2_description" = "Toca la pestaña 'Explorar' para ver los dispositivos disponibles cerca.";
 "instruction_3_title" = "Conecta los Dispositivos";
-"instruction_3_description" = "Toca + junto a un dispositivo para enviar una solicitud de conexión.";
-"instruction_4_title" = "Selecciona la Frecuencia";
-"instruction_4_description" = "Todos los dispositivos conectados deben usar la misma frecuencia para comunicarse.";
+"instruction_3_description" = "Toca + junto a un iPhone o iPad para enviar la solicitud. Mac y Android se conectan solos en la misma red Wi-Fi.";
+"instruction_4_title" = "Mismo canal";
+"instruction_4_description" = "Todos empiezan en el canal público, así que no hay nada que configurar. Un canal privado solo conecta dispositivos que han puesto la misma contraseña.";
 "instruction_5_title" = "Mantén Presionado para Hablar";
 "instruction_5_description" = "Mantén presionado el botón central para transmitir. Suelta para escuchar.";
 "app_info" = "Información de la App";
@@ -182,22 +182,20 @@
 "onboarding_p1_subtitle" = "En la montaña, en una plaza, en un concierto: habla con tus amigos incluso donde no hay cobertura.";
 
 "onboarding_p2_no_internet_title" = "Sin internet, sin SIM";
-"onboarding_p2_no_internet_body" = "Las voces viajan directamente entre dispositivos cercanos por Bluetooth, Wi-Fi y red local. Funciona sin servidor de internet, siempre que estéis dentro del alcance local.";
+"onboarding_p2_no_internet_body" = "Entre iPhone y iPad la voz va directa de un dispositivo a otro por Wi-Fi y Bluetooth: sin router, sin servidor, sin cuenta.";
 "onboarding_p2_range_caveat" = "Muros, colinas y desniveles reducen el alcance.";
-"onboarding_p2_multi_platform" = "También funciona en iPad y Mac con Apple Silicon: la misma app y todos tus dispositivos se comunican entre sí.";
-
+"onboarding_p2_multi_platform" = "Talky también funciona en iPad, Mac y Android — la misma app, todos tus dispositivos en la misma conversación.";
 "onboarding_p3_ptt_title" = "Mantén pulsado para hablar";
 "onboarding_p3_ptt_body" = "Como un walkie-talkie de verdad: mantén pulsado el botón central para hablar, suéltalo para escuchar.";
 "onboarding_p3_ptt_rule" = "Una sola voz a la vez en el mismo canal.";
 
-"onboarding_p4_frequency_title" = "Misma frecuencia, misma conversación";
-"onboarding_p4_frequency_analogy" = "Como una radio FM: si tú estás en 146.520 y tu amigo en 150.000, no os oís. Poneos en la misma frecuencia para hablar.";
-"onboarding_p4_change_freq_hint" = "Usa los botones ‹ y › para cambiar de frecuencia, o el botón Home para volver a la predeterminada.";
-"onboarding_p4_private_channels_teaser" = "¿Quieres un canal solo para tu grupo? Crea un Canal Privado con contraseña desde el menú.";
-
+"onboarding_p4_frequency_title" = "Un solo canal, todos te oyen";
+"onboarding_p4_frequency_analogy" = "No hay nada que hacer coincidir: cada Talky arranca en el canal público, así que los dispositivos cercanos se encuentran solos.";
+"onboarding_p4_change_freq_hint" = "Los botones ‹ y › recorren las frecuencias de la pantalla. Se transmite desde la frecuencia home: pulsa el botón verde HOME para volver.";
+"onboarding_p4_private_channels_teaser" = "¿Quieres un canal solo para tu grupo? Crea un Canal Privado con contraseña: solo te encontrará quien escriba la misma contraseña, igual en iPhone, Mac y Android.";
 "onboarding_p5_steps_title" = "¿Listo? Solo 3 pasos";
-"onboarding_p5_step1" = "Abre Talky en un segundo dispositivo cercano: iPhone, iPad, Mac con Apple Silicon o cliente Android compatible";
-"onboarding_p5_step2" = "Abre Explorar, toca + junto al dispositivo cercano y acepta la solicitud en el otro dispositivo";
+"onboarding_p5_step1" = "Abre Talky en un segundo dispositivo cercano: iPhone, iPad, Mac o Android";
+"onboarding_p5_step2" = "En iPhone y iPad abre Explorar y toca + junto al dispositivo, luego acepta en el otro. Mac y Android se conectan solos, en la misma Wi-Fi";
 "onboarding_p5_step3" = "Cuando esté conectado (punto verde), mantén pulsado el botón central para hablar y suéltalo para escuchar";
 
 "onboarding_permissions_title" = "Dos permisos y listo";
@@ -216,7 +214,7 @@
 
 // MARK: - First Run Coach
 "coach_no_peers_title" = "Primer paso";
-"coach_no_peers_body" = "Abre Talky en otro dispositivo cercano, luego toca \"Explorar\" abajo.";
+"coach_no_peers_body" = "Abre Talky en otro dispositivo cercano en la misma Wi-Fi y luego toca \"Explorar\" abajo.";
 "coach_press_ptt_title" = "Ahora mantén pulsado aquí";
 "coach_press_ptt_body" = "Mantén pulsado el botón central para hablar, suéltalo para escuchar.";
 "coach_dismiss" = "Entendido";
@@ -477,3 +475,14 @@
 "paywall.lifetime.cta" = "Pagas una vez ·";
 "paywall.lifetime.subtitle" = "Un pago. Todo Pro para siempre, temas incluidos. Sin suscripción.";
 "paywall.lifetime.owned" = "Tuyo para siempre. Gracias.";
+
+// MARK: - Connection status & cross-platform (2026-08)
+"onboarding_p2_same_wifi" = "Para llegar a un Mac o a un teléfono Android, pon todos los dispositivos en la misma red Wi-Fi: ese enlace viaja por la red local.";
+"status.connected_crossplatform" = "Conectado · Mac/Android (%d)";
+"status.connected_mixed" = "Conectado (%1$d · %2$d Mac/Android)";
+"status.disconnected" = "Desconectado";
+"status.connected" = "Conectado";
+"status.connected_count" = "Conectado (%d)";
+"status.advertising" = "Visible para los demás";
+"status.searching" = "Buscando…";
+"status.connecting" = "Conectando…";

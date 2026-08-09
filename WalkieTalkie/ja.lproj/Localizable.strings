@@ -1,0 +1,482 @@
+/* 
+   Localizable.strings (Japanese)
+   WalkieTalkie
+   
+   Created by Andrea Piani on 12/07/25.
+*/
+
+// MARK: - General
+"coming_soon" = "近日公開";
+"ok" = "OK";
+"cancel" = "キャンセル";
+"error" = "エラー";
+"accept" = "承認";
+"decline" = "拒否";
+"disconnect" = "切断";
+"settings" = "設定";
+"retry" = "再試行";
+"unknown" = "不明";
+"version" = "バージョン";
+"developed_by" = "開発者";
+"website" = "ウェブサイト";
+"open_source" = "オープンソース";
+"view_on_github" = "GitHubで見る";
+"license" = "ライセンス";
+
+// MARK: - Peak App Promotion
+"download_peak" = "Peakを無料でダウンロード";
+"peak_app_subtitle" = "トランシーバー機能を内蔵した本格的な高度計アプリ";
+
+// MARK: - Notifications
+"new_device_detected" = "新しいデバイスを検出";
+"device_detected_message" = "近くで%@を検出しました";
+"connection_established" = "接続しました";
+"connected_to_device" = "%@に接続しました";
+"connection_lost" = "接続が切れました";
+"disconnected_from_device" = "%@から切断しました";
+"incoming_transmission" = "受信中";
+"receiving_audio_message" = "音声メッセージを受信中";
+"background_scan" = "バックグラウンド検索";
+"scanning_for_devices" = "近くのデバイスを検索中";
+"notifications" = "通知";
+"enable_notifications" = "通知をオンにする";
+"disable_notifications" = "通知をオフにする";
+"notification_description" = "新しいデバイスを検出したときや送受信中に通知を受け取ります";
+"notifications_enabled" = "通知がオンになりました";
+"notifications_activated_message" = "デバイスの検出と送受信の通知が届くようになります";
+
+// MARK: - Battery Status
+"charging" = "充電中";
+"full" = "満充電";
+"unplugged" = "電源未接続";
+
+// MARK: - Main Interface
+"frequency_owner" = "周波数の所有者";
+"radio_fm" = "ワールドラジオ";
+"walkie_talkie" = "WalkieTalkie";
+"device" = "デバイス";
+"status" = "状態";
+"no_error" = "エラーなし";
+"channel_1" = "チャンネル1";
+"en" = "JA";
+"hold" = "長押し";
+"pressed" = "押下中";
+"to_talk" = "して話す";
+"release" = "離す";
+"to_send" = "と送信";
+"radio_mode" = "ラジオ";
+"radio_fm_caps" = "ラジオ";
+"active" = "動作中";
+"no_connection" = "接続なし";
+"devices_connected" = "台接続中";
+"status.connected_crossplatform" = "接続中 · Mac/Android (%d)";
+"status.connected_mixed" = "接続中 (%1$d · うちMac/Android %2$d)";
+"status.disconnected" = "未接続";
+"status.connected" = "接続中";
+"status.connected_count" = "接続中 (%d)";
+"status.advertising" = "他の人から見える状態";
+"status.searching" = "検索中…";
+"status.connecting" = "接続中…";
+"transmission_in_progress" = "送信中";
+"reception_in_progress" = "受信中";
+"no_transmission" = "送信なし";
+
+// MARK: - Tab Bar
+"talk" = "通話";
+"explore" = "さがす";
+"connections" = "接続";
+"settings_tab" = "設定";
+"performance" = "パフォーマンス";
+
+// MARK: - Performance
+"performance_title" = "パフォーマンス";
+"high_traffic" = "高負荷";
+"normal_performance" = "通常のパフォーマンス";
+"memory_usage" = "メモリ";
+"network_latency" = "平均遅延";
+"connection_time" = "接続時間";
+"active_connections" = "接続数";
+"performance_trends" = "パフォーマンスの推移";
+"recommendations" = "おすすめ";
+"connections_active" = "件の有効な接続";
+"updated_now" = "たった今更新";
+"optimized_mode" = "最適化モード";
+"audio_cache" = "音声キャッシュ";
+"current_recommendations" = "現在のおすすめ";
+"no_recommendations" = "今のところ提案はありません。パフォーマンスは良好です。";
+"full_report" = "詳細レポート";
+"close" = "閉じる";
+"too_many_connections_warning" = "接続が多すぎます (%d)。最適なパフォーマンスのため6〜8台までを推奨します";
+
+// MARK: - Radio
+"station" = "局";
+"no_station" = "局なし";
+"buffering" = "バッファ中…";
+"genre" = "ジャンル";
+"country" = "国";
+"scanning" = "検索中…";
+
+// MARK: - Connections View
+"connections_title" = "接続";
+"manage_connections" = "トランシーバーの接続を管理";
+"connected_devices" = "接続中のデバイス";
+"scanning_in_progress" = "検索中…";
+"offline" = "オフライン";
+"online" = "オンライン";
+"advertising" = "公開中";
+"browsing" = "検索中";
+"on" = "オン";
+"off" = "オフ";
+"connected_devices_count" = "接続中のデバイス";
+"no_devices_connected" = "接続中のデバイスはありません";
+"devices_nearby_hint" = "他のデバイスが近くにあり、アプリを開いていて、同じWi-Fiネットワークにあることを確認してください";
+"connected" = "接続済み";
+"disconnect_all" = "すべて切断";
+"restart_discovery" = "検索をやり直す";
+"disconnect_device" = "デバイスを切断";
+"disconnect_confirmation" = "すべてのデバイスとの接続を切断しますか？";
+
+// MARK: - Explore View
+"explore_title" = "さがす";
+"scan_nearby_devices" = "近くのデバイスを検索";
+"detected_devices" = "検出したデバイス";
+"no_devices_detected" = "デバイスが見つかりません";
+"ensure_devices_open" = "他のデバイスでアプリが開いていて、同じWi-Fiネットワークにあることを確認してください";
+"available" = "利用可能";
+"tap_plus_to_invite" = "+をタップしてiPhoneまたはiPadにリクエストを送ります。相手側で承認が必要です。MacとAndroidは自動で接続されます。";
+"send_connection_request" = "接続リクエストを送信";
+"invitation_sent" = "リクエスト送信済み";
+"strong" = "強い";
+"medium" = "普通";
+"weak" = "弱い";
+
+// MARK: - Settings View
+"settings_title" = "設定";
+"configure_app" = "アプリを設定";
+"audio" = "オーディオ";
+"white_noise" = "ホワイトノイズ";
+"background_audio" = "無線風の効果音（環境音であり、実際の通信ではありません）";
+"background_audio_description" = "使用中に流れる背景音";
+"noise_volume" = "ノイズの音量";
+"adjust_background_volume" = "背景ノイズの音量を調整";
+"haptic_feedback" = "触覚フィードバック";
+"vibration_on_buttons" = "ボタンを押したときに振動";
+"auto_connect" = "自動接続";
+"auto_connect_description" = "既知のデバイスに自動で接続";
+"voice_activation" = "音声起動";
+"voice_activation_description" = "話すと自動で送信";
+"voice_sensitivity" = "音声感度";
+"voice_sensitivity_description" = "音声起動の感度を調整";
+"low_power_mode" = "低電力モード";
+"low_power_mode_description" = "バッテリー消費を抑えます";
+"reset_settings" = "設定をリセット";
+"how_to_use" = "アプリの使い方";
+"instruction_1_title" = "すべてのデバイスでアプリを開く";
+"instruction_1_description" = "すべてのデバイスでWalkieTalkieアプリが開いていて動作していることを確認します。";
+"instruction_2_title" = "「さがす」を開く";
+"instruction_2_description" = "「さがす」タブをタップすると、近くの利用可能なデバイスが表示されます。";
+"instruction_3_title" = "デバイスを接続する";
+"instruction_3_description" = "iPhoneまたはiPadの横の+をタップしてリクエストを送ります。MacとAndroidは同じWi-Fiネットワーク上で自動的に接続されます。";
+"instruction_4_title" = "同じチャンネル";
+"instruction_4_description" = "全員が公開チャンネルから始まるので、設定するものはありません。プライベートチャンネルは同じパスワードを入力したデバイスだけをつなぎます。";
+"instruction_5_title" = "長押しで話す";
+"instruction_5_description" = "中央のボタンを押し続けると送信します。離すと受信します。";
+"app_info" = "アプリ情報";
+"support_development" = "開発を支援する";
+"buy_me_coffee" = "コーヒーをおごる";
+"support_description" = "このアプリを気に入ったら、開発者の支援をご検討ください";
+"view_performance" = "パフォーマンス統計を見る";
+
+// MARK: - Background Audio
+"background_playback" = "バックグラウンド再生";
+"background_playback_description" = "アプリがバックグラウンドでもラジオを再生し続けます";
+"now_playing" = "再生中";
+"control_center_info" = "コントロールセンターとロック画面から再生を操作できます";
+
+// MARK: - Appearance
+"appearance" = "外観";
+"dark_mode" = "ダークモード";
+"dark_mode_description" = "アプリの画面にダークテーマを使う";
+
+// MARK: - Peak App
+"peak_app_title" = "Peak: ハイカーのための高度計";
+"peak_app_description" = "AIとトランシーバーを備えた、ハイカー向けの無料高度計";
+"download_peak_app" = "Peakアプリを入手";
+"peak_altimeter_free" = "無料の高度計";
+"peak_walkie_ai_description" = "トランシーバーとAI付き";
+
+// MARK: - Alerts
+"connection_request" = "接続リクエスト";
+"wants_to_connect" = "が接続を求めています";
+"microphone_permission_required" = "マイクの許可が必要です";
+"microphone_permission_message" = "WalkieTalkieアプリが正しく動作するにはマイクへのアクセスが必要です。この許可がないと音声を送信できません。";
+"audio_transmission_error" = "音声の送信でエラーが発生しました。もう一度お試しください。";
+
+// MARK: - Errors
+"no_connected_peers" = "接続中のデバイスはありません";
+
+// MARK: - Onboarding
+"onboarding_p1_title" = "iPhoneの中のトランシーバー";
+"onboarding_p1_subtitle" = "山でも、フェスでも、人混みの広場でも。電波が届かない場所でも仲間と話せます。";
+
+"onboarding_p2_no_internet_title" = "インターネットもSIMも不要";
+"onboarding_p2_no_internet_body" = "iPhoneとiPadの間では、声はWi-FiとBluetoothで端末から端末へ直接届きます。ルーターもサーバーもアカウントも要りません。";
+"onboarding_p2_range_caveat" = "壁や丘、高低差があると届く距離が短くなります。";
+"onboarding_p2_same_wifi" = "MacやAndroid端末とつなぐときは、すべての端末を同じWi-Fiネットワークに接続してください。この経路はローカルネットワークを通ります。";
+"onboarding_p2_multi_platform" = "TalkyはiPad、Mac、Androidでも動きます。同じアプリで、あなたのすべての端末が同じ会話に入れます。";
+
+"onboarding_p3_ptt_title" = "長押しして話す";
+"onboarding_p3_ptt_body" = "本物のトランシーバーと同じです。中央のボタンを押し続けて話し、離すと受信します。";
+"onboarding_p3_ptt_rule" = "同じチャンネルで話せるのは一度に一人だけです。";
+
+"onboarding_p4_frequency_title" = "チャンネルはひとつ、全員に届きます";
+"onboarding_p4_frequency_analogy" = "合わせるものは何もありません。どのTalkyも公開チャンネルから始まるので、近くの端末は自分たちで見つけ合います。";
+"onboarding_p4_change_freq_hint" = "‹ と › のボタンはディスプレイの周波数を切り替えます。送信はhome周波数から行います。緑のHOMEボタンで戻れます。";
+"onboarding_p4_private_channels_teaser" = "仲間内だけのチャンネルが欲しいですか？パスワード付きのプライベートチャンネルを作れば、同じパスワードを入力した人だけがあなたを見つけられます。iPhoneでもMacでもAndroidでも同じです。";
+
+"onboarding_p5_steps_title" = "準備はいい？ たった3ステップ";
+"onboarding_p5_step1" = "近くの2台目でTalkyを開きます：iPhone、iPad、MacまたはAndroid";
+"onboarding_p5_step2" = "iPhoneとiPadでは「さがす」を開いて端末の横の+をタップし、相手側で承認します。MacとAndroidは同じWi-Fi上で自動的につながります";
+"onboarding_p5_step3" = "接続できたら（緑の点）、中央のボタンを押し続けて話し、離すと受信します";
+
+"onboarding_permissions_title" = "許可はふたつだけ";
+"onboarding_permissions_description" = "Talkyが動くために必要です。";
+"onboarding_microphone_permission" = "マイク";
+"onboarding_permission_mic_why" = "押して話すときにあなたの声を拾うために使います。";
+"onboarding_notification_permission" = "通知";
+"onboarding_permission_notif_why" = "アプリを閉じているときに呼びかけられたらお知らせします。";
+"onboarding_permission_open_settings" = "iOSの設定を開く";
+
+"onboarding_continue" = "続ける";
+"onboarding_get_started" = "はじめる";
+"onboarding_allow_permissions" = "許可する";
+"onboarding_skip" = "スキップ";
+"onboarding_back" = "戻る";
+
+// MARK: - First Run Coach
+"coach_no_peers_title" = "最初のステップ";
+"coach_no_peers_body" = "同じWi-Fiにある近くの別の端末でTalkyを開き、下の\"さがす\"をタップしてください。";
+"coach_press_ptt_title" = "ここを長押し";
+"coach_press_ptt_body" = "中央のボタンを押し続けて話し、離すと受信します。";
+"coach_dismiss" = "わかりました";
+"ads_section_title" = "広告とプライバシー";
+"watch_ad_remove_ads" = "動画を見て広告なしに";
+"watch_ad_remove_ads_subtitle" = "1時間広告なし";
+"ads_removed_active" = "広告はオフです";
+"ads_removed_remaining" = "残り%d分";
+"manage_privacy" = "プライバシー設定を管理";
+
+/* MARK: - Talky Pro features (added 2026-05) */
+
+// Paywall
+"paywall.close" = "閉じる";
+"paywall.title" = "Talky Proを解放";
+"paywall.subtitle" = "Talkyのすべてを、制限なしで";
+"paywall.error_title" = "購入できませんでした";
+"paywall.feature.no_ads" = "広告なし";
+"paywall.feature.unlimited_stations" = "ラジオ局が無制限";
+"paywall.feature.premium_international" = "海外のプレミアム局";
+"paywall.feature.record_transmissions" = "自分の送信を録音";
+"paywall.feature.private_channels" = "プライベートチャンネル";
+"paywall.feature.custom_themes" = "カスタムテーマ";
+"paywall.feature.history" = "送受信履歴";
+"paywall.feature.sleep_timer" = "ラジオのスリープタイマー";
+"paywall.feature.equalizer" = "プレミアムイコライザー";
+"paywall.plan.weekly" = "週額";
+"paywall.plan.weekly_suffix" = "/週";
+"paywall.plan.yearly" = "年額";
+"paywall.plan.yearly_suffix" = "/年";
+"paywall.badge.most_popular" = "いちばん人気";
+"paywall.badge.save" = "%d%%お得";
+"paywall.compare.weekly_vs_yearly" = "年%1$@。週払いなら%2$@かかります。";
+"paywall.trial.badge" = "%1$d日間無料、その後は年%2$@";
+"paywall.cta.start" = "Talky Proをはじめる";
+"paywall.apple_footer" = "サブスクリプションは自動更新されます。Apple IDの設定からいつでも解約できます。購入確定時にApple IDへ請求されます。";
+"paywall.link.restore" = "復元";
+"paywall.link.terms" = "利用規約";
+"paywall.link.privacy" = "プライバシー";
+"paywall.error.purchase_failed" = "購入を完了できませんでした。接続を確認してもう一度お試しください。";
+"paywall.error.no_purchases" = "このApple IDでの過去の購入は見つかりませんでした。";
+"paywall.error.restore_failed" = "購入を復元できませんでした。しばらくしてからお試しください。";
+
+// Transmission history
+"history.title" = "送受信履歴";
+"history.delete" = "削除";
+"history.clear_confirm_title" = "履歴を消去しますか？";
+"history.clear_all" = "すべて消去";
+"history.cancel" = "キャンセル";
+"history.paywall_message" = "送受信履歴を見るにはTalky Proを解放してください";
+"history.unlock_pro" = "Proを解放";
+"history.empty" = "まだ受信した通信はありません";
+
+// Themes
+"theme.title" = "テーマ";
+"theme.subtitle" = "アプリの色を変える";
+"theme.name.default" = "デフォルト";
+"theme.name.ocean" = "オーシャン";
+"theme.name.forest" = "フォレスト";
+"theme.name.sunset" = "サンセット";
+"theme.name.midnight" = "ミッドナイト";
+"theme.name.military" = "ミリタリー";
+"theme.name.retro80s" = "レトロ80s";
+"theme.name.vintageRadio" = "ヴィンテージラジオ";
+"theme.name.cyberpunk" = "サイバーパンク";
+"theme.name.stealth" = "ステルス";
+"theme.name.aurora" = "オーロラ";
+"theme.name.submarine" = "サブマリン";
+"theme.name.hamRadio" = "アマチュア無線";
+"theme.name.festival" = "フェスティバル";
+"theme.name.blackHole" = "ブラックホール";
+"theme.name.galaxy" = "ギャラクシー";
+"theme.name.hacker" = "ハッカー";
+"theme.name.wildfire" = "ワイルドファイア";
+"theme.name.arctic" = "アークティック";
+
+// Sleep timer
+"sleep_timer.title" = "ラジオのスリープタイマー";
+"sleep_timer.close" = "閉じる";
+"sleep_timer.paywall_message" = "ラジオのスリープタイマーを使うにはTalky Proを解放してください";
+"sleep_timer.unlock_pro" = "Proを解放";
+"sleep_timer.countdown_label" = "ラジオが止まるまで";
+"sleep_timer.cancel" = "タイマーを解除";
+"sleep_timer.picker_prompt" = "どのくらい聴きますか？";
+
+// Equalizer
+"equalizer.title" = "イコライザー";
+"equalizer.subtitle" = "音のプリセットを選ぶ";
+"equalizer.active_preset" = "使用中のプリセット";
+"equalizer.preset.flat" = "フラット";
+"equalizer.preset.bass" = "低音";
+"equalizer.preset.vocal" = "ボーカル";
+"equalizer.preset.rock" = "ロック";
+"equalizer.preset.pop" = "ポップ";
+
+// Recordings
+"recordings.title" = "録音";
+"recordings.delete_all_title" = "すべての録音を削除しますか？";
+"recordings.delete_all" = "すべて削除";
+"recordings.delete_all_message" = "この操作は取り消せません。";
+"recordings.cancel" = "キャンセル";
+"recordings.pro_feature" = "Pro機能";
+"recordings.paywall_message" = "自分と相手の通信を録音して聴き返すにはTalky Proを解放してください。";
+"recordings.unlock_pro" = "Proを解放";
+"recordings.empty_title" = "録音はありません";
+"recordings.empty_message" = "送信した通信と受信した通信がここに表示されます。";
+"recordings.privacy_notice" = "録音はこの端末にのみ保存されます。各地域のプライバシー法に従って利用する責任はご本人にあります。";
+"recordings.own_transmission" = "あなたの送信";
+
+// Private channels
+"private_channels.title" = "プライベートチャンネル";
+"private_channels.close" = "閉じる";
+"private_channels.channel_fallback" = "チャンネル";
+"private_channels.public_state_title" = "現在は公開モードです";
+"private_channels.public_state_description" = "近くのTalkyユーザーなら誰でもあなたを見つけられます。パスワードを知っている人とだけ話すには、プライベートチャンネルを作成してください。";
+"private_channels.create_or_join" = "プライベートチャンネルを作成／参加";
+"private_channels.private_state_title" = "プライベートチャンネルが有効です";
+"private_channels.private_state_description" = "パスワードを知っている人だけがあなたを見つけて話せます。";
+"private_channels.leave" = "チャンネルを離れる";
+"private_channels.form.title" = "チャンネルに参加";
+"private_channels.form.name_label" = "チャンネル名";
+"private_channels.form.name_placeholder" = "例：山田家";
+"private_channels.form.password_label" = "パスワード";
+"private_channels.form.password_placeholder" = "4文字以上";
+"private_channels.form.submit" = "参加";
+"private_channels.form.hint" = "同じパスワードを入力した端末どうしだけが見つかり、話せます。";
+"private_channels.paywall.pro_feature" = "Pro機能";
+"private_channels.paywall.headline" = "パスワード付きチャンネル";
+"private_channels.paywall.description" = "パスワードで守られたチャンネルを作れます。パスワードを知っている人だけがあなたを見つけて話せます。";
+"private_channels.paywall.cta" = "Talky Proで解放";
+"private_channels.error.empty_name" = "チャンネル名を入力してください。";
+"private_channels.error.password_min" = "パスワードは%d文字以上にしてください。";
+"private_channels.error.join_failed" = "チャンネルに参加できませんでした。Talky Proが有効か確認してください。";
+
+// Settings - Pro section
+"settings.pro.title" = "Talky Pro";
+"settings.pro.title_active" = "Talky Pro 有効";
+"settings.pro.manage_subscription" = "サブスクリプションを管理";
+"settings.pro.manage_subscription_subtitle" = "Apple IDから変更・解約できます";
+"settings.pro.unlock" = "Talky Proを解放";
+"settings.pro.unlock_subtitle" = "広告なし、制限なし";
+"settings.pro.restore_purchases" = "購入を復元";
+
+// Settings - Personalization section
+"settings.personalization.title" = "カスタマイズ";
+"settings.personalization.themes" = "テーマ";
+"settings.personalization.history.title" = "送受信履歴";
+"settings.personalization.history.subtitle" = "誰から連絡があったか確認";
+"settings.personalization.sleep_timer.title" = "ラジオのスリープタイマー";
+"settings.personalization.sleep_timer.subtitle" = "X分後にラジオを止める";
+"settings.personalization.equalizer.title" = "イコライザー";
+"settings.personalization.equalizer.subtitle" = "プレミアム音響プリセット";
+"settings.personalization.recordings.title" = "録音";
+"settings.personalization.recordings.subtitle" = "自分の通信を聴き返す";
+"settings.personalization.private_channels.title" = "プライベートチャンネル";
+"settings.personalization.private_channels.subtitle" = "パスワード付きトランシーバー";
+
+// MARK: - Station Browser & Sleep Timer
+"browse_stations" = "局を探す";
+"search_stations" = "局を検索…";
+"all_stations" = "すべて";
+"favorites" = "お気に入り";
+"recents" = "最近";
+"nearby" = "近く";
+"by_country" = "国別";
+"by_genre" = "ジャンル別";
+"no_favorites_hint" = "お気に入りはまだありません。局を長押しすると追加できます。";
+"no_recents" = "最近聴いた局はありません。";
+"no_search_results" = "局が見つかりません。";
+"now_playing_short" = "再生中";
+"pro_badge" = "PRO";
+"sleep_timer" = "スリープタイマー";
+
+// MARK: - Mode Switch & Onboarding Radio
+"mode_switch_hint" = "左上のボタンでトランシーバーとワールドラジオを切り替えられます";
+"got_it" = "わかりました";
+"onboarding.radio_mode.title" = "トランシーバー＋ラジオ";
+"onboarding.radio_mode.subtitle" = "ワンタップでモードを切り替え";
+"onboarding.radio_mode.body" = "左上のボタンで、仲間と話すトランシーバーと、世界数百局のインターネットラジオを切り替えられます。";
+"onboarding.radio_mode.streaming_note" = "ラジオはインターネット配信を使います。物理的なFMアンテナではありません。データ通信（Wi-Fiまたはモバイル通信）が必要です。";
+
+// MARK: - Live Activities
+"live_activities.title" = "ライブアクティビティ";
+"live_activities.toggle" = "バックグラウンドで表示";
+"live_activities.description" = "アプリがバックグラウンドに移ったとき、ラジオとトランシーバーの操作をDynamic Islandとロック画面に表示します。";
+
+// MARK: - Pro upsell banner (added 2026-05-23)
+"paywall.brand_label" = "TALKY PRO";
+"upsell.title" = "Talky Proを解放";
+"upsell.subtitle" = "広告なし · 個人開発者を応援";
+"upsell.dismiss" = "閉じる";
+
+// MARK: - Themes Pack (one-shot non-consumable, added 2026-05-23)
+"themes_pack.title" = "すべてのテーマを解放";
+"themes_pack.subtitle" = "買い切り、ずっとあなたのもの";
+"themes_pack.cta_buy" = "すべてのテーマを解放";
+"themes_pack.prop.all_themes" = "プレミアムテーマ11種（Identity＋アニメーション）";
+"themes_pack.prop.forever" = "サブスクなし、ずっとあなたのもの";
+"themes_pack.prop.one_time" = "一度きりのお支払い";
+"theme_purchase.or" = "または";
+"theme_purchase.subscribe_title" = "Talky Proにする";
+"theme_purchase.subscribe_subtitle" = "テーマ＋海外ラジオ＋広告なし";
+"theme_purchase.apple_footer" = "お支払いはAppleが処理します。テーマパックは自動更新されません。";
+"paywall.close" = "閉じる";
+"paywall.link.restore" = "復元";
+"paywall.link.terms" = "利用規約";
+"paywall.link.privacy" = "プライバシー";
+"paywall.error_title" = "購入できませんでした";
+"paywall.error.purchase_failed" = "購入を完了できませんでした。接続を確認してもう一度お試しください。";
+"paywall.error.no_purchases" = "このApple IDでの過去の購入は見つかりませんでした。";
+"paywall.error.restore_failed" = "購入を復元できませんでした。しばらくしてからお試しください。";
+"check_wifi_bluetooth" = "Wi-FiとBluetoothを確認";
+
+/* Paywall — supporter note: who is behind Talky and what Pro really pays for */
+"paywall.support.eyebrow" = "開発者からひとこと";
+"paywall.support.title" = "Talkyは一人で作っています";
+"paywall.support.body" = "私は個人開発者で、TalkyのコードはGitHubで公開しています。Proはアプリを囲む壁ではありません。Apple Developerアカウント、サーバー、局や機能を増やすための時間をまかなうための支援です。今はタイミングでなければ、無料のまま使い続けてください。無料であり続けます。";
+"paywall.support.github" = "GitHubでコードを見る";
+"paywall.support.compact" = "個人開発者が作っています。TalkyのコードはGitHubで公開中。";
+
+/* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
+"paywall.lifetime.cta" = "一度だけ支払う ·";
+"paywall.lifetime.subtitle" = "一度のお支払いで、Proのすべてを永久に。テーマも込み。サブスクなし。";
+"paywall.lifetime.owned" = "ずっとあなたのものです。ありがとう。";

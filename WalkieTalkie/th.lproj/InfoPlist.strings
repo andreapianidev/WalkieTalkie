@@ -1,0 +1,12 @@
+/* 
+   InfoPlist.strings (Thai)
+   WalkieTalkie
+*/
+
+// MARK: - Permission Descriptions
+"NSMicrophoneUsageDescription" = "แอปนี้ต้องเข้าถึงไมโครโฟนเพื่อส่งข้อความเสียงผ่านวิทยุสื่อสาร";
+"NSLocalNetworkUsageDescription" = "แอปนี้ใช้เครือข่ายท้องถิ่นเพื่อเชื่อมต่อกับอุปกรณ์ใกล้เคียงสำหรับการสื่อสารด้วยวิทยุสื่อสาร";
+"NSBluetoothAlwaysUsageDescription" = "แอปนี้ใช้บลูทูธเพื่อค้นหาและเชื่อมต่อกับอุปกรณ์วิทยุสื่อสารที่อยู่ใกล้เคียง";
+"NSBluetoothPeripheralUsageDescription" = "แอปนี้ใช้บลูทูธเพื่อให้อุปกรณ์วิทยุสื่อสารอื่นค้นพบได้";
+"NSNetworkVolumesUsageDescription" = "แอปนี้เข้าถึงเครือข่ายเพื่อการสื่อสารด้วยวิทยุสื่อสารระหว่างอุปกรณ์";
+"NSUserTrackingUsageDescription" = "ตัวระบุนี้จะถูกใช้เพื่อแสดงโฆษณาที่ตรงกับคุณมากขึ้น และเพื่อสนับสนุนการพัฒนาแอปแบบไม่มีค่าใช้จ่าย";

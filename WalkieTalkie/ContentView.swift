@@ -66,10 +66,12 @@ struct ContentView: View {
             return multipeerManager.connectionStatus
         }
         if crossPlatformManager.connectedPeerCount > 0 && multipeerManager.connectedPeers.isEmpty {
-            return "Connesso Android (\(crossPlatformManager.connectedPeerCount))"
+            return String(format: "status.connected_crossplatform".localized, crossPlatformManager.connectedPeerCount)
         }
         if crossPlatformManager.connectedPeerCount > 0 {
-            return "Connesso (\(connectedWalkiePeerCount), Android \(crossPlatformManager.connectedPeerCount))"
+            return String(format: "status.connected_mixed".localized,
+                          connectedWalkiePeerCount,
+                          crossPlatformManager.connectedPeerCount)
         }
         return multipeerManager.connectionStatus
     }

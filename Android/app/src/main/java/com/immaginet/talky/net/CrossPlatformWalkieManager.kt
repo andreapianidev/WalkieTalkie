@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import com.immaginet.talky.audio.AudioManager
 import com.immaginet.talky.audio.RemoteAudioPolicy
+import com.immaginet.talky.R
 import com.immaginet.talky.protocol.PeerChannelPolicy
 import com.immaginet.talky.protocol.PeerConnectionPolicy
 import com.immaginet.talky.protocol.TalkyMessage
@@ -262,7 +263,7 @@ class CrossPlatformWalkieManager(
         val socket = ServerSocket(0)
         serverSocket = socket
         localEndpoint = "Locale: ${socket.localPort} / ${TalkyProtocol.SERVICE_TYPE}"
-        status = "Advertising + discovery attivi"
+        status = appContext.getString(R.string.status_advertising)
 
         executor.execute {
             while (!socket.isClosed && !isClosed.get()) {
@@ -996,7 +997,7 @@ class CrossPlatformWalkieManager(
         runCatching { serverSocket?.close() }
         serverSocket = null
         localEndpoint = ""
-        status = "Fermo"
+        status = appContext.getString(R.string.status_stopped)
         releaseMulticastLock()
     }
 

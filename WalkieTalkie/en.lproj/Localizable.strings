@@ -69,6 +69,14 @@
 "active" = "ACTIVE";
 "no_connection" = "No connection";
 "devices_connected" = "devices connected";
+"status.connected_crossplatform" = "Connected · Mac/Android (%d)";
+"status.connected_mixed" = "Connected (%1$d · %2$d Mac/Android)";
+"status.disconnected" = "Disconnected";
+"status.connected" = "Connected";
+"status.connected_count" = "Connected (%d)";
+"status.advertising" = "Visible to others";
+"status.searching" = "Searching…";
+"status.connecting" = "Connecting…";
 "transmission_in_progress" = "TRANSMISSION IN PROGRESS";
 "reception_in_progress" = "RECEPTION IN PROGRESS";
 "no_transmission" = "no transmission";
@@ -121,7 +129,7 @@
 "off" = "OFF";
 "connected_devices_count" = "Connected Devices";
 "no_devices_connected" = "No devices connected";
-"devices_nearby_hint" = "Make sure other devices are nearby and have the app open";
+"devices_nearby_hint" = "Make sure other devices are nearby with the app open, and on the same Wi-Fi network";
 "connected" = "Connected";
 "disconnect_all" = "Disconnect All";
 "restart_discovery" = "Restart Discovery";
@@ -133,9 +141,9 @@
 "scan_nearby_devices" = "Scan nearby devices";
 "detected_devices" = "Detected Devices";
 "no_devices_detected" = "No devices detected";
-"ensure_devices_open" = "Make sure other devices have the app open";
+"ensure_devices_open" = "Make sure other devices have the app open and are on the same Wi-Fi network";
 "available" = "Available";
-"tap_plus_to_invite" = "Tap + to send a connection request. The other device must accept it.";
+"tap_plus_to_invite" = "Tap + to send a request to an iPhone or iPad; the other device has to accept it. Mac and Android connect automatically.";
 "send_connection_request" = "Send connection request";
 "invitation_sent" = "Request sent";
 "strong" = "Strong";
@@ -168,9 +176,9 @@
 "instruction_2_title" = "Go to Explore";
 "instruction_2_description" = "Tap the 'Explore' tab to see available devices nearby.";
 "instruction_3_title" = "Connect Devices";
-"instruction_3_description" = "Tap + next to a device to send a connection request.";
-"instruction_4_title" = "Select Frequency";
-"instruction_4_description" = "All connected devices must use the same frequency to communicate.";
+"instruction_3_description" = "Tap + next to an iPhone or iPad to send a connection request. Mac and Android connect by themselves over the same Wi-Fi network.";
+"instruction_4_title" = "Same Channel";
+"instruction_4_description" = "Everyone starts on the public channel, so there's nothing to set. A private channel only connects devices that entered the same password.";
 "instruction_5_title" = "Hold to Talk";
 "instruction_5_description" = "Hold the center button to transmit. Release to listen.";
 "app_info" = "App Information";
@@ -212,22 +220,23 @@
 "onboarding_p1_subtitle" = "On a mountain, at a festival, in a busy square: talk to your friends even where there's no signal.";
 
 "onboarding_p2_no_internet_title" = "No internet, no SIM";
-"onboarding_p2_no_internet_body" = "Voices travel directly between nearby devices over Bluetooth, Wi-Fi and local network. It works without an internet server, as long as you're within local range.";
+"onboarding_p2_no_internet_body" = "Between iPhone and iPad the voice travels straight from device to device over Wi-Fi and Bluetooth: no router, no server, no account.";
 "onboarding_p2_range_caveat" = "Walls, hills and elevation reduce the range.";
-"onboarding_p2_multi_platform" = "Also runs on iPad and Apple Silicon Macs — same app, all your devices talk together.";
+"onboarding_p2_same_wifi" = "To reach a Mac or an Android phone, put every device on the same Wi-Fi network: that link travels over the local network.";
+"onboarding_p2_multi_platform" = "Talky also runs on iPad, Mac and Android — same app, all your devices in the same conversation.";
 
 "onboarding_p3_ptt_title" = "Hold to talk";
 "onboarding_p3_ptt_body" = "Just like a real walkie-talkie: hold the center button to speak, release to listen.";
 "onboarding_p3_ptt_rule" = "Only one voice at a time on the same channel.";
 
-"onboarding_p4_frequency_title" = "Same frequency, same conversation";
-"onboarding_p4_frequency_analogy" = "Think of an FM radio: if you're on 146.520 and your friend is on 150.000, you can't hear each other. Pick the same frequency to talk.";
-"onboarding_p4_change_freq_hint" = "Use the ‹ and › buttons to change frequency, or the Home button to return to the default.";
-"onboarding_p4_private_channels_teaser" = "Want a channel just for your group? Create a Private Channel with a password from the menu.";
+"onboarding_p4_frequency_title" = "One channel, everyone hears you";
+"onboarding_p4_frequency_analogy" = "There's nothing to match: every Talky starts on the public channel, so nearby devices find each other on their own.";
+"onboarding_p4_change_freq_hint" = "The ‹ and › buttons scan the frequency display. You transmit from the home frequency — press the green HOME button to come back to it.";
+"onboarding_p4_private_channels_teaser" = "Want a channel just for your group? Create a Private Channel with a password: only those who type the same password will find you — on iPhone, Mac and Android alike.";
 
 "onboarding_p5_steps_title" = "Ready? Just 3 steps";
-"onboarding_p5_step1" = "Open Talky on a second device nearby: iPhone, iPad, Apple Silicon Mac or Android-compatible client";
-"onboarding_p5_step2" = "Open Explore, tap + next to the nearby device, then accept the request on the other device";
+"onboarding_p5_step1" = "Open Talky on a second device nearby: iPhone, iPad, Mac or Android";
+"onboarding_p5_step2" = "On iPhone and iPad open Explore and tap + next to the device, then accept on the other one. Mac and Android connect on their own, over the same Wi-Fi";
 "onboarding_p5_step3" = "Once connected (green dot), hold the center button to talk, release to listen";
 
 "onboarding_permissions_title" = "Two permissions and we're set";
@@ -246,7 +255,7 @@
 
 // MARK: - First Run Coach
 "coach_no_peers_title" = "First step";
-"coach_no_peers_body" = "Open Talky on another nearby device, then tap \"Explore\" below.";
+"coach_no_peers_body" = "Open Talky on another nearby device on the same Wi-Fi, then tap \"Explore\" below.";
 "coach_press_ptt_title" = "Now hold here";
 "coach_press_ptt_body" = "Hold the center button to speak, release to listen.";
 "coach_dismiss" = "Got it";
