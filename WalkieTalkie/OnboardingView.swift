@@ -496,6 +496,11 @@ struct PermissionsView: View {
 
                     Spacer()
 
+                    // Linea guida 5.1.1(iv): il bottone che precede il prompt di
+                    // sistema non deve spingere verso il si', quindi "Continua" e
+                    // mai "Consenti" (rifiuto iOS 2.44, 9 ago 2026 — stesso
+                    // rilievo gia' preso su macOS il 6 agosto). Il testo
+                    // esplicativo sopra invece e' consentito e va tenuto.
                     VStack(spacing: 12) {
                         Button(action: requestPermissions) {
                             HStack {
@@ -504,7 +509,7 @@ struct PermissionsView: View {
                                         .progressViewStyle(CircularProgressViewStyle(tint: .white))
                                         .scaleEffect(0.8)
                                 } else {
-                                    Text(OnboardingStrings.allowPermissionsButton)
+                                    Text(OnboardingStrings.continueButton)
                                         .fontWeight(.semibold)
                                 }
                             }
@@ -530,14 +535,12 @@ struct PermissionsView: View {
                             }
                         }
 
-                        Button {
-                            isOnboardingComplete = true
-                            dismiss()
-                        } label: {
-                            Text(OnboardingStrings.skipButton)
-                                .foregroundColor(Color("PrimaryTextColor").opacity(0.55))
-                                .padding(.vertical, 8)
-                        }
+                        // Niente "Salta" qui: la 5.1.1(iv) vuole che dopo il
+                        // messaggio esplicativo si arrivi SEMPRE al prompt di
+                        // sistema, e questo bottone permetteva di rimandarlo.
+                        // Nessuno resta bloccato: requestPermissions() chiude
+                        // comunque il foglio, anche se l'utente rifiuta o se il
+                        // permesso era gia' stato deciso e il prompt non riappare.
                     }
                     .padding(.horizontal, 24)
                     .padding(.bottom, 24)

@@ -54,8 +54,11 @@ struct OnboardingStrings {
     // MARK: - Actions
     static let continueButton = NSLocalizedString("onboarding_continue", comment: "Continue button")
     static let getStartedButton = NSLocalizedString("onboarding_get_started", comment: "Get started button")
-    static let allowPermissionsButton = NSLocalizedString("onboarding_allow_permissions", comment: "Allow permissions button")
-    static let skipButton = NSLocalizedString("onboarding_skip", comment: "Skip button")
+    // `allowPermissionsButton` e' stato eliminato di proposito: era l'etichetta
+    // direttiva ("Consenti") davanti al prompt microfono che ha fatto rifiutare
+    // la 2.44 per 5.1.1(iv). Il foglio permessi usa `continueButton`. Non
+    // reintrodurre una stringa direttiva qui.
+    static let skipButton = NSLocalizedString("onboarding_skip", comment: "Skip button (onboarding carousel only — never on the permissions sheet)")
     static let backButton = NSLocalizedString("onboarding_back", comment: "Back button")
 
     // MARK: - First Run Coach (post-onboarding)
