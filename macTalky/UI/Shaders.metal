@@ -1,4 +1,4 @@
-//creato da Andrea Piani - Immaginet Srl - 01/08/26 - https://www.andreapiani.com - Shaders.metal
+//creato da Andrea Piani - 01/08/26 - https://www.andreapiani.com - Shaders.metal
 //  macTalky
 //
 //  Suite Metal della console (SwiftUI colorEffect / layerEffect):

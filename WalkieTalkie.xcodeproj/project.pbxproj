@@ -633,7 +633,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = Talky;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Andrea Piani — Immaginet Srl";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Talky · Andrea Piani · NIE 02915190306-Z · El Paso, Santa Cruz de Tenerife · Islas Canarias";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Talky uses the local network to discover nearby devices to talk to over walkie-talkie. Nothing is sent over the internet.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Talky uses the microphone to transmit your voice to connected devices while you hold the push-to-talk button.";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -675,7 +675,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = Talky;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Andrea Piani — Immaginet Srl";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2026 Talky · Andrea Piani · NIE 02915190306-Z · El Paso, Santa Cruz de Tenerife · Islas Canarias";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Talky uses the local network to discover nearby devices to talk to over walkie-talkie. Nothing is sent over the internet.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Talky uses the microphone to transmit your voice to connected devices while you hold the push-to-talk button.";
 				LD_RUNPATH_SEARCH_PATHS = (
