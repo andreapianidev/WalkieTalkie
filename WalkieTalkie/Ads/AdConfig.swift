@@ -20,19 +20,21 @@ enum AdConfig {
     static let interstitialAdUnitID = "ca-app-pub-1193280742171051/1317702703"
     static let rewardedAdUnitID     = "ca-app-pub-1193280742171051/3696454034"
     static let nativeStationAdUnitID = "ca-app-pub-1193280742171051/4859462082"
-    /// ⚠️ NON ANCORA CREATA su AdMob. Verificato il 19/08/26 via API: l'account
-    /// pub-1193280742171051 ha 171 ad unit, quelle di Talky sono esattamente
-    /// quattro — walkietalkieapertura (APP_OPEN), interstitialwalkie
-    /// (INTERSTITIAL), walkiepremio (REWARDED), nativowalkie (NATIVE). Nessun
-    /// banner. Questo ID è un segnaposto inventato: ogni richiesta viene
-    /// rifiutata per "invalid ad unit ID" e non compare nei report, motivo per
-    /// cui il buco è passato inosservato per mesi (in DEBUG si usa l'ID di test
-    /// di Google, che funziona benissimo).
+    /// Ad unit `bannertalky`, creata il 19/08/26 e verificata via API AdMob:
+    /// adFormat BANNER sull'app `ca-app-pub-1193280742171051~5179465988`.
     ///
-    /// Finché resta un segnaposto `isBannerConfigured` è false e non si fa
-    /// nessuna richiesta. Per accenderlo: crea un'ad unit BANNER sull'app
-    /// `ca-app-pub-1193280742171051~5179465988` e incolla qui l'ID vero.
-    static let bannerAdUnitID        = "ca-app-pub-1193280742171051/3958227741"
+    /// Fino a quel giorno qui c'era `.../3958227741`, un ID scritto a mano che
+    /// su AdMob non è mai esistito. Le due schermate che montano
+    /// `AdaptiveBannerView` (Explore e Connections) chiedevano quindi un
+    /// annuncio che veniva rifiutato ogni volta, e le richieste con ad unit ID
+    /// invalido non compaiono in nessun report: il buco è rimasto invisibile
+    /// per mesi. In DEBUG si usa l'ID di test di Google, che funziona
+    /// benissimo, quindi non si vedeva nemmeno provando l'app.
+    ///
+    /// Se un giorno serve di nuovo un segnaposto, va aggiunto a
+    /// `unconfiguredAdUnitIDs` così `isBannerConfigured` lo spegne invece di
+    /// bruciare richieste.
+    static let bannerAdUnitID        = "ca-app-pub-1193280742171051/9000188893"
 
     /// Segnaposto noti: ID scritti a mano che non esistono lato AdMob.
     private static let unconfiguredAdUnitIDs: Set<String> = [
