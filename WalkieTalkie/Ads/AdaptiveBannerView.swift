@@ -5,7 +5,7 @@ struct AdaptiveBannerView: View {
     @EnvironmentObject private var adManager: AdManager
 
     var body: some View {
-        if !IAPManager.shared.isProUser, !adManager.adsRemoved, adManager.isInitialized {
+        if AdConfig.isBannerConfigured, !IAPManager.shared.isProUser, !adManager.adsRemoved, adManager.isInitialized {
             AdaptiveBannerRepresentable(adUnitID: AdConfig.bannerAdUnitID)
                 .frame(height: 50)
                 .frame(maxWidth: .infinity)

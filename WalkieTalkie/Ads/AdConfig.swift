@@ -20,8 +20,36 @@ enum AdConfig {
     static let interstitialAdUnitID = "ca-app-pub-1193280742171051/1317702703"
     static let rewardedAdUnitID     = "ca-app-pub-1193280742171051/3696454034"
     static let nativeStationAdUnitID = "ca-app-pub-1193280742171051/4859462082"
-    static let bannerAdUnitID        = "ca-app-pub-1193280742171051/3958227741" // placeholder – creare in console AdMob
+    /// ⚠️ NON ANCORA CREATA su AdMob. Verificato il 19/08/26 via API: l'account
+    /// pub-1193280742171051 ha 171 ad unit, quelle di Talky sono esattamente
+    /// quattro — walkietalkieapertura (APP_OPEN), interstitialwalkie
+    /// (INTERSTITIAL), walkiepremio (REWARDED), nativowalkie (NATIVE). Nessun
+    /// banner. Questo ID è un segnaposto inventato: ogni richiesta viene
+    /// rifiutata per "invalid ad unit ID" e non compare nei report, motivo per
+    /// cui il buco è passato inosservato per mesi (in DEBUG si usa l'ID di test
+    /// di Google, che funziona benissimo).
+    ///
+    /// Finché resta un segnaposto `isBannerConfigured` è false e non si fa
+    /// nessuna richiesta. Per accenderlo: crea un'ad unit BANNER sull'app
+    /// `ca-app-pub-1193280742171051~5179465988` e incolla qui l'ID vero.
+    static let bannerAdUnitID        = "ca-app-pub-1193280742171051/3958227741"
+
+    /// Segnaposto noti: ID scritti a mano che non esistono lato AdMob.
+    private static let unconfiguredAdUnitIDs: Set<String> = [
+        "ca-app-pub-1193280742171051/3958227741"
+    ]
     #endif
+
+    /// False finché `bannerAdUnitID` è un segnaposto. Chiedere un banner con un
+    /// ID inesistente non è gratis: è una richiesta di rete a ogni comparsa
+    /// della view che non potrà mai riempirsi.
+    static var isBannerConfigured: Bool {
+        #if DEBUG
+        return true
+        #else
+        return !unconfiguredAdUnitIDs.contains(bannerAdUnitID)
+        #endif
+    }
 
     enum FrequencyCap {
         static let appOpenMaxAge: TimeInterval = 4 * 3600

@@ -19,7 +19,7 @@ struct ContentView: View {
     @StateObject private var crossPlatformManager = TalkyCrossPlatformManager.shared
     @EnvironmentObject private var adManager: AdManager
     @State private var frequencyChangeCount = 0
-    @State private var stationChangeCount = 0
+    @State private var radioExitCount = 0
     @State private var interstitialDebounceTask: Task<Void, Never>?
     @State private var isTransmitting = false
     @State private var frequency = "428.283"
@@ -296,6 +296,8 @@ struct ContentView: View {
         } else {
             radioManager.stopRadio()
             audioManager.updateBackgroundAudioForMode(isRadioMode: false)
+            // Radio ferma: qui l'interstitial puo' davvero passare il gate.
+            maybeShowInterstitialOnRadioExit()
         }
         hapticManager.lightTap()
     }
@@ -486,10 +488,8 @@ struct ContentView: View {
                         guard isRadioMode else { return }
                         if value.translation.width < -30 {
                             radioManager.nextStation()
-                            maybeShowInterstitialOnStationChange()
                         } else if value.translation.width > 30 {
                             radioManager.previousStation()
-                            maybeShowInterstitialOnStationChange()
                         }
                     }
             )
@@ -605,7 +605,6 @@ struct ContentView: View {
                 // Previous station (tap: previous, long press: jump -10)
                 Button(action: {
                     radioManager.previousStation()
-                    maybeShowInterstitialOnStationChange()
                 }) {
                     ZStack {
                         Circle()
@@ -646,7 +645,6 @@ struct ContentView: View {
                 // Next station (tap: next, long press: jump +10)
                 Button(action: {
                     radioManager.nextStation()
-                    maybeShowInterstitialOnStationChange()
                 }) {
                     ZStack {
                         Circle()
@@ -1166,16 +1164,28 @@ struct ContentView: View {
         scheduleInterstitialAfterIdle()
     }
 
-    /// Radio counterpart of `maybeShowInterstitialOnChannelChange`. Fires only on
-    /// explicit user station changes (tuner prev/next + swipe) — never on the
-    /// auto-resume that runs when switching into radio mode. The actual cadence
-    /// (180s min interval, 5/day) is enforced centrally by AdManager, so these
-    /// extra call sites only widen the pool of eligible moments, they don't raise
-    /// the cap.
-    private func maybeShowInterstitialOnStationChange() {
-        stationChangeCount += 1
-        // Skip the very first change so we never greet a fresh session with an ad.
-        guard stationChangeCount > 1 else { return }
+    /// Radio counterpart of `maybeShowInterstitialOnChannelChange`, agganciato
+    /// all'USCITA dalla modalità radio invece che al cambio stazione.
+    ///
+    /// Prima stava sui tasti prev/next e sullo swipe del sintonizzatore, e non
+    /// poteva funzionare: `nextStation()`/`previousStation()` chiamano
+    /// `playStation()`, che mette `isPlaying = true` in modo sincrono
+    /// (RadioManager.swift:765), mentre `AdManager.showInterstitialIfAllowed()`
+    /// esce subito con `guard !RadioManager.shared.isPlaying`. Il debounce di
+    /// 2,5 s non cambiava niente: la radio suonava già. L'unico caso in cui
+    /// passava era lo stream fallito — cioè un annuncio a schermo intero
+    /// esattamente sopra una stazione che non parte, il peggior momento
+    /// possibile.
+    ///
+    /// Qui invece la radio è appena stata fermata da `stopRadio()`, l'utente ha
+    /// finito di ascoltare e sta cambiando attività: nessun audio interrotto,
+    /// che è il motivo per cui il gate esiste (recensione 1★ DE
+    /// "penetrantester Werbung"). Cadenza e tetto (180 s, 5/giorno) restano
+    /// centralizzati in AdManager.
+    private func maybeShowInterstitialOnRadioExit() {
+        radioExitCount += 1
+        // Salta la prima uscita: non si accoglie una sessione nuova con un ad.
+        guard radioExitCount > 1 else { return }
         scheduleInterstitialAfterIdle()
     }
 

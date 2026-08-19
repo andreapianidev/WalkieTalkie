@@ -89,6 +89,18 @@ struct WalkieTalkieApp: App {
                     Task { await iapManager.updateEntitlements() }
                 }
                 if newPhase == .active {
+                    // Riprova il bootstrap se al lancio non e' andato a buon fine.
+                    //
+                    // `AdManager.bootstrap()` esce con `guard consent.canRequestAds`:
+                    // se UMP fallisce — rete assente o ballerina all'avvio, che su
+                    // un walkie-talkie usato all'aperto non e' un caso di scuola —
+                    // l'SDK non parte mai, `isInitialized` resta false e la sessione
+                    // intera non mostra nessun annuncio, banner compreso. Non c'era
+                    // nessun ritentativo: bastava un avvio sfortunato per perdere
+                    // tutto il resto della sessione.
+                    if adManager.canRetryBootstrap {
+                        Task { await adManager.bootstrap() }
+                    }
                     // Only re-show when truly coming back from background.
                     if isOnboardingComplete {
                         adManager.showAppOpenIfAllowed(afterDelay: true)

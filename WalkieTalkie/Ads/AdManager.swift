@@ -68,7 +68,21 @@ final class AdManager: ObservableObject {
     ///   2. ATT prompt (only after UMP has resolved and UI is active)
     ///   3. GoogleMobileAds SDK start (so Google sees the consent + IDFA signal)
     ///   4. Preload of all ad formats
+    /// Tentativi di bootstrap gia' spesi. `WalkieTalkieApp` ritenta a ogni
+    /// rientro in foreground finche' `isInitialized` e' false; il tetto evita
+    /// che un utente che ha legittimamente negato il consenso si porti dietro
+    /// una chiamata di rete a ogni foreground per tutta la sessione.
+    private var bootstrapAttempts = 0
+    private static let maxBootstrapAttempts = 3
+
+    var canRetryBootstrap: Bool {
+        !isInitialized && bootstrapAttempts < Self.maxBootstrapAttempts
+    }
+
     func bootstrap() async {
+        guard !isInitialized else { return }
+        bootstrapAttempts += 1
+
         // 1. UMP
         await consent.gatherConsent()
         guard consent.canRequestAds else { return }
