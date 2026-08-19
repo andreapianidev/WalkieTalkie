@@ -1,4 +1,4 @@
-//creato da Andrea Piani - Immaginet Srl - 12/07/25 - https://www.andreapiani.com - plan.md
+//creato da Andrea Piani - 12/07/25 - https://www.andreapiani.com - plan.md
 
 # WalkieTalkie App Development Plan
 

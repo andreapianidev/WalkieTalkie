@@ -1,4 +1,4 @@
-//creato da Andrea Piani - Immaginet Srl - 13/06/26 - https://www.andreapiani.com - TalkyCrossPlatformManager.swift
+//creato da Andrea Piani - 13/06/26 - https://www.andreapiani.com - TalkyCrossPlatformManager.swift
 
 import Foundation
 import Network

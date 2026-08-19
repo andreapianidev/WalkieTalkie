@@ -1,4 +1,4 @@
-//creato da Andrea Piani - Immaginet Srl - 07/08/26 - https://www.andreapiani.com - PaywallTriggerManager.swift
+//creato da Andrea Piani - 07/08/26 - https://www.andreapiani.com - PaywallTriggerManager.swift
 //  WalkieTalkie
 //
 

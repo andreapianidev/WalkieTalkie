@@ -1,4 +1,4 @@
-//creato da Andrea Piani - Immaginet Srl - 01/08/26 - https://www.andreapiani.com - WalkieView.swift
+//creato da Andrea Piani - 01/08/26 - https://www.andreapiani.com - WalkieView.swift
 //  macTalky
 //
 //  Modulo walkie: PTT circolare (mouse o barra spaziatrice), VU meter,

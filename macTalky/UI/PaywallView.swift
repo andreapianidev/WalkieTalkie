@@ -1,4 +1,4 @@
-//creato da Andrea Piani - Immaginet Srl - 01/08/26 - https://www.andreapiani.com - PaywallView.swift
+//creato da Andrea Piani - 01/08/26 - https://www.andreapiani.com - PaywallView.swift
 //  macTalky
 //
 //  Paywall Talky Pro. Stessi prodotti App Store dell'app iOS (universal

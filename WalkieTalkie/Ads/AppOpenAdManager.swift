@@ -1,7 +1,7 @@
 //  AppOpenAdManager.swift
 //  WalkieTalkie - Talky
 //
-//  Created by Andrea Piani - Immaginet Srl
+//  Created by Andrea Piani
 
 import Foundation
 import Combine

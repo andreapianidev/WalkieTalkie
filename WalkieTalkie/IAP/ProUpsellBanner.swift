@@ -1,4 +1,4 @@
-//creato da Andrea Piani - Immaginet Srl - 23/05/26 - https://www.andreapiani.com - ProUpsellBanner.swift
+//creato da Andrea Piani - 23/05/26 - https://www.andreapiani.com - ProUpsellBanner.swift
 //  WalkieTalkie
 //
 //  Created by Andrea Piani on 23/05/26.

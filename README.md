@@ -1,4 +1,4 @@
-// Created by Andrea Piani - Immaginet Srl - 22/05/26 - https://www.andreapiani.com - README.md
+// Created by Andrea Piani - 22/05/26 - https://www.andreapiani.com - README.md
 
 # Talky — Walkie-Talkie & FM Radio (Source-Available iOS + Android App)
 
@@ -614,7 +614,7 @@ Conventional-commit prefixes are appreciated: `feat:`, `fix:`, `chore:`, `refact
 
 ### Contributor license agreement
 
-By opening a pull request you agree that **your contribution is licensed under the same [PolyForm Noncommercial License 1.0.0](LICENSE)** as the rest of the project, and that you grant Andrea Piani / Immaginet Srl a perpetual, worldwide, royalty-free right to relicense your contribution under **any other license (including commercial)** as part of the official Talky distribution. This is the standard inbound=outbound model used by most source-available projects and is required to keep the commercial-license path viable.
+By opening a pull request you agree that **your contribution is licensed under the same [PolyForm Noncommercial License 1.0.0](LICENSE)** as the rest of the project, and that you grant Andrea Piani a perpetual, worldwide, royalty-free right to relicense your contribution under **any other license (including commercial)** as part of the official Talky distribution. This is the standard inbound=outbound model used by most source-available projects and is required to keep the commercial-license path viable.
 
 ### Good first issues
 - Add more radio stations (extend `RadioManager.radioStations`)
@@ -628,7 +628,7 @@ By opening a pull request you agree that **your contribution is licensed under t
 
 ## 📄 License
 
-**[PolyForm Noncommercial License 1.0.0](LICENSE)** — © 2025–2026 Andrea Piani / Immaginet Srl. All rights reserved.
+**[PolyForm Noncommercial License 1.0.0](LICENSE)** — © 2025–2026 Andrea Piani · NIE 02915190306-Z · El Paso, Santa Cruz de Tenerife · Islas Canarias. All rights reserved.
 
 > 🚫 **This is NOT an MIT/Apache/BSD/GPL project.** It is **source-available**, not "open-source" in the OSI sense. Commercial use is **strictly prohibited** without a separate written license signed by the copyright holder.
 
@@ -670,7 +670,7 @@ The plain-language summary above is informational only and does not replace the 
 
 ## 🏔️ Credits & Links
 
-- **Developer**: Andrea Piani · **Company**: Immaginet Srl
+- **Developer**: Andrea Piani · NIE 02915190306-Z · El Paso, Santa Cruz de Tenerife · Islas Canarias
 - **Website**: <https://www.andreapiani.com>
 - **Privacy policy**: <https://privacypolicyhub.vercel.app>
 - **Support coffee** ☕: <https://buymeacoffee.com/andreapianidev>

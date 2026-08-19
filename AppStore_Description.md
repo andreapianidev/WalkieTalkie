@@ -154,4 +154,4 @@ talky, walkie talkie, radio, comunicazione, push to talk, PTT, radio FM, multipe
 **4+** (Adatto a tutte le età)
 
 ---
-*Creato da Andrea Piani - Immaginet Srl - 2024 - https://www.andreapiani.com - AppStore_Description.md*
+*Creato da Andrea Piani - 2024 - https://www.andreapiani.com - AppStore_Description.md*

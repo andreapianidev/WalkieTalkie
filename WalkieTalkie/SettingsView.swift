@@ -1,4 +1,4 @@
-//creato da Andrea Piani - Immaginet Srl - 2024 - https://www.andreapiani.com - SettingsView.swift
+//creato da Andrea Piani - 2024 - https://www.andreapiani.com - SettingsView.swift
 
 import SwiftUI
 import Combine
@@ -938,7 +938,7 @@ struct SettingsView: View {
                         .font(.body)
                         .foregroundColor(Color("PrimaryTextColor"))
                     Spacer()
-                    Text("Andrea Piani - Immaginet Srl")
+                    Text("Andrea Piani")
                         .font(.body)
                         .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
                 }

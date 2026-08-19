@@ -1,4 +1,4 @@
-//creato da Andrea Piani - Immaginet Srl - 02/08/26 - https://www.andreapiani.com - SettingsPane.swift
+//creato da Andrea Piani - 02/08/26 - https://www.andreapiani.com - SettingsPane.swift
 //  macTalky
 //
 //  Scena Settings (⌘,) replicata dalla SettingsView iOS, adattata al Mac:
@@ -238,7 +238,7 @@ struct SettingsPane: View {
                 Link("andreapiani.com", destination: URL(string: "https://www.andreapiani.com")!)
             }
             Section {
-                Text("© 2026 Andrea Piani — Immaginet Srl. Source-available under the PolyForm Noncommercial License 1.0.0.")
+                Text("© 2026 Andrea Piani · NIE 02915190306-Z · El Paso, Santa Cruz de Tenerife · Islas Canarias. Source-available under the PolyForm Noncommercial License 1.0.0.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

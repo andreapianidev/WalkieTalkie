@@ -1,4 +1,4 @@
-//creato da Andrea Piani - Immaginet Srl - 01/08/26 - https://www.andreapiani.com - ContentView.swift
+//creato da Andrea Piani - 01/08/26 - https://www.andreapiani.com - ContentView.swift
 //  macTalky
 //
 //  Root: sidebar console + area operativa (Walkie / Radio) sopra lo sfondo

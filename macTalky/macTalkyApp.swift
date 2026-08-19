@@ -1,4 +1,4 @@
-//creato da Andrea Piani - Immaginet Srl - 01/08/26 - https://www.andreapiani.com - macTalkyApp.swift
+//creato da Andrea Piani - 01/08/26 - https://www.andreapiani.com - macTalkyApp.swift
 //  macTalky
 //
 //  Walkie-talkie + radio Internet per macOS 26+. Parla con Talky iOS e

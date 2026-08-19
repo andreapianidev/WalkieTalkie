@@ -1,4 +1,4 @@
-//creato da Andrea Piani - Immaginet Srl - 13/01/25 - https://www.andreapiani.com - SettingsManager.swift
+//creato da Andrea Piani - 13/01/25 - https://www.andreapiani.com - SettingsManager.swift
 //  WalkieTalkie
 //
 //  Created by Andrea Piani on 13/01/25.

@@ -1,4 +1,4 @@
-//creato da Andrea Piani - Immaginet Srl - 2024 - https://www.andreapiani.com - ExploreView.swift
+//creato da Andrea Piani - 2024 - https://www.andreapiani.com - ExploreView.swift
 
 import SwiftUI
 import MultipeerConnectivity

@@ -1,4 +1,4 @@
-//creato da Andrea Piani - Immaginet Srl - 02/08/26 - https://www.andreapiani.com - MenuBarPanel.swift
+//creato da Andrea Piani - 02/08/26 - https://www.andreapiani.com - MenuBarPanel.swift
 //  macTalky
 //
 //  Mini-console nella menu bar: PTT hold-to-talk, stato canale/peer,

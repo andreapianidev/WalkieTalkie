@@ -1,4 +1,4 @@
-//creato da Andrea Piani - Immaginet Srl - 01/08/26 - https://www.andreapiani.com - SettingsManager.swift
+//creato da Andrea Piani - 01/08/26 - https://www.andreapiani.com - SettingsManager.swift
 //  macTalky
 //
 //  Persistenza impostazioni macOS via UserDefaults. Versione snella del

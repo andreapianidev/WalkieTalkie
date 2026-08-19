@@ -1,4 +1,4 @@
-//creato da Andrea Piani - Immaginet Srl - 02/08/26 - https://www.andreapiani.com - OnboardingView.swift
+//creato da Andrea Piani - 02/08/26 - https://www.andreapiani.com - OnboardingView.swift
 //  macTalky
 //
 //  Onboarding al primo avvio, replicato dallo spirito di quello iOS ma in
