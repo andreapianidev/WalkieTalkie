@@ -38,6 +38,16 @@ object AdManager {
         private set
 
     fun gatherConsentAndInitialize(activity: Activity) {
+        // Senza ID AdMob reali non c'è niente da mostrare: saltare qui evita di
+        // chiedere il consenso GDPR, di inizializzare l'SDK e di precaricare
+        // annunci che nessuno vedrà. `canRequestAds` resta false, quindi
+        // AdBanner non disegna nulla.
+        if (!AdConfig.isConfigured) {
+            canRequestAds = false
+            privacyOptionsRequired = false
+            return
+        }
+
         val params = ConsentRequestParameters.Builder()
             .setTagForUnderAgeOfConsent(false)
             .build()

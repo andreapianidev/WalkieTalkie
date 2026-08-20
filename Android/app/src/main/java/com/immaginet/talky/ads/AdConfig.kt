@@ -42,4 +42,22 @@ object AdConfig {
     val interstitialId: String get() = resolve(LIVE_INTERSTITIAL, TEST_INTERSTITIAL)
     val rewardedId: String get() = resolve(LIVE_REWARDED, TEST_REWARDED)
     val appOpenId: String get() = resolve(LIVE_APP_OPEN, TEST_APP_OPEN)
+
+    /**
+     * `true` solo quando esistono ID AdMob veri, cioè quando l'app può davvero
+     * guadagnare qualcosa mostrando un annuncio.
+     *
+     * Finché è `false` l'app non mostra pubblicità e non inizializza nemmeno
+     * l'SDK. Non è una questione di ricavi mancati — con i soli ID di test non
+     * ce n'erano — ma di cosa vedeva l'utente: un banner Google con scritto
+     * "Test Ad" fisso in fondo alla schermata principale, e prima ancora un
+     * modulo di consenso GDPR che chiedeva il permesso di profilarlo per
+     * annunci che non esistono. Chi scarica l'APK da GitHub adesso non vede
+     * né l'uno né l'altro.
+     *
+     * Per riaccendere tutto: sostituire i `LIVE_*` con gli ID reali e l'App ID
+     * di test nel manifest con quello vero. Non serve toccare altro.
+     */
+    val isConfigured: Boolean
+        get() = !BuildConfig.DEBUG && !isPlaceholder(LIVE_APP_ID) && !isPlaceholder(LIVE_BANNER)
 }

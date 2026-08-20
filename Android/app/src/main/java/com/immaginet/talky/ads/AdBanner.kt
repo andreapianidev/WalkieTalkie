@@ -23,6 +23,11 @@ import com.google.android.gms.ads.AdView
 @Composable
 fun AdBanner(modifier: Modifier = Modifier) {
     val context = LocalContext.current
+    // Doppia guardia voluta: `AdManager` non alza mai `canRequestAds` senza ID
+    // reali, ma il banner è la sola pubblicità che l'utente vede sempre a
+    // schermo, e un giorno che qualcuno tocchi quel percorso qui non deve
+    // ricomparire la striscia "Test Ad".
+    if (!AdConfig.isConfigured) return
     val canRequestAds = AdManager.canRequestAds
     val privacyOptionsRequired = AdManager.privacyOptionsRequired
 
