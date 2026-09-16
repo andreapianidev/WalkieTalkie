@@ -22,6 +22,11 @@ final class AppOpenAdManager: NSObject, ObservableObject {
     /// Suppress flag set by other components (e.g. while user is transmitting).
     var suppressNextResume: Bool = false
 
+    /// Ultimo controllo prima di presentare, impostato da `AdManager`. Serve al
+    /// percorso con ritardo: fra la decisione e la presentazione passano 1,2 s,
+    /// abbastanza perche' il paywall si apra e l'annuncio gli finisca sopra.
+    var shouldPresent: () -> Bool = { true }
+
     func loadAd() async {
         guard !isLoading, !isAdAvailable else { return }
         isLoading = true
@@ -69,6 +74,11 @@ final class AppOpenAdManager: NSObject, ObservableObject {
             let delay = UInt64(AdConfig.FrequencyCap.appOpenResumeDelay * 1_000_000_000)
             try? await Task.sleep(nanoseconds: delay)
             guard !Task.isCancelled else {
+                self.isPresenting = false
+                self.pendingPresentationTask = nil
+                return
+            }
+            guard self.shouldPresent() else {
                 self.isPresenting = false
                 self.pendingPresentationTask = nil
                 return

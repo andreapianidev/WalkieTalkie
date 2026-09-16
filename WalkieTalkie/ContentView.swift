@@ -1011,11 +1011,23 @@ struct ContentView: View {
         .onReceive(NotificationCenter.default.publisher(for: PaywallTriggerManager.presentRequest)) { note in
             // I trigger nascono nei manager, che non conoscono la gerarchia
             // SwiftUI: arrivano qui via NotificationCenter. Se c'è già un
-            // paywall o un foglio aperto si lascia perdere — sovrapporre due
-            // schermate modali è peggio che non mostrarne nessuna.
-            guard !showPaywall, !showBrowser, !showSleepTimer else { return }
-            paywallTrigger = note.userInfo?["trigger"] as? String ?? "unknown"
+            // paywall o un foglio aperto non si sovrappone niente: il trigger
+            // non risulta mostrato, quindi PaywallTriggerManager lo riprova.
+            let trigger = note.userInfo?["trigger"] as? String ?? "unknown"
+            guard !showPaywall, !showBrowser, !showSleepTimer else {
+                PaywallFlowLog.log("paywall \(trigger) non aperto: schermata modale gia' aperta (paywall=\(showPaywall), browser=\(showBrowser), timer=\(showSleepTimer))")
+                return
+            }
+            paywallTrigger = trigger
             showPaywall = true
+        }
+        .onReceive(NotificationCenter.default.publisher(for: PaywallTriggerManager.presentFailed)) { _ in
+            // `showPaywall` a true senza paywall a schermo bloccherebbe ogni
+            // apertura successiva, anche quelle chieste dall'utente. Se invece
+            // un paywall è davvero visibile non si tocca.
+            if showPaywall && !adManager.isPaywallVisible {
+                showPaywall = false
+            }
         }
         .onAppear {
             // Inizializza l'indice della frequenza corrente

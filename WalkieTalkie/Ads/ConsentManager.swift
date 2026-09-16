@@ -83,8 +83,22 @@ final class ConsentManager: ObservableObject {
         // Extra safety buffer so we are not racing a scene transition.
         try? await Task.sleep(nanoseconds: 1_000_000_000) // 1s
 
-        guard UIApplication.shared.applicationState == .active else { return }
+        guard UIApplication.shared.applicationState == .active else {
+            PaywallFlowLog.log("ATT non richiesta: app non attiva, si riprova al prossimo avvio")
+            return
+        }
+        PaywallFlowLog.log("ATT richiesta")
         _ = await ATTrackingManager.requestTrackingAuthorization()
+    }
+
+    var trackingStatusDescription: String {
+        switch ATTrackingManager.trackingAuthorizationStatus {
+        case .notDetermined: return "notDetermined"
+        case .restricted: return "restricted"
+        case .denied: return "denied"
+        case .authorized: return "authorized"
+        @unknown default: return "unknown"
+        }
     }
 
     func presentPrivacyOptions() async {

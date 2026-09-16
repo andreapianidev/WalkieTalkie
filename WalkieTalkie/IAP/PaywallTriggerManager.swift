@@ -4,7 +4,20 @@
 
 import Foundation
 import Combine
+import os
 import FirebaseAnalytics
+
+/// Log del percorso consenso, ATT e paywall, leggibile da Console.app sul
+/// dispositivo filtrando per categoria `PaywallFlow`. Messaggi pubblici: con
+/// `os_log("%@")` in Release comparirebbero come `<private>`, cioe' inutili
+/// proprio sulla build in cui serve capire cosa e' successo.
+enum PaywallFlowLog {
+    private static let logger = os.Logger(subsystem: "com.andreapiani.walkietalkie", category: "PaywallFlow")
+
+    static func log(_ message: String) {
+        logger.notice("[PaywallFlow] \(message, privacy: .public)")
+    }
+}
 
 /// Decide QUANDO mostrare il paywall, e soprattutto quando tacere.
 ///
@@ -30,6 +43,11 @@ final class PaywallTriggerManager {
     /// Notifica osservata da ContentView per presentare il paywall.
     /// `userInfo["trigger"]` contiene il `Trigger.rawValue`.
     static let presentRequest = Notification.Name("talky.paywall.present")
+
+    /// Notifica di presentazione fallita: ContentView rimette a posto il proprio
+    /// stato, altrimenti `showPaywall` resterebbe `true` senza paywall a schermo
+    /// e bloccherebbe ogni apertura successiva della sessione.
+    static let presentFailed = Notification.Name("talky.paywall.presentFailed")
 
     // MARK: - Trigger
 
@@ -82,7 +100,14 @@ final class PaywallTriggerManager {
     private enum Keys {
         static let sessionCount = "paywall_session_count"
         static let lastShown = "paywall_last_shown_date"
-        static let firedOneShots = "paywall_fired_oneshots"
+        /// `_v2` dalla 2.46. Fino alla 2.45 il one-shot veniva segnato alla
+        /// RICHIESTA, non alla comparsa: chi aveva un foglio aperto, il modulo
+        /// di consenso o l'alert ATT a schermo in quel momento si e' visto
+        /// bruciare il trigger senza mai vedere il paywall. La vecchia chiave
+        /// non distingue i due casi, quindi si riparte da zero: chi il paywall
+        /// l'ha visto davvero lo rivede una volta sola, gli altri finalmente
+        /// lo vedono.
+        static let firedOneShots = "paywall_fired_oneshots_v2"
         static let transmissions = "paywall_transmission_count"
         // Strumentazione (fase 3.4)
         static let shownTotal = "paywall_metric_shown_total"
@@ -96,6 +121,19 @@ final class PaywallTriggerManager {
     /// Vero mentre una trasmissione è in corso: in quel momento il paywall non
     /// si apre per nessun motivo. Lo aggiorna `MultipeerManager`.
     var isConversationActive = false
+
+    /// Il trigger proattivo richiesto e non ancora confermato da `PaywallView`.
+    /// Finche' non arriva la conferma il trigger NON e' consumato.
+    private var awaitingConfirmation: Trigger?
+
+    /// Tempo concesso alla vista per comparire dopo la richiesta. `onAppear`
+    /// arriva in meno di mezzo secondo: 4 s sono un margine largo.
+    private let confirmationTimeout: UInt64 = 4_000_000_000
+
+    /// Nuovi tentativi nella stessa sessione dopo una presentazione fallita.
+    /// Oltre, si riprova alla sessione successiva.
+    private let maxRetriesPerSession = 2
+    private var retriesThisSession = 0
 
     private init() {}
 
@@ -111,16 +149,35 @@ final class PaywallTriggerManager {
 
     // MARK: - Eventi in ingresso
 
-    /// Da chiamare a ogni avvio a freddo dell'app.
+    /// Da chiamare a ogni avvio a freddo dell'app, PRIMA di `AdManager.bootstrap()`.
     func registerSession() {
         let count = defaults.integer(forKey: Keys.sessionCount) + 1
         defaults.set(count, forKey: Keys.sessionCount)
-        guard count == 2 else { return }
-        // Ritardo: il paywall non deve atterrare sopra la schermata che si sta
-        // ancora componendo, né sopra il prompt ATT del primo avvio.
+        // `>= 2` e non `== 2`: con l'uguaglianza una presentazione fallita al
+        // secondo avvio non si recuperava piu'. Il one-shot, segnato solo a
+        // paywall comparso, impedisce che si ripeta.
+        guard count >= 2, canPresent(.secondSession) else { return }
+
+        // Deciso adesso, prima che il bootstrap annunci arrivi a caricare
+        // l'app-open: in questa sessione l'annuncio di apertura non parte.
+        AdManager.shared.appOpenBlockedThisSession = true
+        PaywallFlowLog.log("sessione \(count): paywall second_session in programma, app-open spento per questa sessione")
+
+        scheduleAfterPrivacyFlow(.secondSession, settleDelay: 1_500_000_000)
+    }
+
+    /// Richiede il paywall solo quando consenso e ATT sono chiusi.
+    ///
+    /// Il modulo UMP e l'alert ATT stanno a schermo per un tempo che dipende
+    /// dalla rete e dall'utente: il vecchio ritardo fisso di 2,5 s cadeva spesso
+    /// nel mezzo, e un `fullScreenCover` presentato sopra di loro fallisce senza
+    /// errori. Il margine dopo la chiusura lascia finire la transizione di scena
+    /// che l'alert ATT provoca uscendo.
+    private func scheduleAfterPrivacyFlow(_ trigger: Trigger, settleDelay: UInt64) {
         Task { @MainActor in
-            try? await Task.sleep(nanoseconds: 2_500_000_000)
-            request(.secondSession)
+            await AdManager.shared.waitUntilPrivacyFlowClosed()
+            try? await Task.sleep(nanoseconds: settleDelay)
+            request(trigger)
         }
     }
 
@@ -129,7 +186,9 @@ final class PaywallTriggerManager {
         guard connectedPeerCount > 0 else { return }
         let count = defaults.integer(forKey: Keys.transmissions) + 1
         defaults.set(count, forKey: Keys.transmissions)
-        guard count == transmissionMilestone else { return }
+        // `>=` per lo stesso motivo di `registerSession`: se alla ventesima il
+        // paywall non riesce ad aprirsi, si riprova alla ventunesima.
+        guard count >= transmissionMilestone else { return }
         request(.twentiethTransmission)
     }
 
@@ -145,35 +204,77 @@ final class PaywallTriggerManager {
 
     // MARK: - Decisione
 
+    /// Chiede a ContentView di aprire il paywall. Ritorna `true` se la richiesta
+    /// e' partita, che NON vuol dire che il paywall sia comparso: il trigger si
+    /// consuma solo in `paywallDidAppear`.
     @discardableResult
     private func request(_ trigger: Trigger) -> Bool {
         guard canPresent(trigger) else { return false }
-
-        if trigger.isOneShot {
-            var fired = Set(defaults.stringArray(forKey: Keys.firedOneShots) ?? [])
-            fired.insert(trigger.rawValue)
-            defaults.set(Array(fired), forKey: Keys.firedOneShots)
+        guard awaitingConfirmation == nil else {
+            PaywallFlowLog.log("paywall \(trigger.rawValue) non richiesto: un'altra richiesta attende conferma")
+            return false
         }
-        defaults.set(Date(), forKey: Keys.lastShown)
-        recordShown(trigger)
+
+        PaywallFlowLog.log("paywall richiesto (trigger=\(trigger.rawValue))")
+        awaitingConfirmation = trigger
 
         // Il paywall sta per aprirsi: l'app-open non deve infilarsi nel mezzo.
         // Si alza solo `suppressNextResume`, che si consuma da sé al primo
         // rientro: `isPaywallVisible` resta di proprietà della vista, l'unica
-        // che sa anche spegnerlo. Alzarlo anche qui significherebbe lasciarlo
-        // acceso per sempre nei casi in cui ContentView scarta la richiesta
-        // perché ha già un foglio aperto — e da lì niente più pubblicità.
+        // che sa anche spegnerlo.
         AdManager.shared.appOpen.suppressNextResume = true
 
         NotificationCenter.default.post(
             name: Self.presentRequest, object: nil,
             userInfo: ["trigger": trigger.rawValue])
+
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: confirmationTimeout)
+            guard awaitingConfirmation == trigger else { return }
+            presentationFailed(trigger)
+        }
         return true
+    }
+
+    /// Chiamato da `PaywallView.onAppear`: e' l'unico punto in cui un paywall
+    /// risulta mostrato davvero, quindi l'unico in cui il trigger si consuma.
+    func paywallDidAppear(trigger: String) {
+        PaywallFlowLog.log("paywall mostrato (trigger=\(trigger))")
+        guard let pending = awaitingConfirmation, pending.rawValue == trigger else { return }
+        awaitingConfirmation = nil
+
+        if pending.isOneShot {
+            var fired = Set(defaults.stringArray(forKey: Keys.firedOneShots) ?? [])
+            fired.insert(pending.rawValue)
+            defaults.set(Array(fired), forKey: Keys.firedOneShots)
+        }
+        defaults.set(Date(), forKey: Keys.lastShown)
+        recordShown(pending)
+    }
+
+    /// La vista non e' comparsa entro il tempo concesso. Il trigger resta
+    /// disponibile: si riprova in questa sessione, e se anche questo va male
+    /// alla prossima.
+    private func presentationFailed(_ trigger: Trigger) {
+        awaitingConfirmation = nil
+        PaywallFlowLog.log("paywall fallito (trigger=\(trigger.rawValue)): nessuna comparsa entro 4 s, trigger ancora disponibile")
+        Analytics.logEvent("paywall_present_failed", parameters: ["trigger": trigger.rawValue])
+        NotificationCenter.default.post(
+            name: Self.presentFailed, object: nil,
+            userInfo: ["trigger": trigger.rawValue])
+
+        guard trigger.isProactive, retriesThisSession < maxRetriesPerSession else { return }
+        retriesThisSession += 1
+        PaywallFlowLog.log("nuovo tentativo \(retriesThisSession)/\(maxRetriesPerSession) per \(trigger.rawValue) fra 5 s")
+        scheduleAfterPrivacyFlow(trigger, settleDelay: 5_000_000_000)
     }
 
     private func canPresent(_ trigger: Trigger) -> Bool {
         if isPro { return false }
-        if isConversationActive { return false }
+        if isConversationActive {
+            PaywallFlowLog.log("paywall \(trigger.rawValue) rimandato: conversazione in corso")
+            return false
+        }
 
         if trigger.isOneShot {
             let fired = defaults.stringArray(forKey: Keys.firedOneShots) ?? []

@@ -62,6 +62,9 @@ struct WalkieTalkieApp: App {
                 // sessione un abbonato si vedrebbe proporre l'abbonamento.
                 // Solo a onboarding concluso: il paywall non va messo davanti a
                 // chi non ha ancora finito di configurare l'app.
+                // Prima del bootstrap annunci e non dopo: se in questa sessione
+                // tocca al paywall, l'app-open va spento prima che possa partire.
+                // Il paywall stesso aspetta che consenso e ATT siano chiusi.
                 if isOnboardingComplete {
                     PaywallTriggerManager.shared.registerSession()
                 }
@@ -98,7 +101,10 @@ struct WalkieTalkieApp: App {
                     // intera non mostra nessun annuncio, banner compreso. Non c'era
                     // nessun ritentativo: bastava un avvio sfortunato per perdere
                     // tutto il resto della sessione.
-                    if adManager.canRetryBootstrap {
+                    // Mai sopra un paywall aperto: il modulo di consenso gli
+                    // finirebbe davanti. Un bootstrap gia' in corso non riparte,
+                    // lo gestisce `AdManager.bootstrap()`.
+                    if adManager.canRetryBootstrap && !adManager.isPaywallVisible {
                         Task { await adManager.bootstrap() }
                     }
                     // Only re-show when truly coming back from background.

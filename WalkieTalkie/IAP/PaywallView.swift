@@ -199,6 +199,8 @@ struct PaywallView: View {
             // modo più diretto per perdere sia la vendita sia la recensione.
             adManager.isPaywallVisible = true
             adManager.appOpen.suppressNextResume = true
+            // Conferma di comparsa: solo da qui un trigger proattivo si consuma.
+            PaywallTriggerManager.shared.paywallDidAppear(trigger: trigger)
             Analytics.logEvent("paywall_shown", parameters: ["trigger": trigger])
             if iap.products.isEmpty {
                 Task { try? await iap.loadProducts() }
@@ -210,6 +212,7 @@ struct PaywallView: View {
         }
         .onDisappear {
             adManager.isPaywallVisible = false
+            PaywallFlowLog.log("paywall chiuso (trigger=\(trigger))")
             Analytics.logEvent("paywall_dismissed", parameters: ["trigger": trigger])
             // Chiuso senza comprare: si registra anche QUALE prodotto era
             // selezionato. È il numero che distingue "il prezzo non convince"
