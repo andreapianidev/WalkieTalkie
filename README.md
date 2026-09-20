@@ -71,6 +71,7 @@
 - [Feature Matrix (Free vs Pro)](#-feature-matrix-free-vs-pro)
 - [Walkie-Talkie Engine](#-walkie-talkie-engine)
 - [TALKY1 protocol specification](docs/TALKY1.md)
+- [Changelog](CHANGELOG.md)
 - [Radio Browser (135 stations)](#-radio-browser-135-stations)
 - [Live Activities & Dynamic Island](#-live-activities--dynamic-island)
 - [Theme System (16 themes)](#-theme-system-16-themes)
@@ -110,7 +111,12 @@
 
 Talky now ships an **Android port** too — it lives in [`Android/`](Android/) inside this same repo and is distributed under the **same [PolyForm Noncommercial License](LICENSE)** as the iOS app.
 
-> ⬇️ **[Download Talky for Android v1.1 (signed APK)](https://github.com/andreapianidev/WalkieTalkie/releases/download/android-v1.1/Talky-Android-v1.1.apk)** — Android 11/API 30 or newer. Android may ask you to authorize installation from your browser or file manager.
+> ⬇️ **[Download the latest Talky for Android (signed APK)](https://github.com/andreapianidev/WalkieTalkie/releases/latest)** — Android 13/API 33 or newer. Android may ask you to authorize installation from your browser or file manager.
+>
+> The link points at the releases page, not at one file, so it cannot go stale
+> the way the old hard-coded v1.1 link did. Devices still on Android 11 or 12 can
+> install `android-v1.2` from the same page. What changed in each version is in
+> [`CHANGELOG.md`](CHANGELOG.md).
 
 > ⚠️ **Status: Beta.** The Android app is a younger, leaner port of the iOS original. The core experience (push-to-talk + radio) is functional and builds a **signed release APK**, but it does **not yet** have feature parity on the Pro tier (no IAP/paywall, no Live Activities, single base theme).
 
@@ -126,7 +132,7 @@ Talky now ships an **Android port** too — it lives in [`Android/`](Android/) i
 |---|---|
 | Language | **Kotlin** |
 | UI | **Jetpack Compose** + Material 3 |
-| Min / Target SDK | **30 (Android 11)** / **36** |
+| Min / Target SDK | **33 (Android 13)** / **36** |
 | P2P | Network Service Discovery (NSD) |
 | Ads | Google Mobile Ads + User Messaging Platform |
 | Backend | Firebase (Analytics + Crashlytics) |
@@ -644,7 +650,18 @@ Contributions are welcome! Please:
 2. **Match the existing code style** — Swift API Design Guidelines, no force-unwraps, prefer `@MainActor` and `nonisolated` correctness over `@unchecked Sendable`
 3. **Update localizations** if you change any UI string (`it`, `en`, `es`, `ms`, `zh-Hant` must stay in sync)
 4. **Build & run on a physical device** before opening the PR
-5. **Open a PR** with a clear description, screenshots for UI changes, and reference any related issue
+5. **Bump the build number in the same commit** — `versionCode` on Android,
+   `CURRENT_PROJECT_VERSION` on Xcode. Every change, no exceptions. A number
+   raised separately afterwards no longer says which work it belongs to.
+6. **Add a [`CHANGELOG.md`](CHANGELOG.md) entry** saying what changes for whoever
+   installs the app, not what changed in the code. Nothing is released without
+   one.
+7. **Test the release build, not just debug.** The 1.2 Android APK died at
+   startup for everyone who downloaded it while working perfectly in
+   development, because debug builds are not minified and R8 was stripping a
+   class Room looks up by name. A bug that only exists in the artifact you ship
+   is the expensive kind.
+8. **Open a PR** with a clear description, screenshots for UI changes, and reference any related issue
 
 Conventional-commit prefixes are appreciated: `feat:`, `fix:`, `chore:`, `refactor:`, `docs:`, `style:`.
 

@@ -24,10 +24,14 @@ android {
 
     defaultConfig {
         applicationId = "com.immaginet.talky.android"
-        minSdk = 30
+        // Android 13. Due versioni sopra il vecchio minSdk 30 (Android 11): niente
+        // sistemi decrepiti da tenere vivi, e in cambio si danno per scontati i
+        // permessi a runtime per le notifiche (POST_NOTIFICATIONS, API 33) e il
+        // comportamento moderno di rete e audio, senza rami di compatibilita'.
+        minSdk = 33
         targetSdk = 36
-        versionCode = 3
-        versionName = "1.2"
+        versionCode = 4
+        versionName = "1.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
