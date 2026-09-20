@@ -943,8 +943,14 @@ class RadioManager: NSObject, ObservableObject {
     private func setupNowPlayingInfo(for station: RadioStation) {
         var nowPlayingInfo = [String: Any]()
         nowPlayingInfo[MPMediaItemPropertyTitle] = station.name
-        nowPlayingInfo[MPMediaItemPropertyArtist] = "\(station.country) - \(station.frequency) FM"
-        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = "Talky Radio"
+        // Niente "FM": questa riga finisce nel Centro di Controllo e sulla
+        // schermata Now Playing di macOS, e diceva "Germania - 87.6 FM" mentre
+        // riproduceva uno stream internet. Stessa correzione fatta nel
+        // RadioManager di iOS, che e' un file separato: i due target hanno due
+        // copie di questa classe e una correzione sola non basta.
+        // macTalky non e' localizzata, quindi qui la stringa resta letterale.
+        nowPlayingInfo[MPMediaItemPropertyArtist] = "\(station.country) · \(station.genre)"
+        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = "Talky · Internet Radio"
         nowPlayingInfo[MPMediaItemPropertyGenre] = station.genre
         nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = true
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isPlaying ? 1.0 : 0.0
