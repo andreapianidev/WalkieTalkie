@@ -28,7 +28,7 @@
 
 ## 🖥 macTalky (macOS)
 
-**macTalky** is the native macOS 26+ companion app, living in the [`macTalky/`](macTalky/) folder as a third target of the same Xcode project. It speaks the same local **TALKY1 protocol** (Bonjour `_walkie-talkie._tcp.` + TCP + PCM16 mono 48 kHz) as Talky iOS and Talky Android, so a Mac, an iPhone and an Android phone on the same Wi-Fi all talk to each other.
+**macTalky** is the native macOS 26+ companion app, living in the [`macTalky/`](macTalky/) folder as a third target of the same Xcode project. It speaks the same local **[TALKY1 protocol](docs/TALKY1.md)** (Bonjour `_walkie-talkie._tcp.` + TCP + PCM16 mono 48 kHz) as Talky iOS and Talky Android, so a Mac, an iPhone and an Android phone on the same Wi-Fi all talk to each other.
 
 > ⬇️ **Download**: grab `macTalky.zip` from [**GitHub Releases**](https://github.com/andreapianidev/WalkieTalkie/releases) (macOS 26+, Apple Silicon). First launch: right-click → Open (the GitHub build is not notarized). In-app purchases work only in the Mac App Store version, currently in review on the same App Store record as Talky iOS (universal purchase).
 
@@ -49,6 +49,7 @@
 - [Android (Beta)](#-android-beta)
 - [Feature Matrix (Free vs Pro)](#-feature-matrix-free-vs-pro)
 - [Walkie-Talkie Engine](#-walkie-talkie-engine)
+- [TALKY1 protocol specification](docs/TALKY1.md)
 - [Radio Browser (135 stations)](#-radio-browser-135-stations)
 - [Live Activities & Dynamic Island](#-live-activities--dynamic-island)
 - [Theme System (16 themes)](#-theme-system-16-themes)
@@ -155,6 +156,11 @@ cp keystore.properties.sample keystore.properties   # then edit values, or remov
 Backed by **`MultipeerManager`** and **`AudioManager`**:
 
 - **Service type**: `walkie-talkie` (MCSession / MCNearbyServiceAdvertiser + Browser)
+- **Cross-platform**: MultipeerConnectivity only reaches other Apple devices. Mac
+  and Android are reached over **TALKY1**, the local protocol documented in
+  [`docs/TALKY1.md`](docs/TALKY1.md) — Bonjour `_walkie-talkie._tcp.`, TCP,
+  length-prefixed frames, PCM16 mono 48 kHz. That spec is everything you need to
+  write a fourth implementation without reading this codebase.
 - **No internet required** — works over Wi-Fi, peer-to-peer Wi-Fi, or Bluetooth
 - **Up to 8 simultaneous peers**
 - **Audio session** `.playAndRecord` with `.defaultToSpeaker`, mixWithOthers off during PTT
