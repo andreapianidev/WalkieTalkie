@@ -2,7 +2,7 @@
 
 # Talky — Walkie-Talkie & Internet Radio (Source-Available iOS + Android App)
 
-![Talky App](https://www.andreapiani.com/talky.png)
+<img src="docs/screenshots/ios/app_icon.jpg" alt="Talky" width="120">
 
 [![Website](https://img.shields.io/badge/Website-walkie--talky.vercel.app-7cf9de.svg?style=flat&logo=vercel&logoColor=white)](https://walkie-talky.vercel.app)
 [![App Store](https://img.shields.io/badge/App%20Store-Free%20Download-0a84ff.svg?style=flat&logo=appstore&logoColor=white)](https://apps.apple.com/app/id6748584483)
@@ -23,6 +23,27 @@
 **Website**: <https://walkie-talky.vercel.app>
 **App Store**: [Talky — Walkie Talkie, Radio](https://apps.apple.com/app/id6748584483) · Free · Bundle ID `com.immaginet.talky`
 **Repository**: <https://github.com/andreapianidev/WalkieTalkie>
+
+---
+
+## 📱 Talky on iPhone
+
+| Talk — hold to transmit | Explore — nearby devices | Connections | Settings |
+|---|---|---|---|
+| ![Talky Talk screen, push to talk](docs/screenshots/ios/talk_ptt.png) | ![Talky Explore, radar of nearby devices](docs/screenshots/ios/explore_radar.png) | ![Talky Connections, advertising and browsing state](docs/screenshots/ios/connections.png) | ![Talky Settings, white noise and haptics](docs/screenshots/ios/settings.png) |
+
+- **Talk** — the frequency display, the channel, and the hold-to-talk key. The dot
+  row under the buttons is the level meter; the line at the bottom says how many
+  devices are connected and whether anyone is transmitting.
+- **Explore** — a radar of the devices around you, with estimated distance and
+  signal strength. Tap one to connect.
+- **Connections** — advertising and browsing state, the list of connected devices,
+  and the two buttons that fix most problems: disconnect all, restart discovery.
+- **Settings** — notifications, white noise and its volume, haptics, auto-connect.
+
+> These are the App Store screenshots of the current build (2.46). They were shot
+> in July 2025 and still show the older yellow look: the radio, the 16 themes and
+> the Live Activities are not in them. Worth re-shooting.
 
 ---
 
