@@ -23,7 +23,7 @@
       "type": "NonConsumable"
     },
     {
-      "displayPrice": "14.99",
+      "displayPrice": "39.99",
       "familyShareable": true,
       "internalID": "T0200",
       "localizations": [
@@ -61,7 +61,7 @@
         {
           "adHocOffers": [],
           "codeOffers": [],
-          "displayPrice": "0.99",
+          "displayPrice": "2.99",
           "familyShareable": false,
           "groupNumber": 1,
           "internalID": "S0001",
@@ -87,7 +87,7 @@
         {
           "adHocOffers": [],
           "codeOffers": [],
-          "displayPrice": "9.99",
+          "displayPrice": "19.99",
           "familyShareable": false,
           "groupNumber": 2,
           "internalID": "S0002",

@@ -17,7 +17,8 @@ enum ProductID: String, CaseIterable {
     case yearly = "ProAnnualWT"
 
     /// Singolo non-consumable che sblocca tutti i temi Pro-locked
-    /// (alternativa one-shot alla subscription). Prezzo target €4,99.
+    /// (alternativa one-shot alla subscription). Listino vero: €5,99 in area
+    /// euro, non i €4,99 che questo commento indicava come obiettivo.
     static let themesPackID = "app.immaginet.talky.themes.allpack"
 
     /// Non-consumable che sblocca **tutto Talky Pro per sempre**, temi inclusi.
@@ -28,9 +29,15 @@ enum ProductID: String, CaseIterable {
     /// un'app scritta da una persona sola, l'abbonamento settimanale è la forma
     /// sbagliata del messaggio "dammi un contributo".
     ///
-    /// €14,99 in area euro (≈ $12,99 USA). Il prezzo è ancorato al mercato:
-    /// myTuner Radio Pro chiede $10 una tantum per la sola radio, Voxer e
-    /// Walkie Talkie Intercom ~$30 **all'anno** per il solo push-to-talk.
+    /// Prezzo vero a listino: **€39,99** in area euro, verificato su App Store
+    /// Connect il 20/09/26. Questo commento diceva €14,99: era il prezzo
+    /// pensato in fase di progetto, mai quello messo in vendita, e per un mese
+    /// ha fatto credere il contrario a chi leggeva il codice. Anche
+    /// `Talky.storekit` portava 14.99 e ora e' allineato.
+    ///
+    /// A €39,99 il "per sempre" vale due anni di abbonamento annuale (€19,99),
+    /// che e' il rapporto che si vuole: chi resta paga meno, chi non vuole
+    /// abbonarsi ha una strada.
     static let lifetimeID = "app.immaginet.talky.pro.lifetime"
 
     /// Tutti gli ID prodotto (subscription + non-consumable) per `Product.products(for:)`.

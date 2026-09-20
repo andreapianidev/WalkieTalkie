@@ -1,6 +1,6 @@
 // Created by Andrea Piani - 22/05/26 - https://www.andreapiani.com - README.md
 
-# Talky — Walkie-Talkie & FM Radio (Source-Available iOS + Android App)
+# Talky — Walkie-Talkie & Internet Radio (Source-Available iOS + Android App)
 
 ![Talky App](https://www.andreapiani.com/talky.png)
 
@@ -16,7 +16,7 @@
 [![Commercial use: NOT permitted](https://img.shields.io/badge/Commercial%20use-NOT%20permitted-critical.svg)](#-license)
 [![Source available](https://img.shields.io/badge/Source-Available-brightgreen.svg)]()
 
-> **Talky** is a SwiftUI iOS app that combines **offline peer-to-peer push-to-talk** (Multipeer Connectivity) with a **global FM/internet radio browser** (135 stations across 50+ countries), **Live Activities + Dynamic Island** controls (iOS 16.2+), a complete **Pro tier** (themes, animated backgrounds, equalizer, recording, sleep timer) and a production-grade **AdMob monetization stack** for the free tier.
+> **Talky** is a SwiftUI iOS app that combines **offline peer-to-peer push-to-talk** (Multipeer Connectivity) with a **global internet radio browser** (135 streaming stations across 50+ countries; the iPhone has no FM receiver, and as of 2.46 the app no longer implies it does), **Live Activities + Dynamic Island** controls (iOS 16.2+), a complete **Pro tier** (themes, animated backgrounds, equalizer, recording, sleep timer) and a production-grade **AdMob monetization stack** for the free tier.
 
 > ⚠️ **This project is source-available, NOT MIT/Apache/BSD/GPL.** It is distributed under the **[PolyForm Noncommercial License 1.0.0](LICENSE)** — you may read, fork, modify and run it for personal/educational/non-profit purposes, but **commercial use (including shipping a derived app on any app store, paid services, ad-supported services and consulting deliverables) is strictly prohibited without a separate written commercial license.** See [License](#-license) for details and commercial-license contact.
 
@@ -238,7 +238,7 @@ Themes are organised into 3 pluggable **packs** registered into a central `Theme
 | Sunset | Orange | `sun.horizon.fill` |
 | Midnight | Indigo | `moon.stars.fill` |
 
-### 🎭 Identity Pack — €0.99 each OR included in Pro (9 themes)
+### 🎭 Identity Pack — included in Pro, or in the All Themes Pack (9 themes)
 - **Military** · **Retro 80s** · **Vintage Radio** · **Cyberpunk** · **Stealth** · **Aurora** · **Submarine** · **Ham Radio** · **Festival**
 
 Each Identity theme bundles:
@@ -246,13 +246,13 @@ Each Identity theme bundles:
 - Optional custom PostScript font (e.g. `PressStart2P-Regular` for Retro 80s) via `FontManager`
 - Optional themed sound pack (e.g. `morse`, `sonar`, `glitch`) via `ThemeSoundManager`
 
-### 🌌 Animated Pack — €1.99 each OR included in Pro (2 themes)
+### 🌌 Animated Pack — included in Pro, or in the All Themes Pack (2 themes)
 - **Black Hole** — GPU shader gravitational lensing background
 - **Galaxy** — Procedural starfield
 
 Rendered by `AnimatedBackgroundView` using `TimelineView` + Canvas for 60 fps.
 
-> Themes can be purchased individually (StoreKit 2 non-consumable) or unlocked all-at-once via Talky Pro subscription. Unlocking is enforced by `ThemeManager` reading `IAPManager.shared.ownedProducts`.
+> **Correction (20 Sep 2026):** individual theme purchases do not exist. This section claimed €0.99 and €1.99 per theme, but `ProductID.allIDs` only ever requests `ProWeeklyWT`, `ProAnnualWT`, the All Themes Pack (€5.99) and Talky Pro Lifetime (€39.99), so StoreKit is never asked for a per-theme product. A leftover `app.immaginet.talky.theme.military` record does sit on App Store Connect in `MISSING_METADATA`, unreferenced by the app. Themes unlock via Pro or the All Themes Pack, enforced by `ThemeManager` reading `IAPManager.shared.ownedProducts`.
 
 ---
 
@@ -285,8 +285,8 @@ A complete, **policy-compliant** AdMob stack lives under [`Ads/`](WalkieTalkie/W
 |---|---|---|
 | **App Open** | `AppOpenAdManager` | Cold launch + return-from-background |
 | **Interstitial** | `InterstitialAdCoordinator` | Natural breaks (frequency-capped: 5/day, 180s min interval) |
-| **Rewarded** | `RewardedAdCoordinator` | "Remove ads for 1 hour" opt-in |
-| **Native Advanced** | `NativeAdCoordinator` + `NativeAdCardView` | Inline card inside the radio browser |
+| **Rewarded** | `RewardedAdCoordinator` | Two opt-in rewards: "remove ads for 1 hour", and (2.46) "unlock this Pro station for 24 hours" from the station browser |
+| ~~**Native Advanced**~~ | `NativeAdCoordinator` + `NativeAdCardView` | **Not wired.** Removed from `AdManager` after 14 days at $0.00 with 9 impressions. The files stay for a future placement; the `nativowalkie` unit on AdMob receives no requests. |
 
 Implementation notes:
 - **SDK**: Google Mobile Ads SDK **13.x** (modern types: `InterstitialAd`, `Request`, `MobileAds.shared.start`, etc. — no `GAD` prefix)
@@ -301,8 +301,17 @@ Implementation notes:
 1. UMP consent flow   ──► gatherConsent()
 2. ATT prompt         ──► requestATTIfNeeded()
 3. SDK init           ──► MobileAds.shared.start
-4. Parallel preload   ──► appOpen | interstitial | rewarded | nativeStation
+4. Preload            ──► appOpen only, and only if it can still be shown
+                          this session (not Pro, no active reward, paywall
+                          not already claiming the session)
 ```
+
+Interstitial and rewarded are **not** preloaded at launch any more. Until 2.46 they
+were, and because the interstitial only ever shows on exit from radio mode and the
+rewarded only on an explicit tap, most sessions asked Google for an ad, got one, and
+threw it away: 13% show rate on the interstitial, 5% on the rewarded. They now load
+at the moment the opportunity appears (`prepareInterstitialForRadioSession` when
+playback starts, `prepareRewardedIfNeeded` when a rewarded CTA is on screen).
 
 This order is mandatory for both Apple review and AdMob eCPM (Google must see the consent + IDFA signal before any ad request).
 
