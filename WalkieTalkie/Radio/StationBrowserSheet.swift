@@ -16,6 +16,13 @@ struct StationBrowserSheet: View {
     @State private var selectedTab: BrowserTab = .all
     @State private var showPaywall: Bool = false
 
+    /// Stazione Pro toccata da un utente Free: apre il foglio di scelta fra
+    /// abbonamento e pass a 24 ore.
+    @State private var lockedStation: RadioStation?
+
+    @ObservedObject private var adManager = AdManager.shared
+    @ObservedObject private var stationPasses = StationPassManager.shared
+
     private enum BrowserTab: Int, CaseIterable, Identifiable {
         case all, favorites, recents, nearby
         var id: Int { rawValue }
@@ -38,6 +45,7 @@ struct StationBrowserSheet: View {
         NavigationView {
             VStack(spacing: 0) {
                 searchBar
+                streamingNote
                 upsellBanner
                 tabPicker
                 content
@@ -63,6 +71,82 @@ struct StationBrowserSheet: View {
         }) {
             PaywallView(trigger: "station_browser")
         }
+        .onAppear {
+            // Chi sta sfogliando le stazioni incontrera' quasi certamente una
+            // riga bloccata: il rewarded va caricato adesso, cosi' quando tocca
+            // "ascolta 24 ore" il video parte subito.
+            adManager.prepareRewardedIfNeeded()
+            StationPassManager.shared.pruneExpired()
+        }
+        .confirmationDialog(
+            lockedStation?.name ?? "",
+            isPresented: Binding(
+                get: { lockedStation != nil },
+                set: { if !$0 { lockedStation = nil } }
+            ),
+            titleVisibility: .visible
+        ) {
+            Button("station_locked.watch_video".localized) {
+                unlockWithRewarded()
+            }
+            Button("station_locked.go_pro".localized) {
+                lockedStation = nil
+                showPaywall = true
+            }
+            Button("cancel".localized, role: .cancel) {
+                lockedStation = nil
+            }
+        } message: {
+            Text("station_locked.message".localized)
+        }
+    }
+
+    // MARK: - Sblocco a 24 ore
+
+    /// Mostra il rewarded e, a premio riscosso, fa partire subito la stazione.
+    ///
+    /// Se l'annuncio non e' pronto non si lascia il tocco a vuoto: si apre il
+    /// paywall, che e' l'altra strada per la stessa cosa.
+    private func unlockWithRewarded() {
+        guard let station = lockedStation else { return }
+        lockedStation = nil
+
+        guard adManager.rewarded.isAdReady else {
+            showPaywall = true
+            return
+        }
+
+        adManager.presentRewardedStationPass(
+            stationID: station.id,
+            stationName: station.name
+        ) {
+            radioManager.playStation(station)
+            dismiss()
+        }
+    }
+
+    // MARK: - Nota streaming
+
+    /// Una riga sola, sempre visibile dove si scelgono le stazioni: queste
+    /// arrivano da internet, non dall'antenna.
+    ///
+    /// La stessa frase esiste nell'onboarding, ma la vede solo chi installa
+    /// l'app adesso. Chi ha scritto "Fake Walkie Talkie" e "Das angebliche
+    /// Radio ist ein Fake" aveva gia' finito l'onboarding mesi fa, o non lo ha
+    /// mai visto, e si e' trovato una app che mostrava frequenze FM sulla
+    /// schermata di blocco. Il posto dove serve dirlo e' questo.
+    private var streamingNote: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "wifi")
+                .font(.system(size: 10, weight: .semibold))
+            Text("radio.streaming_disclaimer".localized)
+                .font(.caption2)
+                .multilineTextAlignment(.leading)
+        }
+        .foregroundColor(.secondary)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 16)
+        .padding(.top, 8)
     }
 
     // MARK: - Upsell banner
@@ -255,17 +339,24 @@ struct StationBrowserSheet: View {
     // MARK: - Station row
 
     private func stationRow(_ station: RadioStation) -> some View {
-        let isLocked = station.isPro && !isProUser
+        // Un pass a 24 ore vinto col rewarded apre la stazione come se fosse
+        // Pro, finche' dura.
+        let passRemaining = stationPasses.remainingShortDescription(for: station.id)
+        let isLocked = station.isPro && !isProUser && passRemaining == nil
         let isCurrent = radioManager.currentStation?.id == station.id
 
         return Button {
-            radioManager.playStation(station)
-            if !isLocked {
-                dismiss()
+            // Una riga bloccata non prova piu' a suonare per farsi respingere
+            // dal gate: apre direttamente la scelta fra Pro e pass a 24 ore.
+            guard !isLocked else {
+                lockedStation = station
+                return
             }
+            radioManager.playStation(station)
+            dismiss()
         } label: {
             HStack(spacing: 12) {
-                flagWithProPill(station: station, isLocked: isLocked)
+                flagWithProPill(station: station, isLocked: isLocked, passRemaining: passRemaining)
 
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 6) {
@@ -330,7 +421,9 @@ struct StationBrowserSheet: View {
         }
     }
 
-    private func flagWithProPill(station: RadioStation, isLocked: Bool) -> some View {
+    private func flagWithProPill(station: RadioStation,
+                                 isLocked: Bool,
+                                 passRemaining: String? = nil) -> some View {
         ZStack(alignment: .topTrailing) {
             Text(station.flagEmoji)
                 .font(.title2)
@@ -343,6 +436,16 @@ struct StationBrowserSheet: View {
                     .padding(.vertical, 1)
                     .background(Capsule().fill(Color.yellow))
                     .offset(x: 4, y: -2)
+            } else if let passRemaining {
+                // Stazione Pro aperta da un pass: si dice quanto resta, cosi'
+                // nessuno scopre il giorno dopo che si e' richiusa.
+                Text(passRemaining)
+                    .font(.system(size: 8, weight: .bold))
+                    .foregroundColor(.black)
+                    .padding(.horizontal, 4)
+                    .padding(.vertical, 1)
+                    .background(Capsule().fill(Color.green))
+                    .offset(x: 6, y: -2)
             }
         }
     }

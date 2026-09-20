@@ -434,8 +434,7 @@
 "onboarding.radio_mode.title" = "Telsiz + radyo";
 "onboarding.radio_mode.subtitle" = "Modlar arasında tek dokunuşla geçiş yap";
 "onboarding.radio_mode.body" = "Sol üstteki düğme, arkadaşlarınla konuştuğun telsiz ile yüzlerce uluslararası istasyonun bulunduğu internet radyosu arasında geçiş yapmanı sağlar.";
-"onboarding.radio_mode.streaming_note" = "Radyo internet yayını kullanır — fiziksel bir FM anteni değil. Etkin bir veri bağlantısı (Wi-Fi ya da hücresel) gerekir.";
-
+"onboarding.radio_mode.streaming_note" = "Radyo internet yayını kullanır, fiziksel bir FM anteni değil. Etkin bir veri bağlantısı (Wi-Fi ya da hücresel) gerekir.";
 // MARK: - Live Activities
 "live_activities.title" = "Canlı Etkinlikler";
 "live_activities.toggle" = "Arka planda göster";
@@ -479,3 +478,10 @@
 "paywall.lifetime.cta" = "Bir kez öde ·";
 "paywall.lifetime.subtitle" = "Tek ödeme. Pro'nun tamamı, sonsuza dek — temalar dahil. Abonelik yok.";
 "paywall.lifetime.owned" = "Sonsuza dek senin. Teşekkürler.";
+
+/* Pass stazione a 24 ore (rewarded) e chiarimento sullo streaming */
+"radio.streaming_disclaimer" = "İstasyonlar internet üzerinden gelir: iPhone'da FM alıcısı yoktur.";
+"radio.now_playing_album" = "Talky · İnternet radyosu";
+"station_locked.message" = "Bu istasyon Talky Pro'ya dahildir. Kısa bir video izleyerek 24 saat boyunca da dinleyebilirsin.";
+"station_locked.watch_video" = "24 saat dinle, video izle";
+"station_locked.go_pro" = "Pro ile hepsini aç";

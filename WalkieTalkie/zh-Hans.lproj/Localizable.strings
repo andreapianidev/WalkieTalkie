@@ -479,3 +479,10 @@
 "paywall.lifetime.cta" = "一次付清 ·";
 "paywall.lifetime.subtitle" = "付一次，永久拥有 Pro 的一切，包含主题。无需订阅。";
 "paywall.lifetime.owned" = "永久属于你，谢谢。";
+
+/* Pass stazione a 24 ore (rewarded) e chiarimento sullo streaming */
+"radio.streaming_disclaimer" = "电台通过互联网播放：iPhone 没有 FM 接收器。";
+"radio.now_playing_album" = "Talky · 网络电台";
+"station_locked.message" = "该电台属于 Talky Pro。观看一段短视频也可收听 24 小时。";
+"station_locked.watch_video" = "看视频，收听 24 小时";
+"station_locked.go_pro" = "用 Pro 解锁全部";

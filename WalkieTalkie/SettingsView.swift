@@ -1298,6 +1298,8 @@ struct SettingsView: View {
             .disabled(!adManager.rewarded.isAdReady)
             .opacity(adManager.rewarded.isAdReady ? 1.0 : 0.6)
             .onAppear {
+                // Il rewarded si carica quando il suo CTA compare, non all'avvio.
+                adManager.prepareRewardedIfNeeded()
                 guard !didLogSettingsRewardImpression else { return }
                 didLogSettingsRewardImpression = true
                 Analytics.logEvent("rewarded_cta_shown", parameters: ["source": "settings"])

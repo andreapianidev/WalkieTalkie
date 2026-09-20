@@ -746,6 +746,8 @@ struct PaywallView: View {
             .disabled(!rewardedCoordinator.isAdReady)
             .opacity(rewardedCoordinator.isAdReady ? 1.0 : 0.55)
             .onAppear {
+                // Il rewarded si carica quando il suo CTA compare, non all'avvio.
+                adManager.prepareRewardedIfNeeded()
                 guard !didLogRewardedImpression else { return }
                 didLogRewardedImpression = true
                 Analytics.logEvent("rewarded_cta_shown", parameters: ["source": trigger])

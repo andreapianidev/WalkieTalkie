@@ -20,6 +20,19 @@ final class InterstitialAdCoordinator: NSObject, ObservableObject {
     private var shownTodayStart: Date = Calendar.current.startOfDay(for: Date())
     private let adUnitID = AdConfig.interstitialAdUnitID
 
+    /// Vero se il tetto giornaliero lascia ancora spazio a una presentazione.
+    ///
+    /// Serve a decidere se vale la pena CARICARE, non se si puo' mostrare
+    /// adesso: percio' guarda solo il tetto del giorno e non la cadenza minima
+    /// di 180 s, che fra il momento del precaricamento (accensione della radio)
+    /// e quello della presentazione (uscita dalla radio) sara' quasi sempre
+    /// passata. La verifica vera resta in `showAdIfAllowed`.
+    var canShowSoon: Bool {
+        let today = Calendar.current.startOfDay(for: Date())
+        let countToday = (today == shownTodayStart) ? shownTodayCount : 0
+        return countToday < AdConfig.FrequencyCap.interstitialDailyMax
+    }
+
     func loadAd() async {
         guard interstitial == nil else { return }
         do {
@@ -69,7 +82,11 @@ extension InterstitialAdCoordinator: FullScreenContentDelegate {
             self.interstitial = nil
             self.isAdReady = false
             self.onDismiss?()
-            await loadAd()
+            // Nessun ricaricamento immediato: l'interstitial si mostra solo
+            // all'uscita dalla radio, e l'utente ne e' appena uscito. Il
+            // prossimo lo prepara `AdManager.prepareInterstitialForRadioSession`
+            // quando la radio riparte. Ricaricare qui voleva dire una richiesta
+            // riempita e mai mostrata per ogni annuncio mostrato.
         }
     }
 

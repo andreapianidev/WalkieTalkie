@@ -429,8 +429,7 @@
 "onboarding.radio_mode.title" = "Walkie-Talkie + Radio";
 "onboarding.radio_mode.subtitle" = "Cambia entre los dos modos con un toque";
 "onboarding.radio_mode.body" = "El botón superior izquierdo te permite alternar entre Walkie-Talkie para hablar con amigos y cientos de emisoras de radio internacionales por streaming.";
-"onboarding.radio_mode.streaming_note" = "La radio usa streaming por internet — no una antena FM física. Requiere conexión de datos activa (Wi-Fi o datos móviles).";
-
+"onboarding.radio_mode.streaming_note" = "La radio usa streaming por internet, no una antena FM física. Requiere conexión de datos activa (Wi-Fi o datos móviles).";
 // MARK: - Live Activities
 "live_activities.title" = "Live Activities";
 "live_activities.toggle" = "Mostrar en segundo plano";
@@ -485,3 +484,10 @@
 "status.advertising" = "Visible para los demás";
 "status.searching" = "Buscando…";
 "status.connecting" = "Conectando…";
+
+/* Pass stazione a 24 ore (rewarded) e chiarimento sullo streaming */
+"radio.streaming_disclaimer" = "Las emisoras llegan por internet: el iPhone no tiene receptor de FM.";
+"radio.now_playing_album" = "Talky · Radio por internet";
+"station_locked.message" = "Esta emisora forma parte de Talky Pro. También puedes escucharla 24 horas viendo un vídeo corto.";
+"station_locked.watch_video" = "Escuchar 24 horas, ver un vídeo";
+"station_locked.go_pro" = "Desbloquear todo con Pro";

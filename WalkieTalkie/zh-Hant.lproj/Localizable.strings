@@ -425,8 +425,7 @@
 "onboarding.radio_mode.title" = "對講機 + 電台";
 "onboarding.radio_mode.subtitle" = "一鍵切換兩種模式";
 "onboarding.radio_mode.body" = "左上角的按鈕讓您在與朋友通話的對講機模式和數百個國際網絡串流電台之間切換。";
-"onboarding.radio_mode.streaming_note" = "電台使用網絡串流——不是實體FM天線。需要有效的數據連接（Wi-Fi或手機網絡）。";
-
+"onboarding.radio_mode.streaming_note" = "電台使用網絡串流，不是實體FM天線。需要有效的數據連接（Wi-Fi或手機網絡）。";
 // MARK: - Live Activities
 "live_activities.title" = "即時動態";
 "live_activities.toggle" = "於背景顯示";
@@ -481,3 +480,10 @@
 "status.advertising" = "其他人看得到你";
 "status.searching" = "搜尋中…";
 "status.connecting" = "連線中…";
+
+/* Pass stazione a 24 ore (rewarded) e chiarimento sullo streaming */
+"radio.streaming_disclaimer" = "電台透過網際網路播放：iPhone 沒有 FM 接收器。";
+"radio.now_playing_album" = "Talky · 網路電台";
+"station_locked.message" = "此電台屬於 Talky Pro。觀看一段短影片也可收聽 24 小時。";
+"station_locked.watch_video" = "看影片，收聽 24 小時";
+"station_locked.go_pro" = "用 Pro 解鎖全部";

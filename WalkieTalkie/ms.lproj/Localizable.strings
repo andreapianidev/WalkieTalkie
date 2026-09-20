@@ -425,8 +425,7 @@
 "onboarding.radio_mode.title" = "Walkie-Talkie + Radio";
 "onboarding.radio_mode.subtitle" = "Bertukar mod dengan satu ketukan";
 "onboarding.radio_mode.body" = "Butang kiri atas membolehkan anda bertukar antara Walkie-Talkie untuk berbual dengan rakan dan ratusan stesen radio antarabangsa melalui penstriman internet.";
-"onboarding.radio_mode.streaming_note" = "Radio menggunakan penstriman internet — bukan antena FM fizikal. Sambungan data aktif (Wi-Fi atau selular) diperlukan.";
-
+"onboarding.radio_mode.streaming_note" = "Radio menggunakan penstriman internet, bukan antena FM fizikal. Sambungan data aktif (Wi-Fi atau selular) diperlukan.";
 // MARK: - Live Activities
 "live_activities.title" = "Live Activities";
 "live_activities.toggle" = "Papar di latar belakang";
@@ -481,3 +480,10 @@
 "status.advertising" = "Kelihatan kepada orang lain";
 "status.searching" = "Mencari…";
 "status.connecting" = "Menyambung…";
+
+/* Pass stazione a 24 ore (rewarded) e chiarimento sullo streaming */
+"radio.streaming_disclaimer" = "Stesen disiarkan melalui internet: iPhone tiada penerima FM.";
+"radio.now_playing_album" = "Talky · Radio internet";
+"station_locked.message" = "Stesen ini termasuk dalam Talky Pro. Anda juga boleh mendengarnya selama 24 jam dengan menonton video pendek.";
+"station_locked.watch_video" = "Dengar 24 jam, tonton video";
+"station_locked.go_pro" = "Buka semua dengan Pro";

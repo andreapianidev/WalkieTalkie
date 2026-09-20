@@ -434,8 +434,7 @@
 "onboarding.radio_mode.title" = "Bộ đàm + radio";
 "onboarding.radio_mode.subtitle" = "Chuyển chế độ chỉ với một lần chạm";
 "onboarding.radio_mode.body" = "Nút góc trên bên trái cho phép bạn chuyển giữa bộ đàm để nói chuyện với bạn bè và radio internet với hàng trăm đài quốc tế.";
-"onboarding.radio_mode.streaming_note" = "Radio dùng luồng phát qua internet — không phải ăng-ten FM thật. Cần có kết nối dữ liệu (Wi-Fi hoặc di động).";
-
+"onboarding.radio_mode.streaming_note" = "Radio dùng luồng phát qua internet, không phải ăng-ten FM thật. Cần có kết nối dữ liệu (Wi-Fi hoặc di động).";
 // MARK: - Live Activities
 "live_activities.title" = "Hoạt động trực tiếp";
 "live_activities.toggle" = "Hiển thị khi chạy nền";
@@ -479,3 +478,10 @@
 "paywall.lifetime.cta" = "Trả một lần ·";
 "paywall.lifetime.subtitle" = "Một lần thanh toán. Trọn bộ Pro, mãi mãi — gồm cả giao diện. Không cần đăng ký.";
 "paywall.lifetime.owned" = "Thuộc về bạn mãi mãi. Cảm ơn bạn.";
+
+/* Pass stazione a 24 ore (rewarded) e chiarimento sullo streaming */
+"radio.streaming_disclaimer" = "Các đài phát qua internet: iPhone không có bộ thu FM.";
+"radio.now_playing_album" = "Talky · Radio internet";
+"station_locked.message" = "Đài này thuộc Talky Pro. Bạn cũng có thể nghe trong 24 giờ bằng cách xem một video ngắn.";
+"station_locked.watch_video" = "Nghe 24 giờ, xem video";
+"station_locked.go_pro" = "Mở khoá tất cả với Pro";

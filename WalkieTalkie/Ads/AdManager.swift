@@ -35,6 +35,9 @@ final class AdManager: ObservableObject {
         interstitial.onDismiss = { [weak self] in
             guard let self else { return }
             guard !IAPManager.shared.isProUser, !self.adsRemoved else { return }
+            // La pillola offre il rewarded: va caricato adesso, perche' dal
+            // bootstrap non si precarica piu'.
+            self.prepareRewardedIfNeeded()
             self.showRewardedPill = true
             Task { @MainActor in
                 try? await Task.sleep(nanoseconds: 8_000_000_000)
@@ -150,11 +153,41 @@ final class AdManager: ObservableObject {
         isInitialized = true
 
         // 4. Preload
-        await withTaskGroup(of: Void.self) { group in
-            group.addTask { await self.appOpen.loadAd() }
-            group.addTask { await self.interstitial.loadAd() }
-            group.addTask { await self.rewarded.loadAd() }
+        //
+        // Si precarica SOLO l'app-open, e solo se in questa sessione puo'
+        // davvero comparire. Interstitial e rewarded si caricano quando si
+        // avvicina l'occasione di mostrarli (vedi
+        // `prepareInterstitialForRadioSession` e `prepareRewardedIfNeeded`).
+        //
+        // Prima si caricavano tutti e tre a ogni avvio. L'interstitial si
+        // mostra solo all'uscita dalla radio, quindi nella maggior parte delle
+        // sessioni l'annuncio veniva chiesto, riempito da Google e buttato:
+        // 1.582 impression su circa 12.000 richieste riempite, show rate 13%.
+        // Il rewarded, che parte solo se l'utente tocca un CTA, stava al 5%.
+        // Richieste riempite e non mostrate non si pagano, ma abbassano lo show
+        // rate dell'unita', che e' un segnale che AdMob usa per decidere quanto
+        // vale mostrarci un annuncio.
+        if appOpenLoadAllowed {
+            await appOpen.loadAd()
+        } else {
+            PaywallFlowLog.log("preload app-open saltato: in questa sessione non puo' comparire")
         }
+    }
+
+    /// Condizioni per cui vale la pena CARICARE un app-open, valutate a fine
+    /// bootstrap. Sono il sottoinsieme stabile di `appOpenAllowedNow`: quelle
+    /// che non possono cambiare fra adesso e la presentazione (l'utente non
+    /// diventa Pro durante il lancio) piu' la sessione riservata al paywall,
+    /// che a questo punto e' gia' stata decisa da `PaywallTriggerManager`.
+    ///
+    /// Fuori resta `RadioManager.isPlaying`: al lancio la radio non suona
+    /// ancora, e al rientro da background l'annuncio viene ricontrollato da
+    /// `appOpenAllowedNow`.
+    private var appOpenLoadAllowed: Bool {
+        guard !IAPManager.shared.isProUser else { return false }
+        guard !adsRemoved else { return false }
+        guard !appOpenBlockedThisSession else { return false }
+        return true
     }
 
     /// Ritorna quando consenso e ATT sono chiusi. Subito, se lo sono gia'.
@@ -169,6 +202,37 @@ final class AdManager: ObservableObject {
         let waiters = privacyFlowWaiters
         privacyFlowWaiters.removeAll()
         waiters.forEach { $0.resume() }
+    }
+
+    // MARK: - Caricamento a richiesta
+
+    /// Prepara l'interstitial perche' fra poco potrebbe servire.
+    ///
+    /// La chiama `RadioManager.playStation`: l'unico momento in cui
+    /// l'interstitial viene mostrato e' l'uscita dalla modalita' radio, quindi
+    /// chi non accende mai la radio non deve far partire nessuna richiesta.
+    /// Chi la accende da' all'annuncio tutto il tempo dell'ascolto per
+    /// caricarsi, molto piu' dei 2,5 s di debounce che aveva prima.
+    func prepareInterstitialForRadioSession() {
+        guard !IAPManager.shared.isProUser, !adsRemoved else { return }
+        // Se la cadenza o il tetto giornaliero escludono gia' la prossima
+        // presentazione, non si chiede niente.
+        guard interstitial.canShowSoon else {
+            PaywallFlowLog.log("preload interstitial saltato: cadenza o tetto giornaliero")
+            return
+        }
+        Task { await interstitial.loadAd() }
+    }
+
+    /// Prepara il rewarded quando un CTA che lo offre compare a schermo.
+    ///
+    /// Chiamata da `RewardAdCTAView.onAppear` e dal foglio di sblocco stazione:
+    /// il rewarded parte solo su gesto esplicito dell'utente, quindi caricarlo
+    /// a ogni avvio significava riempire richieste che nel 95% dei casi non
+    /// diventavano niente.
+    func prepareRewardedIfNeeded() {
+        guard !IAPManager.shared.isProUser else { return }
+        Task { await rewarded.loadAd() }
     }
 
     // MARK: - Convenience
@@ -237,6 +301,33 @@ final class AdManager: ObservableObject {
             self.grantRemoveAdsReward()
             HapticManager.shared.success()
             Analytics.logEvent("rewarded_reward_earned", parameters: ["source": source])
+        }
+    }
+
+    /// Rewarded che sblocca una stazione Pro per 24 ore.
+    ///
+    /// Secondo premio disponibile sul rewarded, e quello con l'intenzione piu'
+    /// forte: si offre a chi ha appena toccato una stazione bloccata, cioe' nel
+    /// momento in cui il premio e' esattamente la cosa che stava cercando di
+    /// fare. `onGranted` serve alla UI per far partire subito l'ascolto invece
+    /// di chiedere all'utente di ritoccare la riga.
+    func presentRewardedStationPass(stationID: Int,
+                                    stationName: String,
+                                    source: String = "station_locked",
+                                    onGranted: (() -> Void)? = nil) {
+        Analytics.logEvent("rewarded_cta_tapped", parameters: [
+            "source": source,
+            "station": stationName
+        ])
+        rewarded.showAd {
+            StationPassManager.shared.grantPass(for: stationID)
+            HapticManager.shared.success()
+            Analytics.logEvent("rewarded_reward_earned", parameters: [
+                "source": source,
+                "reward": "station_pass_24h",
+                "station": stationName
+            ])
+            onGranted?()
         }
     }
 }

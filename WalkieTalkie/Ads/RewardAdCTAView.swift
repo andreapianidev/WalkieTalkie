@@ -100,6 +100,9 @@ struct RewardAdCTAView: View {
             .disabled(!rewarded.isAdReady)
             .opacity(rewarded.isAdReady ? 1.0 : 0.6)
             .onAppear {
+                // Il rewarded non si carica piu' all'avvio dell'app: si carica
+                // qui, quando un CTA che lo offre e' davvero a schermo.
+                adManager.prepareRewardedIfNeeded()
                 guard !didLogImpression else { return }
                 didLogImpression = true
                 Analytics.logEvent("rewarded_cta_shown", parameters: ["source": source])

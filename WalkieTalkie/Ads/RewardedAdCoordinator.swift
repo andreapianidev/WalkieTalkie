@@ -47,7 +47,10 @@ extension RewardedAdCoordinator: FullScreenContentDelegate {
         Task { @MainActor in
             self.rewardedAd = nil
             self.isAdReady = false
-            await loadAd()
+            // Nessun ricaricamento automatico: il rewarded parte solo se
+            // l'utente tocca un CTA, e chi ha appena riscosso il premio non ne
+            // tocca un altro subito. Lo ricarica `prepareRewardedIfNeeded`
+            // quando un CTA ricompare.
         }
     }
 

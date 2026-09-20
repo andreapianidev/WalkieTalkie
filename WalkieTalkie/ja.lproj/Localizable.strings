@@ -479,3 +479,10 @@
 "paywall.lifetime.cta" = "一度だけ支払う ·";
 "paywall.lifetime.subtitle" = "一度のお支払いで、Proのすべてを永久に。テーマも込み。サブスクなし。";
 "paywall.lifetime.owned" = "ずっとあなたのものです。ありがとう。";
+
+/* Pass stazione a 24 ore (rewarded) e chiarimento sullo streaming */
+"radio.streaming_disclaimer" = "放送局はインターネット経由です。iPhoneにFMチューナーはありません。";
+"radio.now_playing_album" = "Talky · インターネットラジオ";
+"station_locked.message" = "この放送局はTalky Proに含まれます。短い動画を見ると24時間聴くこともできます。";
+"station_locked.watch_video" = "動画を見て24時間聴く";
+"station_locked.go_pro" = "Proですべて解除";

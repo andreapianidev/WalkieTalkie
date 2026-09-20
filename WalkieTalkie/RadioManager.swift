@@ -709,10 +709,24 @@ class RadioManager: NSObject, ObservableObject {
     func playStation(_ station: RadioStation) {
         // Pro gate: blocca la riproduzione delle stazioni internazionali premium per utenti non Pro.
         // La UI osserva `blockedByPaywall` e si occupa di mostrare il paywall.
-        if station.isPro && !UserDefaults.standard.bool(forKey: "fastboot_isProUser") {
+        //
+        // Il pass a 24 ore guadagnato con un rewarded vale quanto l'abbonamento
+        // per QUESTA stazione e per il tempo che gli resta: e' l'unico modo in
+        // cui un utente Free puo' passare di qui.
+        if station.isPro
+            && !UserDefaults.standard.bool(forKey: "fastboot_isProUser")
+            && !StationPassManager.shared.isUnlocked(station.id) {
             logger.logInfo("Riproduzione bloccata da paywall per stazione Pro: \(station.name)")
             blockedByPaywall = true
             return
+        }
+
+        // La radio parte: da qui in poi l'utente puo' arrivare all'uscita dalla
+        // modalita' radio, che e' l'unico punto in cui l'app mostra un
+        // interstitial. E' il momento giusto per chiederlo, con tutto il tempo
+        // dell'ascolto davanti per caricarsi.
+        Task { @MainActor in
+            AdManager.shared.prepareInterstitialForRadioSession()
         }
 
         // Cleanup intermedio: chiamato da playStation come reset, NON come stop
@@ -1083,8 +1097,20 @@ class RadioManager: NSObject, ObservableObject {
     private func setupNowPlayingInfo(for station: RadioStation) {
         var nowPlayingInfo = [String: Any]()
         nowPlayingInfo[MPMediaItemPropertyTitle] = station.name
-        nowPlayingInfo[MPMediaItemPropertyArtist] = "\(station.country) - \(station.frequency) FM"
-        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = "Talky Radio"
+        // Niente "FM" qui dentro.
+        //
+        // Questa riga finisce sulla schermata di blocco, nel Centro di
+        // Controllo e in CarPlay, ed e' il posto dove Talky diceva piu' forte
+        // una cosa non vera: "Germania - 87.6 FM" mentre sta riproducendo uno
+        // stream internet. Tre recensioni tedesche da una stella dicono
+        // esattamente questo ("Das angebliche Radio ist ein Fake. Das iPhone
+        // besitzt keinen Radioempfaenger"), e avevano ragione sul cartello,
+        // non sulla funzione: le stazioni ci sono e suonano, solo che arrivano
+        // dalla rete. La frequenza resta visibile nel browser come dato della
+        // stazione, che e' cio' che e': su cosa trasmette quell'emittente nel
+        // suo paese.
+        nowPlayingInfo[MPMediaItemPropertyArtist] = "\(station.country) · \(station.genre)"
+        nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = "radio.now_playing_album".localized
         nowPlayingInfo[MPMediaItemPropertyGenre] = station.genre
         nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = true
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isPlaying ? 1.0 : 0.0
