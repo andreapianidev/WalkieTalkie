@@ -10,16 +10,22 @@ import GoogleMobileAds
 
 /// Unico interstitial dell'app, condiviso da `AdManager.shared.interstitial`.
 ///
-/// Il caricamento e' just-in-time: niente all'avvio, niente alla comparsa di
-/// una schermata, niente dopo una chiusura. Lo chiedono solo
-/// `AdManager.prepareInterstitialForRadioSession` e
-/// `AdManager.prepareInterstitialIfDue`, cioe' quando il prossimo trigger
-/// (cambio canale, uscita dalla radio) puo' davvero mostrarlo.
+/// Caricamento in anticipo con riuso: un annuncio si chiede a fine bootstrap,
+/// resta in cache finche' non si mostra (fino a 55 minuti) e si richiede dopo
+/// ogni presentazione, cosi' il prossimo trigger lo trova pronto. Una sola
+/// richiesta alla volta, backoff crescente dopo un no-fill, nessun timer.
+///
+/// Il caricamento just-in-time (2.46) perdeva l'impression ogni volta che il
+/// trigger arrivava prima dell'annuncio. Una richiesta riempita e non mostrata
+/// non costa niente; un trigger senza annuncio pronto e' un'impression persa.
 @MainActor
 final class InterstitialAdCoordinator: NSObject, ObservableObject {
     @Published private(set) var isAdReady = false
 
     var onDismiss: (() -> Void)?
+    /// Vero se vale la pena tenere un annuncio pronto (utente free, annunci non
+    /// rimossi dal rewarded). Lo imposta `AdManager`.
+    var shouldPreload: () -> Bool = { false }
 
     private var interstitial: InterstitialAd?
     private var loadedAt: Date?
@@ -32,8 +38,14 @@ final class InterstitialAdCoordinator: NSObject, ObservableObject {
 
     /// Un interstitial scade dopo un'ora: lo si butta un po' prima.
     private let maxAge: TimeInterval = 55 * 60
-    /// Dopo un no-fill si aspetta prima di richiedere, invece di martellare AdMob.
-    private let failureBackoff: TimeInterval = 60
+    /// Dopo un no-fill si aspetta prima di richiedere, invece di martellare
+    /// AdMob: 60 s, poi il doppio a ogni no-fill di fila, fino a 15 minuti.
+    private let baseFailureBackoff: TimeInterval = 60
+    private let maxFailureBackoff: TimeInterval = 15 * 60
+    private var consecutiveFailures = 0
+    private var failureBackoff: TimeInterval {
+        min(maxFailureBackoff, baseFailureBackoff * pow(2, Double(max(0, consecutiveFailures - 1))))
+    }
 
     /// Vero se il tetto giornaliero lascia ancora spazio a una presentazione.
     ///
@@ -83,18 +95,27 @@ final class InterstitialAdCoordinator: NSObject, ObservableObject {
             interstitial = ad
             loadedAt = Date()
             lastFailureAt = nil
+            consecutiveFailures = 0
             isAdReady = true
         } catch {
             print("[Interstitial] load failed: \(error.localizedDescription)")
             lastFailureAt = Date()
+            consecutiveFailures += 1
             isAdReady = false
         }
     }
 
+    /// Tiene un annuncio pronto se serve. Se ce n'e' gia' uno valido, o una
+    /// richiesta in volo, o il backoff non e' passato, non fa niente.
+    func preloadIfUseful() {
+        guard shouldPreload(), canShowSoon else { return }
+        Task { await loadAd() }
+    }
+
     /// Tries to present the interstitial. Returns true if the ad was shown.
     ///
-    /// Se l'annuncio non c'e' non si carica da qui: lo preparano i chiamanti
-    /// (`AdManager.prepareInterstitialIfDue`) prima del ritardo di inattivita'.
+    /// Se l'annuncio non c'e' (scaduto o non ancora arrivato) si chiede adesso
+    /// per il prossimo trigger.
     @discardableResult
     func showAdIfAllowed() -> Bool {
         resetDailyCounterIfNeeded()
@@ -105,6 +126,7 @@ final class InterstitialAdCoordinator: NSObject, ObservableObject {
         }
         discardIfExpired()
         guard let interstitial, let root = AdRootViewController.current() else {
+            preloadIfUseful()
             return false
         }
         interstitial.present(from: root)
@@ -136,12 +158,9 @@ extension InterstitialAdCoordinator: FullScreenContentDelegate {
             self.loadedAt = nil
             self.isAdReady = false
             self.onDismiss?()
-            // Nessun ricaricamento immediato: la cadenza minima esclude il
-            // prossimo trigger per 180 s. Lo preparano
-            // `AdManager.prepareInterstitialForRadioSession` e
-            // `AdManager.prepareInterstitialIfDue` quando si avvicina.
-            // Ricaricare qui voleva dire una richiesta riempita e mai mostrata
-            // per ogni annuncio mostrato.
+            // Riuso: si richiede subito il prossimo, resta valido 55 minuti e
+            // il trigger successivo lo trova pronto.
+            self.preloadIfUseful()
         }
     }
 
@@ -149,10 +168,10 @@ extension InterstitialAdCoordinator: FullScreenContentDelegate {
                         didFailToPresentFullScreenContentWithError error: Error) {
         Task { @MainActor in
             print("[Interstitial] present failed: \(error.localizedDescription)")
-            // Nessun ricaricamento: lo rifa' il prossimo trigger.
             self.interstitial = nil
             self.loadedAt = nil
             self.isAdReady = false
+            self.preloadIfUseful()
         }
     }
 }

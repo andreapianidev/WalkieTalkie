@@ -8,10 +8,11 @@ import Combine
 import UIKit
 import GoogleMobileAds
 
-/// Rewarded caricato solo a richiesta, quando l'utente tocca un CTA: niente
-/// precaricamento alla comparsa del bottone e niente ricaricamento dopo la
-/// chiusura. AdMob misurava uno show rate del 5,5% sul rewarded precaricato,
-/// perche' la maggior parte di chi vede il bottone non lo tocca.
+/// Rewarded caricato in anticipo con riuso: uno a fine bootstrap, tenuto in
+/// cache finche' non si mostra (fino a 55 minuti), richiesto di nuovo dopo ogni
+/// presentazione. Chi tocca un CTA lo trova pronto invece di aspettare lo
+/// spinner, che era il punto in cui molti rinunciavano. Se al tocco non c'e',
+/// si carica allora, come prima.
 @MainActor
 final class RewardedAdCoordinator: NSObject, ObservableObject {
     @Published private(set) var isAdReady = false
@@ -26,8 +27,34 @@ final class RewardedAdCoordinator: NSObject, ObservableObject {
     /// Un rewarded scade dopo un'ora: lo si butta un po' prima.
     private let maxAge: TimeInterval = 55 * 60
 
+    /// Vero se vale la pena tenere un annuncio pronto. Lo imposta `AdManager`.
+    var shouldPreload: () -> Bool = { false }
+
+    /// La richiesta in volo, se c'e': un tocco durante il precaricamento la
+    /// aspetta invece di aprirne un'altra.
+    private var loadTask: Task<Void, Never>?
+    private var lastFailureAt: Date?
+    private let failureBackoff: TimeInterval = 120
+
+    /// Tiene un annuncio pronto se serve. Non fa niente se ce n'e' gia' uno,
+    /// se una richiesta e' in volo o se l'ultimo no-fill e' troppo recente.
+    func preloadIfUseful() {
+        discardIfExpired()
+        guard shouldPreload(), rewardedAd == nil, loadTask == nil else { return }
+        if let lastFailureAt, Date().timeIntervalSince(lastFailureAt) < failureBackoff { return }
+        Task { await self.loadAd() }
+    }
+
     private func loadAd() async {
+        if let loadTask { await loadTask.value; return }
         guard rewardedAd == nil else { return }
+        let task = Task { @MainActor in await self.performLoad() }
+        loadTask = task
+        await task.value
+        loadTask = nil
+    }
+
+    private func performLoad() async {
         do {
             let ad = try await RewardedAd.load(
                 with: adUnitID,
@@ -36,9 +63,11 @@ final class RewardedAdCoordinator: NSObject, ObservableObject {
             ad.fullScreenContentDelegate = self
             rewardedAd = ad
             loadedAt = Date()
+            lastFailureAt = nil
             isAdReady = true
         } catch {
             print("[Rewarded] load failed: \(error.localizedDescription)")
+            lastFailureAt = Date()
             isAdReady = false
         }
     }
@@ -89,8 +118,8 @@ extension RewardedAdCoordinator: FullScreenContentDelegate {
             self.rewardedAd = nil
             self.loadedAt = nil
             self.isAdReady = false
-            // Nessun ricaricamento automatico: il prossimo si chiede al
-            // prossimo tocco su un CTA.
+            // Riuso: si richiede subito il prossimo per il tocco successivo.
+            self.preloadIfUseful()
         }
     }
 
@@ -98,10 +127,10 @@ extension RewardedAdCoordinator: FullScreenContentDelegate {
                         didFailToPresentFullScreenContentWithError error: Error) {
         Task { @MainActor in
             print("[Rewarded] present failed: \(error.localizedDescription)")
-            // Nessun ricaricamento: il prossimo tocco ne chiede uno nuovo.
             self.rewardedAd = nil
             self.loadedAt = nil
             self.isAdReady = false
+            self.preloadIfUseful()
         }
     }
 }

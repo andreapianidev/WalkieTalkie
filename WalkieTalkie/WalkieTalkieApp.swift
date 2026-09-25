@@ -117,6 +117,10 @@ struct WalkieTalkieApp: App {
                     if adManager.canRetryBootstrap && !adManager.isPaywallVisible {
                         Task { await adManager.bootstrap() }
                     }
+                    // Un annuncio tenuto in cache scade dopo 55 minuti: al
+                    // rientro lo si rimpiazza, cosi' il prossimo trigger lo
+                    // trova pronto.
+                    adManager.preloadFullScreenAds()
                     // Only re-show when truly coming back from background.
                     if returningFromBackground {
                         returningFromBackground = false

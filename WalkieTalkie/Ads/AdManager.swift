@@ -55,6 +55,8 @@ final class AdManager: ObservableObject {
             }
         }
         appOpen.shouldPresent = { [weak self] in self?.appOpenAllowedNow ?? false }
+        interstitial.shouldPreload = { [weak self] in self?.fullScreenPreloadAllowed ?? false }
+        rewarded.shouldPreload = { [weak self] in self?.fullScreenPreloadAllowed ?? false }
         // Restore a previously granted remove-ads window. Drop it if already expired.
         let ts = UserDefaults.standard.double(forKey: Self.removeAdsUntilKey)
         if ts > 0 {
@@ -162,26 +164,35 @@ final class AdManager: ObservableObject {
         MobileAds.shared.start { _ in }
         isInitialized = true
 
-        // 4. Preload
+        // 4. Preload con riuso
         //
-        // Si precarica SOLO l'app-open, e solo se in questa sessione puo'
-        // davvero comparire. L'interstitial si carica quando si avvicina
-        // l'occasione di mostrarlo (`prepareInterstitialForRadioSession`,
-        // `prepareInterstitialIfDue`), il rewarded al tocco sul suo CTA.
-        //
-        // Prima si caricavano tutti e tre a ogni avvio. L'interstitial si
-        // mostra solo all'uscita dalla radio, quindi nella maggior parte delle
-        // sessioni l'annuncio veniva chiesto, riempito da Google e buttato:
-        // 1.582 impression su circa 12.000 richieste riempite, show rate 13%.
-        // Il rewarded, che parte solo se l'utente tocca un CTA, stava al 5%.
-        // Richieste riempite e non mostrate non si pagano, ma abbassano lo show
-        // rate dell'unita', che e' un segnale che AdMob usa per decidere quanto
-        // vale mostrarci un annuncio.
+        // App-open solo se in questa sessione puo' comparire. Interstitial e
+        // rewarded si caricano subito e restano in cache finche' non si
+        // mostrano (fino a 55 minuti); dopo ogni presentazione si richiede il
+        // successivo. Nella 2.46 si caricavano solo all'arrivo del trigger, e
+        // ogni trigger arrivato prima dell'annuncio era un'impression persa.
         if appOpenLoadAllowed {
             await appOpen.loadAd()
         } else {
             PaywallFlowLog.log("preload app-open saltato: in questa sessione non puo' comparire")
         }
+        preloadFullScreenAds()
+    }
+
+    /// Vero se vale la pena tenere pronti interstitial e rewarded.
+    var fullScreenPreloadAllowed: Bool {
+        guard isInitialized else { return false }
+        guard !IAPManager.shared.isProUser else { return false }
+        guard !adsRemoved else { return false }
+        return true
+    }
+
+    /// Tiene pronti interstitial e rewarded. Da chiamare a fine bootstrap e a
+    /// ogni rientro in primo piano (rimpiazza un annuncio scaduto). Se sono
+    /// gia' pronti o in caricamento non fa niente.
+    func preloadFullScreenAds() {
+        interstitial.preloadIfUseful()
+        rewarded.preloadIfUseful()
     }
 
     /// Condizioni per cui vale la pena CARICARE un app-open, valutate a fine
@@ -228,33 +239,17 @@ final class AdManager: ObservableObject {
         return radioExitsThisSession > 1
     }
 
-    /// Prepara l'interstitial perche' fra poco potrebbe servire.
-    ///
-    /// La chiama `RadioManager.playStation`: l'uscita dalla modalita' radio e'
-    /// uno dei due momenti in cui l'interstitial viene mostrato, e chi la
-    /// accende da' all'annuncio tutto il tempo dell'ascolto per caricarsi.
-    /// Non alla prima sessione radio, perche' la sua uscita non lo mostra.
+    /// Prima di una sessione radio: l'uscita dalla radio e' uno dei momenti
+    /// in cui l'interstitial si mostra. Con il preload a fine bootstrap di
+    /// solito c'e' gia'; qui si rimpiazza se e' scaduto.
     func prepareInterstitialForRadioSession() {
-        guard !IAPManager.shared.isProUser, !adsRemoved else { return }
-        guard radioExitsThisSession >= 1 else { return }
-        // Se il tetto giornaliero esclude gia' la prossima presentazione, non
-        // si chiede niente.
-        guard interstitial.canShowSoon else {
-            PaywallFlowLog.log("preload interstitial saltato: tetto giornaliero")
-            return
-        }
-        Task { await interstitial.loadAd() }
+        interstitial.preloadIfUseful()
     }
 
-    /// Prepara l'interstitial quando il prossimo trigger (cambio canale, uscita
-    /// dalla radio) puo' davvero mostrarlo: cadenza e tetto lo permettono e la
-    /// radio non suona. Se e' gia' carico, in caricamento o in backoff dopo un
-    /// no-fill, non fa niente.
+    /// Prima di un trigger (cambio canale, uscita dalla radio): rimpiazza
+    /// l'annuncio se e' scaduto o se l'ultimo caricamento non e' andato.
     func prepareInterstitialIfDue() {
-        guard !IAPManager.shared.isProUser, !adsRemoved else { return }
-        guard !RadioManager.shared.isPlaying else { return }
-        guard interstitial.canShowNow else { return }
-        Task { await interstitial.loadAd() }
+        interstitial.preloadIfUseful()
     }
 
     // MARK: - Convenience
