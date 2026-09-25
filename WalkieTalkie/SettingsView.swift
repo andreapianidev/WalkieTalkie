@@ -1284,7 +1284,7 @@ struct SettingsView: View {
                             .foregroundColor(.white.opacity(0.8))
                     }
                     Spacer()
-                    if !adManager.rewarded.isAdReady {
+                    if adManager.rewarded.isLoading {
                         ProgressView()
                             .tint(.white)
                     }
@@ -1295,11 +1295,9 @@ struct SettingsView: View {
                         .fill(Color.blue.opacity(0.85))
                 )
             }
-            .disabled(!adManager.rewarded.isAdReady)
-            .opacity(adManager.rewarded.isAdReady ? 1.0 : 0.6)
+            .disabled(adManager.rewarded.isLoading)
             .onAppear {
-                // Il rewarded si carica quando il suo CTA compare, non all'avvio.
-                adManager.prepareRewardedIfNeeded()
+                // Il rewarded si carica al tocco, non alla comparsa del CTA.
                 guard !didLogSettingsRewardImpression else { return }
                 didLogSettingsRewardImpression = true
                 Analytics.logEvent("rewarded_cta_shown", parameters: ["source": "settings"])

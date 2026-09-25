@@ -14,7 +14,7 @@ import FirebaseAnalytics
 ///
 /// - Si auto-nasconde se l'utente è Pro o se ha già un reward attivo (sarebbe
 ///   un'offerta priva di senso).
-/// - Resta disabilitato con uno spinner finché l'ad non è caricato.
+/// - Il video si carica al tocco: mentre arriva, spinner e bottone disabilitato.
 /// - Emette un funnel misurabile: `rewarded_cta_shown` (una volta, alla comparsa)
 ///   → `rewarded_cta_tapped` → `rewarded_reward_earned` (gli ultimi due da
 ///   `AdManager.presentRewardedRemoveAds`), tutti con lo stesso `source`.
@@ -76,13 +76,13 @@ struct RewardAdCTAView: View {
 
                     Spacer(minLength: 4)
 
-                    if rewarded.isAdReady {
+                    if rewarded.isLoading {
+                        ProgressView()
+                            .controlSize(.small)
+                    } else {
                         Image(systemName: "chevron.right")
                             .font(.system(size: 12, weight: .semibold))
                             .foregroundColor(ink.opacity(0.4))
-                    } else {
-                        ProgressView()
-                            .controlSize(.small)
                     }
                 }
                 .padding(.horizontal, 14)
@@ -97,12 +97,10 @@ struct RewardAdCTAView: View {
                 )
             }
             .buttonStyle(.plain)
-            .disabled(!rewarded.isAdReady)
-            .opacity(rewarded.isAdReady ? 1.0 : 0.6)
+            .disabled(rewarded.isLoading)
             .onAppear {
-                // Il rewarded non si carica piu' all'avvio dell'app: si carica
-                // qui, quando un CTA che lo offre e' davvero a schermo.
-                adManager.prepareRewardedIfNeeded()
+                // Il rewarded non si carica alla comparsa del CTA: si carica al
+                // tocco, perche' la maggior parte di chi lo vede non lo tocca.
                 guard !didLogImpression else { return }
                 didLogImpression = true
                 Analytics.logEvent("rewarded_cta_shown", parameters: ["source": source])

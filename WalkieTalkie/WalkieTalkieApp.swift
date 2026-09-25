@@ -20,6 +20,13 @@ struct WalkieTalkieApp: App {
     @StateObject private var themeManager = ThemeManager.shared
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage("isOnboardingComplete") private var isOnboardingComplete = false
+    /// Vero dopo un passaggio in `.background`, consumato al `.active` successivo.
+    ///
+    /// `.active` da solo arriva anche quando si chiude un alert di sistema
+    /// (microfono, rete locale, ATT), il Centro di Controllo o il foglio di
+    /// acquisto StoreKit, che passano solo da `.inactive`: l'app-open partiva
+    /// a meta' sessione. Si mostra solo al rientro vero da background.
+    @State private var returningFromBackground = false
 
     #if DEBUG && targetEnvironment(simulator)
     @State private var showDebugTierAlert = true
@@ -82,6 +89,9 @@ struct WalkieTalkieApp: App {
                 LiveActivityDeepLink.handle(url)
             }
             .onChange(of: scenePhase) { newPhase in
+                if newPhase == .background {
+                    returningFromBackground = true
+                }
                 if newPhase == .active {
                     // Rilegge gli entitlement a ogni rientro in primo piano.
                     // `Transaction.updates` copre acquisti e rimborsi, ma non la
@@ -108,8 +118,11 @@ struct WalkieTalkieApp: App {
                         Task { await adManager.bootstrap() }
                     }
                     // Only re-show when truly coming back from background.
-                    if isOnboardingComplete {
-                        adManager.showAppOpenIfAllowed(afterDelay: true)
+                    if returningFromBackground {
+                        returningFromBackground = false
+                        if isOnboardingComplete {
+                            adManager.showAppOpenIfAllowed(afterDelay: true)
+                        }
                     }
                 }
             }

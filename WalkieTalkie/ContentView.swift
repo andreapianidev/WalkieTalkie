@@ -19,7 +19,6 @@ struct ContentView: View {
     @StateObject private var crossPlatformManager = TalkyCrossPlatformManager.shared
     @EnvironmentObject private var adManager: AdManager
     @State private var frequencyChangeCount = 0
-    @State private var radioExitCount = 0
     @State private var interstitialDebounceTask: Task<Void, Never>?
     @State private var isTransmitting = false
     @State private var frequency = "428.283"
@@ -1105,8 +1104,13 @@ struct ContentView: View {
                             .font(.system(size: 12))
                     }
                     Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.caption.bold())
+                    if adManager.rewarded.isLoading {
+                        ProgressView()
+                            .tint(.white)
+                    } else {
+                        Image(systemName: "chevron.right")
+                            .font(.caption.bold())
+                    }
                 }
                 .foregroundColor(.white)
                 .padding(.horizontal, 16)
@@ -1120,8 +1124,7 @@ struct ContentView: View {
                 .padding(.bottom, 10)
             }
             .buttonStyle(.plain)
-            .disabled(!adManager.rewarded.isAdReady)
-            .opacity(adManager.rewarded.isAdReady ? 1.0 : 0.5)
+            .disabled(adManager.rewarded.isLoading)
         }
     }
 
@@ -1171,6 +1174,9 @@ struct ContentView: View {
         // Never interrupt a live transmission or reception.
         guard !isTransmitting, !multipeerManager.isReceiving else { return }
         frequencyChangeCount += 1
+        // Load just in time: from the first change on, the next one may show
+        // the ad. No-op if already loaded, loading, capped or backing off.
+        adManager.prepareInterstitialIfDue()
         // Skip the very first change after launch.
         guard frequencyChangeCount > 1 else { return }
         scheduleInterstitialAfterIdle()
@@ -1195,9 +1201,13 @@ struct ContentView: View {
     /// "penetrantester Werbung"). Cadenza e tetto (180 s, 5/giorno) restano
     /// centralizzati in AdManager.
     private func maybeShowInterstitialOnRadioExit() {
-        radioExitCount += 1
         // Salta la prima uscita: non si accoglie una sessione nuova con un ad.
-        guard radioExitCount > 1 else { return }
+        // Il contatore sta in AdManager, che lo usa anche per non caricare
+        // l'interstitial durante la prima sessione radio.
+        guard adManager.registerRadioExit() else { return }
+        // Di norma e' gia' carico da `playStation`; se e' scaduto durante un
+        // ascolto lungo o era andato a vuoto, si riprova adesso.
+        adManager.prepareInterstitialIfDue()
         scheduleInterstitialAfterIdle()
     }
 

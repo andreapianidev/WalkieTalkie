@@ -31,16 +31,26 @@ final class AdManager: ObservableObject {
     /// reward survives an app relaunch within its validity window.
     private static let removeAdsUntilKey = "fastboot_removeAdsUntil"
 
+    private var cancellables = Set<AnyCancellable>()
+
     private init() {
+        // I CTA rewarded osservano `AdManager`: senza questo inoltro lo spinner
+        // di caricamento del rewarded non aggiornerebbe la vista.
+        rewarded.objectWillChange
+            .sink { [weak self] _ in self?.objectWillChange.send() }
+            .store(in: &cancellables)
         interstitial.onDismiss = { [weak self] in
             guard let self else { return }
             guard !IAPManager.shared.isProUser, !self.adsRemoved else { return }
-            // La pillola offre il rewarded: va caricato adesso, perche' dal
-            // bootstrap non si precarica piu'.
-            self.prepareRewardedIfNeeded()
+            // La pillola offre il rewarded, che si carica solo quando la si tocca.
             self.showRewardedPill = true
             Task { @MainActor in
                 try? await Task.sleep(nanoseconds: 8_000_000_000)
+                // Se l'utente l'ha toccata e il video sta caricando, la pillola
+                // resta finche' il caricamento non finisce.
+                while self.rewarded.isLoading {
+                    try? await Task.sleep(nanoseconds: 500_000_000)
+                }
                 self.showRewardedPill = false
             }
         }
@@ -155,9 +165,9 @@ final class AdManager: ObservableObject {
         // 4. Preload
         //
         // Si precarica SOLO l'app-open, e solo se in questa sessione puo'
-        // davvero comparire. Interstitial e rewarded si caricano quando si
-        // avvicina l'occasione di mostrarli (vedi
-        // `prepareInterstitialForRadioSession` e `prepareRewardedIfNeeded`).
+        // davvero comparire. L'interstitial si carica quando si avvicina
+        // l'occasione di mostrarlo (`prepareInterstitialForRadioSession`,
+        // `prepareInterstitialIfDue`), il rewarded al tocco sul suo CTA.
         //
         // Prima si caricavano tutti e tre a ogni avvio. L'interstitial si
         // mostra solo all'uscita dalla radio, quindi nella maggior parte delle
@@ -206,33 +216,45 @@ final class AdManager: ObservableObject {
 
     // MARK: - Caricamento a richiesta
 
+    /// Uscite dalla modalita' radio in questa sessione. La prima non mostra
+    /// l'interstitial (non si accoglie una sessione nuova con un annuncio),
+    /// quindi finche' non c'e' stata non vale la pena caricarlo.
+    private(set) var radioExitsThisSession = 0
+
+    /// Registra un'uscita dalla radio. Vero se questa uscita puo' mostrare
+    /// l'interstitial, cioe' se non e' la prima della sessione.
+    func registerRadioExit() -> Bool {
+        radioExitsThisSession += 1
+        return radioExitsThisSession > 1
+    }
+
     /// Prepara l'interstitial perche' fra poco potrebbe servire.
     ///
-    /// La chiama `RadioManager.playStation`: l'unico momento in cui
-    /// l'interstitial viene mostrato e' l'uscita dalla modalita' radio, quindi
-    /// chi non accende mai la radio non deve far partire nessuna richiesta.
-    /// Chi la accende da' all'annuncio tutto il tempo dell'ascolto per
-    /// caricarsi, molto piu' dei 2,5 s di debounce che aveva prima.
+    /// La chiama `RadioManager.playStation`: l'uscita dalla modalita' radio e'
+    /// uno dei due momenti in cui l'interstitial viene mostrato, e chi la
+    /// accende da' all'annuncio tutto il tempo dell'ascolto per caricarsi.
+    /// Non alla prima sessione radio, perche' la sua uscita non lo mostra.
     func prepareInterstitialForRadioSession() {
         guard !IAPManager.shared.isProUser, !adsRemoved else { return }
-        // Se la cadenza o il tetto giornaliero escludono gia' la prossima
-        // presentazione, non si chiede niente.
+        guard radioExitsThisSession >= 1 else { return }
+        // Se il tetto giornaliero esclude gia' la prossima presentazione, non
+        // si chiede niente.
         guard interstitial.canShowSoon else {
-            PaywallFlowLog.log("preload interstitial saltato: cadenza o tetto giornaliero")
+            PaywallFlowLog.log("preload interstitial saltato: tetto giornaliero")
             return
         }
         Task { await interstitial.loadAd() }
     }
 
-    /// Prepara il rewarded quando un CTA che lo offre compare a schermo.
-    ///
-    /// Chiamata da `RewardAdCTAView.onAppear` e dal foglio di sblocco stazione:
-    /// il rewarded parte solo su gesto esplicito dell'utente, quindi caricarlo
-    /// a ogni avvio significava riempire richieste che nel 95% dei casi non
-    /// diventavano niente.
-    func prepareRewardedIfNeeded() {
-        guard !IAPManager.shared.isProUser else { return }
-        Task { await rewarded.loadAd() }
+    /// Prepara l'interstitial quando il prossimo trigger (cambio canale, uscita
+    /// dalla radio) puo' davvero mostrarlo: cadenza e tetto lo permettono e la
+    /// radio non suona. Se e' gia' carico, in caricamento o in backoff dopo un
+    /// no-fill, non fa niente.
+    func prepareInterstitialIfDue() {
+        guard !IAPManager.shared.isProUser, !adsRemoved else { return }
+        guard !RadioManager.shared.isPlaying else { return }
+        guard interstitial.canShowNow else { return }
+        Task { await interstitial.loadAd() }
     }
 
     // MARK: - Convenience
@@ -296,12 +318,15 @@ final class AdManager: ObservableObject {
     /// converts on AdMob/Firebase instead of a single anonymous number.
     func presentRewardedRemoveAds(source: String) {
         Analytics.logEvent("rewarded_cta_tapped", parameters: ["source": source])
-        rewarded.showAd { [weak self] in
+        rewarded.showAd(onReward: { [weak self] in
             guard let self else { return }
             self.grantRemoveAdsReward()
             HapticManager.shared.success()
             Analytics.logEvent("rewarded_reward_earned", parameters: ["source": source])
-        }
+        }, onUnavailable: {
+            // Nessun video disponibile: nessun premio, ma il tocco non resta muto.
+            HapticManager.shared.warning()
+        })
     }
 
     /// Rewarded che sblocca una stazione Pro per 24 ore.
@@ -310,16 +335,18 @@ final class AdManager: ObservableObject {
     /// forte: si offre a chi ha appena toccato una stazione bloccata, cioe' nel
     /// momento in cui il premio e' esattamente la cosa che stava cercando di
     /// fare. `onGranted` serve alla UI per far partire subito l'ascolto invece
-    /// di chiedere all'utente di ritoccare la riga.
+    /// di chiedere all'utente di ritoccare la riga; `onUnavailable` scatta se
+    /// dopo il caricamento non c'e' nessun video da mostrare.
     func presentRewardedStationPass(stationID: Int,
                                     stationName: String,
                                     source: String = "station_locked",
-                                    onGranted: (() -> Void)? = nil) {
+                                    onGranted: (() -> Void)? = nil,
+                                    onUnavailable: (() -> Void)? = nil) {
         Analytics.logEvent("rewarded_cta_tapped", parameters: [
             "source": source,
             "station": stationName
         ])
-        rewarded.showAd {
+        rewarded.showAd(onReward: {
             StationPassManager.shared.grantPass(for: stationID)
             HapticManager.shared.success()
             Analytics.logEvent("rewarded_reward_earned", parameters: [
@@ -328,6 +355,6 @@ final class AdManager: ObservableObject {
                 "station": stationName
             ])
             onGranted?()
-        }
+        }, onUnavailable: onUnavailable)
     }
 }

@@ -51,6 +51,17 @@ struct StationBrowserSheet: View {
                 content
             }
             .background(Color("BackgroundColor").ignoresSafeArea())
+            .overlay {
+                // Il video del pass a 24 ore si carica al tocco: finche' non
+                // arriva, uno spinner dice che il tocco e' stato preso.
+                if adManager.rewarded.isLoading {
+                    ZStack {
+                        Color.black.opacity(0.25).ignoresSafeArea()
+                        ProgressView()
+                            .controlSize(.large)
+                    }
+                }
+            }
             .navigationTitle("browse_stations".localized)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -72,10 +83,8 @@ struct StationBrowserSheet: View {
             PaywallView(trigger: "station_browser")
         }
         .onAppear {
-            // Chi sta sfogliando le stazioni incontrera' quasi certamente una
-            // riga bloccata: il rewarded va caricato adesso, cosi' quando tocca
-            // "ascolta 24 ore" il video parte subito.
-            adManager.prepareRewardedIfNeeded()
+            // Il rewarded non si precarica qui: si chiede al tocco su
+            // "ascolta 24 ore" (vedi `unlockWithRewarded`).
             StationPassManager.shared.pruneExpired()
         }
         .confirmationDialog(
@@ -105,24 +114,24 @@ struct StationBrowserSheet: View {
 
     /// Mostra il rewarded e, a premio riscosso, fa partire subito la stazione.
     ///
-    /// Se l'annuncio non e' pronto non si lascia il tocco a vuoto: si apre il
-    /// paywall, che e' l'altra strada per la stessa cosa.
+    /// Il video si carica adesso, al tocco. Se non arriva non si lascia il
+    /// tocco a vuoto: si apre il paywall, che e' l'altra strada per la stessa
+    /// cosa.
     private func unlockWithRewarded() {
         guard let station = lockedStation else { return }
         lockedStation = nil
 
-        guard adManager.rewarded.isAdReady else {
-            showPaywall = true
-            return
-        }
-
         adManager.presentRewardedStationPass(
             stationID: station.id,
-            stationName: station.name
-        ) {
-            radioManager.playStation(station)
-            dismiss()
-        }
+            stationName: station.name,
+            onGranted: {
+                radioManager.playStation(station)
+                dismiss()
+            },
+            onUnavailable: {
+                showPaywall = true
+            }
+        )
     }
 
     // MARK: - Nota streaming

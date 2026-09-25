@@ -14,11 +14,22 @@ final class NativeAdCoordinator: NSObject, ObservableObject {
 
     private var adLoader: AdLoader?
     private var lastLoadStartedAt: Date?
+    private var isLoading = false
+    private var lastFailureAt: Date?
     private let adUnitID = AdConfig.nativeStationAdUnitID
+
+    /// Dopo un no-fill si aspetta prima di richiedere: senza, ogni onAppear
+    /// faceva partire una richiesta nuova.
+    private let failureBackoff: TimeInterval = 60
 
     func loadAd() {
         // Defensive Pro gate: never spend bandwidth fetching a creative we will not display.
         guard !IAPManager.shared.isProUser else { return }
+        // Mai una richiesta nuova con un annuncio gia' carico o in arrivo.
+        // Per rinfrescarlo si passa da `reset()`.
+        guard nativeAd == nil, !isLoading else { return }
+        if let lastFailureAt, Date().timeIntervalSince(lastFailureAt) < failureBackoff { return }
+        isLoading = true
         // Anchor the loader to the topmost VC so click-through presents from the right context.
         let loader = AdLoader(
             adUnitID: adUnitID,
@@ -48,6 +59,8 @@ extension NativeAdCoordinator: NativeAdLoaderDelegate {
     nonisolated func adLoader(_ adLoader: AdLoader, didReceive nativeAd: NativeAd) {
         Task { @MainActor in
             self.nativeAd = nativeAd
+            self.isLoading = false
+            self.lastFailureAt = nil
         }
     }
 
@@ -56,6 +69,8 @@ extension NativeAdCoordinator: NativeAdLoaderDelegate {
         Task { @MainActor in
             print("[NativeAd] load failed: \(error.localizedDescription)")
             self.nativeAd = nil
+            self.isLoading = false
+            self.lastFailureAt = Date()
         }
     }
 }

@@ -728,7 +728,7 @@ struct PaywallView: View {
                         .font(.system(size: 14, weight: .semibold))
                     Text("watch_ad_remove_ads".localized)
                         .font(.system(size: 14, weight: .semibold))
-                    if !rewardedCoordinator.isAdReady {
+                    if rewardedCoordinator.isLoading {
                         ProgressView()
                             .controlSize(.mini)
                             .padding(.leading, 2)
@@ -743,11 +743,9 @@ struct PaywallView: View {
                 )
             }
             .buttonStyle(.plain)
-            .disabled(!rewardedCoordinator.isAdReady)
-            .opacity(rewardedCoordinator.isAdReady ? 1.0 : 0.55)
+            .disabled(rewardedCoordinator.isLoading)
             .onAppear {
-                // Il rewarded si carica quando il suo CTA compare, non all'avvio.
-                adManager.prepareRewardedIfNeeded()
+                // Il rewarded si carica al tocco, non alla comparsa del CTA.
                 guard !didLogRewardedImpression else { return }
                 didLogRewardedImpression = true
                 Analytics.logEvent("rewarded_cta_shown", parameters: ["source": trigger])
