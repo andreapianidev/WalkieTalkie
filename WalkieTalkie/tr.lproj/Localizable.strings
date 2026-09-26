@@ -290,6 +290,7 @@
 "paywall.compare.weekly_vs_yearly" = "Yılda %1$@. Haftalık ödeseydin %2$@ harcardın.";
 "paywall.trial.badge" = "%1$d gün ücretsiz, sonra yılda %2$@";
 "paywall.cta.start" = "Talky Pro'yu başlat";
+"paywall.cta.trial" = "%d gün ücretsiz dene";
 "paywall.apple_footer" = "Abonelik otomatik yenilenir. Apple Kimliği ayarlarından istediğin zaman iptal edebilirsin. Ödeme, satın alma onaylandığında Apple Kimliğinden tahsil edilir.";
 "paywall.link.restore" = "Geri yükle";
 "paywall.link.terms" = "Koşullar";
@@ -470,13 +471,13 @@
 /* Paywall — supporter note: who is behind Talky and what Pro really pays for */
 "paywall.support.eyebrow" = "GELİŞTİRİCİDEN BİR NOT";
 "paywall.support.title" = "Talky'yi tek bir kişi yapıyor";
-"paywall.support.body" = "Bağımsız bir geliştiriciyim ve Talky'nin kodu GitHub'da herkese açık. Pro, uygulamanın etrafındaki bir duvar değil: Apple geliştirici hesabını, sunucuları ve istasyon ile özellik eklemeye harcanan saatleri karşılayan bir katkı. Şimdi doğru zaman değilse Talky'yi ücretsiz kullanmayı sürdür — ücretsiz kalmaya devam ediyor.";
+"paywall.support.body" = "Bağımsız bir geliştiriciyim ve Talky'nin kodu GitHub'da herkese açık. Pro, uygulamanın etrafındaki bir duvar değil: Apple geliştirici hesabını, sunucuları ve istasyon ile özellik eklemeye harcanan saatleri karşılayan bir katkı. Şimdi doğru zaman değilse Talky'yi ücretsiz kullanmayı sürdür, ücretsiz kalmaya devam ediyor.";
 "paywall.support.github" = "Kodu GitHub'da gör";
-"paywall.support.compact" = "Bağımsız tek bir geliştirici tarafından yapıldı — Talky'nin kodu GitHub'da herkese açık.";
+"paywall.support.compact" = "Bağımsız tek bir geliştirici tarafından yapıldı. Talky'nin kodu GitHub'da herkese açık.";
 
 /* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
 "paywall.lifetime.cta" = "Bir kez öde ·";
-"paywall.lifetime.subtitle" = "Tek ödeme. Pro'nun tamamı, sonsuza dek — temalar dahil. Abonelik yok.";
+"paywall.lifetime.subtitle" = "Tek ödeme. Pro'nun tamamı, sonsuza dek, temalar dahil. Abonelik yok.";
 "paywall.lifetime.owned" = "Sonsuza dek senin. Teşekkürler.";
 
 /* Pass stazione a 24 ore (rewarded) e chiarimento sullo streaming */

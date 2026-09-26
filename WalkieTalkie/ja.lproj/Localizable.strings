@@ -290,6 +290,7 @@
 "paywall.compare.weekly_vs_yearly" = "年%1$@。週払いなら%2$@かかります。";
 "paywall.trial.badge" = "%1$d日間無料、その後は年%2$@";
 "paywall.cta.start" = "Talky Proをはじめる";
+"paywall.cta.trial" = "%d日間無料で試す";
 "paywall.apple_footer" = "サブスクリプションは自動更新されます。Apple IDの設定からいつでも解約できます。購入確定時にApple IDへ請求されます。";
 "paywall.link.restore" = "復元";
 "paywall.link.terms" = "利用規約";

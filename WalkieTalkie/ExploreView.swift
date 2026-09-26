@@ -13,10 +13,14 @@ struct ExploreView: View {
     @State private var showPaywall: Bool = false
     @State private var pendingInvitePeerIDs: Set<String> = []
 
-    private let radarRadius: CGFloat = 120
+    /// 120 pt di raggio fanno un radar alto 300 pt: su iPhone 8/SE (667 pt)
+    /// da solo si prendeva meta' dello spazio utile e spingeva la lista dei
+    /// dispositivi, con i "+" per invitare, sotto la tab bar.
+    private let radarRadius: CGFloat = UIScreen.main.bounds.height < 700 ? 90 : 120
     private let maxRange: Double = 100 // metri
 
     var body: some View {
+        FitOrScroll {
         VStack(spacing: 0) {
             // Header
             headerView
@@ -51,6 +55,7 @@ struct ExploreView: View {
             deviceListView
 
             Spacer(minLength: 100)
+        }
         }
         .background(Color("BackgroundColor"))
         .fullScreenCover(isPresented: $showPaywall) {

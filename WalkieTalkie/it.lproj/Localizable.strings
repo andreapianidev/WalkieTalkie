@@ -279,6 +279,7 @@
 "paywall.compare.weekly_vs_yearly" = "%1$@ all'anno. Pagando a settimana spenderesti %2$@.";
 "paywall.trial.badge" = "%1$d giorni gratis, poi %2$@ all'anno";
 "paywall.cta.start" = "Inizia Talky Pro";
+"paywall.cta.trial" = "Prova gratis per %d giorni";
 "paywall.apple_footer" = "L'abbonamento si rinnova automaticamente. Puoi annullarlo in qualsiasi momento dalle Impostazioni del tuo Apple ID. Il pagamento sarà addebitato sul tuo Apple ID al momento della conferma dell'acquisto.";
 "paywall.link.restore" = "Ripristina";
 "paywall.link.terms" = "Termini";
@@ -459,9 +460,9 @@
 /* Paywall — nota supporter: chi c'è dietro Talky e cosa paga davvero Pro */
 "paywall.support.eyebrow" = "DUE PAROLE DALLO SVILUPPATORE";
 "paywall.support.title" = "Talky la scrivo da solo";
-"paywall.support.body" = "Sono uno sviluppatore indipendente e il codice di Talky è pubblico su GitHub. Pro non è un muro intorno all'app: è un contributo che copre l'account sviluppatore Apple, i server e le ore passate ad aggiungere stazioni e funzioni. Se non è il momento, continua a usare Talky gratis — resta gratis.";
+"paywall.support.body" = "Sono uno sviluppatore indipendente e il codice di Talky è pubblico su GitHub. Pro non è un muro intorno all'app: è un contributo che copre l'account sviluppatore Apple, i server e le ore passate ad aggiungere stazioni e funzioni. Se non è il momento, continua a usare Talky gratis, resta gratis.";
 "paywall.support.github" = "Guarda il codice su GitHub";
-"paywall.support.compact" = "Fatta da uno sviluppatore indipendente — il codice di Talky è pubblico su GitHub.";
+"paywall.support.compact" = "Fatta da uno sviluppatore indipendente. Il codice di Talky è pubblico su GitHub.";
 
 /* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
 "paywall.lifetime.cta" = "Paghi una volta ·";

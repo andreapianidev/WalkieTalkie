@@ -85,26 +85,15 @@ struct ContentView: View {
                 // Contenuto principale
                 VStack(spacing: 0) {
                     if selectedTab == 0 {
-                        // Main walkie talkie view
-                        VStack(spacing: 0) {
-                            // Header
-                            headerView
-                            
-                            // Connection status textbox
-                            connectionStatusView
-                            
-                            // Display frequenza
-                            frequencyDisplayView
-                            
-                            // Controlli playback
-                            playbackControlsView
-                            
-                            Spacer()
-                            
-                            // Area speaker con griglia punti
-                            speakerAreaView
-                            
-                            Spacer()
+                        // Main walkie talkie view. Sugli schermi bassi la
+                        // colonna scorre se non ci sta (radio + testo grande),
+                        // invece di spingere l'header sotto la barra di stato.
+                        if isCompactHeight {
+                            FitOrScroll(scrollDisabled: isTransmitting) {
+                                walkieMainColumn
+                            }
+                        } else {
+                            walkieMainColumn
                         }
                     } else if selectedTab == 1 {
                         // Explore view
@@ -129,9 +118,9 @@ struct ContentView: View {
                         }
                     }
 
-                    // Spazio per la tab bar
+                    // Spazio per la tab bar (compatta: 10+48+10 di barra e 12 di margine)
                     Spacer()
-                        .frame(height: isCompactHeight ? 76 : 100)
+                        .frame(height: isCompactHeight ? 80 : 100)
                 }
                 
                 // Tab bar fissa in basso
@@ -172,6 +161,30 @@ struct ContentView: View {
                 maybeShowModeSwitchHint()
                 restorePersistedAudioMode()
             }
+        }
+    }
+
+    /// La schermata principale del walkie: header, stato, display, comandi e PTT.
+    private var walkieMainColumn: some View {
+        VStack(spacing: 0) {
+            // Header
+            headerView
+
+            // Connection status textbox
+            connectionStatusView
+
+            // Display frequenza
+            frequencyDisplayView
+
+            // Controlli playback
+            playbackControlsView
+
+            Spacer()
+
+            // Area speaker con griglia punti
+            speakerAreaView
+
+            Spacer()
         }
     }
 
@@ -386,13 +399,13 @@ struct ContentView: View {
                 .frame(width: 12, height: 12)
         }
         .padding(.horizontal, 20)
-        .padding(.vertical, 12)
+        .padding(.vertical, isCompactHeight ? 8 : 12)
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color("SurfaceColor"))
         )
         .padding(.horizontal, 20)
-        .padding(.top, 10)
+        .padding(.top, isCompactHeight ? 6 : 10)
     }
     
     private var frequencyDisplayView: some View {
@@ -493,18 +506,18 @@ struct ContentView: View {
                     }
             )
         }
-        .padding(.top, 20)
+        .padding(.top, isCompactHeight ? 10 : 20)
     }
 
     private var playbackControlsView: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: isCompactHeight ? 10 : 16) {
             if isRadioMode {
                 radioSecondaryControlsRow
             }
 
             mainPlaybackRow
         }
-        .padding(.top, 20)
+        .padding(.top, isCompactHeight ? 10 : 20)
     }
 
     /// Riga superiore (solo radio): Browse, Preferito, Sleep Timer.
@@ -761,10 +774,10 @@ struct ContentView: View {
     }
 
     private var speakerAreaView: some View {
-        VStack(spacing: isCompactHeight ? 14 : 30) {
+        VStack(spacing: isCompactHeight ? 10 : 30) {
             // Griglia di punti per simulare speaker - aumentata
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 8), spacing: 6) {
-                ForEach(0..<(isCompactHeight ? 40 : 88), id: \.self) { _ in
+                ForEach(0..<(isCompactHeight ? 24 : 88), id: \.self) { _ in
                     Circle()
                         .fill(Color.black)
                         .frame(width: 5, height: 5)
@@ -773,17 +786,17 @@ struct ContentView: View {
             .padding(.horizontal, 40)
             
             // Push to talk button migliorato con gesture (disabilitato in modalità FM)
-            VStack(spacing: 15) {
+            VStack(spacing: isCompactHeight ? 10 : 15) {
                 ZStack {
                     // Cerchio esterno
                     Circle()
                         .fill(isRadioMode ? Color.gray.opacity(0.5) : (isTransmitting ? Color.red : Color.black))
-                        .frame(width: isCompactHeight ? 116 : 140, height: isCompactHeight ? 116 : 140)
+                        .frame(width: isCompactHeight ? 106 : 140, height: isCompactHeight ? 106 : 140)
 
                     // Cerchio interno
                     Circle()
                         .fill(isRadioMode ? Color.gray.opacity(0.3) : Color.white)
-                        .frame(width: isCompactHeight ? 98 : 120, height: isCompactHeight ? 98 : 120)
+                        .frame(width: isCompactHeight ? 90 : 120, height: isCompactHeight ? 90 : 120)
                     
                     // Testo centrale
                     VStack(spacing: 4) {
@@ -814,7 +827,7 @@ struct ContentView: View {
                     if isTransmitting && !isRadioMode {
                         Circle()
                             .stroke(Color.red.opacity(0.6), lineWidth: 3)
-                            .frame(width: isCompactHeight ? 116 : 140, height: isCompactHeight ? 116 : 140)
+                            .frame(width: isCompactHeight ? 106 : 140, height: isCompactHeight ? 106 : 140)
                             .scaleEffect(isTransmitting ? 1.1 : 1.0)
                             .animation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true), value: isTransmitting)
                     }

@@ -290,6 +290,7 @@
 "paywall.compare.weekly_vs_yearly" = "%1$@ pro Jahr. Wöchentlich gezahlt wären es %2$@.";
 "paywall.trial.badge" = "%1$d Tage gratis, danach %2$@ pro Jahr";
 "paywall.cta.start" = "Talky Pro starten";
+"paywall.cta.trial" = "%d Tage gratis testen";
 "paywall.apple_footer" = "Das Abo verlängert sich automatisch. Du kannst es jederzeit in den Einstellungen deiner Apple-ID kündigen. Die Zahlung wird bei Kaufbestätigung über deine Apple-ID abgerechnet.";
 "paywall.link.restore" = "Wiederherstellen";
 "paywall.link.terms" = "Nutzungsbedingungen";
@@ -470,13 +471,13 @@
 /* Paywall — supporter note: who is behind Talky and what Pro really pays for */
 "paywall.support.eyebrow" = "EINE NOTIZ VOM ENTWICKLER";
 "paywall.support.title" = "Talky wird von einer Person gebaut";
-"paywall.support.body" = "Ich bin unabhängiger Entwickler und Talkys Code ist auf GitHub öffentlich. Pro ist keine Mauer um die App: Es ist ein Beitrag, der den Apple-Entwicklerzugang, die Server und die Stunden für neue Sender und Funktionen deckt. Wenn es gerade nicht passt, nutze Talky weiter gratis – es bleibt gratis.";
+"paywall.support.body" = "Ich bin unabhängiger Entwickler und Talkys Code ist auf GitHub öffentlich. Pro ist keine Mauer um die App: Es ist ein Beitrag, der den Apple-Entwicklerzugang, die Server und die Stunden für neue Sender und Funktionen deckt. Wenn es gerade nicht passt, nutze Talky weiter gratis, es bleibt gratis.";
 "paywall.support.github" = "Den Code auf GitHub ansehen";
-"paywall.support.compact" = "Von einem unabhängigen Entwickler gebaut – Talkys Code ist auf GitHub öffentlich.";
+"paywall.support.compact" = "Von einem unabhängigen Entwickler gebaut. Talkys Code ist auf GitHub öffentlich.";
 
 /* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
 "paywall.lifetime.cta" = "Einmal zahlen ·";
-"paywall.lifetime.subtitle" = "Eine Zahlung. Alles von Pro, für immer – Designs inklusive. Kein Abo.";
+"paywall.lifetime.subtitle" = "Eine Zahlung. Alles von Pro, für immer, Designs inklusive. Kein Abo.";
 "paywall.lifetime.owned" = "Für immer deins. Danke.";
 
 /* Pass stazione a 24 ore (rewarded) e chiarimento sullo streaming */

@@ -290,6 +290,7 @@
 "paywall.compare.weekly_vs_yearly" = "연 %1$@. 주 단위로 내면 %2$@을(를) 쓰게 됩니다.";
 "paywall.trial.badge" = "%1$d일 무료, 이후 연 %2$@";
 "paywall.cta.start" = "Talky Pro 시작하기";
+"paywall.cta.trial" = "%d일 무료 체험 시작";
 "paywall.apple_footer" = "구독은 자동으로 갱신됩니다. Apple ID 설정에서 언제든 해지할 수 있습니다. 구매 확인 시 Apple ID로 결제됩니다.";
 "paywall.link.restore" = "복원";
 "paywall.link.terms" = "이용약관";
@@ -473,7 +474,7 @@
 "paywall.support.title" = "Talky는 한 사람이 만듭니다";
 "paywall.support.body" = "저는 1인 개발자이고 Talky의 코드는 GitHub에 공개되어 있습니다. Pro는 앱을 둘러싼 벽이 아닙니다. Apple 개발자 계정과 서버, 방송국과 기능을 늘리는 데 들어간 시간을 감당하기 위한 후원입니다. 지금이 적절하지 않다면 계속 무료로 쓰세요. 앞으로도 무료입니다.";
 "paywall.support.github" = "GitHub에서 코드 보기";
-"paywall.support.compact" = "1인 개발자가 만듭니다 — Talky의 코드는 GitHub에 공개되어 있습니다.";
+"paywall.support.compact" = "1인 개발자가 만듭니다. Talky의 코드는 GitHub에 공개되어 있습니다.";
 
 /* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
 "paywall.lifetime.cta" = "한 번만 결제 ·";

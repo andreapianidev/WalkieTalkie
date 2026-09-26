@@ -270,6 +270,7 @@
 "paywall.compare.weekly_vs_yearly" = "每年 %1$@。改用每週付費一年要花 %2$@。";
 "paywall.trial.badge" = "免費 %1$d 天，之後每年 %2$@";
 "paywall.cta.start" = "開始使用 Talky Pro";
+"paywall.cta.trial" = "免費試用 %d 天";
 "paywall.apple_footer" = "訂閱會自動續訂。您隨時可以從 Apple ID 設定中取消。確認購買後，款項將從您的 Apple ID 扣款。";
 "paywall.link.restore" = "還原";
 "paywall.link.terms" = "服務條款";
@@ -461,9 +462,9 @@
 /* Paywall — 贊助說明：Talky 背後是誰，Pro 實際支付了什麼 */
 "paywall.support.eyebrow" = "開發者的話";
 "paywall.support.title" = "Talky 由我一個人開發";
-"paywall.support.body" = "我是獨立開發者，Talky 的程式碼公開在 GitHub 上。Pro 並不是把 app 圍起來的高牆，而是一份贊助：用來支付 Apple 開發者帳號、伺服器，以及新增電台和功能所花的時間。如果現在時機不對，也可以繼續免費使用 Talky——它一直都會是免費的。";
+"paywall.support.body" = "我是獨立開發者，Talky 的程式碼公開在 GitHub 上。Pro 並不是把 app 圍起來的高牆，而是一份贊助：用來支付 Apple 開發者帳號、伺服器，以及新增電台和功能所花的時間。如果現在時機不對，也可以繼續免費使用 Talky，它一直都會是免費的。";
 "paywall.support.github" = "在 GitHub 上查看程式碼";
-"paywall.support.compact" = "由一位獨立開發者製作——Talky 的程式碼公開在 GitHub 上。";
+"paywall.support.compact" = "由一位獨立開發者製作，Talky 的程式碼公開在 GitHub 上。";
 
 /* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
 "paywall.lifetime.cta" = "一次買斷 ·";

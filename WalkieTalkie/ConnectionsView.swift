@@ -13,6 +13,10 @@ struct ConnectionsView: View {
     @State private var selectedPeer: MCPeerID?
     
     var body: some View {
+        // Su iPhone 8/SE la colonna e' piu' alta dello spazio sopra la tab bar:
+        // "Riavvia ricerca", il bottone da premere quando due telefoni non si
+        // trovano, finiva sotto la barra. Ora la colonna scorre.
+        FitOrScroll {
         VStack(spacing: 20) {
             // Header
             headerView
@@ -36,6 +40,7 @@ struct ConnectionsView: View {
             Spacer()
         }
         .padding()
+        }
         .alert("disconnect_device".localized, isPresented: $showingDisconnectAlert) {
             Button("disconnect".localized, role: .destructive) {
                 multipeerManager.disconnect()

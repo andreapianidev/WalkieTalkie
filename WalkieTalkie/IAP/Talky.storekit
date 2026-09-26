@@ -63,7 +63,7 @@
           "codeOffers": [],
           "displayPrice": "2.99",
           "familyShareable": false,
-          "groupNumber": 1,
+          "groupNumber": 2,
           "internalID": "S0001",
           "introductoryOffer": null,
           "localizations": [
@@ -88,10 +88,15 @@
           "adHocOffers": [],
           "codeOffers": [],
           "displayPrice": "19.99",
-          "familyShareable": false,
-          "groupNumber": 2,
+          "familyShareable": true,
+          "groupNumber": 1,
           "internalID": "S0002",
-          "introductoryOffer": null,
+          "introductoryOffer": {
+            "internalID": "S0002-INTRO",
+            "numberOfPeriods": 1,
+            "paymentMode": "free",
+            "subscriptionPeriod": "P1W"
+          },
           "localizations": [
             {
               "description": "Talky Pro annuale: temi, equalizer, sleep timer e niente pubblicità",

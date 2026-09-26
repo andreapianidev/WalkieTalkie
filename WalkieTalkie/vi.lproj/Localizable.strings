@@ -290,6 +290,7 @@
 "paywall.compare.weekly_vs_yearly" = "%1$@ mỗi năm. Trả theo tuần bạn sẽ tốn %2$@.";
 "paywall.trial.badge" = "Miễn phí %1$d ngày, sau đó %2$@ mỗi năm";
 "paywall.cta.start" = "Bắt đầu Talky Pro";
+"paywall.cta.trial" = "Dùng thử miễn phí %d ngày";
 "paywall.apple_footer" = "Gói đăng ký tự động gia hạn. Bạn có thể huỷ bất cứ lúc nào trong Cài đặt Apple ID. Khoản thanh toán sẽ được tính vào Apple ID khi bạn xác nhận mua.";
 "paywall.link.restore" = "Khôi phục";
 "paywall.link.terms" = "Điều khoản";
@@ -470,13 +471,13 @@
 /* Paywall — supporter note: who is behind Talky and what Pro really pays for */
 "paywall.support.eyebrow" = "ĐÔI LỜI TỪ NHÀ PHÁT TRIỂN";
 "paywall.support.title" = "Talky do một người làm ra";
-"paywall.support.body" = "Tôi là nhà phát triển độc lập và mã nguồn của Talky được công khai trên GitHub. Pro không phải bức tường vây quanh ứng dụng: đó là khoản đóng góp giúp trang trải tài khoản nhà phát triển Apple, chi phí máy chủ và thời gian bỏ ra để thêm đài và tính năng. Nếu bây giờ chưa phải lúc, cứ tiếp tục dùng Talky miễn phí — nó vẫn miễn phí.";
+"paywall.support.body" = "Tôi là nhà phát triển độc lập và mã nguồn của Talky được công khai trên GitHub. Pro không phải bức tường vây quanh ứng dụng: đó là khoản đóng góp giúp trang trải tài khoản nhà phát triển Apple, chi phí máy chủ và thời gian bỏ ra để thêm đài và tính năng. Nếu bây giờ chưa phải lúc, cứ tiếp tục dùng Talky miễn phí, nó vẫn miễn phí.";
 "paywall.support.github" = "Xem mã nguồn trên GitHub";
-"paywall.support.compact" = "Do một nhà phát triển độc lập làm ra — mã nguồn Talky công khai trên GitHub.";
+"paywall.support.compact" = "Do một nhà phát triển độc lập làm ra. Mã nguồn Talky công khai trên GitHub.";
 
 /* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
 "paywall.lifetime.cta" = "Trả một lần ·";
-"paywall.lifetime.subtitle" = "Một lần thanh toán. Trọn bộ Pro, mãi mãi — gồm cả giao diện. Không cần đăng ký.";
+"paywall.lifetime.subtitle" = "Một lần thanh toán. Trọn bộ Pro, mãi mãi, gồm cả giao diện. Không cần đăng ký.";
 "paywall.lifetime.owned" = "Thuộc về bạn mãi mãi. Cảm ơn bạn.";
 
 /* Pass stazione a 24 ore (rewarded) e chiarimento sullo streaming */

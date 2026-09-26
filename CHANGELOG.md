@@ -113,6 +113,17 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
+### [2.48] (98), unreleased
+
+- On iPhone 8, SE and other small screens, Explore and Connections now scroll:
+  the "+" buttons to invite a device and "Restart discovery" no longer end up
+  hidden under the bottom bar.
+- The main walkie screen is more compact on small screens, and scrolls instead
+  of pushing the header under the status bar when it still does not fit.
+- The Pro screen shows the free trial only when the Apple ID can actually get
+  it, only with the yearly plan selected, and the button says "Try free for N
+  days". The yearly trial is now 7 days (set on App Store Connect).
+
 ### [2.46] — 2026-09-20
 
 - The paywall trigger is consumed only once the paywall has actually appeared,

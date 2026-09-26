@@ -47,6 +47,11 @@ struct PaywallView: View {
     @State private var isPurchasing: Bool = false
     @State private var heroAppeared: Bool = false
     @State private var didLogRewardedImpression: Bool = false
+    /// Idoneita' alla prova gratuita dell'annuale, chiesta a StoreKit. Parte da
+    /// false: finche' la risposta non arriva non si promette niente. Chi ha gia'
+    /// usato la prova, o e' gia' stato abbonato nel gruppo, non la riceverebbe,
+    /// quindi a lui la paywall non la deve mostrare.
+    @State private var isEligibleForTrial: Bool = false
 
     // MARK: - Palette adattiva
 
@@ -156,9 +161,27 @@ struct PaywallView: View {
     /// Letta da StoreKit e non scritta nel codice: se un giorno l'offerta viene
     /// tolta o cambiata, il badge segue senza bisogno di una nuova build.
     private var yearlyIntroOffer: Product.SubscriptionOffer? {
-        guard let offer = yearlyProduct?.subscription?.introductoryOffer,
+        guard isEligibleForTrial,
+              let offer = yearlyProduct?.subscription?.introductoryOffer,
               offer.paymentMode == .freeTrial else { return nil }
         return offer
+    }
+
+    /// La prova vale solo per l'annuale: con il settimanale selezionato il badge
+    /// e il bottone "prova gratis" farebbero credere a una prova che non c'e'.
+    private var isYearlySelected: Bool {
+        selectedProductID == ProductID.yearly.rawValue
+    }
+
+    /// Chiede a StoreKit se questo Apple ID puo' ancora avere l'offerta
+    /// introduttiva del gruppo. Rifatto quando cambia il prodotto annuale
+    /// (primo caricamento, catalogo ricaricato).
+    private func refreshTrialEligibility() async {
+        guard let subscription = yearlyProduct?.subscription else {
+            isEligibleForTrial = false
+            return
+        }
+        isEligibleForTrial = await subscription.isEligibleForIntroOffer
     }
 
     // MARK: - Body
@@ -223,6 +246,9 @@ struct PaywallView: View {
                 PaywallTriggerManager.shared.recordDismissedWithoutPurchase(
                     trigger: trigger, selectedProductID: selectedProductID)
             }
+        }
+        .task(id: yearlyProduct?.id) {
+            await refreshTrialEligibility()
         }
         .alert("paywall.error_title".localized, isPresented: $showErrorAlert) {
             Button("OK", role: .cancel) {}
@@ -487,7 +513,8 @@ struct PaywallView: View {
     /// cambiare senza passare da qui.
     @ViewBuilder
     private var freeTrialBadge: some View {
-        if let offer = yearlyIntroOffer,
+        if isYearlySelected,
+           let offer = yearlyIntroOffer,
            let yearly = yearlyProduct?.displayPrice {
             let days = Self.days(in: offer.period)
             HStack(spacing: 5) {
@@ -622,9 +649,11 @@ struct PaywallView: View {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: .black))
                 } else {
-                    Text("paywall.cta.start".localized)
+                    Text(ctaTitle)
                         .font(.system(size: 17, weight: .bold, design: .rounded))
                         .foregroundColor(.black)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                 }
             }
             .frame(maxWidth: .infinity)
@@ -643,7 +672,17 @@ struct PaywallView: View {
         }
         .disabled(isPurchasing || selectedProduct == nil)
         .padding(.top, 12)
-        .accessibilityLabel("paywall.cta.start".localized)
+        .accessibilityLabel(ctaTitle)
+    }
+
+    /// "Prova gratis per 7 giorni" quando l'annuale e' selezionato e l'utente e'
+    /// idoneo, altrimenti "Inizia Talky Pro". I giorni vengono dall'offerta
+    /// StoreKit, come nel badge.
+    private var ctaTitle: String {
+        if isYearlySelected, let offer = yearlyIntroOffer {
+            return String(format: "paywall.cta.trial".localized, Self.days(in: offer.period))
+        }
+        return "paywall.cta.start".localized
     }
 
     // MARK: - Acquisto a vita

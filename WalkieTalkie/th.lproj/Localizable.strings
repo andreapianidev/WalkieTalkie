@@ -290,6 +290,7 @@
 "paywall.compare.weekly_vs_yearly" = "%1$@ ต่อปี ถ้าจ่ายรายสัปดาห์คุณจะเสีย %2$@";
 "paywall.trial.badge" = "ฟรี %1$d วัน จากนั้น %2$@ ต่อปี";
 "paywall.cta.start" = "เริ่มใช้ Talky Pro";
+"paywall.cta.trial" = "ทดลองใช้ฟรี %d วัน";
 "paywall.apple_footer" = "การสมัครสมาชิกจะต่ออายุอัตโนมัติ คุณยกเลิกได้ทุกเมื่อจากการตั้งค่า Apple ID ระบบจะเรียกเก็บเงินผ่าน Apple ID เมื่อยืนยันการซื้อ";
 "paywall.link.restore" = "กู้คืน";
 "paywall.link.terms" = "ข้อกำหนด";
@@ -471,9 +472,9 @@
 /* Paywall — supporter note: who is behind Talky and what Pro really pays for */
 "paywall.support.eyebrow" = "ข้อความจากผู้พัฒนา";
 "paywall.support.title" = "Talky สร้างโดยคนคนเดียว";
-"paywall.support.body" = "ผมเป็นนักพัฒนาอิสระ และโค้ดของ Talky เปิดเป็นสาธารณะบน GitHub Pro ไม่ใช่กำแพงล้อมแอป แต่เป็นการสนับสนุนที่ช่วยจ่ายค่าบัญชีนักพัฒนา Apple ค่าเซิร์ฟเวอร์ และเวลาที่ใช้เพิ่มสถานีและฟีเจอร์ ถ้าตอนนี้ยังไม่สะดวก ใช้ Talky ฟรีต่อไปได้เลย — มันยังฟรีเหมือนเดิม";
+"paywall.support.body" = "ผมเป็นนักพัฒนาอิสระ และโค้ดของ Talky เปิดเป็นสาธารณะบน GitHub Pro ไม่ใช่กำแพงล้อมแอป แต่เป็นการสนับสนุนที่ช่วยจ่ายค่าบัญชีนักพัฒนา Apple ค่าเซิร์ฟเวอร์ และเวลาที่ใช้เพิ่มสถานีและฟีเจอร์ ถ้าตอนนี้ยังไม่สะดวก ใช้ Talky ฟรีต่อไปได้เลย มันยังฟรีเหมือนเดิม";
 "paywall.support.github" = "ดูโค้ดบน GitHub";
-"paywall.support.compact" = "สร้างโดยนักพัฒนาอิสระคนเดียว — โค้ดของ Talky เปิดเป็นสาธารณะบน GitHub";
+"paywall.support.compact" = "สร้างโดยนักพัฒนาอิสระคนเดียว โค้ดของ Talky เปิดเป็นสาธารณะบน GitHub";
 
 /* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
 "paywall.lifetime.cta" = "จ่ายครั้งเดียว ·";

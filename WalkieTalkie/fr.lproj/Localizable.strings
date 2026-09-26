@@ -290,6 +290,7 @@
 "paywall.compare.weekly_vs_yearly" = "%1$@ par an. En payant à la semaine, vous dépenseriez %2$@.";
 "paywall.trial.badge" = "%1$d jours offerts, puis %2$@ par an";
 "paywall.cta.start" = "Démarrer Talky Pro";
+"paywall.cta.trial" = "Essai gratuit de %d jours";
 "paywall.apple_footer" = "L'abonnement se renouvelle automatiquement. Vous pouvez l'annuler à tout moment dans les réglages de votre identifiant Apple. Le paiement sera débité de votre identifiant Apple à la confirmation de l'achat.";
 "paywall.link.restore" = "Restaurer";
 "paywall.link.terms" = "Conditions";
@@ -470,13 +471,13 @@
 /* Paywall — supporter note: who is behind Talky and what Pro really pays for */
 "paywall.support.eyebrow" = "UN MOT DU DÉVELOPPEUR";
 "paywall.support.title" = "Talky est fait par une seule personne";
-"paywall.support.body" = "Je suis développeur indépendant et le code de Talky est public sur GitHub. Pro n'est pas un mur autour de l'app : c'est une contribution qui couvre le compte développeur Apple, les serveurs et les heures passées à ajouter des stations et des fonctions. Si ce n'est pas le bon moment, continuez à utiliser Talky gratuitement — il reste gratuit.";
+"paywall.support.body" = "Je suis développeur indépendant et le code de Talky est public sur GitHub. Pro n'est pas un mur autour de l'app : c'est une contribution qui couvre le compte développeur Apple, les serveurs et les heures passées à ajouter des stations et des fonctions. Si ce n'est pas le bon moment, continuez à utiliser Talky gratuitement, il reste gratuit.";
 "paywall.support.github" = "Voir le code sur GitHub";
-"paywall.support.compact" = "Fait par un développeur indépendant — le code de Talky est public sur GitHub.";
+"paywall.support.compact" = "Fait par un développeur indépendant. Le code de Talky est public sur GitHub.";
 
 /* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
 "paywall.lifetime.cta" = "Payer une fois ·";
-"paywall.lifetime.subtitle" = "Un seul paiement. Tout Pro, pour toujours — thèmes inclus. Sans abonnement.";
+"paywall.lifetime.subtitle" = "Un seul paiement. Tout Pro, pour toujours, thèmes inclus. Sans abonnement.";
 "paywall.lifetime.owned" = "À vous pour toujours. Merci.";
 
 /* Pass stazione a 24 ore (rewarded) e chiarimento sullo streaming */

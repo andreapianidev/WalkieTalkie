@@ -290,6 +290,7 @@
 "paywall.compare.weekly_vs_yearly" = "%1$@ per year. Paying weekly you would spend %2$@.";
 "paywall.trial.badge" = "%1$d days free, then %2$@ per year";
 "paywall.cta.start" = "Start Talky Pro";
+"paywall.cta.trial" = "Try free for %d days";
 "paywall.apple_footer" = "Subscription auto-renews. You can cancel anytime from your Apple ID Settings. Payment will be charged to your Apple ID at confirmation of purchase.";
 "paywall.link.restore" = "Restore";
 "paywall.link.terms" = "Terms";
@@ -470,13 +471,13 @@
 /* Paywall — supporter note: who is behind Talky and what Pro really pays for */
 "paywall.support.eyebrow" = "A NOTE FROM THE DEV";
 "paywall.support.title" = "Talky is built by one person";
-"paywall.support.body" = "I'm an independent developer and Talky's code is public on GitHub. Pro isn't a wall around the app: it's a contribution that covers the Apple developer account, the servers and the hours spent adding stations and features. If now isn't the right time, keep using Talky for free — it stays free.";
+"paywall.support.body" = "I'm an independent developer and Talky's code is public on GitHub. Pro isn't a wall around the app: it's a contribution that covers the Apple developer account, the servers and the hours spent adding stations and features. If now isn't the right time, keep using Talky for free, it stays free.";
 "paywall.support.github" = "See the code on GitHub";
-"paywall.support.compact" = "Made by one independent developer — Talky's code is public on GitHub.";
+"paywall.support.compact" = "Made by one independent developer. Talky's code is public on GitHub.";
 
 /* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
 "paywall.lifetime.cta" = "Pay once ·";
-"paywall.lifetime.subtitle" = "One payment. Everything Pro, forever — themes included. No subscription.";
+"paywall.lifetime.subtitle" = "One payment. Everything Pro, forever, themes included. No subscription.";
 "paywall.lifetime.owned" = "Yours forever. Thank you.";
 
 /* Pass stazione a 24 ore (rewarded) e chiarimento sullo streaming */

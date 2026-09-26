@@ -290,6 +290,7 @@
 "paywall.compare.weekly_vs_yearly" = "%1$@ por ano. Pagando por semana você gastaria %2$@.";
 "paywall.trial.badge" = "%1$d dias grátis, depois %2$@ por ano";
 "paywall.cta.start" = "Começar o Talky Pro";
+"paywall.cta.trial" = "Experimente grátis por %d dias";
 "paywall.apple_footer" = "A assinatura se renova automaticamente. Você pode cancelar quando quiser nos Ajustes do seu ID Apple. A cobrança será feita no seu ID Apple ao confirmar a compra.";
 "paywall.link.restore" = "Restaurar";
 "paywall.link.terms" = "Termos";
@@ -470,13 +471,13 @@
 /* Paywall — supporter note: who is behind Talky and what Pro really pays for */
 "paywall.support.eyebrow" = "UM RECADO DO DESENVOLVEDOR";
 "paywall.support.title" = "O Talky é feito por uma pessoa só";
-"paywall.support.body" = "Sou desenvolvedor independente e o código do Talky é público no GitHub. O Pro não é um muro em volta do app: é uma contribuição que cobre a conta de desenvolvedor da Apple, os servidores e as horas gastas adicionando estações e recursos. Se agora não é a hora, siga usando o Talky de graça — ele continua gratuito.";
+"paywall.support.body" = "Sou desenvolvedor independente e o código do Talky é público no GitHub. O Pro não é um muro em volta do app: é uma contribuição que cobre a conta de desenvolvedor da Apple, os servidores e as horas gastas adicionando estações e recursos. Se agora não é a hora, siga usando o Talky de graça, ele continua gratuito.";
 "paywall.support.github" = "Ver o código no GitHub";
-"paywall.support.compact" = "Feito por um desenvolvedor independente — o código do Talky é público no GitHub.";
+"paywall.support.compact" = "Feito por um desenvolvedor independente. O código do Talky é público no GitHub.";
 
 /* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
 "paywall.lifetime.cta" = "Pague uma vez ·";
-"paywall.lifetime.subtitle" = "Um pagamento. Tudo do Pro, para sempre — temas inclusos. Sem assinatura.";
+"paywall.lifetime.subtitle" = "Um pagamento. Tudo do Pro, para sempre, temas inclusos. Sem assinatura.";
 "paywall.lifetime.owned" = "Seu para sempre. Obrigado.";
 
 /* Pass stazione a 24 ore (rewarded) e chiarimento sullo streaming */

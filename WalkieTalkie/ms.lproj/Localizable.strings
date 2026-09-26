@@ -270,6 +270,7 @@
 "paywall.compare.weekly_vs_yearly" = "%1$@ setahun. Bayar mingguan anda akan belanja %2$@.";
 "paywall.trial.badge" = "%1$d hari percuma, kemudian %2$@ setahun";
 "paywall.cta.start" = "Mula Talky Pro";
+"paywall.cta.trial" = "Cuba percuma %d hari";
 "paywall.apple_footer" = "Langganan diperbaharui secara automatik. Anda boleh batal pada bila-bila masa daripada Tetapan Apple ID anda. Bayaran akan dikenakan kepada Apple ID anda apabila pembelian disahkan.";
 "paywall.link.restore" = "Pulihkan";
 "paywall.link.terms" = "Terma";
@@ -461,9 +462,9 @@
 /* Paywall — nota sokongan: siapa di sebalik Talky dan apa yang sebenarnya dibiayai Pro */
 "paywall.support.eyebrow" = "SEPATAH KATA DARIPADA PEMBANGUN";
 "paywall.support.title" = "Talky dibina oleh satu orang sahaja";
-"paywall.support.body" = "Saya pembangun bebas dan kod Talky terbuka kepada umum di GitHub. Pro bukan tembok di sekeliling apl ini: ia sumbangan yang menampung akaun pembangun Apple, pelayan dan jam yang dihabiskan untuk menambah stesen serta ciri baharu. Kalau belum sesuai masanya, teruskan guna Talky secara percuma — ia kekal percuma.";
+"paywall.support.body" = "Saya pembangun bebas dan kod Talky terbuka kepada umum di GitHub. Pro bukan tembok di sekeliling apl ini: ia sumbangan yang menampung akaun pembangun Apple, pelayan dan jam yang dihabiskan untuk menambah stesen serta ciri baharu. Kalau belum sesuai masanya, teruskan guna Talky secara percuma, ia kekal percuma.";
 "paywall.support.github" = "Lihat kod di GitHub";
-"paywall.support.compact" = "Dibina oleh seorang pembangun bebas — kod Talky terbuka di GitHub.";
+"paywall.support.compact" = "Dibina oleh seorang pembangun bebas. Kod Talky terbuka di GitHub.";
 
 /* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
 "paywall.lifetime.cta" = "Bayar sekali ·";
