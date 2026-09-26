@@ -31,9 +31,12 @@ Tutto quello che la scheda promette e' stato letto nel codice, non supposto.
 - **Tolte le promesse che il codice non mantiene.** "Crittografata" (la sessione e'
   `encryptionPreference: .optional` e il canale TCP verso Mac non e' cifrato),
   "tempo reale" (il messaggio parte al rilascio), "migliaia di stazioni" (sono 343),
-  "stima della distanza" (sul radar la posizione dei dispositivi e' casuale),
-  "progetto open source" in ko/ja/tr (la licenza PolyForm Noncommercial non e' open
-  source), "localizzata in italiano, inglese e spagnolo" in ko/ja (sono 14 lingue).
+  "stima della distanza" (il radar con metri e posizioni casuali e' stato tolto
+  dall'app nella 2.48 build 99),
+  "progetto open source" in ko/ja/tr: il file `LICENSE` e' PolyForm Noncommercial
+  1.0.0, che non e' una licenza open source (vieta l'uso commerciale). In tutte le
+  lingue la scheda dice quindi "codice pubblico su GitHub", con il link al
+  repository, "localizzata in italiano, inglese e spagnolo" in ko/ja (sono 14 lingue).
 - **Detto chiaro che Talky non e' una ricetrasmittente**: non parla con walkie-talkie
   PMR o CB. E' la risposta diretta alle recensioni "radio finta".
 - **Nessun prezzo scritto a mano.** La prova gratuita e' citata senza durata, cosi'
@@ -46,9 +49,9 @@ Tutto quello che la scheda promette e' stato letto nel codice, non supposto.
 - **URL di marketing**: `https://www.andreapiani.com`, gia' impostato cosi' su tutte
   le lingue della 2.47. Da lasciare com'e'.
 - **Note di versione**: solo cose utili all'utente, nessuna frase sulla pubblicita'.
-  Descrivono le modifiche della build 2.48 (98): schermate che scorrono su iPhone 8
-  e SE, schermata principale piu' compatta, prova gratuita mostrata solo a chi puo'
-  averla. Se nella versione entra altro, vanno aggiornate.
+  Descrivono le modifiche delle build 2.48 (98 e 99): Esplora senza distanze
+  inventate, schermate che scorrono su iPhone 8 e SE, schermata principale piu'
+  compatta, prova gratuita mostrata solo a chi puo' averla. Se nella versione entra altro, vanno aggiornate.
 
 ## Testi per lingua
 
@@ -69,6 +72,7 @@ Talk to people nearby with no cell signal and no internet. iPhones connect direc
 **Novita' di questa versione**
 
 ```
+• Explore no longer shows made-up distances: the radar with meters and random positions is gone, replaced by a plain list of the devices found and their real status.
 • Explore and Connections now scroll on iPhone 8, SE and other small screens, so no button stays hidden under the bottom bar.
 • The main screen is more compact on small screens.
 • The Pro screen shows the free trial only if your Apple ID can actually get it, and the button says so.
@@ -93,7 +97,7 @@ More than 300 stations from over 80 countries, streamed over the internet (this 
 TALKY PRO
 Talky is free with ads. Talky Pro removes the ads and adds all stations, recordings of your transmissions, private channels with a password, themes, history, sleep timer and equalizer. The yearly plan includes a free trial if you have not used one before, and there is also a one-time purchase with no subscription.
 
-Talky's full Swift code is public on GitHub, source-available under the PolyForm Noncommercial 1.0.0 license.
+Talky's code is public on GitHub, under the PolyForm Noncommercial 1.0.0 license: https://github.com/andreapianidev/WalkieTalkie
 
 Terms of Use (EULA): https://walkie-talky.vercel.app/terms
 Privacy Policy: https://walkie-talky.vercel.app/privacy
@@ -119,6 +123,7 @@ Parla con chi ti è vicino senza rete cellulare e senza internet. Gli iPhone si 
 **Novita' di questa versione**
 
 ```
+• Esplora non mostra più distanze inventate: il radar con i metri e le posizioni casuali è sparito, al suo posto l'elenco dei dispositivi trovati con il loro stato reale.
 • Su iPhone 8, SE e altri schermi piccoli le schermate Esplora e Connessioni ora scorrono: nessun pulsante resta nascosto sotto la barra in basso.
 • La schermata principale è più compatta sugli schermi piccoli.
 • La schermata Pro mostra la prova gratuita solo se il tuo Apple ID può davvero averla, e il pulsante lo dice chiaramente.
@@ -143,7 +148,7 @@ Oltre 300 stazioni da più di 80 paesi, in streaming via internet (per questa pa
 TALKY PRO
 Talky è gratuita con pubblicità. Talky Pro toglie la pubblicità e aggiunge tutte le stazioni, la registrazione delle trasmissioni, canali privati con password, temi, cronologia, sleep timer ed equalizzatore. Il piano annuale include una prova gratuita per chi non l'ha già usata, e c'è anche un acquisto unico, senza abbonamento.
 
-Il codice Swift di Talky è pubblico su GitHub, con licenza PolyForm Noncommercial 1.0.0.
+Il codice di Talky è pubblico su GitHub, con licenza PolyForm Noncommercial 1.0.0: https://github.com/andreapianidev/WalkieTalkie
 
 Terms of Use (EULA): https://walkie-talky.vercel.app/terms
 Privacy Policy: https://walkie-talky.vercel.app/privacy
@@ -169,6 +174,7 @@ Sprich mit Menschen in der Nähe, ohne Mobilfunk und ohne Internet. iPhones verb
 **Novita' di questa versione**
 
 ```
+• Entdecken zeigt keine erfundenen Entfernungen mehr: Das Radar mit Metern und zufälligen Positionen ist weg, stattdessen gibt es eine Liste der gefundenen Geräte mit ihrem echten Status.
 • Entdecken und Verbindungen lassen sich auf iPhone 8, SE und anderen kleinen Bildschirmen jetzt scrollen: Keine Taste bleibt mehr unter der unteren Leiste verborgen.
 • Der Hauptbildschirm ist auf kleinen Bildschirmen kompakter.
 • Der Pro-Bildschirm zeigt die Gratis-Testphase nur, wenn deine Apple-ID sie wirklich bekommt, und die Taste sagt es klar.
@@ -193,7 +199,7 @@ Mehr als 300 Sender aus über 80 Ländern, gestreamt über das Internet (dafür 
 TALKY PRO
 Talky ist kostenlos mit Werbung. Talky Pro entfernt die Werbung und bietet alle Sender, Aufnahmen deiner Übertragungen, private Kanäle mit Passwort, Designs, Verlauf, Sleep-Timer und Equalizer. Das Jahresabo enthält eine kostenlose Testphase, falls du noch keine genutzt hast, und es gibt auch einen Einmalkauf ohne Abo.
 
-Der komplette Swift-Code von Talky ist öffentlich auf GitHub einsehbar, unter der Lizenz PolyForm Noncommercial 1.0.0.
+Der Code von Talky ist öffentlich auf GitHub, unter der Lizenz PolyForm Noncommercial 1.0.0: https://github.com/andreapianidev/WalkieTalkie
 
 Terms of Use (EULA): https://walkie-talky.vercel.app/terms
 Privacy Policy: https://walkie-talky.vercel.app/privacy
@@ -219,6 +225,7 @@ Habla con quien tienes cerca sin cobertura móvil y sin internet. Los iPhone se 
 **Novita' di questa versione**
 
 ```
+• Explorar ya no muestra distancias inventadas: el radar con metros y posiciones aleatorias desaparece y en su lugar está la lista de dispositivos encontrados con su estado real.
 • En iPhone 8, SE y otras pantallas pequeñas, Explorar y Conexiones ahora se desplazan: ningún botón queda oculto bajo la barra inferior.
 • La pantalla principal es más compacta en pantallas pequeñas.
 • La pantalla Pro muestra la prueba gratuita solo si tu Apple ID puede obtenerla de verdad, y el botón lo indica claramente.
@@ -243,7 +250,7 @@ Más de 300 emisoras de más de 80 países, en streaming por internet (para esta
 TALKY PRO
 Talky es gratis con anuncios. Talky Pro quita los anuncios y añade todas las emisoras, la grabación de tus transmisiones, canales privados con contraseña, temas, historial, temporizador de apagado y ecualizador. El plan anual incluye una prueba gratuita si aún no la has usado, y también hay una compra única, sin suscripción.
 
-Todo el código Swift de Talky es público en GitHub, con la licencia PolyForm Noncommercial 1.0.0.
+El código de Talky es público en GitHub, con la licencia PolyForm Noncommercial 1.0.0: https://github.com/andreapianidev/WalkieTalkie
 
 Terms of Use (EULA): https://walkie-talky.vercel.app/terms
 Privacy Policy: https://walkie-talky.vercel.app/privacy
@@ -269,6 +276,7 @@ Parlez aux personnes proches sans réseau mobile ni internet. Les iPhone se reli
 **Novita' di questa versione**
 
 ```
+• Explorer n'affiche plus de distances inventées : le radar avec des mètres et des positions aléatoires a disparu, remplacé par la liste des appareils trouvés avec leur état réel.
 • Sur iPhone 8, SE et les autres petits écrans, Explorer et Connexions défilent désormais : aucun bouton ne reste caché sous la barre du bas.
 • L'écran principal est plus compact sur les petits écrans.
 • L'écran Pro n'affiche l'essai gratuit que si votre identifiant Apple peut vraiment en profiter, et le bouton l'indique clairement.
@@ -293,7 +301,7 @@ Plus de 300 stations de plus de 80 pays, en streaming par internet (cette partie
 TALKY PRO
 Talky est gratuite avec publicité. Talky Pro retire la publicité et ajoute toutes les stations, l'enregistrement de vos transmissions, des canaux privés avec mot de passe, des thèmes, l'historique, une minuterie de veille et un égaliseur. L'offre annuelle inclut un essai gratuit si vous n'en avez pas déjà profité, et il existe aussi un achat unique, sans abonnement.
 
-Tout le code Swift de Talky est public sur GitHub, sous licence PolyForm Noncommercial 1.0.0.
+Le code de Talky est public sur GitHub, sous licence PolyForm Noncommercial 1.0.0 : https://github.com/andreapianidev/WalkieTalkie
 
 Terms of Use (EULA): https://walkie-talky.vercel.app/terms
 Privacy Policy: https://walkie-talky.vercel.app/privacy
@@ -319,6 +327,7 @@ Fale com quem está perto sem sinal de celular e sem internet. Os iPhones se con
 **Novita' di questa versione**
 
 ```
+• Explorar não mostra mais distâncias inventadas: o radar com metros e posições aleatórias saiu, e no lugar fica a lista dos aparelhos encontrados com o status real.
 • No iPhone 8, SE e outras telas pequenas, Explorar e Conexões agora rolam: nenhum botão fica escondido sob a barra inferior.
 • A tela principal ficou mais compacta em telas pequenas.
 • A tela Pro só mostra o teste grátis se o seu ID Apple pode mesmo recebê-lo, e o botão diz isso claramente.
@@ -343,7 +352,7 @@ Mais de 300 estações de mais de 80 países, via streaming pela internet (esta 
 TALKY PRO
 O Talky é grátis com anúncios. O Talky Pro remove os anúncios e acrescenta todas as estações, gravação das suas transmissões, canais privados com senha, temas, histórico, timer de desligamento e equalizador. O plano anual inclui um teste grátis para quem ainda não usou, e também há uma compra única, sem assinatura.
 
-Todo o código Swift do Talky é público no GitHub, sob a licença PolyForm Noncommercial 1.0.0.
+O código do Talky é público no GitHub, sob a licença PolyForm Noncommercial 1.0.0: https://github.com/andreapianidev/WalkieTalkie
 
 Terms of Use (EULA): https://walkie-talky.vercel.app/terms
 Privacy Policy: https://walkie-talky.vercel.app/privacy
@@ -369,6 +378,7 @@ A assinatura Talky Pro é renovada automaticamente ao final de cada período, a 
 **Novita' di questa versione**
 
 ```
+• 「探す」画面で作り物の距離を表示しなくなりました。メートル表示とランダムな位置のレーダーをやめ、見つかったデバイスと実際の状態を一覧で表示します。
 • iPhone 8やSEなど小さな画面で、「探す」と「接続」の画面がスクロールできるようになり、下のバーにボタンが隠れなくなりました。
 • 小さな画面でメイン画面をコンパクトにしました。
 • Pro画面では、お使いのApple IDが実際に受けられる場合だけ無料トライアルを表示し、ボタンにもはっきり表示します。
@@ -393,7 +403,7 @@ A assinatura Talky Pro é renovada automaticamente ao final de cada período, a 
 TALKY PRO
 Talkyは広告付きで無料です。Talky Proでは広告がなくなり、すべての局、送信内容の録音、パスワード付きプライベートチャンネル、テーマ、履歴、スリープタイマー、イコライザーが使えます。年額プランには、まだ使ったことのない方向けの無料トライアルがあり、サブスクリプションなしの買い切りも用意しています。
 
-TalkyのSwiftコードはすべてGitHubで公開されています（PolyForm Noncommercial 1.0.0ライセンス）。
+TalkyのコードはGitHubで公開されています（PolyForm Noncommercial 1.0.0ライセンス）: https://github.com/andreapianidev/WalkieTalkie
 
 Terms of Use (EULA): https://walkie-talky.vercel.app/terms
 Privacy Policy: https://walkie-talky.vercel.app/privacy
@@ -419,6 +429,7 @@ Talky Proのサブスクリプションは、期間終了の24時間前までに
 **Novita' di questa versione**
 
 ```
+• 탐색 화면에서 지어낸 거리를 더 이상 보여 주지 않습니다. 미터 표시와 무작위 위치의 레이더를 없애고, 찾은 기기와 실제 상태를 목록으로 보여 줍니다.
 • iPhone 8, SE 등 작은 화면에서 탐색과 연결 화면을 스크롤할 수 있어, 하단 바 아래에 버튼이 가려지지 않습니다.
 • 작은 화면에서 메인 화면을 더 간결하게 만들었습니다.
 • Pro 화면은 Apple ID로 실제 받을 수 있을 때만 무료 체험을 표시하고, 버튼에도 분명히 알려 줍니다.
@@ -443,7 +454,7 @@ Talky Proのサブスクリプションは、期間終了の24時間前までに
 TALKY PRO
 Talky는 광고와 함께 무료입니다. Talky Pro는 광고를 없애고 모든 방송국, 송신 녹음, 비밀번호가 있는 개인 채널, 테마, 기록, 슬립 타이머, 이퀄라이저를 제공합니다. 연간 플랜에는 아직 사용하지 않은 분을 위한 무료 체험이 포함되어 있으며, 구독 없는 1회 구매도 있습니다.
 
-Talky의 전체 Swift 코드는 PolyForm Noncommercial 1.0.0 라이선스로 GitHub에 공개되어 있습니다.
+Talky의 코드는 PolyForm Noncommercial 1.0.0 라이선스로 GitHub에 공개되어 있습니다: https://github.com/andreapianidev/WalkieTalkie
 
 Terms of Use (EULA): https://walkie-talky.vercel.app/terms
 Privacy Policy: https://walkie-talky.vercel.app/privacy
@@ -469,6 +480,7 @@ Talky Pro 구독은 현재 기간 종료 최소 24시간 전에 취소하지 않
 **Novita' di questa versione**
 
 ```
+• “探索”页面不再显示编造的距离：带米数和随机位置的雷达已移除，改为列出找到的设备及其真实状态。
 • 在 iPhone 8、SE 等小屏幕上，“探索”和“连接”页面现在可以滚动，按钮不会再被底部栏挡住。
 • 小屏幕上的主界面更紧凑。
 • Pro 页面只在你的 Apple 账户确实能获得免费试用时才显示，按钮上也会写清楚。
@@ -493,7 +505,7 @@ Talky Pro 구독은 현재 기간 종료 최소 24시간 전에 취소하지 않
 TALKY PRO
 Talky 免费使用，含广告。Talky Pro 去除广告，并提供全部电台、通话录音、带密码的私人频道、主题、历史记录、睡眠定时器和均衡器。年度方案为还没用过试用的用户提供免费试用，另有一次性购买，无需订阅。
 
-Talky 的全部 Swift 代码公开在 GitHub 上，采用 PolyForm Noncommercial 1.0.0 许可证。
+Talky 的代码公开在 GitHub 上，采用 PolyForm Noncommercial 1.0.0 许可证：https://github.com/andreapianidev/WalkieTalkie
 
 使用条款 (EULA)：https://walkie-talky.vercel.app/terms
 隐私政策：https://walkie-talky.vercel.app/privacy
@@ -519,6 +531,7 @@ Talky Pro 订阅会在每个周期结束时自动续订，除非在当期结束�
 **Novita' di questa versione**
 
 ```
+• 「探索」頁面不再顯示編造的距離：帶公尺數和隨機位置的雷達已移除，改為列出找到的裝置及其真實狀態。
 • 在 iPhone 8、SE 等小螢幕上，「探索」和「連線」頁面現在可以捲動，按鈕不會再被底部列擋住。
 • 小螢幕上的主畫面更精簡。
 • Pro 頁面只在你的 Apple 帳號確實能獲得免費試用時才顯示，按鈕上也會寫清楚。
@@ -543,7 +556,7 @@ Talky Pro 订阅会在每个周期结束时自动续订，除非在当期结束�
 TALKY PRO
 Talky 免費使用，含廣告。Talky Pro 移除廣告，並提供全部電台、通話錄音、有密碼的私人頻道、主題、歷史紀錄、睡眠定時器和等化器。年度方案為尚未使用過試用的使用者提供免費試用，另有一次性購買，無需訂閱。
 
-Talky 的全部 Swift 程式碼公開在 GitHub 上，採用 PolyForm Noncommercial 1.0.0 授權。
+Talky 的程式碼公開在 GitHub 上，採用 PolyForm Noncommercial 1.0.0 授權：https://github.com/andreapianidev/WalkieTalkie
 
 使用條款 (EULA)：https://walkie-talky.vercel.app/terms
 隱私政策：https://walkie-talky.vercel.app/privacy
@@ -569,6 +582,7 @@ Talky Pro 訂閱會於每個週期結束時自動續訂，除非在當期結束�
 **Novita' di questa versione**
 
 ```
+• หน้าสำรวจไม่แสดงระยะทางที่แต่งขึ้นอีกแล้ว เรดาร์ที่มีเมตรและตำแหน่งสุ่มถูกเอาออก แทนด้วยรายการอุปกรณ์ที่พบพร้อมสถานะจริง
 • บน iPhone 8, SE และหน้าจอขนาดเล็กอื่น ๆ หน้าสำรวจและการเชื่อมต่อเลื่อนได้แล้ว ปุ่มจะไม่ถูกซ่อนใต้แถบด้านล่างอีก
 • หน้าจอหลักกระชับขึ้นบนหน้าจอขนาดเล็ก
 • หน้าจอ Pro จะแสดงการทดลองใช้ฟรีเฉพาะเมื่อ Apple ID ของคุณได้รับจริง และปุ่มก็บอกไว้ชัดเจน
@@ -593,7 +607,7 @@ Talky Pro 訂閱會於每個週期結束時自動續訂，除非在當期結束�
 TALKY PRO
 Talky ใช้ได้ฟรีโดยมีโฆษณา Talky Pro จะเอาโฆษณาออกและเพิ่มทุกสถานี การบันทึกการส่งสัญญาณ ช่องส่วนตัวพร้อมรหัสผ่าน ธีม ประวัติ ตัวตั้งเวลาปิด และอีควอไลเซอร์ แผนรายปีมีช่วงทดลองใช้ฟรีสำหรับผู้ที่ยังไม่เคยใช้ และยังมีแบบซื้อครั้งเดียวโดยไม่ต้องสมัครสมาชิก
 
-โค้ด Swift ทั้งหมดของ Talky เปิดเป็นสาธารณะบน GitHub ภายใต้สัญญาอนุญาต PolyForm Noncommercial 1.0.0
+โค้ดของ Talky เปิดเป็นสาธารณะบน GitHub ภายใต้สัญญาอนุญาต PolyForm Noncommercial 1.0.0: https://github.com/andreapianidev/WalkieTalkie
 
 Terms of Use (EULA): https://walkie-talky.vercel.app/terms
 Privacy Policy: https://walkie-talky.vercel.app/privacy
@@ -619,6 +633,7 @@ Mobil şebeke ve internet olmadan yakınınızdakilerle konuşun. iPhone'lar Wi-
 **Novita' di questa versione**
 
 ```
+• Keşfet artık uydurma mesafeler göstermiyor: metreli ve rastgele konumlu radar kaldırıldı, yerine bulunan cihazların gerçek durumlarıyla bir liste geldi.
 • iPhone 8, SE ve diğer küçük ekranlarda Keşfet ve Bağlantılar artık kaydırılabiliyor: hiçbir düğme alttaki çubuğun altında gizli kalmıyor.
 • Ana ekran küçük ekranlarda daha derli toplu.
 • Pro ekranı ücretsiz denemeyi yalnızca Apple Kimliğiniz gerçekten alabiliyorsa gösteriyor ve düğme bunu açıkça belirtiyor.
@@ -643,7 +658,7 @@ NASIL ÇALIŞIR, SÜRPRIZSIZ
 TALKY PRO
 Talky reklamlı olarak ücretsizdir. Talky Pro reklamları kaldırır; tüm istasyonları, yayınlarınızın kaydını, şifreli özel kanalları, temaları, geçmişi, uyku zamanlayıcısını ve ekolayzırı ekler. Yıllık plan, daha önce kullanmadıysanız ücretsiz deneme içerir; ayrıca aboneliksiz tek seferlik satın alma da vardır.
 
-Talky'nin tüm Swift kodu, PolyForm Noncommercial 1.0.0 lisansıyla GitHub'da herkese açıktır.
+Talky'nin kodu, PolyForm Noncommercial 1.0.0 lisansıyla GitHub'da herkese açıktır: https://github.com/andreapianidev/WalkieTalkie
 
 Terms of Use (EULA): https://walkie-talky.vercel.app/terms
 Privacy Policy: https://walkie-talky.vercel.app/privacy
@@ -669,6 +684,7 @@ Nói chuyện với người ở gần mà không cần sóng di động hay Int
 **Novita' di questa versione**
 
 ```
+• Khám phá không còn hiển thị khoảng cách bịa ra: radar có mét và vị trí ngẫu nhiên đã được bỏ, thay bằng danh sách thiết bị tìm thấy cùng trạng thái thật.
 • Trên iPhone 8, SE và các màn hình nhỏ khác, màn hình Khám phá và Kết nối giờ đã cuộn được: không còn nút nào bị che dưới thanh phía dưới.
 • Màn hình chính gọn hơn trên màn hình nhỏ.
 • Màn hình Pro chỉ hiển thị dùng thử miễn phí khi Apple ID của bạn thực sự nhận được, và nút bấm ghi rõ điều đó.
@@ -693,7 +709,7 @@ Hơn 300 đài từ hơn 80 quốc gia, phát trực tuyến qua Internet (phầ
 TALKY PRO
 Talky miễn phí và có quảng cáo. Talky Pro bỏ quảng cáo và thêm tất cả các đài, ghi âm các lần truyền, kênh riêng có mật khẩu, giao diện, lịch sử, hẹn giờ tắt và bộ chỉnh âm. Gói năm có dùng thử miễn phí cho người chưa từng dùng, và còn có gói mua một lần, không cần đăng ký.
 
-Toàn bộ mã Swift của Talky được công khai trên GitHub, theo giấy phép PolyForm Noncommercial 1.0.0.
+Mã nguồn của Talky được công khai trên GitHub, theo giấy phép PolyForm Noncommercial 1.0.0: https://github.com/andreapianidev/WalkieTalkie
 
 Terms of Use (EULA): https://walkie-talky.vercel.app/terms
 Privacy Policy: https://walkie-talky.vercel.app/privacy

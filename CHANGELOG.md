@@ -113,7 +113,21 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [2.48] (98), unreleased
+### [2.48] (99), unreleased
+
+- Explore no longer invents distances. The radar with 25/50/75/100 m rings and
+  devices drawn at random positions is gone (MultipeerConnectivity gives no
+  distance and no signal strength), and so are the "~20m" and "Strong/Weak"
+  labels on each device. What is left is true: whether Talky is searching, and
+  the list of devices found with their real status (available, request sent,
+  connected). The empty-list hint now says what iPhone-to-iPhone really needs
+  (Talky open, Wi-Fi and Bluetooth on) and that only Mac and Android need the
+  same Wi-Fi network.
+- No more em or en dashes in visible text, iOS and Mac, in every language.
+- Mac: the copyright line in Settings and in the About box now carries the
+  correct NIE and town.
+
+#### Also in 2.48 (98)
 
 - On iPhone 8, SE and other small screens, Explore and Connections now scroll:
   the "+" buttons to invite a device and "Restart discovery" no longer end up

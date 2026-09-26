@@ -189,7 +189,7 @@ struct PaywallView: View {
                     .foregroundStyle(Talky.dim)
             }
 
-            Text("Talky is built by one independent developer, and its code is public on GitHub. Pro is a contribution that keeps it alive — Talky stays free for everyone else.")
+            Text("Talky is built by one independent developer, and its code is public on GitHub. Pro is a contribution that keeps it alive, and Talky stays free for everyone else.")
                 .font(.system(size: 11, design: .rounded))
                 .foregroundStyle(Talky.text.opacity(0.8))
                 .lineSpacing(2)

@@ -126,14 +126,13 @@
 "scan_nearby_devices" = "Imbas peranti berdekatan";
 "detected_devices" = "Peranti Dikesan";
 "no_devices_detected" = "Tiada peranti dikesan";
-"ensure_devices_open" = "Pastikan peranti lain membuka aplikasi dan berada pada rangkaian Wi-Fi yang sama";
+"ensure_devices_open" = "Pastikan peranti lain membuka Talky, dengan Wi-Fi dan Bluetooth dihidupkan. Mac atau telefon Android mesti berada pada rangkaian Wi-Fi yang sama.";
+"explore.searching" = "Mencari peranti berdekatan yang membuka Talky. Ia muncul di bawah sebaik sahaja berada dalam jangkauan.";
+"explore.search_stopped" = "Carian dihentikan. Ketik anak panah di atas untuk mencari semula.";
 "available" = "Tersedia";
 "tap_plus_to_invite" = "Ketik + untuk menghantar permintaan kepada iPhone atau iPad; peranti satu lagi mesti menerimanya. Mac dan Android bersambung secara automatik.";
 "send_connection_request" = "Hantar permintaan sambungan";
 "invitation_sent" = "Permintaan dihantar";
-"strong" = "Kuat";
-"medium" = "Sederhana";
-"weak" = "Lemah";
 
 // MARK: - Settings View
 "settings_title" = "Tetapan";
@@ -205,7 +204,7 @@
 "onboarding_p2_no_internet_title" = "Tanpa internet, tanpa SIM";
 "onboarding_p2_no_internet_body" = "Antara iPhone dan iPad, suara bergerak terus dari satu peranti ke peranti lain melalui Wi-Fi dan Bluetooth: tiada penghala, tiada pelayan, tiada akaun.";
 "onboarding_p2_range_caveat" = "Dinding, bukit dan kecerunan mengurangkan jangkauan.";
-"onboarding_p2_multi_platform" = "Talky juga berjalan pada iPad, Mac dan Android — aplikasi yang sama, semua peranti anda dalam perbualan yang sama.";
+"onboarding_p2_multi_platform" = "Talky juga berjalan pada iPad, Mac dan Android: aplikasi yang sama, semua peranti anda dalam perbualan yang sama.";
 "onboarding_p3_ptt_title" = "Tekan dan tahan untuk bercakap";
 "onboarding_p3_ptt_body" = "Seperti walkie-talkie sebenar: tekan dan tahan butang tengah untuk bercakap, lepaskan untuk mendengar.";
 "onboarding_p3_ptt_rule" = "Hanya satu suara pada satu masa di saluran yang sama.";
@@ -213,7 +212,7 @@
 "onboarding_p4_frequency_title" = "Satu saluran, semua dengar anda";
 "onboarding_p4_frequency_analogy" = "Tiada apa-apa yang perlu dipadankan: setiap Talky bermula pada saluran awam, jadi peranti berdekatan menemui satu sama lain sendiri.";
 "onboarding_p4_change_freq_hint" = "Butang ‹ dan › mengimbas frekuensi pada paparan. Anda menghantar dari frekuensi home: tekan butang hijau HOME untuk kembali.";
-"onboarding_p4_private_channels_teaser" = "Mahu saluran khas untuk kumpulan anda? Cipta Saluran Peribadi dengan kata laluan: hanya orang yang menaip kata laluan sama akan menemui anda — pada iPhone, Mac dan Android.";
+"onboarding_p4_private_channels_teaser" = "Mahu saluran khas untuk kumpulan anda? Cipta Saluran Peribadi dengan kata laluan: hanya orang yang menaip kata laluan sama akan menemui anda, pada iPhone, Mac dan Android.";
 "onboarding_p5_steps_title" = "Sedia? Cuma 3 langkah";
 "onboarding_p5_step1" = "Buka Talky pada peranti kedua berdekatan: iPhone, iPad, Mac atau Android";
 "onboarding_p5_step2" = "Pada iPhone dan iPad buka Teroka dan ketik + di sebelah peranti, kemudian terima pada peranti satu lagi. Mac dan Android bersambung sendiri, pada Wi-Fi yang sama";

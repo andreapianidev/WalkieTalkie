@@ -106,7 +106,7 @@
 "no_recommendations" = "Şu an bir öneri yok. Performans en iyi durumda!";
 "full_report" = "Tam rapor";
 "close" = "Kapat";
-"too_many_connections_warning" = "Çok fazla bağlantı var (%d) — en iyi performans için 6-8 ile sınırlamak daha iyi";
+"too_many_connections_warning" = "Çok fazla bağlantı var (%d). En iyi performans için 6-8 ile sınırlamak daha iyi";
 
 // MARK: - Radio
 "station" = "İstasyon";
@@ -141,14 +141,13 @@
 "scan_nearby_devices" = "Yakındaki cihazları ara";
 "detected_devices" = "Bulunan cihazlar";
 "no_devices_detected" = "Cihaz bulunamadı";
-"ensure_devices_open" = "Diğer cihazlarda uygulamanın açık olduğundan ve aynı Wi-Fi ağında bulunduğundan emin ol";
+"ensure_devices_open" = "Diğer cihazlarda Talky'nin açık, Wi-Fi ve Bluetooth'un açık olduğundan emin ol. Mac veya Android telefon aynı Wi-Fi ağında olmalı.";
+"explore.searching" = "Talky'si açık olan yakındaki cihazlar aranıyor. Menzile girdikleri anda aşağıda görünürler.";
+"explore.search_stopped" = "Arama durdu. Yeniden aramak için üstteki oka dokun.";
 "available" = "Uygun";
 "tap_plus_to_invite" = "Bir iPhone veya iPad'e istek göndermek için + simgesine dokun; karşı cihazın kabul etmesi gerekir. Mac ve Android kendiliğinden bağlanır.";
 "send_connection_request" = "Bağlantı isteği gönder";
 "invitation_sent" = "İstek gönderildi";
-"strong" = "Güçlü";
-"medium" = "Orta";
-"weak" = "Zayıf";
 
 // MARK: - Settings View
 "settings_title" = "Ayarlar";
@@ -223,7 +222,7 @@
 "onboarding_p2_no_internet_body" = "iPhone ile iPad arasında ses, Wi-Fi ve Bluetooth üzerinden doğrudan cihazdan cihaza gider: yönlendirici yok, sunucu yok, hesap yok.";
 "onboarding_p2_range_caveat" = "Duvarlar, tepeler ve yükseklik farkı menzili kısaltır.";
 "onboarding_p2_same_wifi" = "Bir Mac'e ya da Android telefona ulaşmak için tüm cihazları aynı Wi-Fi ağına bağla: bu bağlantı yerel ağ üzerinden gider.";
-"onboarding_p2_multi_platform" = "Talky iPad, Mac ve Android'de de çalışır — aynı uygulama, tüm cihazların aynı sohbette.";
+"onboarding_p2_multi_platform" = "Talky iPad, Mac ve Android'de de çalışır: aynı uygulama, tüm cihazların aynı sohbette.";
 
 "onboarding_p3_ptt_title" = "Konuşmak için basılı tut";
 "onboarding_p3_ptt_body" = "Tıpkı gerçek bir telsiz gibi: konuşmak için ortadaki düğmeyi basılı tut, dinlemek için bırak.";
@@ -231,8 +230,8 @@
 
 "onboarding_p4_frequency_title" = "Tek kanal, herkes seni duyuyor";
 "onboarding_p4_frequency_analogy" = "Eşleştirilecek bir şey yok: her Talky ortak kanaldan başlar, bu yüzden yakındaki cihazlar birbirini kendiliğinden bulur.";
-"onboarding_p4_change_freq_hint" = "‹ ve › düğmeleri ekrandaki frekanslar arasında gezinir. Yayın home frekansından yapılır — geri dönmek için yeşil HOME düğmesine bas.";
-"onboarding_p4_private_channels_teaser" = "Yalnızca kendi grubuna özel bir kanal mı istiyorsun? Parolalı bir Özel Kanal oluştur: seni yalnızca aynı parolayı yazanlar bulur — iPhone'da, Mac'te ve Android'de aynı şekilde.";
+"onboarding_p4_change_freq_hint" = "‹ ve › düğmeleri ekrandaki frekanslar arasında gezinir. Yayın home frekansından yapılır. Geri dönmek için yeşil HOME düğmesine bas.";
+"onboarding_p4_private_channels_teaser" = "Yalnızca kendi grubuna özel bir kanal mı istiyorsun? Parolalı bir Özel Kanal oluştur: seni yalnızca aynı parolayı yazanlar bulur, iPhone'da, Mac'te ve Android'de aynı şekilde.";
 
 "onboarding_p5_steps_title" = "Hazır mısın? Yalnızca 3 adım";
 "onboarding_p5_step1" = "Yakındaki ikinci bir cihazda Talky'yi aç: iPhone, iPad, Mac ya da Android";

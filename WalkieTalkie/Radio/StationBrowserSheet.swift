@@ -268,7 +268,7 @@ struct StationBrowserSheet: View {
                         stationRow(station)
                     }
                 } label: {
-                    sectionHeader("📍 \("nearby".localized) — \(radioManager.deviceCountry) (\(radioManager.localStations.count))")
+                    sectionHeader("📍 \("nearby".localized): \(radioManager.deviceCountry) (\(radioManager.localStations.count))")
                 }
             }
 

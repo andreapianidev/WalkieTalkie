@@ -141,14 +141,13 @@
 "scan_nearby_devices" = "近くのデバイスを検索";
 "detected_devices" = "検出したデバイス";
 "no_devices_detected" = "デバイスが見つかりません";
-"ensure_devices_open" = "他のデバイスでアプリが開いていて、同じWi-Fiネットワークにあることを確認してください";
+"ensure_devices_open" = "ほかのデバイスでTalkyを開き、Wi-FiとBluetoothをオンにしてください。MacやAndroidスマートフォンは同じWi-Fiネットワークにつなぐ必要があります。";
+"explore.searching" = "Talkyを開いている近くのデバイスを探しています。通信範囲に入ると下に表示されます。";
+"explore.search_stopped" = "検索を停止しました。上の矢印をタップすると再検索します。";
 "available" = "利用可能";
 "tap_plus_to_invite" = "+をタップしてiPhoneまたはiPadにリクエストを送ります。相手側で承認が必要です。MacとAndroidは自動で接続されます。";
 "send_connection_request" = "接続リクエストを送信";
 "invitation_sent" = "リクエスト送信済み";
-"strong" = "強い";
-"medium" = "普通";
-"weak" = "弱い";
 
 // MARK: - Settings View
 "settings_title" = "設定";

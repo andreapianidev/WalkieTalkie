@@ -159,7 +159,7 @@ struct RadioView: View {
 
     private var emptyMessage: String {
         switch filter {
-        case .favorites: return "No favorites yet — click the star on any station."
+        case .favorites: return "No favorites yet. Click the star on any station."
         case .recents: return "Stations you play will appear here."
         default: return "No station matches your search."
         }
@@ -181,7 +181,7 @@ struct RadioView: View {
                         .font(.system(size: 13, weight: isCurrent ? .bold : .medium, design: .rounded))
                         .foregroundStyle(isCurrent ? Talky.amber : Talky.text)
                         .lineLimit(1)
-                    Text("\(station.displayLabel) · \(station.quality.rawValue)")
+                    Text(station.quality == .unknown ? station.displayLabel : "\(station.displayLabel) · \(station.quality.rawValue)")
                         .font(.vfd(9))
                         .kerning(0.8)
                         .foregroundStyle(Talky.dim)
@@ -238,7 +238,7 @@ struct RadioView: View {
                             .kerning(1.4)
                             .foregroundStyle(Talky.dim)
                     } else {
-                        Text("— STANDBY —")
+                        Text("STANDBY")
                             .font(.vfd(15, weight: .bold))
                             .foregroundStyle(Talky.dim)
                         Text(radio.lastError ?? "SELECT A STATION")

@@ -126,14 +126,13 @@
 "scan_nearby_devices" = "掃描附近裝置";
 "detected_devices" = "偵測到的裝置";
 "no_devices_detected" = "未偵測到裝置";
-"ensure_devices_open" = "請確認其他裝置已開啟 App，並連到同一個 Wi-Fi 網路";
+"ensure_devices_open" = "請確認其他裝置已開啟 Talky，並打開 Wi-Fi 和藍牙。Mac 或 Android 手機需要連上同一個 Wi-Fi 網路。";
+"explore.searching" = "正在尋找附近開啟了 Talky 的裝置。進入範圍後會顯示在下方。";
+"explore.search_stopped" = "已停止搜尋。點一下上方的箭頭即可重新搜尋。";
 "available" = "可用";
 "tap_plus_to_invite" = "點 + 向 iPhone 或 iPad 送出請求，對方必須接受。Mac 和 Android 會自動連線。";
 "send_connection_request" = "送出連接請求";
 "invitation_sent" = "請求已送出";
-"strong" = "強";
-"medium" = "中等";
-"weak" = "弱";
 
 // MARK: - Settings View
 "settings_title" = "設定";
@@ -205,7 +204,7 @@
 "onboarding_p2_no_internet_title" = "無需網路，無需 SIM 卡";
 "onboarding_p2_no_internet_body" = "在 iPhone 與 iPad 之間，聲音透過 Wi-Fi 和藍牙直接在裝置間傳遞：不需路由器、不需伺服器、不需帳號。";
 "onboarding_p2_range_caveat" = "牆壁、山丘與高低差會降低傳輸距離。";
-"onboarding_p2_multi_platform" = "Talky 也能在 iPad、Mac 和 Android 上執行——同一個 App，你所有的裝置都在同一場對話裡。";
+"onboarding_p2_multi_platform" = "Talky 也能在 iPad、Mac 和 Android 上執行，同一個 App，你所有的裝置都在同一場對話裡。";
 "onboarding_p3_ptt_title" = "按住即可說話";
 "onboarding_p3_ptt_body" = "就像真正的對講機：按住中央按鈕說話，放開後聆聽。";
 "onboarding_p3_ptt_rule" = "同一頻道上同一時間只能有一個人說話。";
@@ -213,7 +212,7 @@
 "onboarding_p4_frequency_title" = "同一個頻道，大家都聽得到";
 "onboarding_p4_frequency_analogy" = "沒有什麼需要對齊：每台 Talky 都從公開頻道開始，附近的裝置會自己找到彼此。";
 "onboarding_p4_change_freq_hint" = "‹ 和 › 按鍵用來瀏覽顯示器上的頻率。發話一律從 home 頻率送出：按綠色 HOME 鍵即可回到該頻率。";
-"onboarding_p4_private_channels_teaser" = "想要只屬於你們這群人的頻道嗎？用密碼建立私人頻道：只有輸入相同密碼的人才找得到你——iPhone、Mac 和 Android 都一樣。";
+"onboarding_p4_private_channels_teaser" = "想要只屬於你們這群人的頻道嗎？用密碼建立私人頻道：只有輸入相同密碼的人才找得到你，iPhone、Mac 和 Android 都一樣。";
 "onboarding_p5_steps_title" = "準備好了嗎？只需 3 步";
 "onboarding_p5_step1" = "在附近的第二台裝置上開啟 Talky：iPhone、iPad、Mac 或 Android";
 "onboarding_p5_step2" = "在 iPhone 和 iPad 上開啟「探索」，點裝置旁的 +，再到另一台上接受。Mac 和 Android 會自己連上，只要在同一個 Wi-Fi";

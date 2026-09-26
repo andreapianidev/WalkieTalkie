@@ -6,18 +6,15 @@ import MultipeerConnectivity
 struct ExploreView: View {
     @ObservedObject var multipeerManager: MultipeerManager
     @ObservedObject private var crossPlatformManager = TalkyCrossPlatformManager.shared
-    @State private var radarRotation: Double = 0
-    @State private var pulseScale: CGFloat = 1.0
-    @State private var scanningOpacity: Double = 0.3
+    @State private var searchWave: Bool = false
     @State private var detectedDevices: [DetectedDevice] = []
     @State private var showPaywall: Bool = false
     @State private var pendingInvitePeerIDs: Set<String> = []
 
-    /// 120 pt di raggio fanno un radar alto 300 pt: su iPhone 8/SE (667 pt)
-    /// da solo si prendeva meta' dello spazio utile e spingeva la lista dei
-    /// dispositivi, con i "+" per invitare, sotto la tab bar.
-    private let radarRadius: CGFloat = UIScreen.main.bounds.height < 700 ? 90 : 120
-    private let maxRange: Double = 100 // metri
+    /// iPhone 8/SE (667 pt) e simili: pannello di ricerca piu' basso, cosi' la
+    /// lista dei dispositivi, con i "+" per invitare, resta sopra la tab bar.
+    private let isCompact: Bool = UIScreen.main.bounds.height < 700
+    private var waveSize: CGFloat { isCompact ? 96 : 130 }
 
     var body: some View {
         FitOrScroll {
@@ -26,7 +23,7 @@ struct ExploreView: View {
             headerView
 
             // Banner Pro discreto: cooldown 7gg gestito da ProUpsellBanner.
-            // Posizionato sotto l'header per essere visibile senza coprire il radar.
+            // Posizionato sotto l'header per essere visibile senza coprire il pannello di ricerca.
             ProUpsellBanner(placement: .explore) {
                 showPaywall = true
             }
@@ -46,8 +43,8 @@ struct ExploreView: View {
 
             Spacer()
 
-            // Radar Display
-            radarView
+            // Stato della ricerca (niente radar: Multipeer non da' distanze)
+            searchPanel
 
             Spacer()
 
@@ -62,7 +59,7 @@ struct ExploreView: View {
             PaywallView(trigger: "explore_banner")
         }
         .onAppear {
-            startRadarAnimation()
+            searchWave = true
             updateDetectedDevices()
         }
         .onReceive(multipeerManager.$connectedPeers) { _ in
@@ -117,18 +114,52 @@ struct ExploreView: View {
         .padding(.bottom, 15)
     }
     
-    private var radarView: some View {
-        GeometryReader { geometry in
-            let center = CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
-            
+    /// Pannello di ricerca. Prima qui c'era un radar con anelli a 25, 50, 75 e
+    /// 100 metri e i dispositivi disegnati in posizioni casuali: Multipeer non
+    /// da' ne' distanza ne' intensita' del segnale, quindi era tutto inventato.
+    /// Adesso dice solo quello che l'app sa davvero: se sta cercando e quanti
+    /// dispositivi ha trovato. L'animazione e' un'onda senza scala ne' posizioni.
+    private var searchPanel: some View {
+        VStack(spacing: isCompact ? 10 : 14) {
             ZStack {
-                radarBackground(center: center)
-                radarSweepEffects(center: center)
-                radarDevices(center: center)
-                radarLabels(center: center)
+                ForEach(0..<2) { i in
+                    Circle()
+                        .stroke(Color.green.opacity(multipeerManager.isBrowsing ? 0.5 : 0.0), lineWidth: 2)
+                        .frame(width: waveSize, height: waveSize)
+                        .scaleEffect(searchWave ? 1.0 : 0.35)
+                        .opacity(searchWave ? 0.0 : 1.0)
+                        .animation(
+                            multipeerManager.isBrowsing
+                                ? .easeOut(duration: 2.2).repeatForever(autoreverses: false).delay(Double(i) * 1.1)
+                                : .default,
+                            value: searchWave
+                        )
+                }
+
+                Circle()
+                    .fill(Color("SurfaceColor"))
+                    .frame(width: 56, height: 56)
+                    .overlay(Circle().stroke(Color.black.opacity(0.12), lineWidth: 1))
+
+                Image(systemName: multipeerManager.isBrowsing
+                      ? "antenna.radiowaves.left.and.right"
+                      : "antenna.radiowaves.left.and.right.slash")
+                    .font(.system(size: 22, weight: .semibold))
+                    .foregroundColor(Color("PrimaryTextColor"))
             }
+            .frame(height: waveSize)
+            .accessibilityHidden(true)
+
+            Text(multipeerManager.isBrowsing ? "explore.searching".localized : "explore.search_stopped".localized)
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .foregroundColor(Color("PrimaryTextColor"))
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 24)
         }
-        .frame(width: radarRadius * 2 + 60, height: radarRadius * 2 + 60)
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, isCompact ? 12 : 18)
         .background(
             RoundedRectangle(cornerRadius: 20)
                 .fill(Color.black.opacity(0.05))
@@ -137,168 +168,9 @@ struct ExploreView: View {
                         .stroke(Color.black.opacity(0.1), lineWidth: 1)
                 )
         )
+        .padding(.horizontal, 20)
     }
-    
-    private func radarBackground(center: CGPoint) -> some View {
-        ZStack {
-            // Background circles (range rings)
-            ForEach(1..<5) { ring in
-                Circle()
-                    .stroke(Color.black.opacity(0.2), lineWidth: 1)
-                    .frame(width: radarRadius * 2 * CGFloat(ring) / 4,
-                           height: radarRadius * 2 * CGFloat(ring) / 4)
-                    .position(center)
-            }
-            
-            // Main radar circle
-            Circle()
-                .stroke(Color.black, lineWidth: 2)
-                .frame(width: radarRadius * 2, height: radarRadius * 2)
-                .position(center)
-            
-            // Crosshairs
-            Path { path in
-                path.move(to: CGPoint(x: center.x - radarRadius, y: center.y))
-                path.addLine(to: CGPoint(x: center.x + radarRadius, y: center.y))
-                path.move(to: CGPoint(x: center.x, y: center.y - radarRadius))
-                path.addLine(to: CGPoint(x: center.x, y: center.y + radarRadius))
-            }
-            .stroke(Color.black.opacity(0.3), lineWidth: 1)
-        }
-    }
-    
-    private func radarSweepEffects(center: CGPoint) -> some View {
-        ZStack {
-            // Scanning pulse
-            Circle()
-                .stroke(Color.green.opacity(scanningOpacity), lineWidth: 3)
-                .frame(width: radarRadius * 2 * pulseScale,
-                       height: radarRadius * 2 * pulseScale)
-                .position(center)
-                .animation(.easeInOut(duration: 2).repeatForever(autoreverses: true), value: pulseScale)
-            
-            // Radar sweep line with gradient effect
-            Path { path in
-                path.move(to: center)
-                path.addLine(to: CGPoint(x: center.x, y: center.y - radarRadius))
-            }
-            .stroke(
-                LinearGradient(
-                    colors: [Color.green.opacity(0.8), Color.green.opacity(0.1)],
-                    startPoint: .center,
-                    endPoint: .top
-                ),
-                lineWidth: 3
-            )
-            .rotationEffect(.degrees(radarRotation), anchor: UnitPoint(x: 0.5, y: 0.5))
-            .animation(.linear(duration: 3).repeatForever(autoreverses: false), value: radarRotation)
-            
-            // Radar sweep shadow/trail
-            ForEach(0..<8) { i in
-                Path { path in
-                    path.move(to: center)
-                    path.addLine(to: CGPoint(x: center.x, y: center.y - radarRadius))
-                }
-                .stroke(
-                    Color.green.opacity(0.1 - Double(i) * 0.01),
-                    lineWidth: 2
-                )
-                .rotationEffect(.degrees(radarRotation - Double(i) * 5), anchor: UnitPoint(x: 0.5, y: 0.5))
-            }
-        }
-    }
-    
-    private func radarDevices(center: CGPoint) -> some View {
-        ZStack {
-            // Detected devices
-            ForEach(detectedDevices) { device in
-                deviceDot(for: device, center: center)
-            }
-            
-            // Center dot (your position)
-            Circle()
-                .fill(Color.red)
-                .frame(width: 10, height: 10)
-                .position(center)
-                .overlay(
-                    Circle()
-                        .stroke(Color.white, lineWidth: 2)
-                        .frame(width: 10, height: 10)
-                        .position(center)
-                )
-        }
-    }
-    
-    private func radarLabels(center: CGPoint) -> some View {
-        ZStack {
-            // Fixed range labels
-            ForEach(1..<5) { ring in
-                Text("\(Int(maxRange * Double(ring) / 4))m")
-                    .font(.caption2)
-                    .fontWeight(.medium)
-                    .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
-                    .background(
-                        RoundedRectangle(cornerRadius: 4)
-                            .fill(Color.white.opacity(0.8))
-                            .padding(.horizontal, -4)
-                            .padding(.vertical, -1)
-                    )
-                    .position(
-                        x: center.x + (radarRadius * CGFloat(ring) / 4) + 15,
-                        y: center.y - 8
-                    )
-            }
-        }
-    }
-    
-    private func deviceDot(for device: DetectedDevice, center: CGPoint) -> some View {
-        let devicePosition = CGPoint(
-            x: center.x + device.position.x,
-            y: center.y + device.position.y
-        )
-        
-        return ZStack {
-            // Device glow effect
-            Circle()
-                .fill(device.isConnected ? Color.green.opacity(0.3) : Color.orange.opacity(0.3))
-                .frame(width: 20, height: 20)
-                .position(devicePosition)
-                .scaleEffect(device.pulseScale * 1.5)
-                .animation(.easeInOut(duration: 2).repeatForever(autoreverses: true), value: device.pulseScale)
-            
-            // Main device dot
-            Circle()
-                .fill(device.isConnected ? Color.green : Color.orange)
-                .frame(width: 12, height: 12)
-                .position(devicePosition)
-                .overlay(
-                    Circle()
-                        .stroke(Color.white, lineWidth: 2)
-                        .frame(width: 12, height: 12)
-                        .position(devicePosition)
-                )
-                .scaleEffect(device.pulseScale)
-                .animation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: device.pulseScale)
-            
-            // Device name label
-            Text(device.name)
-                .font(.caption2)
-                .fontWeight(.medium)
-                .foregroundColor(Color("PrimaryTextColor"))
-                .background(
-                    RoundedRectangle(cornerRadius: 6)
-                        .fill(Color("SurfaceColor"))
-                        .shadow(color: .black.opacity(0.1), radius: 2, x: 0, y: 1)
-                        .padding(.horizontal, -6)
-                        .padding(.vertical, -2)
-                )
-                .position(
-                    x: devicePosition.x,
-                    y: devicePosition.y - 25
-                )
-        }
-    }
-    
+
     private var deviceListView: some View {
         VStack(alignment: .leading, spacing: 15) {
             HStack {
@@ -383,17 +255,6 @@ struct ExploreView: View {
             
             Spacer()
             
-            VStack(alignment: .trailing, spacing: 2) {
-                Text("~\(Int(device.estimatedDistance))m")
-                    .font(.caption)
-                    .fontWeight(.medium)
-                    .foregroundColor(.black)
-                
-                Text(device.signalStrength)
-                    .font(.caption2)
-                    .foregroundColor(Color("PrimaryTextColor").opacity(0.5))
-            }
-            
             if !device.isConnected, let peerID = device.applePeerID {
                 Button(action: {
                     pendingInvitePeerIDs.insert(device.id)
@@ -419,20 +280,6 @@ struct ExploreView: View {
         )
     }
     
-    private func startRadarAnimation() {
-        withAnimation(.linear(duration: 3).repeatForever(autoreverses: false)) {
-            radarRotation = 360
-        }
-        
-        withAnimation(.easeInOut(duration: 2).repeatForever(autoreverses: true)) {
-            pulseScale = 1.5
-        }
-        
-        withAnimation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true)) {
-            scanningOpacity = 0.8
-        }
-    }
-    
     private func updateDetectedDevices() {
         var devices: [DetectedDevice] = []
         
@@ -444,10 +291,6 @@ struct ExploreView: View {
                 name: peer.displayName,
                 transportLabel: "Apple",
                 isConnected: true,
-                estimatedDistance: Double.random(in: 5...30),
-                signalStrength: "Strong",
-                position: randomPosition(),
-                pulseScale: 1.2
             )
             devices.append(device)
         }
@@ -461,10 +304,6 @@ struct ExploreView: View {
                     name: peer.displayName,
                     transportLabel: "Apple",
                     isConnected: false,
-                    estimatedDistance: Double.random(in: 10...80),
-                    signalStrength: ["weak".localized, "medium".localized, "strong".localized].randomElement() ?? "medium".localized,
-                    position: randomPosition(),
-                    pulseScale: 1.0
                 )
                 devices.append(device)
             }
@@ -478,10 +317,6 @@ struct ExploreView: View {
                 name: peer.name,
                 transportLabel: "Android / Cross-platform",
                 isConnected: isConnected,
-                estimatedDistance: Double.random(in: 5...50),
-                signalStrength: "strong".localized,
-                position: randomPosition(),
-                pulseScale: 1.15
             )
             devices.append(device)
         }
@@ -503,16 +338,6 @@ struct ExploreView: View {
         if device.isConnected { return "connected".localized }
         return isInvitePending ? "invitation_sent".localized : "available".localized
     }
-    
-    private func randomPosition() -> CGPoint {
-        let angle = Double.random(in: 0...(2 * .pi))
-        let distance = Double.random(in: 20...Double(radarRadius - 20))
-        
-        let x = cos(angle) * distance
-        let y = sin(angle) * distance
-        
-        return CGPoint(x: x, y: y)
-    }
 }
 
 struct DetectedDevice: Identifiable {
@@ -521,10 +346,6 @@ struct DetectedDevice: Identifiable {
     let name: String
     let transportLabel: String
     let isConnected: Bool
-    let estimatedDistance: Double
-    let signalStrength: String
-    let position: CGPoint
-    let pulseScale: CGFloat
 }
 
 #Preview {

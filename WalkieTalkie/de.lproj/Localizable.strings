@@ -106,7 +106,7 @@
 "no_recommendations" = "Derzeit keine Empfehlungen. Die Leistung ist optimal!";
 "full_report" = "Vollständiger Bericht";
 "close" = "Schließen";
-"too_many_connections_warning" = "Zu viele Verbindungen (%d) – für optimale Leistung besser auf 6–8 begrenzen";
+"too_many_connections_warning" = "Zu viele Verbindungen (%d). Für optimale Leistung besser auf 6-8 begrenzen";
 
 // MARK: - Radio
 "station" = "Sender";
@@ -141,14 +141,13 @@
 "scan_nearby_devices" = "Geräte in der Nähe suchen";
 "detected_devices" = "Gefundene Geräte";
 "no_devices_detected" = "Keine Geräte gefunden";
-"ensure_devices_open" = "Achte darauf, dass die anderen Geräte die App offen haben und im selben WLAN sind";
+"ensure_devices_open" = "Achte darauf, dass Talky auf den anderen Geräten geöffnet ist und WLAN und Bluetooth eingeschaltet sind. Ein Mac oder ein Android-Telefon muss im selben WLAN sein.";
+"explore.searching" = "Suche nach Geräten in der Nähe, auf denen Talky geöffnet ist. Sie erscheinen unten, sobald sie in Reichweite sind.";
+"explore.search_stopped" = "Suche angehalten. Tippe oben auf den Pfeil, um erneut zu suchen.";
 "available" = "Verfügbar";
 "tap_plus_to_invite" = "Tippe auf +, um einem iPhone oder iPad eine Anfrage zu senden; das andere Gerät muss sie annehmen. Mac und Android verbinden sich automatisch.";
 "send_connection_request" = "Verbindungsanfrage senden";
 "invitation_sent" = "Anfrage gesendet";
-"strong" = "Stark";
-"medium" = "Mittel";
-"weak" = "Schwach";
 
 // MARK: - Settings View
 "settings_title" = "Einstellungen";
@@ -223,7 +222,7 @@
 "onboarding_p2_no_internet_body" = "Zwischen iPhone und iPad geht die Stimme direkt von Gerät zu Gerät über WLAN und Bluetooth: kein Router, kein Server, kein Konto.";
 "onboarding_p2_range_caveat" = "Wände, Hügel und Höhenunterschiede verringern die Reichweite.";
 "onboarding_p2_same_wifi" = "Um einen Mac oder ein Android-Handy zu erreichen, müssen alle Geräte im selben WLAN sein: Diese Verbindung läuft über das lokale Netzwerk.";
-"onboarding_p2_multi_platform" = "Talky läuft auch auf iPad, Mac und Android – dieselbe App, all deine Geräte im selben Gespräch.";
+"onboarding_p2_multi_platform" = "Talky läuft auch auf iPad, Mac und Android: dieselbe App, all deine Geräte im selben Gespräch.";
 
 "onboarding_p3_ptt_title" = "Zum Sprechen halten";
 "onboarding_p3_ptt_body" = "Wie bei einem echten Funkgerät: Halte die mittlere Taste zum Sprechen, lass los zum Zuhören.";
@@ -231,8 +230,8 @@
 
 "onboarding_p4_frequency_title" = "Ein Kanal, alle hören dich";
 "onboarding_p4_frequency_analogy" = "Es gibt nichts abzugleichen: Jedes Talky startet auf dem öffentlichen Kanal, Geräte in der Nähe finden sich also von selbst.";
-"onboarding_p4_change_freq_hint" = "Mit ‹ und › blätterst du durch die Frequenzen im Display. Gesendet wird auf der Home-Frequenz – mit der grünen HOME-Taste kommst du dorthin zurück.";
-"onboarding_p4_private_channels_teaser" = "Du willst einen Kanal nur für deine Gruppe? Erstelle einen privaten Kanal mit Passwort: Dich findet nur, wer dasselbe Passwort eingibt – auf iPhone, Mac und Android gleichermaßen.";
+"onboarding_p4_change_freq_hint" = "Mit ‹ und › blätterst du durch die Frequenzen im Display. Gesendet wird auf der Home-Frequenz. Mit der grünen HOME-Taste kommst du dorthin zurück.";
+"onboarding_p4_private_channels_teaser" = "Du willst einen Kanal nur für deine Gruppe? Erstelle einen privaten Kanal mit Passwort: Dich findet nur, wer dasselbe Passwort eingibt, auf iPhone, Mac und Android gleichermaßen.";
 
 "onboarding_p5_steps_title" = "Bereit? Nur 3 Schritte";
 "onboarding_p5_step1" = "Öffne Talky auf einem zweiten Gerät in der Nähe: iPhone, iPad, Mac oder Android";

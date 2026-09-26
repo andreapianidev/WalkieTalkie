@@ -345,7 +345,8 @@ struct ContentView: View {
                             .font(.caption2)
                             .foregroundColor(Color("PrimaryTextColor").opacity(0.6))
 
-                        if let station = radioManager.currentStation {
+                        // Qualita' sconosciuta: niente chip, invece di un trattino.
+                        if let station = radioManager.currentStation, station.quality != .unknown {
                             HStack(spacing: 2) {
                                 Image(systemName: "wave.3.right")
                                     .font(.caption2)

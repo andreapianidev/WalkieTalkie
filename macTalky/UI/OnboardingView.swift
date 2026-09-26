@@ -35,7 +35,7 @@ private enum OBString {
     private static let table: [String: [OBString: String]] = [
         "en": [
             .welcomeTitle: "Your Mac is now a walkie-talkie",
-            .welcomeBody: "Hold the big TALK key — or the Space bar — to speak. Release to listen. One voice at a time, like a real radio.",
+            .welcomeBody: "Hold the big TALK key (or the Space bar) to speak. Release to listen. One voice at a time, like a real radio.",
             .networkTitle: "No internet. No accounts.",
             .networkBody: "Talky finds Talky devices (iPhone, Android, Mac) on your Wi-Fi network automatically. Grant microphone access to transmit your voice.",
             .networkTip: "All devices must be on the same Wi-Fi network. There's nothing to pair: everyone starts on the public channel and finds each other on their own.",
@@ -47,7 +47,7 @@ private enum OBString {
         ],
         "it": [
             .welcomeTitle: "Il tuo Mac ora è un walkie-talkie",
-            .welcomeBody: "Tieni premuto il grande tasto TALK — o la barra spaziatrice — per parlare. Rilascia per ascoltare. Una voce alla volta, come una radio vera.",
+            .welcomeBody: "Tieni premuto il grande tasto TALK (o la barra spaziatrice) per parlare. Rilascia per ascoltare. Una voce alla volta, come una radio vera.",
             .networkTitle: "Niente internet. Niente account.",
             .networkBody: "Talky trova i dispositivi Talky (iPhone, Android, Mac) sulla tua rete Wi-Fi automaticamente. Concedi il microfono per trasmettere la voce.",
             .networkTip: "Tutti i dispositivi devono stare sulla stessa rete Wi-Fi. Non c'è niente da abbinare a mano: si parte tutti dal canale pubblico e ci si trova da soli.",
@@ -59,7 +59,7 @@ private enum OBString {
         ],
         "de": [
             .welcomeTitle: "Dein Mac ist jetzt ein Funkgerät",
-            .welcomeBody: "Halte die große TALK-Taste — oder die Leertaste — gedrückt, um zu sprechen. Loslassen zum Zuhören. Eine Stimme nach der anderen, wie bei einem echten Funkgerät.",
+            .welcomeBody: "Halte die große TALK-Taste (oder die Leertaste) gedrückt, um zu sprechen. Loslassen zum Zuhören. Eine Stimme nach der anderen, wie bei einem echten Funkgerät.",
             .networkTitle: "Kein Internet. Keine Konten.",
             .networkBody: "Talky findet Talky-Geräte (iPhone, Android, Mac) in deinem WLAN automatisch. Erlaube den Mikrofonzugriff, um deine Stimme zu übertragen.",
             .networkTip: "Alle Geräte müssen im selben WLAN sein. Es gibt nichts zu koppeln: Alle starten auf dem öffentlichen Kanal und finden sich von selbst.",
@@ -71,7 +71,7 @@ private enum OBString {
         ],
         "es": [
             .welcomeTitle: "Tu Mac ahora es un walkie-talkie",
-            .welcomeBody: "Mantén pulsada la gran tecla TALK — o la barra espaciadora — para hablar. Suelta para escuchar. Una voz a la vez, como una radio de verdad.",
+            .welcomeBody: "Mantén pulsada la gran tecla TALK (o la barra espaciadora) para hablar. Suelta para escuchar. Una voz a la vez, como una radio de verdad.",
             .networkTitle: "Sin internet. Sin cuentas.",
             .networkBody: "Talky encuentra automáticamente los dispositivos Talky (iPhone, Android, Mac) en tu red Wi-Fi. Concede acceso al micrófono para transmitir tu voz.",
             .networkTip: "Todos los dispositivos deben estar en la misma red Wi-Fi. No hay nada que emparejar: todos empiezan en el canal público y se encuentran solos.",
@@ -83,7 +83,7 @@ private enum OBString {
         ],
         "fr": [
             .welcomeTitle: "Votre Mac est maintenant un talkie-walkie",
-            .welcomeBody: "Maintenez la grande touche TALK — ou la barre d'espace — pour parler. Relâchez pour écouter. Une voix à la fois, comme une vraie radio.",
+            .welcomeBody: "Maintenez la grande touche TALK (ou la barre d'espace) pour parler. Relâchez pour écouter. Une voix à la fois, comme une vraie radio.",
             .networkTitle: "Pas d'internet. Pas de compte.",
             .networkBody: "Talky trouve automatiquement les appareils Talky (iPhone, Android, Mac) sur votre réseau Wi-Fi. Autorisez le micro pour transmettre votre voix.",
             .networkTip: "Tous les appareils doivent être sur le même réseau Wi-Fi. Rien à appairer : tout le monde démarre sur le canal public et se trouve tout seul.",
@@ -119,7 +119,7 @@ private enum OBString {
         ],
         "pt": [
             .welcomeTitle: "Seu Mac agora é um walkie-talkie",
-            .welcomeBody: "Segure a grande tecla TALK — ou a barra de espaço — para falar. Solte para ouvir. Uma voz por vez, como um rádio de verdade.",
+            .welcomeBody: "Segure a grande tecla TALK (ou a barra de espaço) para falar. Solte para ouvir. Uma voz por vez, como um rádio de verdade.",
             .networkTitle: "Sem internet. Sem contas.",
             .networkBody: "O Talky encontra automaticamente os dispositivos Talky (iPhone, Android, Mac) na sua rede Wi-Fi. Conceda o microfone para transmitir sua voz.",
             .networkTip: "Todos os aparelhos precisam estar na mesma rede Wi-Fi. Não há nada para parear: todo mundo começa no canal público e se encontra sozinho.",
@@ -131,7 +131,7 @@ private enum OBString {
         ],
         "th": [
             .welcomeTitle: "Mac ของคุณคือวิทยุสื่อสารแล้ว",
-            .welcomeBody: "กดปุ่ม TALK ขนาดใหญ่ — หรือแป้น Space — ค้างไว้เพื่อพูด ปล่อยเพื่อฟัง ทีละเสียงเหมือนวิทยุจริง",
+            .welcomeBody: "กดปุ่ม TALK ขนาดใหญ่ (หรือแป้น Space) ค้างไว้เพื่อพูด ปล่อยเพื่อฟัง ทีละเสียงเหมือนวิทยุจริง",
             .networkTitle: "ไม่ต้องใช้อินเทอร์เน็ต ไม่ต้องมีบัญชี",
             .networkBody: "Talky ค้นหาอุปกรณ์ Talky (iPhone, Android, Mac) บนเครือข่าย Wi-Fi โดยอัตโนมัติ อนุญาตไมโครโฟนเพื่อส่งเสียงของคุณ",
             .networkTip: "อุปกรณ์ทุกเครื่องต้องอยู่บนเครือข่าย Wi-Fi เดียวกัน ไม่มีอะไรต้องจับคู่ ทุกคนเริ่มที่ช่องสาธารณะและหากันเจอเอง",
@@ -143,7 +143,7 @@ private enum OBString {
         ],
         "tr": [
             .welcomeTitle: "Mac'iniz artık bir telsiz",
-            .welcomeBody: "Konuşmak için büyük TALK tuşunu — veya boşluk tuşunu — basılı tutun. Dinlemek için bırakın. Gerçek bir telsiz gibi, aynı anda tek ses.",
+            .welcomeBody: "Konuşmak için büyük TALK tuşunu (veya boşluk tuşunu) basılı tutun. Dinlemek için bırakın. Gerçek bir telsiz gibi, aynı anda tek ses.",
             .networkTitle: "İnternet yok. Hesap yok.",
             .networkBody: "Talky, Wi-Fi ağınızdaki Talky cihazlarını (iPhone, Android, Mac) otomatik bulur. Sesinizi iletmek için mikrofona izin verin.",
             .networkTip: "Tüm cihazlar aynı Wi-Fi ağında olmalı. Eşleştirilecek bir şey yok: herkes ortak kanaldan başlar ve birbirini kendiliğinden bulur.",
@@ -155,7 +155,7 @@ private enum OBString {
         ],
         "vi": [
             .welcomeTitle: "Mac của bạn giờ là bộ đàm",
-            .welcomeBody: "Giữ phím TALK lớn — hoặc phím Space — để nói. Thả ra để nghe. Mỗi lần một giọng nói, như bộ đàm thật.",
+            .welcomeBody: "Giữ phím TALK lớn (hoặc phím Space) để nói. Thả ra để nghe. Mỗi lần một giọng nói, như bộ đàm thật.",
             .networkTitle: "Không cần internet. Không cần tài khoản.",
             .networkBody: "Talky tự động tìm các thiết bị Talky (iPhone, Android, Mac) trên mạng Wi-Fi của bạn. Cho phép micrô để truyền giọng nói.",
             .networkTip: "Tất cả thiết bị phải ở cùng một mạng Wi-Fi. Không có gì phải ghép nối: mọi người đều bắt đầu ở kênh công khai và tự tìm thấy nhau.",
@@ -167,7 +167,7 @@ private enum OBString {
         ],
         "ms": [
             .welcomeTitle: "Mac anda kini walkie-talkie",
-            .welcomeBody: "Tahan kekunci TALK besar — atau bar Space — untuk bercakap. Lepaskan untuk mendengar. Satu suara pada satu masa, seperti radio sebenar.",
+            .welcomeBody: "Tahan kekunci TALK besar (atau bar Space) untuk bercakap. Lepaskan untuk mendengar. Satu suara pada satu masa, seperti radio sebenar.",
             .networkTitle: "Tiada internet. Tiada akaun.",
             .networkBody: "Talky mencari peranti Talky (iPhone, Android, Mac) pada rangkaian Wi-Fi anda secara automatik. Benarkan mikrofon untuk menghantar suara anda.",
             .networkTip: "Semua peranti mesti berada pada rangkaian Wi-Fi yang sama. Tiada apa-apa untuk digandingkan: semua bermula pada saluran awam dan menemui satu sama lain sendiri.",
@@ -179,7 +179,7 @@ private enum OBString {
         ],
         "zh-Hans": [
             .welcomeTitle: "你的 Mac 现在是一台对讲机",
-            .welcomeBody: "按住大大的 TALK 键——或空格键——即可说话。松开即收听。一次一个声音,就像真正的对讲机。",
+            .welcomeBody: "按住大大的 TALK 键（或空格键）即可说话。松开即收听。一次一个声音,就像真正的对讲机。",
             .networkTitle: "无需互联网。无需账号。",
             .networkBody: "Talky 会自动发现 Wi-Fi 网络中的 Talky 设备(iPhone、Android、Mac)。授权麦克风即可传输语音。",
             .networkTip: "所有设备必须连到同一个 Wi-Fi 网络。没有什么需要手动配对：大家都从公开频道开始，会自己找到彼此。",
@@ -191,7 +191,7 @@ private enum OBString {
         ],
         "zh-Hant": [
             .welcomeTitle: "你的 Mac 現在是一台對講機",
-            .welcomeBody: "按住大大的 TALK 鍵——或空白鍵——即可說話。放開即收聽。一次一個聲音,就像真正的對講機。",
+            .welcomeBody: "按住大大的 TALK 鍵（或空白鍵）即可說話。放開即收聽。一次一個聲音,就像真正的對講機。",
             .networkTitle: "無需網際網路。無需帳號。",
             .networkBody: "Talky 會自動發現 Wi-Fi 網路中的 Talky 裝置(iPhone、Android、Mac)。授權麥克風即可傳送語音。",
             .networkTip: "所有裝置必須連到同一個 Wi-Fi 網路。沒有什麼需要手動配對：大家都從公開頻道開始，會自己找到彼此。",

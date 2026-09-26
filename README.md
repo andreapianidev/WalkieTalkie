@@ -681,7 +681,7 @@ By opening a pull request you agree that **your contribution is licensed under t
 
 ## 📄 License
 
-**[PolyForm Noncommercial License 1.0.0](LICENSE)** — © 2025–2026 Andrea Piani · NIE 02915190306-Z · El Paso, Santa Cruz de Tenerife · Islas Canarias. All rights reserved.
+**[PolyForm Noncommercial License 1.0.0](LICENSE)**: © 2025-2026 Andrea Piani · NIE Z2331796-S · Tijarafe, Santa Cruz de Tenerife · Islas Canarias. All rights reserved.
 
 > 🚫 **This is NOT an MIT/Apache/BSD/GPL project.** It is **source-available**, not "open-source" in the OSI sense. Commercial use is **strictly prohibited** without a separate written license signed by the copyright holder.
 
@@ -723,7 +723,7 @@ The plain-language summary above is informational only and does not replace the 
 
 ## 🏔️ Credits & Links
 
-- **Developer**: Andrea Piani · NIE 02915190306-Z · El Paso, Santa Cruz de Tenerife · Islas Canarias
+- **Developer**: Andrea Piani · NIE Z2331796-S · Tijarafe, Santa Cruz de Tenerife · Islas Canarias
 - **Website**: <https://www.andreapiani.com>
 - **Privacy policy**: <https://privacypolicyhub.vercel.app>
 - **Support coffee** ☕: <https://buymeacoffee.com/andreapianidev>

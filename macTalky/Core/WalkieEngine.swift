@@ -249,7 +249,7 @@ final class WalkieEngine: NSObject, ObservableObject {
         // Half-duplex, come una radio vera: aprire il microfono mentre un peer
         // sta parlando farebbe rientrare dagli altoparlanti la voce ricevuta.
         guard !isReceiving else {
-            setStatus("Busy — a peer is talking")
+            setStatus("Busy: a peer is talking")
             return
         }
 

@@ -105,14 +105,13 @@
 "scan_nearby_devices" = "Escanear dispositivos cercanos";
 "detected_devices" = "Dispositivos Detectados";
 "no_devices_detected" = "Ningún dispositivo detectado";
-"ensure_devices_open" = "Asegúrate de que los otros dispositivos tengan la app abierta y estén en la misma red Wi-Fi";
+"ensure_devices_open" = "Asegúrate de que los otros dispositivos tengan Talky abierta, con Wi-Fi y Bluetooth activados. Un Mac o un teléfono Android deben estar en la misma red Wi-Fi.";
+"explore.searching" = "Buscando dispositivos cercanos con Talky abierta. Aparecen abajo en cuanto están a su alcance.";
+"explore.search_stopped" = "Búsqueda detenida. Toca la flecha de arriba para buscar de nuevo.";
 "available" = "Disponible";
 "tap_plus_to_invite" = "Toca + para enviar una solicitud a un iPhone o iPad; el otro dispositivo debe aceptarla. Mac y Android se conectan automáticamente.";
 "send_connection_request" = "Enviar solicitud de conexión";
 "invitation_sent" = "Solicitud enviada";
-"strong" = "Fuerte";
-"medium" = "Medio";
-"weak" = "Débil";
 
 // MARK: - Settings View
 "settings_title" = "Configuración";
@@ -184,7 +183,7 @@
 "onboarding_p2_no_internet_title" = "Sin internet, sin SIM";
 "onboarding_p2_no_internet_body" = "Entre iPhone y iPad la voz va directa de un dispositivo a otro por Wi-Fi y Bluetooth: sin router, sin servidor, sin cuenta.";
 "onboarding_p2_range_caveat" = "Muros, colinas y desniveles reducen el alcance.";
-"onboarding_p2_multi_platform" = "Talky también funciona en iPad, Mac y Android — la misma app, todos tus dispositivos en la misma conversación.";
+"onboarding_p2_multi_platform" = "Talky también funciona en iPad, Mac y Android: la misma app, todos tus dispositivos en la misma conversación.";
 "onboarding_p3_ptt_title" = "Mantén pulsado para hablar";
 "onboarding_p3_ptt_body" = "Como un walkie-talkie de verdad: mantén pulsado el botón central para hablar, suéltalo para escuchar.";
 "onboarding_p3_ptt_rule" = "Una sola voz a la vez en el mismo canal.";

@@ -535,7 +535,7 @@ struct PaywallView: View {
                            productID: String,
                            isYearly: Bool) -> some View {
         let isSelected = selectedProductID == productID
-        let priceText = product?.displayPrice ?? "—"
+        let priceText = product?.displayPrice ?? "…"
 
         return VStack(alignment: .leading, spacing: 8) {
             // Mini "PIÙ POPOLARE" tag flush-top per yearly

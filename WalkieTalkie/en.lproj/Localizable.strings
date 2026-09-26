@@ -141,14 +141,13 @@
 "scan_nearby_devices" = "Scan nearby devices";
 "detected_devices" = "Detected Devices";
 "no_devices_detected" = "No devices detected";
-"ensure_devices_open" = "Make sure other devices have the app open and are on the same Wi-Fi network";
+"ensure_devices_open" = "Make sure the other devices have Talky open, with Wi-Fi and Bluetooth on. A Mac or an Android phone must be on the same Wi-Fi network.";
+"explore.searching" = "Searching for nearby devices with Talky open. They appear below as soon as they are in range.";
+"explore.search_stopped" = "Search stopped. Tap the arrow at the top to search again.";
 "available" = "Available";
 "tap_plus_to_invite" = "Tap + to send a request to an iPhone or iPad; the other device has to accept it. Mac and Android connect automatically.";
 "send_connection_request" = "Send connection request";
 "invitation_sent" = "Request sent";
-"strong" = "Strong";
-"medium" = "Medium";
-"weak" = "Weak";
 
 // MARK: - Settings View
 "settings_title" = "Settings";
@@ -223,7 +222,7 @@
 "onboarding_p2_no_internet_body" = "Between iPhone and iPad the voice travels straight from device to device over Wi-Fi and Bluetooth: no router, no server, no account.";
 "onboarding_p2_range_caveat" = "Walls, hills and elevation reduce the range.";
 "onboarding_p2_same_wifi" = "To reach a Mac or an Android phone, put every device on the same Wi-Fi network: that link travels over the local network.";
-"onboarding_p2_multi_platform" = "Talky also runs on iPad, Mac and Android — same app, all your devices in the same conversation.";
+"onboarding_p2_multi_platform" = "Talky also runs on iPad, Mac and Android: same app, all your devices in the same conversation.";
 
 "onboarding_p3_ptt_title" = "Hold to talk";
 "onboarding_p3_ptt_body" = "Just like a real walkie-talkie: hold the center button to speak, release to listen.";
@@ -231,8 +230,8 @@
 
 "onboarding_p4_frequency_title" = "One channel, everyone hears you";
 "onboarding_p4_frequency_analogy" = "There's nothing to match: every Talky starts on the public channel, so nearby devices find each other on their own.";
-"onboarding_p4_change_freq_hint" = "The ‹ and › buttons scan the frequency display. You transmit from the home frequency — press the green HOME button to come back to it.";
-"onboarding_p4_private_channels_teaser" = "Want a channel just for your group? Create a Private Channel with a password: only those who type the same password will find you — on iPhone, Mac and Android alike.";
+"onboarding_p4_change_freq_hint" = "The ‹ and › buttons scan the frequency display. You transmit from the home frequency. Press the green HOME button to come back to it.";
+"onboarding_p4_private_channels_teaser" = "Want a channel just for your group? Create a Private Channel with a password: only those who type the same password will find you, on iPhone, Mac and Android alike.";
 
 "onboarding_p5_steps_title" = "Ready? Just 3 steps";
 "onboarding_p5_step1" = "Open Talky on a second device nearby: iPhone, iPad, Mac or Android";

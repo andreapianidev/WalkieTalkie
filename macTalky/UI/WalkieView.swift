@@ -176,7 +176,7 @@ struct WalkieView: View {
     private var pttHint: String {
         if !engine.hasMicPermission { return "CLICK TO GRANT MICROPHONE ACCESS" }
         if engine.connectedPeerCount == 0 { return "WAITING FOR PEERS ON THE LOCAL NETWORK" }
-        if engine.isReceiving { return "CHANNEL BUSY — WAIT FOR THE PEER TO FINISH" }
+        if engine.isReceiving { return "CHANNEL BUSY: WAIT FOR THE PEER TO FINISH" }
         return settings.spacebarPTT ? "HOLD THE BUTTON OR THE SPACE BAR TO TALK" : "HOLD THE BUTTON TO TALK"
     }
 
@@ -359,7 +359,7 @@ struct ChannelSheet: View {
                 if !iap.isProUser { ProBadge() }
             }
 
-            Text("Devices that share the same channel password can hear each other — everyone else stays on PUBLIC. Works across iPhone, Android and Mac.")
+            Text("Devices that share the same channel password can hear each other. Everyone else stays on PUBLIC. Works across iPhone, Android and Mac.")
                 .font(.system(size: 12))
                 .foregroundStyle(Talky.dim)
                 .fixedSize(horizontal: false, vertical: true)

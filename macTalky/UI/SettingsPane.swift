@@ -48,7 +48,7 @@ struct SettingsPane: View {
             }
             Section("Menu bar") {
                 Toggle("Show mini console in the menu bar", isOn: $settings.showMenuBarExtra)
-                Text("Push-to-talk, peers and radio controls always one click away — even with the main window closed.")
+                Text("Push-to-talk, peers and radio controls always one click away, even with the main window closed.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -68,7 +68,7 @@ struct SettingsPane: View {
             Section("Push-to-talk") {
                 Toggle("Hold Space bar to talk", isOn: $settings.spacebarPTT)
                 LabeledContent("Max transmission") { Text("10 seconds") }
-                Text("One transmission is sent as a single TALKY1 frame — the 10 s cap keeps it compatible with Talky iOS and Android receivers.")
+                Text("One transmission is sent as a single TALKY1 frame: the 10 s cap keeps it compatible with Talky iOS and Android receivers.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -100,7 +100,7 @@ struct SettingsPane: View {
                     }
                     Button("Restart link") { engine.channelDidChange() }
                 }
-                Text("Talky devices discover each other over Bonjour on the local network — no internet, no accounts (TALKY1 protocol).")
+                Text("Talky devices discover each other over Bonjour on the local network: no internet, no accounts (TALKY1 protocol).")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -144,7 +144,7 @@ struct SettingsPane: View {
                 ForEach(ConsoleBackdrop.allCases) { item in
                     backdropRow(item)
                 }
-                Text("Premium backdrops unlock with Talky Pro or the Themes Pack — the same purchases as the iOS app (universal purchase).")
+                Text("Premium backdrops unlock with Talky Pro or the Themes Pack, the same purchases as the iOS app (universal purchase).")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -238,7 +238,7 @@ struct SettingsPane: View {
                 Link("andreapiani.com", destination: URL(string: "https://www.andreapiani.com")!)
             }
             Section {
-                Text("© 2026 Andrea Piani · NIE 02915190306-Z · El Paso, Santa Cruz de Tenerife · Islas Canarias. Source-available under the PolyForm Noncommercial License 1.0.0.")
+                Text("© 2026 Andrea Piani · NIE Z2331796-S · Tijarafe, Santa Cruz de Tenerife · Islas Canarias. Source-available under the PolyForm Noncommercial License 1.0.0.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

@@ -106,7 +106,7 @@
 "no_recommendations" = "Hiện chưa có gợi ý nào. Hiệu năng đang rất tốt!";
 "full_report" = "Báo cáo đầy đủ";
 "close" = "Đóng";
-"too_many_connections_warning" = "Quá nhiều kết nối (%d) — nên giới hạn ở 6-8 để có hiệu năng tốt nhất";
+"too_many_connections_warning" = "Quá nhiều kết nối (%d), nên giới hạn ở 6-8 để có hiệu năng tốt nhất";
 
 // MARK: - Radio
 "station" = "Đài";
@@ -141,14 +141,13 @@
 "scan_nearby_devices" = "Tìm thiết bị ở gần";
 "detected_devices" = "Thiết bị đã tìm thấy";
 "no_devices_detected" = "Không tìm thấy thiết bị nào";
-"ensure_devices_open" = "Hãy chắc chắn các thiết bị khác đang mở ứng dụng và cùng một mạng Wi-Fi";
+"ensure_devices_open" = "Hãy chắc rằng các thiết bị khác đang mở Talky, đã bật Wi-Fi và Bluetooth. Máy Mac hoặc điện thoại Android phải ở cùng mạng Wi-Fi.";
+"explore.searching" = "Đang tìm các thiết bị gần đây đang mở Talky. Thiết bị sẽ hiện bên dưới ngay khi ở trong tầm.";
+"explore.search_stopped" = "Đã dừng tìm kiếm. Chạm vào mũi tên ở trên để tìm lại.";
 "available" = "Sẵn sàng";
 "tap_plus_to_invite" = "Chạm + để gửi yêu cầu tới một iPhone hoặc iPad; thiết bị kia phải chấp nhận. Mac và Android tự kết nối.";
 "send_connection_request" = "Gửi yêu cầu kết nối";
 "invitation_sent" = "Đã gửi yêu cầu";
-"strong" = "Mạnh";
-"medium" = "Trung bình";
-"weak" = "Yếu";
 
 // MARK: - Settings View
 "settings_title" = "Cài đặt";
@@ -223,7 +222,7 @@
 "onboarding_p2_no_internet_body" = "Giữa iPhone và iPad, giọng nói đi thẳng từ máy này sang máy kia qua Wi-Fi và Bluetooth: không router, không máy chủ, không tài khoản.";
 "onboarding_p2_range_caveat" = "Tường, đồi và chênh lệch độ cao làm giảm tầm phủ.";
 "onboarding_p2_same_wifi" = "Để nối tới máy Mac hoặc điện thoại Android, hãy đặt tất cả thiết bị vào cùng một mạng Wi-Fi: đường truyền đó đi qua mạng nội bộ.";
-"onboarding_p2_multi_platform" = "Talky cũng chạy trên iPad, Mac và Android — cùng một ứng dụng, mọi thiết bị của bạn trong cùng cuộc trò chuyện.";
+"onboarding_p2_multi_platform" = "Talky cũng chạy trên iPad, Mac và Android: cùng một ứng dụng, mọi thiết bị của bạn trong cùng cuộc trò chuyện.";
 
 "onboarding_p3_ptt_title" = "Giữ để nói";
 "onboarding_p3_ptt_body" = "Y như bộ đàm thật: giữ nút ở giữa để nói, thả ra để nghe.";
@@ -231,8 +230,8 @@
 
 "onboarding_p4_frequency_title" = "Một kênh duy nhất, ai cũng nghe thấy bạn";
 "onboarding_p4_frequency_analogy" = "Không có gì phải khớp cả: mọi Talky đều bắt đầu ở kênh công khai, nên các thiết bị ở gần tự tìm thấy nhau.";
-"onboarding_p4_change_freq_hint" = "Nút ‹ và › dùng để lướt qua các tần số trên màn hình. Việc truyền diễn ra ở tần số home — nhấn nút HOME màu xanh để quay lại.";
-"onboarding_p4_private_channels_teaser" = "Muốn một kênh riêng cho nhóm của bạn? Hãy tạo Kênh riêng có mật khẩu: chỉ ai nhập đúng mật khẩu đó mới tìm thấy bạn — trên iPhone, Mac và Android như nhau.";
+"onboarding_p4_change_freq_hint" = "Nút ‹ và › dùng để lướt qua các tần số trên màn hình. Việc truyền diễn ra ở tần số home. Nhấn nút HOME màu xanh để quay lại.";
+"onboarding_p4_private_channels_teaser" = "Muốn một kênh riêng cho nhóm của bạn? Hãy tạo Kênh riêng có mật khẩu: chỉ ai nhập đúng mật khẩu đó mới tìm thấy bạn, trên iPhone, Mac và Android như nhau.";
 
 "onboarding_p5_steps_title" = "Sẵn sàng chưa? Chỉ 3 bước";
 "onboarding_p5_step1" = "Mở Talky trên một thiết bị thứ hai ở gần: iPhone, iPad, Mac hoặc Android";

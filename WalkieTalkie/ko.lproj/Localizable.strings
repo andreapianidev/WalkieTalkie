@@ -141,14 +141,13 @@
 "scan_nearby_devices" = "근처 기기 검색";
 "detected_devices" = "발견된 기기";
 "no_devices_detected" = "발견된 기기가 없습니다";
-"ensure_devices_open" = "다른 기기에서 앱이 열려 있고 같은 Wi-Fi 네트워크에 있는지 확인하세요";
+"ensure_devices_open" = "다른 기기에서 Talky를 열고 Wi-Fi와 Bluetooth를 켜 주세요. Mac이나 Android 폰은 같은 Wi-Fi 네트워크에 있어야 합니다.";
+"explore.searching" = "Talky를 연 근처 기기를 찾고 있습니다. 범위 안에 들어오면 아래에 표시됩니다.";
+"explore.search_stopped" = "검색이 멈췄습니다. 위쪽 화살표를 탭하면 다시 검색합니다.";
 "available" = "사용 가능";
 "tap_plus_to_invite" = "+를 눌러 iPhone 또는 iPad에 요청을 보내세요. 상대 기기에서 수락해야 합니다. Mac과 Android는 자동으로 연결됩니다.";
 "send_connection_request" = "연결 요청 보내기";
 "invitation_sent" = "요청 보냄";
-"strong" = "강함";
-"medium" = "보통";
-"weak" = "약함";
 
 // MARK: - Settings View
 "settings_title" = "설정";
