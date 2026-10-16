@@ -9,52 +9,21 @@ import AVFoundation
 import Combine
 import os.log
 
-/// Gestisce l'audio di sottofondo e i permessi per l'app WalkieTalkie
+/// Gestisce la sessione audio, i permessi e la riproduzione della voce ricevuta.
+/// Niente audio finto: quello che si sente arriva da un telefono vicino, da un
+/// ricevitore HF o da un canale POC veri.
 class AudioManager: ObservableObject {
     static let shared = AudioManager()
     
-    private var backgroundAudioPlayer: AVAudioPlayer?
     private var playbackAudioEngine: AVAudioEngine?
     private var playbackPlayerNode: AVAudioPlayerNode?
     private let logger = Logger.shared
-    private let settingsManager = SettingsManager.shared
-    private let powerManager = PowerManager.shared
-    private var cancellables = Set<AnyCancellable>()
     
     @Published var hasAudioPermission = false
-    @Published var isPlayingBackground = false
-    @Published var isPlayingFrequencyAudio = false
-    
-    private let backgroundSounds = ["radio2.mp3", "radio3.mp3", "radio4.mp3"]
-    private var frequencyAudioPlayer: AVAudioPlayer?
-    private let frequencyAudioFiles = Array(1...24).map { "f\($0).mp3" }
     
     private init() {
         setupAudioSession()
         checkAudioPermission()
-        setupSettingsObservers()
-    }
-    
-    private func setupSettingsObservers() {
-        // Osserva i cambiamenti nelle impostazioni del rumore bianco
-        settingsManager.$isBackgroundAudioEnabled
-            .sink { [weak self] isEnabled in
-                DispatchQueue.main.async {
-                    if isEnabled {
-                        self?.startBackgroundAudioIfNeeded()
-                    } else {
-                        self?.stopBackgroundAudio()
-                    }
-                }
-            }
-            .store(in: &cancellables)
-        
-        // Osserva i cambiamenti nel volume
-        settingsManager.$backgroundVolume
-            .sink { [weak self] volume in
-                self?.setBackgroundVolume(volume)
-            }
-            .store(in: &cancellables)
     }
     
     // MARK: - Audio Session Setup
@@ -79,10 +48,6 @@ class AudioManager: ObservableObject {
             DispatchQueue.main.async {
                 self?.hasAudioPermission = granted
                 self?.logger.logAudioInfo("Permesso microfono: \(granted ? "concesso" : "negato")")
-                
-                if granted {
-                    self?.startBackgroundAudioIfNeeded()
-                }
             }
         }
     }
@@ -90,158 +55,16 @@ class AudioManager: ObservableObject {
     private func checkAudioPermission() {
         let status = AVAudioSession.sharedInstance().recordPermission
         hasAudioPermission = status == .granted
-        
-        if hasAudioPermission {
-            startBackgroundAudioIfNeeded()
-        }
-    }
-    
-    // MARK: - Background Audio
-    
-    func startBackgroundAudioIfNeeded() {
-        guard hasAudioPermission && settingsManager.isBackgroundAudioEnabled else {
-            if !hasAudioPermission {
-                logger.logAudioWarning("Tentativo di avviare audio senza permessi")
-            } else {
-                logger.logAudioInfo("Rumore bianco disabilitato dalle impostazioni")
-            }
-            return
-        }
-        
-        startBackgroundAudio()
-    }
-    
-    func startBackgroundAudio() {
-        guard hasAudioPermission else {
-            logger.logAudioWarning("Tentativo di avviare audio senza permessi")
-            return
-        }
-        
-        // Seleziona un file audio casuale
-        let randomSound = backgroundSounds.randomElement() ?? "radio2.mp3"
-        
-        guard let soundURL = Bundle.main.url(forResource: randomSound.replacingOccurrences(of: ".mp3", with: ""), withExtension: "mp3") else {
-            logger.logAudioError(NSError(domain: "AudioManager", code: 404, userInfo: [NSLocalizedDescriptionKey: "File audio non trovato: \(randomSound)"]), context: "Caricamento audio di sottofondo")
-            return
-        }
-        
-        do {
-            backgroundAudioPlayer = try AVAudioPlayer(contentsOf: soundURL)
-            backgroundAudioPlayer?.numberOfLoops = -1 // Loop infinito
-            backgroundAudioPlayer?.volume = settingsManager.backgroundVolume
-            backgroundAudioPlayer?.prepareToPlay()
-            
-            if backgroundAudioPlayer?.play() == true {
-                isPlayingBackground = true
-                logger.logAudioInfo("Audio di sottofondo avviato: \(randomSound)")
-            }
-        } catch {
-            logger.logAudioError(error, context: "Avvio audio di sottofondo")
-        }
-    }
-    
-    // Controlla se il rumore bianco deve essere riprodotto in base alla modalità
-    func updateBackgroundAudioForMode(isRadioMode: Bool) {
-        if isRadioMode {
-            // In modalità FM, ferma il rumore bianco
-            if isPlayingBackground {
-                stopBackgroundAudio()
-                logger.logAudioInfo("Rumore bianco fermato per modalità FM")
-            }
-        } else {
-            // In modalità walkie-talkie, avvia il rumore bianco se non è già in riproduzione e se abilitato
-            if !isPlayingBackground && hasAudioPermission && settingsManager.isBackgroundAudioEnabled {
-                startBackgroundAudio()
-                logger.logAudioInfo("Rumore bianco avviato per modalità walkie-talkie")
-            }
-        }
-    }
-    
-    func stopBackgroundAudio() {
-        backgroundAudioPlayer?.stop()
-        backgroundAudioPlayer = nil
-        isPlayingBackground = false
-        logger.logAudioInfo("Audio di sottofondo arrestato")
-    }
-    
-    /// Riproduce un file MP3 casuale per le frequenze non-home
-    func playRandomFrequencyAudio() {
-        // L'audio frequenza è parte dell'effetto "audio simulato": rispetta lo stesso
-        // interruttore del rumore bianco. Se l'utente lo tiene OFF (default) non parte
-        // alcun suono finto cambiando frequenza — niente percezione "fake".
-        guard settingsManager.isBackgroundAudioEnabled else {
-            logger.logAudioInfo("Audio frequenza simulato disabilitato dalle impostazioni")
-            stopFrequencyAudio()
-            return
-        }
-
-        guard let randomFile = frequencyAudioFiles.randomElement() else {
-            logger.logAudioError(NSError(domain: "AudioManager", code: -1, userInfo: [NSLocalizedDescriptionKey: "Nessun file audio frequenza disponibile"]), context: "Selezione file frequenza")
-            return
-        }
-        
-        guard let soundURL = Bundle.main.url(forResource: randomFile.replacingOccurrences(of: ".mp3", with: ""), withExtension: "mp3") else {
-            logger.logAudioError(NSError(domain: "AudioManager", code: 404, userInfo: [NSLocalizedDescriptionKey: "File audio frequenza non trovato: \(randomFile)"]), context: "Caricamento audio frequenza")
-            return
-        }
-        
-        do {
-            // Ferma l'audio precedente se in riproduzione
-            stopFrequencyAudio()
-            
-            frequencyAudioPlayer = try AVAudioPlayer(contentsOf: soundURL)
-            frequencyAudioPlayer?.numberOfLoops = -1 // Loop infinito
-            frequencyAudioPlayer?.volume = powerManager.isLowPowerModeActive ? 0.3 : 0.5
-            frequencyAudioPlayer?.play()
-            
-            isPlayingFrequencyAudio = true
-            logger.logAudioInfo("Avviata riproduzione audio frequenza: \(randomFile)")
-            
-        } catch {
-            logger.logAudioError(error, context: "Riproduzione audio frequenza")
-        }
-    }
-    
-    /// Ferma la riproduzione dell'audio delle frequenze
-    func stopFrequencyAudio() {
-        frequencyAudioPlayer?.stop()
-        frequencyAudioPlayer = nil
-        isPlayingFrequencyAudio = false
-        logger.logAudioInfo("Audio frequenza arrestato")
-    }
-    
-    func setBackgroundVolume(_ volume: Float) {
-        let clampedVolume = max(0.0, min(1.0, volume))
-        let optimizedVolume = powerManager.getOptimizedBackgroundVolume(clampedVolume)
-        backgroundAudioPlayer?.volume = optimizedVolume
-        logger.logAudioDebug("Volume sottofondo impostato a: \(optimizedVolume) (originale: \(clampedVolume))")
-    }
-    
-    // MARK: - Voice Communication
-    
-    func lowerBackgroundVolumeForVoice() {
-        backgroundAudioPlayer?.volume = settingsManager.backgroundVolume * 0.2 // Abbassa al 20%
-        logger.logAudioDebug("Volume sottofondo abbassato per voce")
-    }
-    
-    func restoreBackgroundVolume() {
-        backgroundAudioPlayer?.volume = settingsManager.backgroundVolume
-        logger.logAudioDebug("Volume sottofondo ripristinato")
     }
     
     func playReceivedAudio(_ data: Data) {
         // Il chiamante (MultipeerManager) invoca questo metodo da una coda globale
-        // di background. Tutte le mutazioni dei player (backgroundAudioPlayer,
-        // playbackAudioEngine, playbackPlayerNode) devono però avvenire sullo
-        // stesso thread per evitare data race con l'audio di sottofondo gestito
-        // sul main. Serializziamo quindi sul main: la copia del breve buffer PCM
-        // PTT è trascurabile in termini di CPU.
+        // di background. Le mutazioni dei player (playbackAudioEngine,
+        // playbackPlayerNode) devono avvenire sullo stesso thread: si serializza
+        // sul main, la copia del breve buffer PCM PTT costa poco.
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             self.logger.logAudioDebug("Riproduzione audio ricevuto: \(data.count) bytes")
-
-            // Abbassa temporaneamente il volume di sottofondo
-            self.lowerBackgroundVolumeForVoice()
 
             // Usa AVAudioEngine per riprodurre i dati PCM raw
             self.playPCMAudio(data)
@@ -258,7 +81,6 @@ class AudioManager: ObservableObject {
         guard let audioEngine = playbackAudioEngine,
               let playerNode = playbackPlayerNode else {
             logger.logAudioError(NSError(domain: "AudioManager", code: -3, userInfo: [NSLocalizedDescriptionKey: "Impossibile creare componenti audio"]), context: "Inizializzazione playback")
-            restoreBackgroundVolume()
             return
         }
         
@@ -273,7 +95,6 @@ class AudioManager: ObservableObject {
             
             guard let format = audioFormat else {
                 logger.logAudioError(NSError(domain: "AudioManager", code: -1, userInfo: [NSLocalizedDescriptionKey: "Formato audio non valido"]), context: "Configurazione formato per riproduzione")
-                restoreBackgroundVolume()
                 return
             }
             
@@ -281,7 +102,6 @@ class AudioManager: ObservableObject {
             let frameCount = AVAudioFrameCount(data.count / MemoryLayout<Float32>.size)
             guard let audioBuffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frameCount) else {
                 logger.logAudioError(NSError(domain: "AudioManager", code: -2, userInfo: [NSLocalizedDescriptionKey: "Impossibile creare buffer audio"]), context: "Creazione buffer per riproduzione")
-                restoreBackgroundVolume()
                 return
             }
             
@@ -310,7 +130,6 @@ class AudioManager: ObservableObject {
             playerNode.scheduleBuffer(audioBuffer, completionHandler: { [weak self] in
                 DispatchQueue.main.async {
                     self?.stopCurrentPlayback()
-                    self?.restoreBackgroundVolume()
                     self?.logger.logAudioDebug("Riproduzione audio completata")
                 }
             })
@@ -321,7 +140,6 @@ class AudioManager: ObservableObject {
         } catch {
             logger.logAudioError(error, context: "Riproduzione audio PCM")
             stopCurrentPlayback()
-            restoreBackgroundVolume()
         }
     }
     
@@ -331,10 +149,5 @@ class AudioManager: ObservableObject {
         playbackAudioEngine = nil
         playbackPlayerNode = nil
     }
-    
-    // MARK: - Cleanup
-    
-    deinit {
-        stopBackgroundAudio()
-    }
+
 }

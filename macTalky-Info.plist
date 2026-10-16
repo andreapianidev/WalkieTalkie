@@ -10,6 +10,13 @@
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
+			<key>rx.linkfanel.net</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<false/>
+			</dict>
 			<key>103.24.105.90</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>

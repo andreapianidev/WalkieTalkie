@@ -16,8 +16,6 @@ class SettingsManager: ObservableObject {
     
     // MARK: - Settings Keys
     private enum Keys {
-        static let isBackgroundAudioEnabled = "isBackgroundAudioEnabled"
-        static let backgroundVolume = "backgroundVolume"
         static let isHapticFeedbackEnabled = "isHapticFeedbackEnabled"
         static let isAutoConnectEnabled = "isAutoConnectEnabled"
         static let selectedFrequency = "selectedFrequency"
@@ -30,20 +28,6 @@ class SettingsManager: ObservableObject {
     }
     
     // MARK: - Published Properties
-    @Published var isBackgroundAudioEnabled: Bool {
-        didSet {
-            userDefaults.set(isBackgroundAudioEnabled, forKey: Keys.isBackgroundAudioEnabled)
-            firebaseManager.trackSettingsChange(setting: "backgroundAudio", value: "\(isBackgroundAudioEnabled)")
-        }
-    }
-    
-    @Published var backgroundVolume: Float {
-        didSet {
-            userDefaults.set(backgroundVolume, forKey: Keys.backgroundVolume)
-            firebaseManager.trackSettingsChange(setting: "backgroundVolume", value: "\(backgroundVolume)")
-        }
-    }
-    
     @Published var isHapticFeedbackEnabled: Bool {
         didSet {
             userDefaults.set(isHapticFeedbackEnabled, forKey: Keys.isHapticFeedbackEnabled)
@@ -110,11 +94,6 @@ class SettingsManager: ObservableObject {
     // MARK: - Initialization
     private init() {
         // Carica le impostazioni salvate o usa i valori di default
-        // Audio simulato (rumore bianco + effetti frequenza) OFF di default: è un effetto
-        // ambientale decorativo, non comunicazione reale. Acceso di serie faceva percepire
-        // l'app come "fake" (recensioni App Store). Chi lo vuole lo attiva dalle Impostazioni.
-        self.isBackgroundAudioEnabled = userDefaults.object(forKey: Keys.isBackgroundAudioEnabled) as? Bool ?? false
-        self.backgroundVolume = userDefaults.object(forKey: Keys.backgroundVolume) as? Float ?? 0.15
         self.isHapticFeedbackEnabled = userDefaults.object(forKey: Keys.isHapticFeedbackEnabled) as? Bool ?? true
         self.isAutoConnectEnabled = userDefaults.object(forKey: Keys.isAutoConnectEnabled) as? Bool ?? false
         self.selectedFrequency = userDefaults.object(forKey: Keys.selectedFrequency) as? String ?? "146.520"
@@ -133,8 +112,6 @@ class SettingsManager: ObservableObject {
     
     /// Resetta tutte le impostazioni ai valori di default
     func resetToDefaults() {
-        isBackgroundAudioEnabled = false
-        backgroundVolume = 0.15
         isHapticFeedbackEnabled = true
         isAutoConnectEnabled = false
         selectedFrequency = "146.520"

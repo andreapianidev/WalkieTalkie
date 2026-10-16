@@ -24,7 +24,6 @@ class PowerManager: ObservableObject {
         static let reducedScanInterval: TimeInterval = 10.0 // Invece di 5.0
         static let reducedHeartbeatInterval: TimeInterval = 30.0 // Invece di 15.0
         static let reducedAudioQuality: Float = 0.6 // Riduce qualità audio
-        static let reducedBackgroundVolume: Float = 0.5 // Riduce volume background
         static let disableAnimations = true
         static let reducedNotificationFrequency: TimeInterval = 60.0
     }
@@ -116,11 +115,6 @@ class PowerManager: ObservableObject {
     /// Ottiene il fattore di qualità audio ottimizzato
     func getOptimizedAudioQuality() -> Float {
         return isLowPowerModeActive ? LowPowerConfig.reducedAudioQuality : 1.0
-    }
-    
-    /// Ottiene il volume di background ottimizzato
-    func getOptimizedBackgroundVolume(_ originalVolume: Float) -> Float {
-        return isLowPowerModeActive ? originalVolume * LowPowerConfig.reducedBackgroundVolume : originalVolume
     }
     
     /// Verifica se le animazioni dovrebbero essere disabilitate

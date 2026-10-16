@@ -10,6 +10,7 @@ import SwiftUI
 enum ConsoleSection: String, CaseIterable, Identifiable {
     case walkie
     case radio
+    case live
 
     var id: String { rawValue }
 
@@ -17,6 +18,7 @@ enum ConsoleSection: String, CaseIterable, Identifiable {
         switch self {
         case .walkie: return "Walkie"
         case .radio: return "Radio"
+        case .live: return "Live HF · POC"
         }
     }
 
@@ -24,6 +26,7 @@ enum ConsoleSection: String, CaseIterable, Identifiable {
         switch self {
         case .walkie: return "dot.radiowaves.left.and.right"
         case .radio: return "antenna.radiowaves.left.and.right"
+        case .live: return "waveform"
         }
     }
 }
@@ -75,6 +78,8 @@ struct ContentView: View {
                         WalkieView(showPaywall: $showPaywall)
                     case .radio:
                         RadioView(showPaywall: $showPaywall)
+                    case .live:
+                        LiveView()
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

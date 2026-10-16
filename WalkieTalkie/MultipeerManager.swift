@@ -669,7 +669,6 @@ class MultipeerManager: NSObject, ObservableObject {
             }
             audioEngine.prepare()
             try audioEngine.start()
-            audioManager.lowerBackgroundVolumeForVoice()
             logger.logAudioInfo("Trasmissione audio avviata.")
         } catch {
             lastError = WalkieTalkieError.audioTransmissionFailed(underlying: error)
@@ -710,7 +709,6 @@ class MultipeerManager: NSObject, ObservableObject {
             PaywallTriggerManager.shared.registerTransmission(connectedPeerCount: peersAtEndOfTransmission)
         }
 
-        audioManager.restoreBackgroundVolume()
         logger.logAudioInfo("Trasmissione audio arrestata.")
     }
     

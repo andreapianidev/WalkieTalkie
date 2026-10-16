@@ -21,7 +21,7 @@ struct ContentView: View {
     @State private var frequencyChangeCount = 0
     @State private var interstitialDebounceTask: Task<Void, Never>?
     @State private var isTransmitting = false
-    @State private var frequency = "428.283"
+    private let frequency = "428.283"
     @State private var showingPermissionAlert = false
     @AppStorage("talky_is_radio_mode") private var isRadioMode = false
     @State private var frequencyChangeAnimation = false
@@ -35,14 +35,10 @@ struct ContentView: View {
     @State private var showModeSwitchHint = false
     @AppStorage("isOnboardingComplete") private var isOnboardingComplete = false
     
-    // Frequenze realistiche per walkie-talkie
-    private let availableFrequencies = [
-        "428.283", "428.325", "428.367", "428.409", "428.451",
-        "428.493", "428.535", "428.577", "428.619", "428.661",
-        "428.703", "428.745", "428.787", "428.829", "428.871",
-        "429.913", "429.955", "429.997", "430.039", "430.081"
-    ]
-    @State private var currentFrequencyIndex = 0
+    /// Canale locale fra telefoni vicini, oppure ascolto dal vivo HF o POC.
+    /// Le 19 "frequenze" di prima suonavano clip registrate: tolte nella 3.0.
+    @State private var walkieBand: WalkieBand = .local
+    @State private var showLiveChannels = false
     @State private var selectedTab = 0
 
     /// iPhone SE/8 e simili (≤667pt): il layout a misure fisse sforava lo schermo
@@ -173,6 +169,12 @@ struct ContentView: View {
             // Connection status textbox
             connectionStatusView
 
+            // Banda del walkie: locale, HF, POC
+            if !isRadioMode, #available(iOS 16.0, *) {
+                BandSelectorRow(selected: walkieBand, enabled: isPoweredOn, onSelect: selectBand)
+                    .padding(.top, isCompactHeight ? 8 : 12)
+            }
+
             // Display frequenza
             frequencyDisplayView
 
@@ -191,7 +193,8 @@ struct ContentView: View {
     /// Aligns the background-audio (white noise) state with the persisted mode
     /// after a cold launch. Non auto-plays radio: solo coerenza dello stato audio.
     private func restorePersistedAudioMode() {
-        audioManager.updateBackgroundAudioForMode(isRadioMode: isRadioMode)
+        // Niente da ripristinare: l'audio di sottofondo finto non esiste piu'.
+        // L'ascolto HF/POC riparte solo quando l'utente sceglie la banda.
     }
 
     /// Shows the WT/FM toggle discovery hint once, only after onboarding is done.
@@ -303,18 +306,26 @@ struct ContentView: View {
         }
         if newRadioMode {
             multipeerManager.stopTransmitting()
+            stopLiveBand()
             radioManager.playStation(radioManager.resumeStation)
-            audioManager.updateBackgroundAudioForMode(isRadioMode: true)
         } else {
             radioManager.stopRadio()
-            audioManager.updateBackgroundAudioForMode(isRadioMode: false)
             // Radio ferma: qui l'interstitial puo' davvero passare il gate.
             maybeShowInterstitialOnRadioExit()
         }
         hapticManager.lightTap()
     }
 
+    @ViewBuilder
     private var connectionStatusView: some View {
+        if !isRadioMode, walkieBand != .local, #available(iOS 16.0, *) {
+            LiveStatusCard(compact: isCompactHeight)
+        } else {
+            localStatusView
+        }
+    }
+
+    private var localStatusView: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 if isRadioMode {
@@ -410,6 +421,17 @@ struct ContentView: View {
     }
     
     private var frequencyDisplayView: some View {
+        VStack(spacing: 8) {
+            if !isRadioMode, walkieBand != .local, #available(iOS 16.0, *) {
+                LiveDisplayView(compact: isCompactHeight)
+            } else {
+                localDisplayView
+            }
+        }
+        .padding(.top, isCompactHeight ? 10 : 20)
+    }
+
+    private var localDisplayView: some View {
         VStack(spacing: 8) {
             // Display principale frequenza
             ZStack {
@@ -507,13 +529,14 @@ struct ContentView: View {
                     }
             )
         }
-        .padding(.top, isCompactHeight ? 10 : 20)
     }
 
     private var playbackControlsView: some View {
         VStack(spacing: isCompactHeight ? 10 : 16) {
             if isRadioMode {
                 radioSecondaryControlsRow
+            } else if walkieBand != .local, #available(iOS 16.0, *) {
+                LiveSecondaryRow(onList: { showLiveChannels = true })
             }
 
             mainPlaybackRow
@@ -704,7 +727,7 @@ struct ContentView: View {
                 }) {
                     ZStack {
                         Circle()
-                            .fill(currentFrequencyIndex == 0 ? Color.green : Color.black)
+                            .fill(walkieBand == .local ? Color.green : Color.black)
                             .frame(width: 50, height: 50)
                         
                         Image(systemName: "house.fill")
@@ -715,7 +738,7 @@ struct ContentView: View {
                 .opacity(isPoweredOn ? 1.0 : 0.3)
                 .disabled(!isPoweredOn)
                 
-                // Previous button
+                // Previous button: canale precedente della banda HF o POC
                 Button(action: {
                     if isPoweredOn {
                         hapticManager.mediumTap()
@@ -732,8 +755,8 @@ struct ContentView: View {
                             .font(.title2)
                     }
                 }
-                .opacity(isPoweredOn ? 1.0 : 0.3)
-                .disabled(!isPoweredOn)
+                .opacity(isPoweredOn && walkieBand != .local ? 1.0 : 0.3)
+                .disabled(!isPoweredOn || walkieBand == .local)
                 
                 // forward button
                 Button(action: {
@@ -752,8 +775,8 @@ struct ContentView: View {
                             .font(.title2)
                     }
                 }
-                .opacity(isPoweredOn ? 1.0 : 0.3)
-                .disabled(!isPoweredOn)
+                .opacity(isPoweredOn && walkieBand != .local ? 1.0 : 0.3)
+                .disabled(!isPoweredOn || walkieBand == .local)
                 
                 // Power button
                 Button(action: {
@@ -776,27 +799,31 @@ struct ContentView: View {
 
     private var speakerAreaView: some View {
         VStack(spacing: isCompactHeight ? 10 : 30) {
-            // Griglia di punti per simulare speaker - aumentata
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 8), spacing: 6) {
-                ForEach(0..<(isCompactHeight ? 24 : 88), id: \.self) { _ in
-                    Circle()
-                        .fill(Color.black)
-                        .frame(width: 5, height: 5)
+            // Griglia dell'altoparlante: in HF e POC si accende con l'audio vero
+            if !isRadioMode, walkieBand != .local, #available(iOS 16.0, *) {
+                LiveSpeakerGrid(count: isCompactHeight ? 24 : 88)
+            } else {
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 8), spacing: 6) {
+                    ForEach(0..<(isCompactHeight ? 24 : 88), id: \.self) { _ in
+                        Circle()
+                            .fill(Color.black)
+                            .frame(width: 5, height: 5)
+                    }
                 }
+                .padding(.horizontal, 40)
             }
-            .padding(.horizontal, 40)
             
             // Push to talk button migliorato con gesture (disabilitato in modalità FM)
             VStack(spacing: isCompactHeight ? 10 : 15) {
                 ZStack {
                     // Cerchio esterno
                     Circle()
-                        .fill(isRadioMode ? Color.gray.opacity(0.5) : (isTransmitting ? Color.red : Color.black))
+                        .fill(isRadioMode || walkieBand != .local ? Color.gray.opacity(0.5) : (isTransmitting ? Color.red : Color.black))
                         .frame(width: isCompactHeight ? 106 : 140, height: isCompactHeight ? 106 : 140)
 
                     // Cerchio interno
                     Circle()
-                        .fill(isRadioMode ? Color.gray.opacity(0.3) : Color.white)
+                        .fill(isRadioMode || walkieBand != .local ? Color.gray.opacity(0.3) : Color.white)
                         .frame(width: isCompactHeight ? 90 : 120, height: isCompactHeight ? 90 : 120)
                     
                     // Testo centrale
@@ -811,6 +838,8 @@ struct ContentView: View {
                             Text("active".localized)
                                 .font(.system(size: 12, weight: .medium))
                                 .foregroundColor(.gray)
+                        } else if walkieBand != .local, #available(iOS 16.0, *) {
+                            LivePTTFace()
                         } else {
                             Text(isTransmitting ? "release".localized : "hold".localized)
                                 .font(.system(size: 16, weight: .bold))
@@ -835,12 +864,12 @@ struct ContentView: View {
                 }
                 .scaleEffect(isTransmitting && !isRadioMode ? 0.95 : 1.0)
                 .animation(.easeInOut(duration: 0.1), value: isTransmitting)
-                .opacity(isPoweredOn && currentFrequencyIndex == 0 ? 1.0 : 0.3)
+                .opacity(isPoweredOn && (walkieBand == .local || isRadioMode) ? 1.0 : 0.3)
                 .gesture(
-                    // Disabilita gesture in modalità FM, quando spento, o su frequenze non-home
-                    (isRadioMode || !isPoweredOn || currentFrequencyIndex != 0) ? nil : DragGesture(minimumDistance: 0)
+                    // Disabilita gesture in modalità FM, quando spento, o in ascolto HF/POC
+                    (isRadioMode || !isPoweredOn || walkieBand != .local) ? nil : DragGesture(minimumDistance: 0)
                         .onChanged { _ in
-                            if !isTransmitting && isPoweredOn && currentFrequencyIndex == 0 {
+                            if !isTransmitting && isPoweredOn && walkieBand == .local {
                                 // Controlla permessi prima di trasmettere
                                 if !audioManager.hasAudioPermission {
                                     checkMicrophonePermission()
@@ -858,6 +887,20 @@ struct ContentView: View {
                 
                 // Status sotto il pulsante
                 VStack(spacing: 4) {
+                    if !isRadioMode, walkieBand != .local, #available(iOS 16.0, *) {
+                        LiveSpeakerStatus()
+                    } else {
+                        localSpeakerStatus
+                    }
+                }
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, isCompactHeight ? 8 : 20)
+    }
+
+    @ViewBuilder
+    private var localSpeakerStatus: some View {
                     if !hasWalkieConnection {
                         HStack {
                             Image(systemName: "exclamationmark.triangle.fill")
@@ -906,11 +949,6 @@ struct ContentView: View {
                             .font(.caption2)
                             .foregroundColor(.gray)
                     }
-                }
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, isCompactHeight ? 8 : 20)
     }
 
     private var tabBarView: some View {
@@ -1001,6 +1039,11 @@ struct ContentView: View {
         .sheet(isPresented: $showBrowser) {
             StationBrowserSheet()
         }
+        .sheet(isPresented: $showLiveChannels) {
+            if #available(iOS 16.0, *) {
+                LiveChannelsSheet()
+            }
+        }
         .sheet(isPresented: $showSleepTimer) {
             SleepTimerSheet(onUnlockTap: {
                 showSleepTimer = false
@@ -1043,11 +1086,6 @@ struct ContentView: View {
             }
         }
         .onAppear {
-            // Inizializza l'indice della frequenza corrente
-            if let index = availableFrequencies.firstIndex(of: frequency) {
-                currentFrequencyIndex = index
-            }
-
             // Controlla i permessi all'avvio
             checkMicrophonePermission()
         }
@@ -1145,43 +1183,48 @@ struct ContentView: View {
     // MARK: - Helper Functions
     
     private func previousFrequency() {
-        currentFrequencyIndex = (currentFrequencyIndex - 1 + availableFrequencies.count) % availableFrequencies.count
-        frequency = availableFrequencies[currentFrequencyIndex]
-
-        // Feedback realistico per cambio frequenza
-        playFrequencyChangeSound()
-        showFrequencyChangeIndicator()
-
-        // Gestione audio per frequenze non-home
-        handleFrequencyAudio()
-
-        FirstTimeEventTracker.shared.fireOnce(
-            FirstTimeEventTracker.Events.channelChange,
-            parameters: ["direction": "prev"]
-        )
-
-        maybeShowInterstitialOnChannelChange()
-        ThemeSoundManager.shared.play(.channelChange)
+        stepLiveChannel(-1)
     }
 
     private func nextFrequency() {
-        currentFrequencyIndex = (currentFrequencyIndex + 1) % availableFrequencies.count
-        frequency = availableFrequencies[currentFrequencyIndex]
+        stepLiveChannel(1)
+    }
 
-        // Feedback realistico per cambio frequenza
+    /// Avanti o indietro fra i canali veri della banda HF o POC. Niente
+    /// interstitial qui: interromperebbe un ascolto in corso.
+    private func stepLiveChannel(_ delta: Int) {
+        guard walkieBand != .local, #available(iOS 16.0, *) else { return }
         playFrequencyChangeSound()
-        showFrequencyChangeIndicator()
-
-        // Gestione audio per frequenze non-home
-        handleFrequencyAudio()
-
+        LiveRadio.shared.step(delta)
         FirstTimeEventTracker.shared.fireOnce(
             FirstTimeEventTracker.Events.channelChange,
-            parameters: ["direction": "next"]
+            parameters: ["direction": delta > 0 ? "next" : "prev", "band": walkieBand.rawValue]
         )
-
-        maybeShowInterstitialOnChannelChange()
         ThemeSoundManager.shared.play(.channelChange)
+    }
+
+    /// Cambio di banda dal selettore: il locale torna al walkie fra telefoni,
+    /// HF e POC accendono l'ascolto dal vivo.
+    private func selectBand(_ band: WalkieBand) {
+        guard isPoweredOn, band != walkieBand else { return }
+        hapticManager.mediumTap()
+        playFrequencyChangeSound()
+        showFrequencyChangeIndicator()
+        if isTransmitting { stopTransmitting() }
+        walkieBand = band
+        if #available(iOS 16.0, *) {
+            if let live = band.live {
+                LiveRadio.shared.start(live)
+            } else {
+                LiveRadio.shared.stop()
+            }
+        }
+        FirebaseManager.shared.trackFrequencyChange(frequency: "band_\(band.rawValue)")
+    }
+
+    private func stopLiveBand() {
+        if #available(iOS 16.0, *) { LiveRadio.shared.stop() }
+        walkieBand = .local
     }
 
     private func maybeShowInterstitialOnChannelChange() {
@@ -1253,33 +1296,10 @@ struct ContentView: View {
     }
     
     private func returnToHomeFrequency() {
-        // Torna alla frequenza principale (indice 0) per la comunicazione reale
-        currentFrequencyIndex = 0
-        frequency = availableFrequencies[0]
-        
-        // Feedback visivo
-        showFrequencyChangeIndicator()
-        
-        // Suono di conferma
-        playFrequencyChangeSound()
-        
-        // Gestione audio per frequenze non-home
-        handleFrequencyAudio()
+        // Torna al canale locale, quello della comunicazione fra telefoni
+        selectBand(.local)
     }
-    
-    private func handleFrequencyAudio() {
-        if currentFrequencyIndex == 0 {
-            // Frequenza home: ferma l'audio casuale per permettere conversazioni
-            audioManager.stopFrequencyAudio()
-            // Riattiva il rumore bianco se abilitato nelle impostazioni
-            audioManager.startBackgroundAudioIfNeeded()
-        } else {
-            // Frequenze non-home: ferma il rumore bianco e riproduci audio casuale in loop
-            audioManager.stopBackgroundAudio()
-            audioManager.playRandomFrequencyAudio()
-        }
-    }
-    
+
     private func togglePower() {
         isPoweredOn.toggle()
         
@@ -1298,21 +1318,17 @@ struct ContentView: View {
                 radioManager.stopRadio()
             }
             
-            // Ferma l'audio delle frequenze
-            audioManager.stopFrequencyAudio()
-            
-            // Ferma il rumore bianco/audio di sottofondo
-            audioManager.stopBackgroundAudio()
+            // Ferma l'ascolto HF/POC
+            if #available(iOS 16.0, *) { LiveRadio.shared.stop() }
         } else {
             // Riaccendi le funzionalità quando viene riacceso
             multipeerManager.startBrowsing()
             multipeerManager.startAdvertising()
             
-            // Ripristina il rumore bianco se abilitato nelle impostazioni
-            audioManager.startBackgroundAudioIfNeeded()
-            
-            // Ripristina l'audio delle frequenze se necessario
-            handleFrequencyAudio()
+            // Riprende l'ascolto della banda HF/POC su cui era rimasto
+            if #available(iOS 16.0, *), let live = walkieBand.live {
+                LiveRadio.shared.start(live)
+            }
         }
     }
     

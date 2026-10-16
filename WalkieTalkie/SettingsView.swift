@@ -141,13 +141,6 @@ struct SettingsView: View {
                 }
             })
         }
-        .onAppear {
-            // Sync audio manager with settings manager
-            if settingsManager.isBackgroundAudioEnabled {
-                audioManager.setBackgroundVolume(settingsManager.backgroundVolume)
-            } else {
-                audioManager.setBackgroundVolume(0.0)
-            }
         }
     }
 
@@ -597,61 +590,6 @@ struct SettingsView: View {
             }
             
             VStack(spacing: 12) {
-                // Background Audio Toggle
-                HStack {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("white_noise".localized)
-                            .font(.body)
-                            .fontWeight(.medium)
-                            .foregroundColor(Color("PrimaryTextColor"))
-                        Text("background_audio".localized)
-                            .font(.caption)
-                            .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
-                    }
-                    
-                    Spacer()
-                    
-                    Toggle("", isOn: $settingsManager.isBackgroundAudioEnabled)
-                        .toggleStyle(SwitchToggleStyle(tint: Color("ToggleAccentColor")))
-                }
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color("SurfaceColor"))
-                )
-                
-                // Volume Slider (only when background audio is enabled)
-                if settingsManager.isBackgroundAudioEnabled {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("noise_volume".localized)
-                                .font(.body)
-                                .fontWeight(.medium)
-                                .foregroundColor(Color("PrimaryTextColor"))
-                            Text("adjust_background_volume".localized)
-                                .font(.caption)
-                                .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
-                        }
-                        
-                        Spacer()
-                        
-                        VStack {
-                            Slider(value: $settingsManager.backgroundVolume, in: 0.05...0.5, step: 0.05)
-                            .accentColor(Color("PrimaryTextColor"))
-                            
-                            Text("\(Int(settingsManager.backgroundVolume * 100))%")
-                                .font(.caption2)
-                                .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
-                        }
-                        .frame(width: 100)
-                    }
-                    .padding()
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color("SurfaceColor"))
-                    )
-                }
-                
                 // Haptic Feedback Setting
                 HStack {
                     VStack(alignment: .leading, spacing: 2) {
@@ -779,12 +717,6 @@ struct SettingsView: View {
                  // Reset Settings Button
                  Button(action: {
                      settingsManager.resetToDefaults()
-                     // Sync with audio manager
-                     if settingsManager.isBackgroundAudioEnabled {
-                         audioManager.setBackgroundVolume(settingsManager.backgroundVolume)
-                     } else {
-                         audioManager.setBackgroundVolume(0.0)
-                     }
                  }) {
                      HStack {
                          Image(systemName: "arrow.clockwise")

@@ -159,7 +159,6 @@ extension FirebaseManager {
         static let deviceType = "device_type"
         static let appVersion = "app_version"
         static let preferredLanguage = "preferred_language"
-        static let backgroundAudioEnabled = "background_audio_enabled"
         static let hapticFeedbackEnabled = "haptic_feedback_enabled"
     }
 }
