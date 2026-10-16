@@ -517,3 +517,9 @@
 "live_silence" = "现在没有人讲话";
 "live_hf_footer" = "你通过公共KiwiSDR接收机收听，这些接收机由世界各地的业余无线电爱好者免费共享。Talky会选择离电台较近的接收机。";
 "live_poc_footer" = "现在有人在线的公共Mumble频道。Talky以静音方式加入，只收听。";
+"live_pro_title" = "Talky Pro 功能";
+"live_pro_scan_message" = "自动扫描属于 Talky Pro。观看一段短视频即可免费试用24小时。";
+"live_pro_background_message" = "离开 Talky 后，HF 和 POC 收听已停止。使用 Talky Pro，熄屏后也能继续收听。观看一段短视频即可免费试用24小时。";
+"live_pro_discover" = "了解 Talky Pro";
+"live_pro_video" = "看视频：免费24小时";
+"paywall.feature.live" = "自动扫描，熄屏收听 HF 和 POC";

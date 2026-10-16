@@ -63,6 +63,24 @@ final class LiveRadio: ObservableObject {
         case hf, poc
     }
 
+    /// Funzione Pro chiesta da chi non ce l'ha: l'interfaccia propone
+    /// Talky Pro o, su iPhone, un video per 24 ore.
+    enum ProPrompt: String, Identifiable {
+        case scan, background
+        var id: String { rawValue }
+    }
+
+    /// Talky Pro (o un pass a tempo) per le comodita' dell'ascolto dal vivo:
+    /// SCAN automatico e ascolto a schermo spento. L'ascolto in se' resta
+    /// gratis: i ricevitori e i server sono offerti da volontari. Ogni app
+    /// imposta il suo controllo all'avvio.
+    var proGate: () -> Bool = { true }
+    /// Chiamato quando l'ascolto dal vivo ha superato `listeningMilestone`
+    /// secondi in tutto. Chi lo riceve decide se e quando mostrare il paywall
+    /// (su iPhone lo consuma PaywallTriggerManager, una volta sola).
+    var onListeningMilestone: (() -> Void)?
+    static let listeningMilestone = 600
+
     @Published private(set) var band: Band?
     @Published private(set) var hfIndex = 0
     @Published private(set) var tuning: Tuning = HFChannel.all[0].tuning
@@ -82,6 +100,9 @@ final class LiveRadio: ObservableObject {
     @Published private(set) var audience: Int?
     @Published private(set) var signalDBm: Double?
     @Published private(set) var level: Float = 0
+    @Published var proPrompt: ProPrompt?
+    /// Ascolto fermato perche' l'app e' andata in background senza Pro.
+    @Published private(set) var isSuspended = false
     @Published var volume: Float = 0.9 {
         didSet { player.setVolume(volume) }
     }
@@ -115,6 +136,10 @@ final class LiveRadio: ObservableObject {
     private var lastVoice = Date.distantPast
     private var scanSince = Date()
 
+    private var listenTask: Task<Void, Never>?
+    private let defaults = UserDefaults.standard
+    private static let listenedKey = "live_listened_seconds"
+
     private var lastLevelPush = Date.distantPast
     private var lastSignalPush = Date.distantPast
 
@@ -128,6 +153,7 @@ final class LiveRadio: ObservableObject {
         guard self.band != band else { return }
         stopScan()
         disconnect()
+        isSuspended = false
         if band == .hf, scoutTask != nil {
             scoutTask?.cancel()
             scoutTask = nil
@@ -152,6 +178,7 @@ final class LiveRadio: ObservableObject {
 
     func stop() {
         stopScan()
+        isSuspended = false
         disconnect()
         scoutTask?.cancel()
         scoutTask = nil
@@ -226,6 +253,10 @@ final class LiveRadio: ObservableObject {
 
     func startScan() {
         guard band == .poc, !isScanning else { return }
+        guard proGate() else {
+            proPrompt = .scan
+            return
+        }
         isScanning = true
         scanHolding = false
         scanSince = Date()
@@ -266,6 +297,51 @@ final class LiveRadio: ObservableObject {
         }
     }
 
+    // MARK: background
+
+    /// L'app va in background senza Pro: l'ascolto si ferma ma la banda
+    /// resta scelta, cosi' al ritorno riparte da sola.
+    func suspendForBackground() {
+        guard band != nil, !isSuspended, !proGate() else { return }
+        stopScan()
+        disconnect()
+        player.stop()
+        state = .idle
+        isSuspended = true
+    }
+
+    /// Ritorno in primo piano dopo una sospensione: riparte e propone il Pro.
+    func resumeFromBackground() {
+        guard isSuspended, let band else { return }
+        isSuspended = false
+        player.start()
+        switch band {
+        case .hf: connectHF(fresh: true)
+        case .poc: pocChannels.isEmpty ? scoutPOC() : connectPOC()
+        }
+        proPrompt = .background
+    }
+
+    // MARK: tempo d'ascolto
+
+    private func startListeningClock() {
+        guard listenTask == nil else { return }
+        listenTask = Task { [weak self] in
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(15))
+                guard let self, !Task.isCancelled, self.state == .online else { continue }
+                self.addListened(15)
+            }
+        }
+    }
+
+    private func addListened(_ seconds: Int) {
+        let total = defaults.integer(forKey: Self.listenedKey) + seconds
+        defaults.set(total, forKey: Self.listenedKey)
+        guard total >= Self.listeningMilestone, !proGate() else { return }
+        onListeningMilestone?()
+    }
+
     // MARK: HF
 
     private func loadReceivers() {
@@ -287,7 +363,7 @@ final class LiveRadio: ObservableObject {
 
     private func connectHF(fresh: Bool) {
         disconnect()
-        guard band == .hf else { return }
+        guard band == .hf, !isSuspended else { return }
         if fresh {
             candidates = rankReceivers(for: currentHF)
             candidateIndex = 0
@@ -411,7 +487,7 @@ final class LiveRadio: ObservableObject {
 
     private func connectPOC() {
         disconnect()
-        guard band == .poc, let target = currentPOC else { return }
+        guard band == .poc, !isSuspended, let target = currentPOC else { return }
         sourceName = target.server.name
         sourcePlace = target.server.country
         channelName = target.channel
@@ -476,6 +552,7 @@ final class LiveRadio: ObservableObject {
             case .online:
                 wasOnline = true
                 state = .online
+                startListeningClock()
             case .refused(let p):
                 band == .hf ? hfFailed(p, refused: true) : pocFailed(refused: true)
             case .dropped(let p):
@@ -505,6 +582,8 @@ final class LiveRadio: ObservableObject {
     }
 
     private func disconnect() {
+        listenTask?.cancel()
+        listenTask = nil
         generation += 1
         pumps.forEach { $0.cancel() }
         pumps = []

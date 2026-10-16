@@ -62,6 +62,14 @@ struct WalkieTalkieApp: App {
             }
             #endif
             .task {
+                // Ascolto dal vivo: SCAN e schermo spento con Pro o pass 24 ore,
+                // paywall morbido dopo 10 minuti d'ascolto.
+                if #available(iOS 16.0, *) {
+                    LiveRadio.shared.proGate = { LivePassManager.shared.hasLiveExtras }
+                    LiveRadio.shared.onListeningMilestone = {
+                        PaywallTriggerManager.shared.requestForLiveListening()
+                    }
+                }
                 // IAP bootstrap deve precedere AdManager: i guard !isProUser dipendono dallo stato Pro.
                 await iapManager.bootstrap()
                 // Dopo il bootstrap IAP e non prima: `registerSession` deve poter
@@ -91,6 +99,8 @@ struct WalkieTalkieApp: App {
             .onChange(of: scenePhase) { newPhase in
                 if newPhase == .background {
                     returningFromBackground = true
+                    // Senza Pro l'ascolto HF/POC non continua a schermo spento.
+                    if #available(iOS 16.0, *) { LiveRadio.shared.suspendForBackground() }
                 }
                 if newPhase == .active {
                     // Rilegge gli entitlement a ogni rientro in primo piano.
@@ -124,6 +134,7 @@ struct WalkieTalkieApp: App {
                     // Only re-show when truly coming back from background.
                     if returningFromBackground {
                         returningFromBackground = false
+                        if #available(iOS 16.0, *) { LiveRadio.shared.resumeFromBackground() }
                         if isOnboardingComplete {
                             adManager.showAppOpenIfAllowed(afterDelay: true)
                         }

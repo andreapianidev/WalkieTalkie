@@ -517,3 +517,9 @@
 "live_silence" = "今は誰も話していません";
 "live_hf_footer" = "世界中のアマチュア無線家が無料で公開しているKiwiSDR受信機で受信します。Talkyは局の近くの受信機を選びます。";
 "live_poc_footer" = "今まさに人がいる公開Mumbleチャンネルです。Talkyはミュートで参加し、聞くだけです。";
+"live_pro_title" = "Talky Proの機能";
+"live_pro_scan_message" = "自動スキャンはTalky Proの機能です。短い動画を見ると24時間無料で試せます。";
+"live_pro_background_message" = "Talkyを離れたときにHFとPOCの受信が止まりました。Talky Proなら画面を消しても受信が続きます。短い動画を見ると24時間無料で試せます。";
+"live_pro_discover" = "Talky Proを見る";
+"live_pro_video" = "動画を見る：24時間無料";
+"paywall.feature.live" = "自動スキャンと、画面オフでのHF・POC受信";

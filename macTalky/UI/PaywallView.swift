@@ -39,6 +39,7 @@ struct PaywallView: View {
             ConsolePanel(padding: 14) {
                 VStack(alignment: .leading, spacing: 9) {
                     feature("antenna.radiowaves.left.and.right", "All \(RadioManager.shared.radioStations.count) worldwide radio stations")
+                    feature("waveform", "Automatic SCAN on live POC channels")
                     feature("lock.fill", "Private password-protected channels")
                     feature("paintpalette.fill", "All themes on the iOS app")
                     feature("heart.fill", "Supports independent development")

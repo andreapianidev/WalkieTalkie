@@ -364,6 +364,7 @@ struct PaywallView: View {
     private var featuresList: some View {
         VStack(alignment: .leading, spacing: 14) {
             featureRow("xmark.circle.fill", "paywall.feature.no_ads")
+            featureRow("waveform", "paywall.feature.live")
             featureRow("antenna.radiowaves.left.and.right", "paywall.feature.unlimited_stations")
             featureRow("globe", "paywall.feature.premium_international")
             featureRow("mic.circle.fill", "paywall.feature.record_transmissions")

@@ -516,3 +516,9 @@
 "live_silence" = "Hiện không ai nói";
 "live_hf_footer" = "Bạn nghe qua các máy thu KiwiSDR công cộng do những người chơi vô tuyến nghiệp dư khắp thế giới chia sẻ miễn phí. Talky chọn máy thu gần trạm phát.";
 "live_poc_footer" = "Các kênh Mumble công cộng đang có người. Talky vào ở chế độ tắt tiếng và chỉ nghe.";
+"live_pro_title" = "Tính năng Talky Pro";
+"live_pro_scan_message" = "Quét tự động là một phần của Talky Pro. Bạn có thể dùng thử miễn phí 24 giờ bằng cách xem một video ngắn.";
+"live_pro_background_message" = "Việc nghe HF và POC đã dừng khi bạn rời Talky. Với Talky Pro, bạn vẫn nghe được khi tắt màn hình. Bạn có thể dùng thử miễn phí 24 giờ bằng cách xem một video ngắn.";
+"live_pro_discover" = "Khám phá Talky Pro";
+"live_pro_video" = "Xem video: miễn phí 24 giờ";
+"paywall.feature.live" = "Quét tự động và nghe HF, POC khi tắt màn hình";

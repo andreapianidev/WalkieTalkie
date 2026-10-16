@@ -309,11 +309,22 @@ struct LiveSecondaryRow: View {
                     HapticManager.shared.lightTap()
                     live.toggleScan()
                 }) {
-                    Text("SCAN")
-                        .font(.system(size: 13, weight: .bold, design: .monospaced))
-                        .foregroundColor(live.isScanning ? .black : .white)
-                        .frame(width: 64, height: 44)
-                        .background(Capsule().fill(live.isScanning ? Color.yellow : Color.black))
+                    HStack(spacing: 4) {
+                        Text("SCAN")
+                            .font(.system(size: 13, weight: .bold, design: .monospaced))
+                        if !live.proGate() {
+                            Text("PRO")
+                                .font(.system(size: 8, weight: .heavy))
+                                .foregroundColor(.black)
+                                .padding(.horizontal, 4)
+                                .padding(.vertical, 1)
+                                .background(Capsule().fill(Color.yellow))
+                        }
+                    }
+                    .foregroundColor(live.isScanning ? .black : .white)
+                    .frame(minWidth: 64, minHeight: 44)
+                    .padding(.horizontal, 6)
+                    .background(Capsule().fill(live.isScanning ? Color.yellow : Color.black))
                 }
                 .accessibilityLabel("live_scan".localized)
                 .accessibilityAddTraits(live.isScanning ? [.isSelected, .isButton] : .isButton)
@@ -324,6 +335,25 @@ struct LiveSecondaryRow: View {
             }
         }
         .padding(.horizontal, 30)
+        .confirmationDialog("live_pro_title".localized,
+                            isPresented: Binding(get: { live.proPrompt != nil },
+                                                 set: { if !$0 { live.proPrompt = nil } }),
+                            titleVisibility: .visible,
+                            presenting: live.proPrompt) { prompt in
+            Button("live_pro_video".localized) {
+                AdManager.shared.presentRewardedLivePass(source: "live_\(prompt.rawValue)", onGranted: {
+                    if prompt == .scan { live.startScan() }
+                }, onUnavailable: {
+                    HapticManager.shared.warning()
+                })
+            }
+            Button("live_pro_discover".localized) {
+                PaywallTriggerManager.shared.requestForLiveFeature()
+            }
+            Button("cancel".localized, role: .cancel) {}
+        } message: { prompt in
+            Text((prompt == .scan ? "live_pro_scan_message" : "live_pro_background_message").localized)
+        }
     }
 
     private func circleButton(_ icon: String, label: String, action: @escaping () -> Void) -> some View {

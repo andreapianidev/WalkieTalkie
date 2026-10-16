@@ -26,6 +26,8 @@ final class AppBootstrap {
         let radio = RadioManager.shared
         let engine = WalkieEngine.shared
 
+        // Ascolto dal vivo: lo SCAN automatico e' Talky Pro.
+        LiveRadio.shared.proGate = { IAPManager.shared.isProUser }
         await IAPManager.shared.bootstrap()
         radio.setVolume(settings.radioVolume)
         engine.refreshMicPermission()

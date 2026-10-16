@@ -516,3 +516,9 @@
 "live_silence" = "Ninguém está falando agora";
 "live_hf_footer" = "Você ouve por receptores KiwiSDR públicos, compartilhados de graça por radioamadores do mundo todo. O Talky escolhe um receptor perto da estação.";
 "live_poc_footer" = "Canais públicos do Mumble com pessoas conectadas agora. O Talky entra mudo e só escuta.";
+"live_pro_title" = "Recurso do Talky Pro";
+"live_pro_scan_message" = "A varredura automática faz parte do Talky Pro. Você pode testar grátis por 24 horas assistindo a um vídeo curto.";
+"live_pro_background_message" = "A escuta HF e POC parou quando você saiu do Talky. Com o Talky Pro ela continua mesmo com a tela apagada. Você pode testar grátis por 24 horas assistindo a um vídeo curto.";
+"live_pro_discover" = "Conheça o Talky Pro";
+"live_pro_video" = "Assista a um vídeo: 24 horas grátis";
+"paywall.feature.live" = "Varredura automática e escuta HF e POC com a tela apagada";

@@ -65,14 +65,19 @@ final class PaywallTriggerManager {
         case recordingAttempt = "recording_attempt"
         /// Ventesima trasmissione riuscita: qui l'utente usa Talky sul serio.
         case twentiethTransmission = "twentieth_transmission"
+        /// Dieci minuti di ascolto dal vivo HF/POC in tutto: la funzione nuova
+        /// e' piaciuta, si propone Pro una volta.
+        case liveListening = "live_listening"
+        /// Tocco su una comodita' Pro dell'ascolto dal vivo (SCAN, schermo spento).
+        case liveFeatureAttempt = "live_feature_attempt"
 
         /// I trigger legati a un traguardo scattano una volta sola nella vita
         /// dell'app. Quelli legati a un'azione bloccata possono ripresentarsi,
         /// perché l'utente sta chiedendo attivamente quella funzione.
         var isOneShot: Bool {
             switch self {
-            case .secondSession, .twentiethTransmission: return true
-            case .privateChannelAttempt, .recordingAttempt: return false
+            case .secondSession, .twentiethTransmission, .liveListening: return true
+            case .privateChannelAttempt, .recordingAttempt, .liveFeatureAttempt: return false
             }
         }
 
@@ -201,6 +206,14 @@ final class PaywallTriggerManager {
     /// L'utente ha provato a registrare una trasmissione.
     @discardableResult
     func requestForRecording() -> Bool { request(.recordingAttempt) }
+
+    /// Dieci minuti di ascolto HF/POC superati (da LiveRadio).
+    @discardableResult
+    func requestForLiveListening() -> Bool { request(.liveListening) }
+
+    /// L'utente ha scelto "Scopri Talky Pro" da una comodita' dell'ascolto dal vivo.
+    @discardableResult
+    func requestForLiveFeature() -> Bool { request(.liveFeatureAttempt) }
 
     // MARK: - Decisione
 

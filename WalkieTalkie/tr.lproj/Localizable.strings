@@ -516,3 +516,9 @@
 "live_silence" = "Şu an kimse konuşmuyor";
 "live_hf_footer" = "Dünyanın dört bir yanındaki amatör telsizcilerin ücretsiz paylaştığı herkese açık KiwiSDR alıcılarıyla dinlersin. Talky istasyona yakın bir alıcı seçer.";
 "live_poc_footer" = "Şu an içinde insan olan herkese açık Mumble kanalları. Talky sessizde katılır ve yalnızca dinler.";
+"live_pro_title" = "Talky Pro özelliği";
+"live_pro_scan_message" = "Otomatik tarama Talky Pro'nun bir parçası. Kısa bir video izleyerek 24 saat ücretsiz deneyebilirsin.";
+"live_pro_background_message" = "Talky'den çıktığında HF ve POC dinlemesi durdu. Talky Pro ile ekran kapalıyken de devam eder. Kısa bir video izleyerek 24 saat ücretsiz deneyebilirsin.";
+"live_pro_discover" = "Talky Pro'yu keşfet";
+"live_pro_video" = "Video izle: 24 saat ücretsiz";
+"paywall.feature.live" = "Otomatik tarama ve ekran kapalıyken HF ve POC dinleme";

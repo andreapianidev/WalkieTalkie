@@ -333,6 +333,24 @@ final class AdManager: ObservableObject {
         })
     }
 
+    /// Rewarded che sblocca per 24 ore SCAN automatico e ascolto a schermo
+    /// spento di HF e POC. Si offre quando l'utente ha appena chiesto una di
+    /// queste due cose.
+    func presentRewardedLivePass(source: String,
+                                 onGranted: (() -> Void)? = nil,
+                                 onUnavailable: (() -> Void)? = nil) {
+        Analytics.logEvent("rewarded_cta_tapped", parameters: ["source": source])
+        rewarded.showAd(onReward: {
+            LivePassManager.shared.grantPass()
+            HapticManager.shared.success()
+            Analytics.logEvent("rewarded_reward_earned", parameters: [
+                "source": source,
+                "reward": "live_pass_24h"
+            ])
+            onGranted?()
+        }, onUnavailable: onUnavailable)
+    }
+
     /// Rewarded che sblocca una stazione Pro per 24 ore.
     ///
     /// Secondo premio disponibile sul rewarded, e quello con l'intenzione piu'

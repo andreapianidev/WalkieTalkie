@@ -79,7 +79,7 @@ struct ContentView: View {
                     case .radio:
                         RadioView(showPaywall: $showPaywall)
                     case .live:
-                        LiveView()
+                        LiveView(showPaywall: $showPaywall)
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

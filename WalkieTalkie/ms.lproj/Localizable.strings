@@ -518,3 +518,9 @@
 "live_silence" = "Tiada sesiapa bercakap sekarang";
 "live_hf_footer" = "Anda mendengar melalui penerima KiwiSDR awam yang dikongsi secara percuma oleh radio amatur di seluruh dunia. Talky memilih penerima berhampiran stesen.";
 "live_poc_footer" = "Saluran Mumble awam yang ada orang sekarang. Talky masuk dalam keadaan senyap dan hanya mendengar.";
+"live_pro_title" = "Ciri Talky Pro";
+"live_pro_scan_message" = "Imbasan automatik ialah sebahagian daripada Talky Pro. Anda boleh mencubanya secara percuma selama 24 jam dengan menonton video pendek.";
+"live_pro_background_message" = "Pendengaran HF dan POC berhenti apabila anda keluar dari Talky. Dengan Talky Pro ia terus berjalan walaupun skrin dimatikan. Anda boleh mencubanya secara percuma selama 24 jam dengan menonton video pendek.";
+"live_pro_discover" = "Kenali Talky Pro";
+"live_pro_video" = "Tonton video: 24 jam percuma";
+"paywall.feature.live" = "Imbasan automatik dan pendengaran HF dan POC dengan skrin dimatikan";

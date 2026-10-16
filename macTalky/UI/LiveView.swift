@@ -9,6 +9,8 @@ import SwiftUI
 
 struct LiveView: View {
     @ObservedObject private var live = LiveRadio.shared
+    @ObservedObject private var iap = IAPManager.shared
+    @Binding var showPaywall: Bool
     @State private var band: LiveRadio.Band = .hf
 
     var body: some View {
@@ -196,8 +198,19 @@ struct LiveView: View {
                     .buttonStyle(ChipButtonStyle(accent: Talky.teal))
                     .keyboardShortcut(.upArrow, modifiers: [])
             } else {
-                Button(live.isScanning ? "SCAN ON" : "SCAN") { live.toggleScan() }
-                    .buttonStyle(ChipButtonStyle(accent: Talky.teal, filled: live.isScanning))
+                Button {
+                    live.toggleScan()
+                    if live.proPrompt != nil {
+                        live.proPrompt = nil
+                        showPaywall = true
+                    }
+                } label: {
+                    HStack(spacing: 6) {
+                        Text(live.isScanning ? "SCAN ON" : "SCAN")
+                        if !iap.isProUser { ProBadge() }
+                    }
+                }
+                .buttonStyle(ChipButtonStyle(accent: Talky.teal, filled: live.isScanning))
                 Button("REFRESH") { live.rescanPOC() }
                     .buttonStyle(ChipButtonStyle(accent: Talky.teal))
                     .disabled(live.isScouting)
