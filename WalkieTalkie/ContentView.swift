@@ -1219,6 +1219,8 @@ struct ContentView: View {
                 LiveRadio.shared.stop()
             }
         }
+        // Ascolto appena finito: qui l'interstitial non interrompe niente.
+        if band == .local { maybeShowInterstitialOnChannelChange() }
         FirebaseManager.shared.trackFrequencyChange(frequency: "band_\(band.rawValue)")
     }
 

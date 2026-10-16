@@ -262,7 +262,15 @@ final class AdManager: ObservableObject {
         // (recensione App Store "penetrantester Werbung"). Gate centrale così
         // copre ogni call site (cambio stazione/canale, idle, ecc.).
         guard !RadioManager.shared.isPlaying else { return }
+        // Stesso discorso per l'ascolto dal vivo HF/POC.
+        guard !isLiveListening else { return }
         interstitial.showAdIfAllowed()
+    }
+
+    /// Vero mentre il walkie ascolta HF o POC dal vivo.
+    private var isLiveListening: Bool {
+        if #available(iOS 16.0, *) { return LiveRadio.shared.isOn }
+        return false
     }
 
     /// Vero mentre il paywall è a schermo o sta per aprirsi.
@@ -290,6 +298,7 @@ final class AdManager: ObservableObject {
         // Idem per l'app-open al rientro in foreground: se la radio sta suonando
         // (anche da background) non sovrapporre un annuncio a schermo intero.
         guard !RadioManager.shared.isPlaying else { return false }
+        guard !isLiveListening else { return false }
         guard !isPaywallVisible else { return false }
         if appOpenBlockedThisSession {
             PaywallFlowLog.log("app-open saltato: in questa sessione tocca al paywall")

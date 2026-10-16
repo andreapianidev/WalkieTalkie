@@ -107,6 +107,8 @@ final class LiveRadio: ObservableObject {
 
     private var scoutTask: Task<Void, Never>?
     private var scoutedAt: Date?
+    /// Server POC che non hanno risposto: non tornano in lista finche' non si aggiorna.
+    private var badServers: Set<String> = []
     private let username = "Talky-\(Int.random(in: 1000 ... 9999))"
 
     private var scanTask: Task<Void, Never>?
@@ -126,6 +128,11 @@ final class LiveRadio: ObservableObject {
         guard self.band != band else { return }
         stopScan()
         disconnect()
+        if band == .hf, scoutTask != nil {
+            scoutTask?.cancel()
+            scoutTask = nil
+            isScouting = false
+        }
         self.band = band
         player.start()
         switch band {
@@ -205,6 +212,7 @@ final class LiveRadio: ObservableObject {
         disconnect()
         pocChannels = []
         pocIndex = 0
+        badServers = []
         scoutPOC()
     }
 
@@ -381,7 +389,7 @@ final class LiveRadio: ObservableObject {
 
     private func publishScouted(_ found: [MumbleLiveChannel]) {
         let current = currentPOC
-        pocChannels = found.sorted { $0.users > $1.users }
+        pocChannels = found.filter { !badServers.contains($0.server.id) }.sorted { $0.users > $1.users }
         if let current, let i = pocChannels.firstIndex(of: current) {
             pocIndex = i
         } else if current == nil, !pocChannels.isEmpty, band == .poc {
@@ -429,6 +437,7 @@ final class LiveRadio: ObservableObject {
         retried = false
         // Canale non raggiungibile: si toglie dalla lista e si passa al prossimo.
         guard let bad = currentPOC else { return }
+        badServers.insert(bad.server.id)
         pocChannels.removeAll { $0.server == bad.server }
         pocIndex = min(pocIndex, max(0, pocChannels.count - 1))
         if pocChannels.isEmpty {
@@ -512,6 +521,7 @@ final class LiveRadio: ObservableObject {
 
 /// Dove si trova, piu' o meno, chi ascolta: dal fuso orario e dal paese,
 /// senza chiedere la posizione. Serve solo a scegliere un ricevitore vicino.
+@available(iOS 16.0, macOS 13.0, *)
 nonisolated enum ApproximatePlace {
     static var current: (latitude: Double, longitude: Double) {
         let tz = TimeZone.current
