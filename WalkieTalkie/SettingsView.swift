@@ -141,7 +141,6 @@ struct SettingsView: View {
                 }
             })
         }
-        }
     }
 
     // MARK: - Pro Section
