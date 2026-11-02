@@ -231,7 +231,7 @@ actor KiwiListener {
             guard !pcm.isEmpty else { return }
             let chunk = PCMChunk(samples: pcm, sampleRate: sampleRate)
             if let squelch {
-                let gate = squelch.feed(dBm: rssi)
+                let gate = squelch.feed(dBm: rssi, audio: chunk.rms)
                 if gate.changed { eventSink.yield(.squelch(gate.open)) }
                 guard gate.pass else {
                     eventSink.yield(.level(0))

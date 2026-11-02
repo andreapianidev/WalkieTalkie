@@ -75,6 +75,9 @@ nonisolated enum CitizensBand {
 /// Fuerteventura il fondo cambiava di 15 dB da un canale all'altro e il
 /// primo pacchetto portava l'S-meter a zero. Un ricevitore manda 6
 /// pacchetti al secondo, l'altro 50: per questo i tempi sono in secondi.
+/// E siccome il fondo cambia da un canale all'altro, si ricorda frequenza
+/// per frequenza: la scansione si ferma su un canale rumoroso solo al primo
+/// giro.
 nonisolated final class Squelch: @unchecked Sendable {
     /// Sopra il rumore di tanto per aprire, di meno per restare aperto.
     static let openMargin = 7.0
@@ -83,20 +86,61 @@ nonisolated final class Squelch: @unchecked Sendable {
     static let hang: TimeInterval = 0.9
     /// Dopo un cambio di frequenza arrivano ancora pacchetti della vecchia.
     static let settle: TimeInterval = 0.3
-    /// Un livello piatto cosi' a lungo e' una portante muta o un disturbo,
-    /// non qualcuno che parla: la voce fa oscillare l'S-meter di piu'.
+    /// Un livello piatto cosi' a lungo e' rumore, una portante muta o un
+    /// disturbo, non qualcuno che parla. Piatto deve esserlo l'S-meter e
+    /// insieme l'audio: in SSB l'S-meter segue la voce, ma in AM misura la
+    /// portante, che resta ferma mentre si parla, e in FM l'ampiezza non
+    /// cambia mai. L'audio invece, con la voce, sale e scende di parecchi
+    /// dB fra sillabe e pause; il fruscio e un fischio no.
     static let steadyWindow: TimeInterval = 4
+    /// Scarto tipo dell'S-meter, in dB.
     static let steadySpread = 1.2
+    /// Distanza fra il 10 e il 90 percentile del livello dei pacchetti
+    /// audio, in dB. Misurato su 45 minuti di registrazioni radio, a 6 e a
+    /// 50 pacchetti al secondo: il fruscio resta fra 0,2 e 2 dB, la voce
+    /// sta quasi sempre sopra i 3.
+    static let steadyAudioSpread = 2.5
+    /// Si aggiunge al livello audio prima di passare ai dB (-60 dBFS): una
+    /// portante senza modulazione da' un audio quasi muto, che senza questo
+    /// gradino ballerebbe di qualche dB e non sembrerebbe piatto.
+    static let audioFloor = 0.001
+    /// Portante muta chiusa e poi qualcuno ci parla sopra: in AM e in FM
+    /// l'S-meter non si muove, l'audio si'. Riapre quando la mediana
+    /// dell'audio dell'ultimo secondo sale di tanto sopra quella del muto.
+    static let wakeWindow: TimeInterval = 1
+    static let wakeRise = 10.0
+
+    /// Dove si ascolta: il rumore di fondo cambia con la frequenza e con la
+    /// larghezza di banda, che segue l'emissione.
+    nonisolated private struct Spot: Hashable {
+        let hz: Int
+        let emission: Emission
+    }
+
+    /// Il fondo prima della portante muta e la mediana dell'audio del muto.
+    private typealias Muted = (floor: Double, audioDB: Double)
 
     private let lock = NSLock()
     private var enabled: Bool
+    private var spot: Spot?
     private var floor: Double?
+    /// Fondo imparato su ogni frequenza ascoltata con questo ricevitore.
+    private var floors: [Spot: Double] = [:]
+    /// Ultimo fondo per emissione, per le frequenze mai ascoltate.
+    private var modeFloors: [Emission: Double] = [:]
     private var smoothed: Double?
     private var open = false
+    private var noiseOnly = false
+    /// Chiuso dalla regola del livello piatto con un segnale ancora sopra il
+    /// fondo: il fondo di prima e la mediana dell'audio quando si e' chiuso.
+    private var muted: Muted?
+    /// Le portanti mute lasciate su ogni frequenza, per riaprire se ci si
+    /// torna e qualcuno ci sta parlando sopra.
+    private var mutes: [Spot: Muted] = [:]
     private var lastAbove = Date.distantPast
     private var lastFeed = Date.distantPast
     private var settleUntil = Date.distantPast
-    private var recent: [(at: Date, dBm: Double)] = []
+    private var recent: [(at: Date, dBm: Double, audioDB: Double)] = []
 
     init(enabled: Bool) {
         self.enabled = enabled
@@ -110,30 +154,40 @@ nonisolated final class Squelch: @unchecked Sendable {
     /// C'e' un segnale adesso (vale anche a squelch spento, per la scansione).
     var isOpen: Bool { locked { open } }
 
-    /// Frequenza cambiata: il rumore di fondo resta, il segnale no.
-    func retuned() {
+    /// L'ultima apertura era solo rumore o una portante muta: la scansione
+    /// puo' andare avanti subito, senza aspettare la coda.
+    var closedOnNoise: Bool { locked { noiseOnly } }
+
+    /// Frequenza o emissione cambiata: il segnale non c'e' piu', il rumore
+    /// di fondo e' quello gia' imparato li', o il piu' recente per quella
+    /// emissione.
+    func retuned(to tuning: Tuning) {
         locked {
-            open = false
-            smoothed = nil
-            recent = []
-            settleUntil = Date().addingTimeInterval(Self.settle)
+            remember()
+            let next = Spot(hz: tuning.hz, emission: tuning.emission)
+            spot = next
+            floor = floors[next] ?? modeFloors[next.emission] ?? floor
+            restart()
+            muted = mutes[next]
         }
     }
 
     /// Ricevitore nuovo: anche il rumore di fondo e' da reimparare.
-    func reset() {
+    func reset(for tuning: Tuning) {
         locked {
-            open = false
+            spot = Spot(hz: tuning.hz, emission: tuning.emission)
             floor = nil
-            smoothed = nil
-            recent = []
-            settleUntil = Date().addingTimeInterval(Self.settle)
+            floors = [:]
+            modeFloors = [:]
+            mutes = [:]
+            restart()
         }
     }
 
-    /// Un pacchetto con il suo S-meter. `pass`: l'audio va all'altoparlante.
-    /// `changed`: lo stato aperto/chiuso e' appena cambiato.
-    func feed(dBm: Double) -> (pass: Bool, open: Bool, changed: Bool) {
+    /// Un pacchetto con il suo S-meter e il livello RMS del suo audio.
+    /// `pass`: l'audio va all'altoparlante. `changed`: lo stato
+    /// aperto/chiuso e' appena cambiato.
+    func feed(dBm: Double, audio rms: Float) -> (pass: Bool, open: Bool, changed: Bool) {
         locked {
             let was = open
             let now = Date()
@@ -147,7 +201,7 @@ nonisolated final class Squelch: @unchecked Sendable {
             lastFeed = now
             let s = smoothed.map { $0 + (dBm - $0) * min(1, dt * 6) } ?? dBm
             smoothed = s
-            recent.append((now, dBm))
+            recent.append((now, dBm, 20 * log10(Double(rms) + Self.audioFloor)))
             recent.removeAll { now.timeIntervalSince($0.at) > Self.steadyWindow }
 
             guard let f = floor else {
@@ -162,6 +216,7 @@ nonisolated final class Squelch: @unchecked Sendable {
                 }
             } else if s > f + Self.openMargin {
                 open = true
+                noiseOnly = false
                 lastAbove = now
             } else {
                 // Giu' in fretta, su piano, un dB al secondo. A squelch aperto
@@ -169,20 +224,70 @@ nonisolated final class Squelch: @unchecked Sendable {
                 floor = s < f ? f + (s - f) * min(1, dt * 4) : f + min(s - f, dt)
             }
             if let level = steadyLevel(now: now), level > (floor ?? level) {
+                if muted == nil, let before = floor, let audio = audioMedian(since: now - Self.steadyWindow) {
+                    muted = (before, audio)
+                }
                 floor = level
+                if open { noiseOnly = true }
                 open = false
+            } else if !open, let m = muted {
+                if s < m.floor + Self.openMargin {
+                    // La portante non c'e' piu': si torna allo squelch normale.
+                    muted = nil
+                } else if let audio = audioMedian(since: now - Self.wakeWindow), audio > m.audioDB + Self.wakeRise {
+                    floor = m.floor
+                    muted = nil
+                    open = true
+                    noiseOnly = false
+                    lastAbove = now
+                }
             }
             return (open || !enabled, open, open != was)
         }
     }
 
-    /// Il livello medio, se negli ultimi secondi e' rimasto piatto.
+    /// Il livello medio dell'S-meter, se negli ultimi secondi sono rimasti
+    /// piatti sia lui sia l'audio.
     private func steadyLevel(now: Date) -> Double? {
         guard let first = recent.first, now.timeIntervalSince(first.at) > Self.steadyWindow - 0.25,
               recent.count >= 8 else { return nil }
-        let mean = recent.reduce(0) { $0 + $1.dBm } / Double(recent.count)
-        let spread = (recent.reduce(0) { $0 + ($1.dBm - mean) * ($1.dBm - mean) } / Double(recent.count)).squareRoot()
-        return spread < Self.steadySpread ? mean : nil
+        let count = Double(recent.count)
+        let mean = recent.reduce(0) { $0 + $1.dBm } / count
+        let spread = (recent.reduce(0) { $0 + ($1.dBm - mean) * ($1.dBm - mean) } / count).squareRoot()
+        guard spread < Self.steadySpread else { return nil }
+        let audio = recent.map { $0.audioDB }.sorted()
+        let low = audio[Int(Double(audio.count - 1) * 0.1)]
+        let high = audio[Int(Double(audio.count - 1) * 0.9)]
+        return high - low < Self.steadyAudioSpread ? mean : nil
+    }
+
+    /// Mediana del livello audio dei pacchetti arrivati da `start` in poi.
+    private func audioMedian(since start: Date) -> Double? {
+        let audio = recent.filter { $0.at >= start }.map { $0.audioDB }.sorted()
+        guard audio.count >= 4 else { return nil }
+        return audio[audio.count / 2]
+    }
+
+    /// Salva il fondo della frequenza che si lascia.
+    private func remember() {
+        guard let spot, let floor else { return }
+        // Tanti passi di sintonia fine: basta ripartire da capo.
+        if floors.count > 600 {
+            floors = [:]
+            mutes = [:]
+        }
+        floors[spot] = floor
+        modeFloors[spot.emission] = floor
+        mutes[spot] = muted
+    }
+
+    private func restart() {
+        open = false
+        noiseOnly = false
+        muted = nil
+        smoothed = nil
+        recent = []
+        settleUntil = Date().addingTimeInterval(Self.settle)
     }
 
     private func locked<T>(_ body: () -> T) -> T {

@@ -13,11 +13,15 @@ nonisolated struct PCMChunk: Sendable {
 
     /// Inviluppo 0...1, abbastanza per un indicatore di livello.
     var envelope: Float {
+        min(1, rms * 2.2)
+    }
+
+    /// Livello RMS dei campioni, 0...1.
+    var rms: Float {
         guard !samples.isEmpty else { return 0 }
         var sum: Float = 0
         for s in samples { sum += s * s }
-        let rms = (sum / Float(samples.count)).squareRoot()
-        return min(1, rms * 2.2)
+        return (sum / Float(samples.count)).squareRoot()
     }
 }
 

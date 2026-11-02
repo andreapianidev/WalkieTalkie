@@ -339,7 +339,7 @@ final class LiveRadio: ObservableObject {
         defaults.set(t.emission.rawValue, forKey: Self.cbEmissionKey)
         guard band == .cb else { return }
         tuning = t
-        squelch.retuned()
+        squelch.retuned(to: t)
         squelchOpen = false
         if isScanning { scanSince = Date() }
         if let kiwi {
@@ -435,7 +435,8 @@ final class LiveRadio: ObservableObject {
             return
         }
         if scanHolding {
-            guard now.timeIntervalSince(lastVoice) > 3 else { return }
+            // Se era solo rumore o una portante muta, avanti subito.
+            guard squelch.closedOnNoise || now.timeIntervalSince(lastVoice) > 3 else { return }
             scanHolding = false
             scanSince = now
             stepCB(1)
@@ -534,7 +535,7 @@ final class LiveRadio: ObservableObject {
         sourcePlace = receiver.location
         wasOnline = false
         retried = fresh ? false : retried
-        squelch.reset()
+        squelch.reset(for: tuning)
         squelchOpen = false
         let listener = KiwiListener(receiver: receiver, tuning: tuning, squelch: band == .cb ? squelch : nil)
         kiwi = listener

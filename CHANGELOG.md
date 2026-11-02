@@ -101,6 +101,15 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
   after.
 - **Automatic squelch**: the hiss stays muted between transmissions.
 
+#### Fixed in (104)
+- **The squelch no longer cuts AM and FM stations mid sentence.** After 4
+  seconds of talking it took the station for a silent carrier and muted it
+  for the rest of the transmission. It now tells voice from hiss by the audio,
+  and opens again when someone talks over a carrier it had muted.
+- **SCAN on CB stops on a noisy channel only on the first pass**, and moves on
+  as soon as it hears that it is only noise, instead of waiting 7 seconds on
+  every pass.
+
 ### [2.0] (112), 2026-10-16
 
 #### New
@@ -146,6 +155,15 @@ Sandboxed, no ads, no tracking.
 
 #### Changed
 - The "CB 27.555" entry left the HF list: it lives in the CB band now.
+
+#### Fixed in (104)
+- **The squelch no longer cuts AM and FM stations mid sentence.** After 4
+  seconds of talking it took the station for a silent carrier and muted it
+  for the rest of the transmission. It now tells voice from hiss by the audio,
+  and opens again when someone talks over a carrier it had muted.
+- **SCAN on CB stops on a noisy channel only on the first pass**, and moves on
+  as soon as it hears that it is only noise, instead of waiting 7 seconds on
+  every pass.
 
 ### [3.0] (113), 2026-10-16
 
