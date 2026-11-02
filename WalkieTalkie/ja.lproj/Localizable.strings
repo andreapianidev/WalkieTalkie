@@ -519,7 +519,21 @@
 "live_poc_footer" = "今まさに人がいる公開Mumbleチャンネルです。Talkyはミュートで参加し、聞くだけです。";
 "live_pro_title" = "Talky Proの機能";
 "live_pro_scan_message" = "自動スキャンはTalky Proの機能です。短い動画を見ると24時間無料で試せます。";
-"live_pro_background_message" = "Talkyを離れたときにHFとPOCの受信が止まりました。Talky Proなら画面を消しても受信が続きます。短い動画を見ると24時間無料で試せます。";
+"live_pro_background_message" = "Talkyを離れたときにHF、CB、POCの受信が止まりました。Talky Proなら画面を消しても受信が続きます。短い動画を見ると24時間無料で試せます。";
 "live_pro_discover" = "Talky Proを見る";
 "live_pro_video" = "動画を見る：24時間無料";
-"paywall.feature.live" = "自動スキャンと、画面オフでのHF・POC受信";
+"paywall.feature.live" = "自動スキャンと、画面オフでのHF・CB・POC受信";
+
+// CB 27 MHz (3.1)
+"live_cb_section" = "チャンネルとDXを切り替え";
+"live_cb_mode" = "受信モード：AM、FM、LSB、USB";
+"live_cb_squelch" = "スケルチ：誰も送信していないときは無音";
+"live_cb_prev" = "前のチャンネル";
+"live_cb_next" = "次のチャンネル";
+"live_cb_quiet" = "チャンネルは空き、スケルチ閉";
+"live_cb_tune" = "移動";
+"live_cb_enter_frequency" = "周波数を入力（26.965 - 27.855 MHz）";
+"live_cb_out_of_band" = "CB帯の外です。26.965から27.855 MHzの周波数を入力してください";
+"live_cb_dx_call" = "SSBのDX呼び出し周波数";
+"live_cb_channels" = "40チャンネル";
+"live_cb_footer" = "本物のCB無線を、近くの公開KiwiSDR受信機から聞けます。伝搬でバンドが開くと（たいてい日中）、送信している人の声が聞こえます。スケルチをオンにすると、交信の合間のノイズは無音になります。";

@@ -524,7 +524,21 @@
 "live_poc_footer" = "Canales públicos de Mumble con gente conectada ahora. Talky entra en silencio y solo escucha.";
 "live_pro_title" = "Función de Talky Pro";
 "live_pro_scan_message" = "El escaneo automático forma parte de Talky Pro. Puedes probarlo gratis 24 horas viendo un vídeo corto.";
-"live_pro_background_message" = "La escucha HF y POC se detuvo al salir de Talky. Con Talky Pro sigue también con la pantalla apagada. Puedes probarlo gratis 24 horas viendo un vídeo corto.";
+"live_pro_background_message" = "La escucha HF, CB y POC se detuvo al salir de Talky. Con Talky Pro sigue también con la pantalla apagada. Puedes probarlo gratis 24 horas viendo un vídeo corto.";
 "live_pro_discover" = "Descubre Talky Pro";
 "live_pro_video" = "Mira un vídeo: 24 horas gratis";
-"paywall.feature.live" = "Escaneo automático y escucha HF y POC con la pantalla apagada";
+"paywall.feature.live" = "Escaneo automático y escucha HF, CB y POC con la pantalla apagada";
+
+// CB 27 MHz (3.1)
+"live_cb_section" = "Cambiar entre canales y DX";
+"live_cb_mode" = "Modo de recepción: AM, FM, LSB o USB";
+"live_cb_squelch" = "Squelch: silencio cuando nadie transmite";
+"live_cb_prev" = "Canal anterior";
+"live_cb_next" = "Canal siguiente";
+"live_cb_quiet" = "Canal libre, squelch cerrado";
+"live_cb_tune" = "Ir";
+"live_cb_enter_frequency" = "Escribe una frecuencia (26.965 - 27.855 MHz)";
+"live_cb_out_of_band" = "Fuera de la CB: escribe una frecuencia entre 26.965 y 27.855 MHz";
+"live_cb_dx_call" = "llamada DX en SSB";
+"live_cb_channels" = "40 canales";
+"live_cb_footer" = "La CB real, desde los receptores KiwiSDR públicos más cercanos a ti. Oyes a quien transmite cuando la propagación abre la banda, normalmente de día. Con el squelch activado, el ruido queda en silencio entre una transmisión y otra.";

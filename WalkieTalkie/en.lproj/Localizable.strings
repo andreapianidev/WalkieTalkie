@@ -518,7 +518,21 @@
 "live_poc_footer" = "Public Mumble channels with people on them right now. Talky joins muted and only listens.";
 "live_pro_title" = "Talky Pro feature";
 "live_pro_scan_message" = "Auto scan is part of Talky Pro. You can try it free for 24 hours by watching a short video.";
-"live_pro_background_message" = "HF and POC listening stopped when you left Talky. With Talky Pro it keeps going with the screen off. You can try it free for 24 hours by watching a short video.";
+"live_pro_background_message" = "HF, CB and POC listening stopped when you left Talky. With Talky Pro it keeps going with the screen off. You can try it free for 24 hours by watching a short video.";
 "live_pro_discover" = "Discover Talky Pro";
 "live_pro_video" = "Watch a video: 24 hours free";
-"paywall.feature.live" = "Auto scan and HF and POC listening with the screen off";
+"paywall.feature.live" = "Auto scan and HF, CB and POC listening with the screen off";
+
+// CB 27 MHz (3.1)
+"live_cb_section" = "Switch between channels and DX";
+"live_cb_mode" = "Receive mode: AM, FM, LSB or USB";
+"live_cb_squelch" = "Squelch: silence when nobody is transmitting";
+"live_cb_prev" = "Previous channel";
+"live_cb_next" = "Next channel";
+"live_cb_quiet" = "Channel clear, squelch closed";
+"live_cb_tune" = "Go";
+"live_cb_enter_frequency" = "Type a frequency (26.965 - 27.855 MHz)";
+"live_cb_out_of_band" = "Outside CB: type a frequency between 26.965 and 27.855 MHz";
+"live_cb_dx_call" = "SSB DX calling frequency";
+"live_cb_channels" = "40 channels";
+"live_cb_footer" = "Real CB, from the public KiwiSDR receivers nearest to you. You hear whoever is transmitting when propagation opens the band, usually during the day. With squelch on, the hiss stays muted between transmissions.";

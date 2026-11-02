@@ -51,12 +51,15 @@ nonisolated enum LiveEvent: Sendable {
     case signal(dBm: Double)
     /// Livello dell'audio in arrivo, 0...1.
     case level(Float)
+    /// Lo squelch CB si e' aperto o chiuso.
+    case squelch(Bool)
 }
 
 nonisolated enum Emission: String, Sendable, Codable, CaseIterable {
     case lsb = "LSB"
     case usb = "USB"
     case am = "AM"
+    case fm = "FM"
     case cw = "CW"
 }
 

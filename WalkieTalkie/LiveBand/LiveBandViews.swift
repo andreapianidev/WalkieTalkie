@@ -1,21 +1,22 @@
 //creato da Andrea Piani - 16/10/26 - https://www.andreapiani.com - LiveBandViews.swift
 //  WalkieTalkie
 //
-//  Le bande HF e POC sulla schermata del walkie: display, stato, comandi e
+//  Le bande HF, CB e POC sulla schermata del walkie: display, stato, comandi e
 //  lista dei canali. Tutto quello che si sente arriva da ricevitori e canali
 //  veri (vedi Shared/RealRadio).
 
 import SwiftUI
 
 /// Dove punta il walkie: il canale locale fra telefoni vicini, oppure
-/// l'ascolto dal vivo delle onde corte o dei canali POC.
+/// l'ascolto dal vivo delle onde corte, della CB o dei canali POC.
 enum WalkieBand: String, CaseIterable {
-    case local, hf, poc
+    case local, hf, cb, poc
 
     var title: String {
         switch self {
         case .local: return "live_band_local".localized
         case .hf: return "HF"
+        case .cb: return "CB"
         case .poc: return "POC"
         }
     }
@@ -24,6 +25,7 @@ enum WalkieBand: String, CaseIterable {
         switch self {
         case .local: return "person.2.wave.2"
         case .hf: return "antenna.radiowaves.left.and.right"
+        case .cb: return "radio"
         case .poc: return "dot.radiowaves.up.forward"
         }
     }
@@ -35,6 +37,7 @@ extension WalkieBand {
         switch self {
         case .local: return nil
         case .hf: return .hf
+        case .cb: return .cb
         case .poc: return .poc
         }
     }
@@ -57,6 +60,7 @@ struct BandSelectorRow: View {
                         Text(band.title)
                             .font(.system(size: 12, weight: .bold, design: .monospaced))
                             .lineLimit(1)
+                            .minimumScaleFactor(0.6)
                     }
                     .foregroundColor(selected == band ? .black : .white)
                     .frame(maxWidth: .infinity)
@@ -113,9 +117,9 @@ extension LiveRadio {
         }
     }
 
-    /// Accensione delle 5 spie del display: S-meter in HF, voce in POC.
+    /// Accensione delle 5 spie del display: S-meter in HF e CB, voce in POC.
     var meterDots: Int {
-        if band == .hf, let dBm = signalDBm {
+        if band?.isKiwi == true, let dBm = signalDBm {
             return Int((SignalScale.fraction(dBm: dBm) * 5).rounded())
         }
         return Int((Double(level) * 5).rounded(.up))
@@ -168,7 +172,16 @@ struct LiveDisplayView: View {
 
                 Spacer(minLength: 0)
 
-                if live.band == .hf {
+                if live.band == .cb, let ch = live.cbChannel {
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Text("CH \(ch)")
+                            .font(.system(size: compact ? 30 : 36, weight: .bold, design: .monospaced))
+                            .foregroundColor(.yellow)
+                        Text("\(live.tuning.megahertzText) " + live.tuning.emission.rawValue)
+                            .font(.caption.monospaced())
+                            .foregroundColor(.yellow.opacity(0.8))
+                    }
+                } else if live.band?.isKiwi == true {
                     HStack(alignment: .firstTextBaseline, spacing: 6) {
                         Text(live.tuning.megahertzText)
                             .font(.system(size: compact ? 30 : 36, weight: .bold, design: .monospaced))
@@ -212,11 +225,20 @@ struct LiveDisplayView: View {
     }
 
     private var headline: String {
-        live.band == .hf ? "HF · \(live.currentHF.name)" : "POC · \(live.sourceName)"
+        switch live.band {
+        case .hf: return "HF · \(live.currentHF.name)"
+        case .cb:
+            let where_ = live.cbChannel.map { "CH \($0)" } ?? (live.cbIsDX ? "DX" : "CB")
+            return "CB · " + where_ + (live.squelchOn ? " · SQL" : "")
+        default: return "POC · \(live.sourceName)"
+        }
     }
 
     private var footline: String {
-        if live.band == .hf {
+        if live.band == .cb, live.isScanning {
+            return (live.scanHolding ? "live_scan_holding" : "live_scan_searching").localized
+        }
+        if live.band?.isKiwi == true {
             if let dBm = live.signalDBm { return "\(SignalScale.label(dBm: dBm)) · \(live.sourceName)" }
             return live.sourceName
         }
@@ -241,7 +263,7 @@ struct LiveStatusCard: View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 HStack {
-                    Text((live.band == .hf ? "live_receiver" : "live_server").localized + ": " + sourceText)
+                    Text((live.band?.isKiwi == true ? "live_receiver" : "live_server").localized + ": " + sourceText)
                         .font(.subheadline)
                         .fontWeight(.medium)
                         .foregroundColor(Color("PrimaryTextColor"))
@@ -280,9 +302,9 @@ struct LiveStatusCard: View {
     }
 
     private var detail: String {
-        if live.band == .hf {
+        if live.band?.isKiwi == true {
             let place = live.sourcePlace.isEmpty ? "" : live.sourcePlace + " · "
-            return place + live.currentHF.kind.subtitle
+            return place + (live.band == .cb ? HFChannel.Kind.citizens : live.currentHF.kind).subtitle
         }
         let place = live.sourcePlace.isEmpty ? "" : live.sourcePlace + " · "
         return place + "live_listen_only_note".localized
@@ -297,7 +319,45 @@ struct LiveSecondaryRow: View {
     let onList: () -> Void
 
     var body: some View {
-        HStack(spacing: 24) {
+        VStack(spacing: 10) {
+            if live.band == .cb { cbRow }
+            mainRow
+        }
+        .confirmationDialog("live_pro_title".localized,
+                            isPresented: Binding(get: { live.proPrompt != nil },
+                                                 set: { if !$0 { live.proPrompt = nil } }),
+                            titleVisibility: .visible,
+                            presenting: live.proPrompt) { prompt in
+            Button("live_pro_video".localized) {
+                AdManager.shared.presentRewardedLivePass(source: "live_\(prompt.rawValue)", onGranted: {
+                    if prompt == .scan { live.startScan() }
+                }, onUnavailable: {
+                    HapticManager.shared.warning()
+                })
+            }
+            Button("live_pro_discover".localized) {
+                PaywallTriggerManager.shared.requestForLiveFeature()
+            }
+            Button("cancel".localized, role: .cancel) {}
+        } message: { prompt in
+            Text((prompt == .scan ? "live_pro_scan_message" : "live_pro_background_message").localized)
+        }
+    }
+
+    /// CB: parte (canali o DX), modo, squelch e sintonia fine.
+    private var cbRow: some View {
+        HStack(spacing: 8) {
+            pill(live.cbIsDX ? "CH" : "DX", label: "live_cb_section".localized) { live.toggleCBSection() }
+            pill(live.tuning.emission.rawValue, label: "live_cb_mode".localized) { live.cycleCBMode() }
+            pill("SQL", label: "live_cb_squelch".localized, lit: live.squelchOn) { live.toggleSquelch() }
+            pill("-1k", label: "live_tune_down".localized) { live.nudge(kHz: -1) }
+            pill("+1k", label: "live_tune_up".localized) { live.nudge(kHz: 1) }
+        }
+        .padding(.horizontal, 20)
+    }
+
+    private var mainRow: some View {
+        HStack(spacing: live.band == .cb ? 8 : 24) {
             circleButton("list.bullet", label: "live_channels".localized, action: onList)
             Spacer()
             if live.band == .hf {
@@ -305,6 +365,10 @@ struct LiveSecondaryRow: View {
                 Spacer()
                 textButton("+1 kHz", label: "live_tune_up".localized) { live.nudge(kHz: 1) }
             } else {
+                if live.band == .cb {
+                    textButton("CH -", label: "live_cb_prev".localized, width: 60) { live.step(-1) }
+                    Spacer()
+                }
                 Button(action: {
                     HapticManager.shared.lightTap()
                     live.toggleScan()
@@ -329,31 +393,34 @@ struct LiveSecondaryRow: View {
                 .accessibilityLabel("live_scan".localized)
                 .accessibilityAddTraits(live.isScanning ? [.isSelected, .isButton] : .isButton)
                 Spacer()
-                circleButton("arrow.clockwise", label: "live_refresh".localized) { live.rescanPOC() }
-                    .disabled(live.isScouting)
-                    .opacity(live.isScouting ? 0.4 : 1)
+                if live.band == .cb {
+                    textButton("CH +", label: "live_cb_next".localized, width: 60) { live.step(1) }
+                } else {
+                    circleButton("arrow.clockwise", label: "live_refresh".localized) { live.rescanPOC() }
+                        .disabled(live.isScouting)
+                        .opacity(live.isScouting ? 0.4 : 1)
+                }
             }
         }
         .padding(.horizontal, 30)
-        .confirmationDialog("live_pro_title".localized,
-                            isPresented: Binding(get: { live.proPrompt != nil },
-                                                 set: { if !$0 { live.proPrompt = nil } }),
-                            titleVisibility: .visible,
-                            presenting: live.proPrompt) { prompt in
-            Button("live_pro_video".localized) {
-                AdManager.shared.presentRewardedLivePass(source: "live_\(prompt.rawValue)", onGranted: {
-                    if prompt == .scan { live.startScan() }
-                }, onUnavailable: {
-                    HapticManager.shared.warning()
-                })
-            }
-            Button("live_pro_discover".localized) {
-                PaywallTriggerManager.shared.requestForLiveFeature()
-            }
-            Button("cancel".localized, role: .cancel) {}
-        } message: { prompt in
-            Text((prompt == .scan ? "live_pro_scan_message" : "live_pro_background_message").localized)
+    }
+
+    private func pill(_ text: String, label: String, lit: Bool = false, action: @escaping () -> Void) -> some View {
+        Button(action: {
+            HapticManager.shared.lightTap()
+            action()
+        }) {
+            Text(text)
+                .font(.system(size: 12, weight: .bold, design: .monospaced))
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+                .foregroundColor(lit ? .black : .white)
+                .frame(maxWidth: .infinity, minHeight: 36)
+                .background(Capsule().fill(lit ? Color.yellow : Color.black))
         }
+        .buttonStyle(.plain)
+        .accessibilityLabel(label)
+        .accessibilityAddTraits(lit ? [.isSelected, .isButton] : .isButton)
     }
 
     private func circleButton(_ icon: String, label: String, action: @escaping () -> Void) -> some View {
@@ -373,7 +440,7 @@ struct LiveSecondaryRow: View {
         .accessibilityLabel(label)
     }
 
-    private func textButton(_ text: String, label: String, action: @escaping () -> Void) -> some View {
+    private func textButton(_ text: String, label: String, width: CGFloat = 72, action: @escaping () -> Void) -> some View {
         Button(action: {
             HapticManager.shared.lightTap()
             action()
@@ -381,7 +448,7 @@ struct LiveSecondaryRow: View {
             Text(text)
                 .font(.system(size: 13, weight: .bold, design: .monospaced))
                 .foregroundColor(.white)
-                .frame(width: 72, height: 44)
+                .frame(width: width, height: 44)
                 .background(Capsule().fill(Color.black))
         }
         .accessibilityLabel(label)
@@ -431,7 +498,7 @@ struct LivePTTFace: View {
                 .font(.system(size: 14, weight: .bold))
                 .foregroundColor(.gray)
                 .multilineTextAlignment(.center)
-            Text(live.band == .hf ? "HF" : "POC")
+            Text(live.band == .hf ? "HF" : live.band == .cb ? "CB" : "POC")
                 .font(.system(size: 12, weight: .medium))
                 .foregroundColor(.gray)
             Text("live_on_air".localized)
@@ -473,6 +540,11 @@ struct LiveSpeakerStatus: View {
     }
 
     private var onlineText: String {
+        if live.band == .cb {
+            if live.isScanning { return (live.scanHolding ? "live_scan_holding" : "live_scan_searching").localized }
+            if live.squelchOn, !live.squelchOpen { return "live_cb_quiet".localized }
+            return "reception_in_progress".localized
+        }
         if live.band == .poc {
             if live.isScanning { return (live.scanHolding ? "live_scan_holding" : "live_scan_searching").localized }
             return "live_silence".localized
@@ -487,11 +559,15 @@ struct LiveSpeakerStatus: View {
 struct LiveChannelsSheet: View {
     @ObservedObject var live = LiveRadio.shared
     @Environment(\.dismiss) private var dismiss
+    @State private var typedFrequency = ""
+    @State private var typedWrong = false
 
     var body: some View {
         NavigationStack {
             List {
-                if live.band == .hf {
+                if live.band == .cb {
+                    cbSections
+                } else if live.band == .hf {
                     Section {
                         ForEach(Array(live.hfChannels.enumerated()), id: \.element.id) { i, ch in
                             Button(action: {
@@ -531,7 +607,7 @@ struct LiveChannelsSheet: View {
                     }
                 }
             }
-            .navigationTitle(live.band == .hf ? "HF" : "POC")
+            .navigationTitle(live.band == .hf ? "HF" : live.band == .cb ? "CB" : "POC")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
@@ -544,6 +620,72 @@ struct LiveChannelsSheet: View {
                     }
                 }
             }
+        }
+    }
+
+    /// Frequenza a mano, i 40 canali e la chiamata DX.
+    @ViewBuilder
+    private var cbSections: some View {
+        Section {
+            HStack {
+                TextField("27.555", text: $typedFrequency)
+                    .keyboardType(.decimalPad)
+                    .font(.body.monospaced())
+                    .onSubmit(tuneTyped)
+                Text("MHz")
+                    .foregroundColor(.secondary)
+                Button("live_cb_tune".localized, action: tuneTyped)
+                    .disabled(typedFrequency.isEmpty)
+            }
+        } header: {
+            Text("live_cb_enter_frequency".localized)
+        } footer: {
+            if typedWrong { Text("live_cb_out_of_band".localized).foregroundColor(.red) }
+        }
+        Section {
+            Button(action: {
+                live.tuneCB(hz: CitizensBand.dxCall)
+                dismiss()
+            }) {
+                row(title: "DX 27.555",
+                    subtitle: "27.555 MHz USB · " + "live_cb_dx_call".localized,
+                    selected: live.tuning.hz == CitizensBand.dxCall)
+            }
+        } header: {
+            Text("DX")
+        }
+        Section {
+            ForEach(1 ... 40, id: \.self) { n in
+                let hz = CitizensBand.channels[n - 1]
+                Button(action: {
+                    live.selectCBChannel(n)
+                    dismiss()
+                }) {
+                    row(title: "CH \(n)",
+                        subtitle: "\(Tuning(hz: hz, emission: .am, bandwidth: 0).megahertzText) MHz " + CitizensBand.usualEmission(channel: n).rawValue,
+                        selected: live.cbChannel == n)
+                }
+            }
+        } header: {
+            Text("live_cb_channels".localized)
+        } footer: {
+            Text("live_cb_footer".localized)
+        }
+    }
+
+    /// Accetta "27.555", "27,555" e anche "27555" (kHz).
+    private func tuneTyped() {
+        let text = typedFrequency.replacingOccurrences(of: ",", with: ".").trimmingCharacters(in: .whitespaces)
+        guard let value = Double(text) else {
+            typedWrong = true
+            return
+        }
+        let hz = Int((value < 100 ? value * 1_000_000 : value * 1000).rounded())
+        if live.tuneCB(hz: hz) {
+            typedWrong = false
+            dismiss()
+        } else {
+            typedWrong = true
         }
     }
 

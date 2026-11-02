@@ -109,6 +109,8 @@ actor KiwiListener {
     nonisolated let audio: AsyncStream<PCMChunk>
     nonisolated let events: AsyncStream<LiveEvent>
     nonisolated let receiver: KiwiReceiver
+    /// Solo per la CB: decide pacchetto per pacchetto se l'audio passa.
+    nonisolated let squelch: Squelch?
 
     private let audioSink: AsyncStream<PCMChunk>.Continuation
     private let eventSink: AsyncStream<LiveEvent>.Continuation
@@ -122,9 +124,10 @@ actor KiwiListener {
     private var failed = false
     private var pendingTune: Task<Void, Never>?
 
-    init(receiver: KiwiReceiver, tuning: Tuning) {
+    init(receiver: KiwiReceiver, tuning: Tuning, squelch: Squelch? = nil) {
         self.receiver = receiver
         self.tuning = tuning
+        self.squelch = squelch
         (audio, audioSink) = AsyncStream.makeStream(of: PCMChunk.self, bufferingPolicy: .bufferingNewest(32))
         (events, eventSink) = AsyncStream.makeStream(of: LiveEvent.self, bufferingPolicy: .bufferingNewest(128))
     }
@@ -227,6 +230,14 @@ actor KiwiListener {
             }
             guard !pcm.isEmpty else { return }
             let chunk = PCMChunk(samples: pcm, sampleRate: sampleRate)
+            if let squelch {
+                let gate = squelch.feed(dBm: rssi)
+                if gate.changed { eventSink.yield(.squelch(gate.open)) }
+                guard gate.pass else {
+                    eventSink.yield(.level(0))
+                    return
+                }
+            }
             audioSink.yield(chunk)
             eventSink.yield(.level(chunk.envelope))
         case .other:
@@ -380,6 +391,7 @@ nonisolated enum KiwiFrame {
         case .usb: (300, t.bandwidth + 300)
         case .cw: (500 - t.bandwidth / 2, 500 + t.bandwidth / 2)
         case .am: (-t.bandwidth * 2, t.bandwidth * 2)
+        case .fm: (-t.bandwidth, t.bandwidth)
         }
     }
 
@@ -389,6 +401,7 @@ nonisolated enum KiwiFrame {
         case .usb: "usb"
         case .cw: "cw"
         case .am: "am"
+        case .fm: "nbfm"
         }
     }
 }

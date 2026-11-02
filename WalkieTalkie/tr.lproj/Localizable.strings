@@ -518,7 +518,21 @@
 "live_poc_footer" = "Şu an içinde insan olan herkese açık Mumble kanalları. Talky sessizde katılır ve yalnızca dinler.";
 "live_pro_title" = "Talky Pro özelliği";
 "live_pro_scan_message" = "Otomatik tarama Talky Pro'nun bir parçası. Kısa bir video izleyerek 24 saat ücretsiz deneyebilirsin.";
-"live_pro_background_message" = "Talky'den çıktığında HF ve POC dinlemesi durdu. Talky Pro ile ekran kapalıyken de devam eder. Kısa bir video izleyerek 24 saat ücretsiz deneyebilirsin.";
+"live_pro_background_message" = "Talky'den çıktığında HF, CB ve POC dinlemesi durdu. Talky Pro ile ekran kapalıyken de devam eder. Kısa bir video izleyerek 24 saat ücretsiz deneyebilirsin.";
 "live_pro_discover" = "Talky Pro'yu keşfet";
 "live_pro_video" = "Video izle: 24 saat ücretsiz";
-"paywall.feature.live" = "Otomatik tarama ve ekran kapalıyken HF ve POC dinleme";
+"paywall.feature.live" = "Otomatik tarama ve ekran kapalıyken HF, CB ve POC dinleme";
+
+// CB 27 MHz (3.1)
+"live_cb_section" = "Kanallar ve DX arasında geç";
+"live_cb_mode" = "Alış modu: AM, FM, LSB veya USB";
+"live_cb_squelch" = "Squelch: kimse yayın yapmadığında sessizlik";
+"live_cb_prev" = "Önceki kanal";
+"live_cb_next" = "Sonraki kanal";
+"live_cb_quiet" = "Kanal boş, squelch kapalı";
+"live_cb_tune" = "Git";
+"live_cb_enter_frequency" = "Frekans yaz (26.965 - 27.855 MHz)";
+"live_cb_out_of_band" = "CB dışında: 26.965 ile 27.855 MHz arasında bir frekans yaz";
+"live_cb_dx_call" = "SSB DX çağrı frekansı";
+"live_cb_channels" = "40 kanal";
+"live_cb_footer" = "Gerçek CB, sana en yakın herkese açık KiwiSDR alıcılarından. Yayılım bandı açtığında, genellikle gündüz, yayın yapanları duyarsın. Squelch açıkken iki yayın arasındaki hışırtı sessiz kalır.";

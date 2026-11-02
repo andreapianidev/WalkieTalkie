@@ -518,7 +518,21 @@
 "live_poc_footer" = "Các kênh Mumble công cộng đang có người. Talky vào ở chế độ tắt tiếng và chỉ nghe.";
 "live_pro_title" = "Tính năng Talky Pro";
 "live_pro_scan_message" = "Quét tự động là một phần của Talky Pro. Bạn có thể dùng thử miễn phí 24 giờ bằng cách xem một video ngắn.";
-"live_pro_background_message" = "Việc nghe HF và POC đã dừng khi bạn rời Talky. Với Talky Pro, bạn vẫn nghe được khi tắt màn hình. Bạn có thể dùng thử miễn phí 24 giờ bằng cách xem một video ngắn.";
+"live_pro_background_message" = "Việc nghe HF, CB và POC đã dừng khi bạn rời Talky. Với Talky Pro, bạn vẫn nghe được khi tắt màn hình. Bạn có thể dùng thử miễn phí 24 giờ bằng cách xem một video ngắn.";
 "live_pro_discover" = "Khám phá Talky Pro";
 "live_pro_video" = "Xem video: miễn phí 24 giờ";
-"paywall.feature.live" = "Quét tự động và nghe HF, POC khi tắt màn hình";
+"paywall.feature.live" = "Quét tự động và nghe HF, CB, POC khi tắt màn hình";
+
+// CB 27 MHz (3.1)
+"live_cb_section" = "Chuyển giữa kênh và DX";
+"live_cb_mode" = "Chế độ thu: AM, FM, LSB hoặc USB";
+"live_cb_squelch" = "Squelch: im lặng khi không ai phát";
+"live_cb_prev" = "Kênh trước";
+"live_cb_next" = "Kênh sau";
+"live_cb_quiet" = "Kênh trống, squelch đóng";
+"live_cb_tune" = "Đi";
+"live_cb_enter_frequency" = "Nhập tần số (26.965 - 27.855 MHz)";
+"live_cb_out_of_band" = "Ngoài dải CB: nhập tần số từ 26.965 đến 27.855 MHz";
+"live_cb_dx_call" = "tần số gọi DX SSB";
+"live_cb_channels" = "40 kênh";
+"live_cb_footer" = "CB thật, từ các máy thu KiwiSDR công cộng gần bạn nhất. Bạn nghe được người đang phát khi điều kiện truyền sóng mở dải, thường vào ban ngày. Khi bật squelch, tiếng rè được tắt giữa các lượt phát.";

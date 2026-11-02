@@ -1,8 +1,8 @@
 //creato da Andrea Piani - 16/10/26 - https://www.andreapiani.com - LiveView.swift
 //  macTalky
 //
-//  Modulo Live: onde corte vere dai KiwiSDR pubblici e canali POC veri su
-//  Mumble, solo in ascolto. Il motore e' in Shared/RealRadio, lo stesso
+//  Modulo Live: onde corte e CB vere dai KiwiSDR pubblici e canali POC veri
+//  su Mumble, solo in ascolto. Il motore e' in Shared/RealRadio, lo stesso
 //  dell'iPhone.
 
 import SwiftUI
@@ -12,6 +12,8 @@ struct LiveView: View {
     @ObservedObject private var iap = IAPManager.shared
     @Binding var showPaywall: Bool
     @State private var band: LiveRadio.Band = .hf
+    @State private var typedFrequency = ""
+    @State private var typedWrong = false
 
     var body: some View {
         VStack(spacing: 16) {
@@ -37,8 +39,8 @@ struct LiveView: View {
         HStack(spacing: 10) {
             PanelLabel("Live receiver")
             Spacer()
-            ForEach([LiveRadio.Band.hf, .poc], id: \.self) { b in
-                Button(b == .hf ? "HF SHORTWAVE" : "POC CHANNELS") {
+            ForEach([LiveRadio.Band.hf, .cb, .poc], id: \.self) { b in
+                Button(b == .hf ? "HF SHORTWAVE" : b == .cb ? "CB 27 MHZ" : "POC CHANNELS") {
                     band = b
                     if live.isOn { live.start(b) }
                 }
@@ -58,7 +60,22 @@ struct LiveView: View {
         ConsolePanel(padding: 0) {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 2) {
-                    if band == .hf {
+                    if band == .cb {
+                        row(title: "DX 27.555",
+                            subtitle: "27.555 MHz USB · SSB DX calling frequency",
+                            selected: live.band == .cb && live.tuning.hz == CitizensBand.dxCall) {
+                            live.tuneCB(hz: CitizensBand.dxCall)
+                            if live.band != .cb { live.start(.cb) }
+                        }
+                        ForEach(1 ... 40, id: \.self) { n in
+                            row(title: "CH \(n)",
+                                subtitle: "\(Tuning(hz: CitizensBand.channels[n - 1], emission: .am, bandwidth: 0).megahertzText) MHz \(CitizensBand.usualEmission(channel: n).rawValue)",
+                                selected: live.band == .cb && live.cbChannel == n) {
+                                live.selectCBChannel(n)
+                                if live.band != .cb { live.start(.cb) }
+                            }
+                        }
+                    } else if band == .hf {
                         ForEach(Array(live.hfChannels.enumerated()), id: \.element.id) { i, ch in
                             row(title: ch.name,
                                 subtitle: "\(ch.tuning.megahertzText) MHz \(ch.tuning.emission.rawValue) · \(kindText(ch.kind))",
@@ -135,7 +152,31 @@ struct LiveView: View {
                         .foregroundStyle(Talky.dim)
                 }
 
-                if band == .hf {
+                if band == .cb {
+                    HStack(alignment: .firstTextBaseline, spacing: 10) {
+                        Text(cbBig)
+                            .font(.vfd(48, weight: .heavy))
+                            .foregroundStyle(Talky.amber)
+                            .shadow(color: Talky.amberDeep.opacity(0.6), radius: 10)
+                        Text(cbSmall)
+                            .font(.vfd(14, weight: .bold))
+                            .foregroundStyle(Talky.amber.opacity(0.8))
+                        Spacer()
+                        if live.squelchOn {
+                            Text(live.squelchOpen ? "BUSY" : "SQL")
+                                .font(.vfd(11, weight: .bold))
+                                .foregroundStyle(live.squelchOpen ? Talky.signal : Talky.dim)
+                        }
+                        if let dBm = live.signalDBm, live.band == .cb {
+                            Text(SignalScale.label(dBm: dBm))
+                                .font(.vfd(18, weight: .bold))
+                                .foregroundStyle(Talky.signal)
+                        }
+                    }
+                    Text(cbLine)
+                        .font(.vfd(11))
+                        .foregroundStyle(live.squelchOpen ? Talky.signal : Talky.text)
+                } else if band == .hf {
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
                         Text(live.tuning.megahertzText)
                             .font(.vfd(48, weight: .heavy))
@@ -168,7 +209,7 @@ struct LiveView: View {
                 SegmentedMeter(level: meterLevel, segments: 24)
 
                 HStack {
-                    Text((band == .hf ? "RECEIVER " : "SERVER ") + (live.sourceName.isEmpty ? "--" : live.sourceName.uppercased()))
+                    Text((band.isKiwi ? "RECEIVER " : "SERVER ") + (live.sourceName.isEmpty ? "--" : live.sourceName.uppercased()))
                         .font(.vfd(9, weight: .semibold))
                         .foregroundStyle(Talky.dim)
                         .lineLimit(1)
@@ -183,6 +224,51 @@ struct LiveView: View {
     }
 
     private var controls: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            if band == .cb { cbControls }
+            mainControls
+        }
+        .disabled(!live.isOn)
+        .opacity(live.isOn ? 1 : 0.5)
+    }
+
+    /// CB: canali o DX, modo, squelch, frequenza scritta a mano.
+    private var cbControls: some View {
+        HStack(spacing: 10) {
+            Button(live.cbIsDX ? "CHANNELS" : "DX 27.555") { live.toggleCBSection() }
+                .buttonStyle(ChipButtonStyle(accent: Talky.teal))
+            Button("MODE \(live.tuning.emission.rawValue)") { live.cycleCBMode() }
+                .buttonStyle(ChipButtonStyle(accent: Talky.teal))
+                .help("AM, FM, LSB or USB")
+            Button("SQL") { live.toggleSquelch() }
+                .buttonStyle(ChipButtonStyle(accent: Talky.teal, filled: live.squelchOn))
+                .help("Squelch: silence when nobody is transmitting")
+            Spacer()
+            TextField("27.555", text: $typedFrequency)
+                .textFieldStyle(.roundedBorder)
+                .font(.vfd(12))
+                .frame(width: 90)
+                .onSubmit(tuneTyped)
+            Text("MHz")
+                .font(.vfd(10))
+                .foregroundStyle(typedWrong ? Talky.alarm : Talky.dim)
+            Button("TUNE", action: tuneTyped)
+                .buttonStyle(ChipButtonStyle(accent: Talky.teal))
+                .disabled(typedFrequency.isEmpty)
+        }
+    }
+
+    /// Accetta "27.555", "27,555" e anche "27555" (kHz).
+    private func tuneTyped() {
+        let text = typedFrequency.replacingOccurrences(of: ",", with: ".").trimmingCharacters(in: .whitespaces)
+        guard let value = Double(text) else {
+            typedWrong = true
+            return
+        }
+        typedWrong = !live.tuneCB(hz: Int((value < 100 ? value * 1_000_000 : value * 1000).rounded()))
+    }
+
+    private var mainControls: some View {
         HStack(spacing: 10) {
             Button { live.step(-1) } label: { Label("PREV", systemImage: "backward.fill") }
                 .buttonStyle(ChipButtonStyle())
@@ -190,14 +276,15 @@ struct LiveView: View {
             Button { live.step(1) } label: { Label("NEXT", systemImage: "forward.fill") }
                 .buttonStyle(ChipButtonStyle())
                 .keyboardShortcut(.rightArrow, modifiers: [])
-            if band == .hf {
+            if band.isKiwi {
                 Button("-1 kHz") { live.nudge(kHz: -1) }
                     .buttonStyle(ChipButtonStyle(accent: Talky.teal))
                     .keyboardShortcut(.downArrow, modifiers: [])
                 Button("+1 kHz") { live.nudge(kHz: 1) }
                     .buttonStyle(ChipButtonStyle(accent: Talky.teal))
                     .keyboardShortcut(.upArrow, modifiers: [])
-            } else {
+            }
+            if band != .hf {
                 Button {
                     live.toggleScan()
                     if live.proPrompt != nil {
@@ -211,9 +298,11 @@ struct LiveView: View {
                     }
                 }
                 .buttonStyle(ChipButtonStyle(accent: Talky.teal, filled: live.isScanning))
-                Button("REFRESH") { live.rescanPOC() }
-                    .buttonStyle(ChipButtonStyle(accent: Talky.teal))
-                    .disabled(live.isScouting)
+                if band == .poc {
+                    Button("REFRESH") { live.rescanPOC() }
+                        .buttonStyle(ChipButtonStyle(accent: Talky.teal))
+                        .disabled(live.isScouting)
+                }
             }
             Spacer()
             Image(systemName: "speaker.wave.2.fill")
@@ -222,13 +311,13 @@ struct LiveView: View {
                 .frame(width: 140)
                 .tint(Talky.amber)
         }
-        .disabled(!live.isOn)
-        .opacity(live.isOn ? 1 : 0.5)
     }
 
     private var footnote: some View {
         Text(band == .hf
              ? "You listen through public KiwiSDR receivers, shared for free by radio amateurs around the world. Talky picks a receiver near the station."
+             : band == .cb
+             ? "Real CB, from the public KiwiSDR receivers nearest to you. You hear whoever is transmitting when propagation opens the band, usually during the day. With squelch on, the hiss stays muted between transmissions."
              : "Public Mumble channels with people on them right now. Talky joins muted and only listens.")
             .font(.system(size: 11))
             .foregroundStyle(Talky.dim)
@@ -238,8 +327,23 @@ struct LiveView: View {
     // MARK: - Testi
 
     private var meterLevel: Float {
-        if live.band == .hf, let dBm = live.signalDBm { return Float(SignalScale.fraction(dBm: dBm)) }
+        if live.band?.isKiwi == true, let dBm = live.signalDBm { return Float(SignalScale.fraction(dBm: dBm)) }
         return live.level
+    }
+
+    private var cbBig: String {
+        live.cbChannel.map { "CH \($0)" } ?? live.tuning.megahertzText
+    }
+
+    private var cbSmall: String {
+        live.cbChannel != nil ? "\(live.tuning.megahertzText) \(live.tuning.emission.rawValue)"
+                              : "MHz \(live.tuning.emission.rawValue)" + (live.cbIsDX ? " · DX" : "")
+    }
+
+    private var cbLine: String {
+        if live.isScanning { return live.scanHolding ? "SCAN STOPPED, SOMEONE IS TRANSMITTING" : "SCANNING" }
+        if live.squelchOpen { return "SIGNAL ON THE CHANNEL" }
+        return live.squelchOn ? "CHANNEL CLEAR, SQUELCH CLOSED" : "SQUELCH OFF, YOU HEAR THE BAND NOISE"
     }
 
     private var pocLine: String {

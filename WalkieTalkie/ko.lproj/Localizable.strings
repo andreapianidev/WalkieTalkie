@@ -519,7 +519,21 @@
 "live_poc_footer" = "지금 사람이 접속해 있는 공개 Mumble 채널입니다. Talky는 음소거 상태로 들어가 듣기만 합니다.";
 "live_pro_title" = "Talky Pro 기능";
 "live_pro_scan_message" = "자동 스캔은 Talky Pro 기능입니다. 짧은 동영상을 보면 24시간 무료로 써 볼 수 있습니다.";
-"live_pro_background_message" = "Talky를 나가자 HF와 POC 수신이 멈췄습니다. Talky Pro에서는 화면이 꺼져도 계속 들을 수 있습니다. 짧은 동영상을 보면 24시간 무료로 써 볼 수 있습니다.";
+"live_pro_background_message" = "Talky를 나가자 HF, CB, POC 수신이 멈췄습니다. Talky Pro에서는 화면이 꺼져도 계속 들을 수 있습니다. 짧은 동영상을 보면 24시간 무료로 써 볼 수 있습니다.";
 "live_pro_discover" = "Talky Pro 알아보기";
 "live_pro_video" = "동영상 보기: 24시간 무료";
-"paywall.feature.live" = "자동 스캔과 화면 꺼짐 상태의 HF·POC 수신";
+"paywall.feature.live" = "자동 스캔과 화면 꺼짐 상태의 HF·CB·POC 수신";
+
+// CB 27 MHz (3.1)
+"live_cb_section" = "채널과 DX 전환";
+"live_cb_mode" = "수신 모드: AM, FM, LSB, USB";
+"live_cb_squelch" = "스퀠치: 아무도 송신하지 않을 때 무음";
+"live_cb_prev" = "이전 채널";
+"live_cb_next" = "다음 채널";
+"live_cb_quiet" = "채널 비어 있음, 스퀠치 닫힘";
+"live_cb_tune" = "이동";
+"live_cb_enter_frequency" = "주파수 입력 (26.965 - 27.855 MHz)";
+"live_cb_out_of_band" = "CB 대역 밖입니다. 26.965에서 27.855 MHz 사이로 입력하세요";
+"live_cb_dx_call" = "SSB DX 호출 주파수";
+"live_cb_channels" = "40개 채널";
+"live_cb_footer" = "가장 가까운 공개 KiwiSDR 수신기로 듣는 진짜 CB입니다. 전파 상태가 대역을 열면(주로 낮 시간) 송신하는 사람의 목소리가 들립니다. 스퀠치를 켜면 교신 사이의 잡음이 들리지 않습니다.";

@@ -519,7 +519,21 @@
 "live_poc_footer" = "现在有人在线的公共Mumble频道。Talky以静音方式加入，只收听。";
 "live_pro_title" = "Talky Pro 功能";
 "live_pro_scan_message" = "自动扫描属于 Talky Pro。观看一段短视频即可免费试用24小时。";
-"live_pro_background_message" = "离开 Talky 后，HF 和 POC 收听已停止。使用 Talky Pro，熄屏后也能继续收听。观看一段短视频即可免费试用24小时。";
+"live_pro_background_message" = "离开 Talky 后，HF、CB 和 POC 收听已停止。使用 Talky Pro，熄屏后也能继续收听。观看一段短视频即可免费试用24小时。";
 "live_pro_discover" = "了解 Talky Pro";
 "live_pro_video" = "看视频：免费24小时";
-"paywall.feature.live" = "自动扫描，熄屏收听 HF 和 POC";
+"paywall.feature.live" = "自动扫描，熄屏收听 HF、CB 和 POC";
+
+// CB 27 MHz (3.1)
+"live_cb_section" = "在信道和 DX 之间切换";
+"live_cb_mode" = "接收模式：AM、FM、LSB 或 USB";
+"live_cb_squelch" = "静噪：无人发射时保持安静";
+"live_cb_prev" = "上一个信道";
+"live_cb_next" = "下一个信道";
+"live_cb_quiet" = "信道空闲，静噪关闭";
+"live_cb_tune" = "前往";
+"live_cb_enter_frequency" = "输入频率（26.965 - 27.855 MHz）";
+"live_cb_out_of_band" = "不在 CB 频段内：请输入 26.965 到 27.855 MHz 之间的频率";
+"live_cb_dx_call" = "SSB DX 呼叫频率";
+"live_cb_channels" = "40 个信道";
+"live_cb_footer" = "真正的 CB 民用波段，来自离你最近的公共 KiwiSDR 接收机。当电波传播打开波段时（通常在白天），你就能听到正在发射的人。开启静噪后，两次通话之间的噪声保持静音。";

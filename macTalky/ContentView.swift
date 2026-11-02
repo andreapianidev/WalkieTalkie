@@ -18,7 +18,7 @@ enum ConsoleSection: String, CaseIterable, Identifiable {
         switch self {
         case .walkie: return "Walkie"
         case .radio: return "Radio"
-        case .live: return "Live HF · POC"
+        case .live: return "Live HF · CB · POC"
         }
     }
 

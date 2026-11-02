@@ -520,7 +520,21 @@
 "live_poc_footer" = "Saluran Mumble awam yang ada orang sekarang. Talky masuk dalam keadaan senyap dan hanya mendengar.";
 "live_pro_title" = "Ciri Talky Pro";
 "live_pro_scan_message" = "Imbasan automatik ialah sebahagian daripada Talky Pro. Anda boleh mencubanya secara percuma selama 24 jam dengan menonton video pendek.";
-"live_pro_background_message" = "Pendengaran HF dan POC berhenti apabila anda keluar dari Talky. Dengan Talky Pro ia terus berjalan walaupun skrin dimatikan. Anda boleh mencubanya secara percuma selama 24 jam dengan menonton video pendek.";
+"live_pro_background_message" = "Pendengaran HF, CB dan POC berhenti apabila anda keluar dari Talky. Dengan Talky Pro ia terus berjalan walaupun skrin dimatikan. Anda boleh mencubanya secara percuma selama 24 jam dengan menonton video pendek.";
 "live_pro_discover" = "Kenali Talky Pro";
 "live_pro_video" = "Tonton video: 24 jam percuma";
-"paywall.feature.live" = "Imbasan automatik dan pendengaran HF dan POC dengan skrin dimatikan";
+"paywall.feature.live" = "Imbasan automatik dan pendengaran HF, CB dan POC dengan skrin dimatikan";
+
+// CB 27 MHz (3.1)
+"live_cb_section" = "Tukar antara saluran dan DX";
+"live_cb_mode" = "Mod penerimaan: AM, FM, LSB atau USB";
+"live_cb_squelch" = "Squelch: senyap apabila tiada siapa memancar";
+"live_cb_prev" = "Saluran sebelumnya";
+"live_cb_next" = "Saluran seterusnya";
+"live_cb_quiet" = "Saluran kosong, squelch tertutup";
+"live_cb_tune" = "Pergi";
+"live_cb_enter_frequency" = "Taip frekuensi (26.965 - 27.855 MHz)";
+"live_cb_out_of_band" = "Di luar CB: taip frekuensi antara 26.965 dan 27.855 MHz";
+"live_cb_dx_call" = "frekuensi panggilan DX SSB";
+"live_cb_channels" = "40 saluran";
+"live_cb_footer" = "CB sebenar, daripada penerima KiwiSDR awam yang paling dekat dengan anda. Anda dengar sesiapa yang memancar apabila perambatan membuka jalur, biasanya pada waktu siang. Dengan squelch dihidupkan, desis kekal senyap antara pancaran.";

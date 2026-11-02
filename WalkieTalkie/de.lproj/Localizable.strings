@@ -518,7 +518,21 @@
 "live_poc_footer" = "Öffentliche Mumble-Kanäle, in denen gerade Leute sind. Talky tritt stumm bei und hört nur zu.";
 "live_pro_title" = "Talky-Pro-Funktion";
 "live_pro_scan_message" = "Der automatische Suchlauf gehört zu Talky Pro. Du kannst ihn 24 Stunden kostenlos testen, wenn du ein kurzes Video ansiehst.";
-"live_pro_background_message" = "Der HF- und POC-Empfang wurde beim Verlassen von Talky beendet. Mit Talky Pro läuft er auch bei ausgeschaltetem Bildschirm weiter. Du kannst es 24 Stunden kostenlos testen, wenn du ein kurzes Video ansiehst.";
+"live_pro_background_message" = "Der HF-, CB- und POC-Empfang wurde beim Verlassen von Talky beendet. Mit Talky Pro läuft er auch bei ausgeschaltetem Bildschirm weiter. Du kannst es 24 Stunden kostenlos testen, wenn du ein kurzes Video ansiehst.";
 "live_pro_discover" = "Talky Pro entdecken";
 "live_pro_video" = "Video ansehen: 24 Stunden gratis";
-"paywall.feature.live" = "Automatischer Suchlauf und HF- und POC-Empfang bei ausgeschaltetem Bildschirm";
+"paywall.feature.live" = "Automatischer Suchlauf und HF-, CB- und POC-Empfang bei ausgeschaltetem Bildschirm";
+
+// CB 27 MHz (3.1)
+"live_cb_section" = "Zwischen Kanälen und DX wechseln";
+"live_cb_mode" = "Empfangsart: AM, FM, LSB oder USB";
+"live_cb_squelch" = "Squelch: Stille, wenn niemand sendet";
+"live_cb_prev" = "Vorheriger Kanal";
+"live_cb_next" = "Nächster Kanal";
+"live_cb_quiet" = "Kanal frei, Squelch geschlossen";
+"live_cb_tune" = "Los";
+"live_cb_enter_frequency" = "Frequenz eingeben (26.965 - 27.855 MHz)";
+"live_cb_out_of_band" = "Außerhalb des CB-Funks: gib eine Frequenz zwischen 26.965 und 27.855 MHz ein";
+"live_cb_dx_call" = "DX-Anruffrequenz in SSB";
+"live_cb_channels" = "40 Kanäle";
+"live_cb_footer" = "Echter CB-Funk, über die öffentlichen KiwiSDR-Empfänger in deiner Nähe. Du hörst, wer sendet, wenn die Ausbreitung das Band öffnet, meist tagsüber. Mit eingeschaltetem Squelch bleibt das Rauschen zwischen den Durchgängen stumm.";

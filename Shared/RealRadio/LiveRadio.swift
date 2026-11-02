@@ -1,8 +1,8 @@
 //creato da Andrea Piani - 16/10/26 - https://www.andreapiani.com - LiveRadio.swift
 //  Talky
 //
-//  Il ricevitore dal vivo: HF dai KiwiSDR pubblici, POC dai canali pubblici
-//  Mumble. Solo ascolto, solo servizi gratuiti senza chiavi. Sceglie il
+//  Il ricevitore dal vivo: HF e CB dai KiwiSDR pubblici, POC dai canali
+//  pubblici Mumble. Solo ascolto, solo servizi gratuiti senza chiavi. Sceglie il
 //  ricevitore piu' adatto, passa al successivo se uno e' pieno o cade, e
 //  per il POC propone solo canali dove c'e' davvero qualcuno.
 
@@ -48,9 +48,7 @@ nonisolated struct HFChannel: Identifiable, Hashable, Sendable {
         HFChannel(id: "ham-20", name: "20 m SSB", kind: .amateur,
                   tuning: Tuning(hz: 14_250_000, emission: .usb, bandwidth: 2800), latitude: nil, longitude: nil),
         HFChannel(id: "ft8-20", name: "FT8 20 m", kind: .digital,
-                  tuning: Tuning(hz: 14_074_000, emission: .usb, bandwidth: 2800), latitude: nil, longitude: nil),
-        HFChannel(id: "cb-27555", name: "CB 27.555", kind: .citizens,
-                  tuning: Tuning(hz: 27_555_000, emission: .usb, bandwidth: 2800), latitude: nil, longitude: nil)
+                  tuning: Tuning(hz: 14_074_000, emission: .usb, bandwidth: 2800), latitude: nil, longitude: nil)
     ]
 }
 
@@ -60,7 +58,10 @@ final class LiveRadio: ObservableObject {
     static let shared = LiveRadio()
 
     enum Band: String, Sendable {
-        case hf, poc
+        case hf, cb, poc
+
+        /// HF e CB arrivano dagli stessi ricevitori KiwiSDR.
+        var isKiwi: Bool { self != .poc }
     }
 
     /// Funzione Pro chiesta da chi non ce l'ha: l'interfaccia propone
@@ -87,7 +88,11 @@ final class LiveRadio: ObservableObject {
     @Published private(set) var pocChannels: [MumbleLiveChannel] = []
     @Published private(set) var pocIndex = 0
     @Published private(set) var isScouting = false
-    /// Scansione POC: salta da un canale all'altro e si ferma quando qualcuno parla.
+    /// Squelch CB acceso: fra un passaggio e l'altro non si sente il fruscio.
+    @Published private(set) var squelchOn: Bool
+    /// C'e' un segnale sulla frequenza CB adesso.
+    @Published private(set) var squelchOpen = false
+    /// Scansione POC e CB: salta da un canale all'altro e si ferma quando qualcuno parla.
     @Published private(set) var isScanning = false
     @Published private(set) var scanHolding = false
     @Published private(set) var state: LinkState = .idle
@@ -113,6 +118,9 @@ final class LiveRadio: ObservableObject {
     var isOn: Bool { band != nil }
 
     private let player = LivePlayer()
+    private let squelch: Squelch
+    /// Ultima sintonia CB, per riaccendere dove si era rimasti.
+    private var cbTuning: Tuning
     private var kiwi: KiwiListener?
     private var mumble: MumbleListener?
     private var pumps: [Task<Void, Never>] = []
@@ -139,11 +147,22 @@ final class LiveRadio: ObservableObject {
     private var listenTask: Task<Void, Never>?
     private let defaults = UserDefaults.standard
     private static let listenedKey = "live_listened_seconds"
+    private static let cbHzKey = "live_cb_hz"
+    private static let cbEmissionKey = "live_cb_emission"
+    private static let squelchKey = "live_cb_squelch"
 
     private var lastLevelPush = Date.distantPast
     private var lastSignalPush = Date.distantPast
 
     private init() {
+        let on = defaults.object(forKey: Self.squelchKey) as? Bool ?? true
+        squelchOn = on
+        squelch = Squelch(enabled: on)
+        let hz = defaults.integer(forKey: Self.cbHzKey)
+        let emission = defaults.string(forKey: Self.cbEmissionKey).flatMap(Emission.init(rawValue:))
+        cbTuning = CitizensBand.dial.contains(hz)
+            ? CitizensBand.tuning(hz: hz, emission: emission ?? CitizensBand.usualEmission(at: hz))
+            : CitizensBand.firstTuning
         player.setVolume(volume)
     }
 
@@ -154,7 +173,7 @@ final class LiveRadio: ObservableObject {
         stopScan()
         disconnect()
         isSuspended = false
-        if band == .hf, scoutTask != nil {
+        if band.isKiwi, scoutTask != nil {
             scoutTask?.cancel()
             scoutTask = nil
             isScouting = false
@@ -163,6 +182,11 @@ final class LiveRadio: ObservableObject {
         player.start()
         switch band {
         case .hf:
+            tuning = currentHF.tuning
+            loadReceivers()
+            connectHF(fresh: true)
+        case .cb:
+            tuning = cbTuning
             loadReceivers()
             connectHF(fresh: true)
         case .poc:
@@ -193,6 +217,8 @@ final class LiveRadio: ObservableObject {
         switch band {
         case .hf:
             selectHF((hfIndex + delta + HFChannel.all.count) % HFChannel.all.count)
+        case .cb:
+            stepCB(delta)
         case .poc:
             guard !pocChannels.isEmpty else { return }
             selectPOC((pocIndex + delta + pocChannels.count) % pocChannels.count)
@@ -218,12 +244,108 @@ final class LiveRadio: ObservableObject {
         }
     }
 
-    /// Sintonia fine in HF, a passi di kHz.
+    /// Sintonia fine in HF e CB, a passi di kHz.
     func nudge(kHz: Int) {
-        guard band == .hf else { return }
-        let hz = min(Tuning.hfRange.upperBound, max(Tuning.hfRange.lowerBound, tuning.hz + kHz * 1000))
-        tuning.hz = hz
-        if let kiwi { Task { await kiwi.tune(tuning) } }
+        switch band {
+        case .hf:
+            let hz = min(Tuning.hfRange.upperBound, max(Tuning.hfRange.lowerBound, tuning.hz + kHz * 1000))
+            tuning.hz = hz
+            if let kiwi { Task { await kiwi.tune(tuning) } }
+        case .cb:
+            let range = CitizensBand.dial
+            let hz = min(range.upperBound, max(range.lowerBound, tuning.hz + kHz * 1000))
+            retuneCB(CitizensBand.tuning(hz: hz, emission: tuning.emission))
+        case .poc, nil:
+            break
+        }
+    }
+
+    // MARK: CB
+
+    /// Numero del canale CB su cui si e' sintonizzati, nil fuori canale.
+    var cbChannel: Int? { CitizensBand.channel(at: tuning.hz) }
+    var cbIsDX: Bool { CitizensBand.isDX(tuning.hz) }
+
+    /// Canale 1...40.
+    func selectCBChannel(_ number: Int) {
+        guard (1 ... 40).contains(number) else { return }
+        let hz = CitizensBand.channels[number - 1]
+        retuneCB(CitizensBand.tuning(hz: hz, emission: emissionFollowing(to: hz)))
+    }
+
+    /// Frequenza scritta a mano, in Hz. Falso se e' fuori dalla CB.
+    @discardableResult
+    func tuneCB(hz: Int) -> Bool {
+        guard CitizensBand.dial.contains(hz) else { return false }
+        retuneCB(CitizensBand.tuning(hz: hz, emission: emissionFollowing(to: hz)))
+        return true
+    }
+
+    /// Dai canali alla zona DX e ritorno.
+    func toggleCBSection() {
+        if cbIsDX {
+            selectCBChannel(19)
+        } else {
+            retuneCB(CitizensBand.tuning(hz: CitizensBand.dxCall, emission: .usb))
+        }
+    }
+
+    /// AM, FM, LSB, USB: in CB si usano tutte e quattro.
+    func cycleCBMode() {
+        guard band == .cb else { return }
+        let order: [Emission] = [.am, .fm, .lsb, .usb]
+        let next = order[((order.firstIndex(of: tuning.emission) ?? -1) + 1) % order.count]
+        retuneCB(CitizensBand.tuning(hz: tuning.hz, emission: next))
+    }
+
+    func toggleSquelch() {
+        squelchOn.toggle()
+        squelch.isEnabled = squelchOn
+        defaults.set(squelchOn, forKey: Self.squelchKey)
+    }
+
+    /// Canale dopo canale fra i 40, a passi di 5 kHz nella zona DX. Fuori
+    /// griglia (dopo una sintonia fine) va al primo canale nella direzione.
+    private func stepCB(_ delta: Int) {
+        let hz = tuning.hz
+        if CitizensBand.isDX(hz) {
+            let steps = CitizensBand.dxSteps
+            let target = delta > 0 ? steps.first { $0 > hz } ?? steps[0]
+                                   : steps.last { $0 < hz } ?? steps[steps.count - 1]
+            retuneCB(CitizensBand.tuning(hz: target, emission: tuning.emission))
+            return
+        }
+        if let number = CitizensBand.channel(at: hz) {
+            selectCBChannel((number - 1 + delta + 40) % 40 + 1)
+            return
+        }
+        let channels = CitizensBand.channels
+        let ahead = channels.indices.filter { delta > 0 ? channels[$0] > hz : channels[$0] < hz }
+        let pick = delta > 0 ? ahead.min { channels[$0] < channels[$1] } : ahead.max { channels[$0] < channels[$1] }
+        selectCBChannel((pick ?? (delta > 0 ? 0 : 39)) + 1)
+    }
+
+    /// L'emissione di solito segue il canale (AM fino al 35, LSB dal 36,
+    /// USB in DX); se l'ha scelta chi ascolta (FM, per esempio) resta quella.
+    private func emissionFollowing(to hz: Int) -> Emission {
+        let usualHere = CitizensBand.usualEmission(at: tuning.hz)
+        guard band == .cb, tuning.emission != usualHere else { return CitizensBand.usualEmission(at: hz) }
+        return tuning.emission
+    }
+
+    private func retuneCB(_ t: Tuning) {
+        cbTuning = t
+        defaults.set(t.hz, forKey: Self.cbHzKey)
+        defaults.set(t.emission.rawValue, forKey: Self.cbEmissionKey)
+        guard band == .cb else { return }
+        tuning = t
+        squelch.retuned()
+        squelchOpen = false
+        if isScanning { scanSince = Date() }
+        if let kiwi {
+            if !isScanning { player.flush() }
+            Task { await kiwi.tune(t) }
+        }
     }
 
     func selectPOC(_ index: Int) {
@@ -252,7 +374,7 @@ final class LiveRadio: ObservableObject {
     }
 
     func startScan() {
-        guard band == .poc, !isScanning else { return }
+        guard band == .poc || band == .cb, !isScanning else { return }
         guard proGate() else {
             proPrompt = .scan
             return
@@ -260,11 +382,12 @@ final class LiveRadio: ObservableObject {
         isScanning = true
         scanHolding = false
         scanSince = Date()
+        let scanning = band
         scanTask = Task { [weak self] in
             while !Task.isCancelled {
-                try? await Task.sleep(for: .milliseconds(250))
-                guard let self, self.isScanning, self.band == .poc else { return }
-                self.scanTick()
+                try? await Task.sleep(for: .milliseconds(scanning == .cb ? 100 : 250))
+                guard let self, self.isScanning, self.band == scanning else { return }
+                scanning == .cb ? self.cbScanTick() : self.scanTick()
             }
         }
     }
@@ -297,6 +420,33 @@ final class LiveRadio: ObservableObject {
         }
     }
 
+    /// Come lo SCAN di un baracchino: un attimo su ogni canale, fermo finche'
+    /// lo squelch resta aperto, avanti 3 secondi dopo che il segnale e' sparito.
+    /// Scorre la parte in cui si e': i 40 canali o la zona DX.
+    private func cbScanTick() {
+        let now = Date()
+        guard state == .online else {
+            scanSince = now
+            return
+        }
+        if squelch.isOpen {
+            scanHolding = true
+            lastVoice = now
+            return
+        }
+        if scanHolding {
+            guard now.timeIntervalSince(lastVoice) > 3 else { return }
+            scanHolding = false
+            scanSince = now
+            stepCB(1)
+            return
+        }
+        // Assestamento dopo il cambio, piu' qualche pacchetto per decidere.
+        if now.timeIntervalSince(scanSince) > Squelch.settle + 0.45 {
+            stepCB(1)
+        }
+    }
+
     // MARK: background
 
     /// L'app va in background senza Pro: l'ascolto si ferma ma la banda
@@ -316,7 +466,7 @@ final class LiveRadio: ObservableObject {
         isSuspended = false
         player.start()
         switch band {
-        case .hf: connectHF(fresh: true)
+        case .hf, .cb: connectHF(fresh: true)
         case .poc: pocChannels.isEmpty ? scoutPOC() : connectPOC()
         }
         proPrompt = .background
@@ -352,23 +502,25 @@ final class LiveRadio: ObservableObject {
             guard let self else { return }
             self.directoryTask = nil
             guard !fresh.isEmpty else {
-                if self.receivers.isEmpty, self.band == .hf { self.state = .refused(.down) }
+                if self.receivers.isEmpty, self.band?.isKiwi == true { self.state = .refused(.down) }
                 return
             }
             let hadNone = self.receivers.isEmpty
             self.receivers = fresh
-            if hadNone, self.band == .hf { self.connectHF(fresh: true) }
+            if hadNone, self.band?.isKiwi == true { self.connectHF(fresh: true) }
         }
     }
 
     private func connectHF(fresh: Bool) {
         disconnect()
-        guard band == .hf, !isSuspended else { return }
+        guard let band, band.isKiwi, !isSuspended else { return }
         if fresh {
-            candidates = rankReceivers(for: currentHF)
+            // La CB si ascolta vicino a chi usa l'app, come le bande radioamatoriali.
+            candidates = band == .cb ? rankReceivers(latitude: nil, longitude: nil)
+                                     : rankReceivers(latitude: currentHF.latitude, longitude: currentHF.longitude)
             candidateIndex = 0
+            if band == .hf { tuning = currentHF.tuning }
         }
-        tuning = fresh ? currentHF.tuning : tuning
         guard !receivers.isEmpty else {
             state = .connecting
             return
@@ -382,7 +534,9 @@ final class LiveRadio: ObservableObject {
         sourcePlace = receiver.location
         wasOnline = false
         retried = fresh ? false : retried
-        let listener = KiwiListener(receiver: receiver, tuning: tuning)
+        squelch.reset()
+        squelchOpen = false
+        let listener = KiwiListener(receiver: receiver, tuning: tuning, squelch: band == .cb ? squelch : nil)
         kiwi = listener
         attach(audio: listener.audio, events: listener.events)
         Task { await listener.connect() }
@@ -390,10 +544,10 @@ final class LiveRadio: ObservableObject {
 
     /// I ricevitori con posti liberi, dal piu' vicino alla stazione (o a chi
     /// ascolta, per le bande radioamatoriali).
-    private func rankReceivers(for channel: HFChannel) -> [KiwiReceiver] {
+    private func rankReceivers(latitude: Double?, longitude: Double?) -> [KiwiReceiver] {
         let here = ApproximatePlace.current
-        let lat = channel.latitude ?? here.latitude
-        let lon = channel.longitude ?? here.longitude
+        let lat = latitude ?? here.latitude
+        let lon = longitude ?? here.longitude
         let now = Date()
         return receivers
             .filter { $0.freeSlots > 0 && (benched[$0.id].map { $0 < now } ?? true) }
@@ -554,9 +708,9 @@ final class LiveRadio: ObservableObject {
                 state = .online
                 startListeningClock()
             case .refused(let p):
-                band == .hf ? hfFailed(p, refused: true) : pocFailed(refused: true)
+                band == .poc ? pocFailed(refused: true) : hfFailed(p, refused: true)
             case .dropped(let p):
-                band == .hf ? hfFailed(p, refused: false) : pocFailed(refused: false)
+                band == .poc ? pocFailed(refused: false) : hfFailed(p, refused: false)
             case .idle, .connecting:
                 break
             }
@@ -572,6 +726,8 @@ final class LiveRadio: ObservableObject {
             guard now.timeIntervalSince(lastSignalPush) > 0.25 else { return }
             lastSignalPush = now
             signalDBm = dBm
+        case .squelch(let open):
+            squelchOpen = open
         case .level(let v):
             let now = Date()
             if v > 0.02 { lastVoice = now }
@@ -595,6 +751,7 @@ final class LiveRadio: ObservableObject {
         talker = nil
         level = 0
         signalDBm = nil
+        squelchOpen = false
     }
 }
 

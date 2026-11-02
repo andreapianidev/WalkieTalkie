@@ -519,7 +519,21 @@
 "live_poc_footer" = "ช่อง Mumble สาธารณะที่มีคนอยู่ตอนนี้ Talky เข้าแบบปิดเสียงและฟังอย่างเดียว";
 "live_pro_title" = "ฟีเจอร์ Talky Pro";
 "live_pro_scan_message" = "การสแกนอัตโนมัติเป็นส่วนหนึ่งของ Talky Pro ลองใช้ฟรี 24 ชั่วโมงได้โดยดูวิดีโอสั้นๆ";
-"live_pro_background_message" = "การฟัง HF และ POC หยุดเมื่อคุณออกจาก Talky ด้วย Talky Pro จะฟังต่อได้แม้ปิดหน้าจอ ลองใช้ฟรี 24 ชั่วโมงได้โดยดูวิดีโอสั้นๆ";
+"live_pro_background_message" = "การฟัง HF, CB และ POC หยุดเมื่อคุณออกจาก Talky ด้วย Talky Pro จะฟังต่อได้แม้ปิดหน้าจอ ลองใช้ฟรี 24 ชั่วโมงได้โดยดูวิดีโอสั้นๆ";
 "live_pro_discover" = "ดู Talky Pro";
 "live_pro_video" = "ดูวิดีโอ: ฟรี 24 ชั่วโมง";
-"paywall.feature.live" = "สแกนอัตโนมัติและฟัง HF และ POC ขณะปิดหน้าจอ";
+"paywall.feature.live" = "สแกนอัตโนมัติและฟัง HF, CB และ POC ขณะปิดหน้าจอ";
+
+// CB 27 MHz (3.1)
+"live_cb_section" = "สลับระหว่างช่องกับ DX";
+"live_cb_mode" = "โหมดรับ: AM, FM, LSB หรือ USB";
+"live_cb_squelch" = "สเควลช์: เงียบเมื่อไม่มีใครส่ง";
+"live_cb_prev" = "ช่องก่อนหน้า";
+"live_cb_next" = "ช่องถัดไป";
+"live_cb_quiet" = "ช่องว่าง สเควลช์ปิด";
+"live_cb_tune" = "ไป";
+"live_cb_enter_frequency" = "พิมพ์ความถี่ (26.965 - 27.855 MHz)";
+"live_cb_out_of_band" = "อยู่นอกย่าน CB พิมพ์ความถี่ระหว่าง 26.965 ถึง 27.855 MHz";
+"live_cb_dx_call" = "ความถี่เรียก DX แบบ SSB";
+"live_cb_channels" = "40 ช่อง";
+"live_cb_footer" = "CB จริง จากเครื่องรับ KiwiSDR สาธารณะที่ใกล้คุณที่สุด คุณจะได้ยินคนที่กำลังส่งเมื่อการแพร่กระจายคลื่นเปิดย่าน มักเป็นช่วงกลางวัน เมื่อเปิดสเควลช์ เสียงซ่าจะเงียบระหว่างการส่งแต่ละครั้ง";
