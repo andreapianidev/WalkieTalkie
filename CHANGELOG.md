@@ -91,6 +91,25 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
+### [2.1] (103), in review
+
+#### New
+- **CB 27 MHz** in the Live receiver: all 40 channels, the DX area above
+  channel 40 with the calling frequency 27.555 USB, channel step, 1 kHz fine
+  tuning, AM/FM/LSB/USB, a frequency you can type.
+- **SCAN on CB** (Talky Pro): stops while someone transmits, moves on 3 s
+  after.
+- **Automatic squelch**: the hiss stays muted between transmissions.
+
+### [2.0] (112), 2026-10-16
+
+#### New
+- **Live receiver**: real HF shortwave from public KiwiSDR receivers and real
+  POC channels from public Mumble servers, listen only.
+
+#### Removed
+- All recorded and simulated audio (fake frequencies, white noise).
+
 ### [1.1.4] — current
 
 Version train opened after 1.1.3 went on sale.
@@ -112,6 +131,31 @@ Sandboxed, no ads, no tracking.
 ---
 
 ## Talky iOS
+
+### [3.1] (103), in review
+
+#### New
+- **CB band** next to LOCAL, HF and POC: the real citizens band on 27 MHz,
+  all 40 channels (AM on 1 to 35, LSB on 36 to 40 by default) and the DX area
+  above channel 40, calling on 27.555 USB.
+- CH up/down, 1 kHz fine tuning, AM/FM/LSB/USB, and a frequency you can type
+  in the channel list.
+- **SCAN on CB** (Talky Pro, or 24 hours with a short video): stops while
+  someone transmits, moves on 3 s after.
+- **Automatic squelch** (SQL): the hiss stays muted between transmissions.
+
+#### Changed
+- The "CB 27.555" entry left the HF list: it lives in the CB band now.
+
+### [3.0] (113), 2026-10-16
+
+#### New
+- **HF** and **POC** bands: real shortwave from public KiwiSDR receivers and
+  real public Mumble channels, listen only. SCAN and listening with the screen
+  off are Talky Pro.
+
+#### Removed
+- The 19 fake frequencies, their recorded clips and the white noise switch.
 
 ### [2.48] (99), unreleased
 

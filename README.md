@@ -1,6 +1,6 @@
 // Created by Andrea Piani - 22/05/26 - https://www.andreapiani.com - README.md
 
-# Talky — Walkie-Talkie & Internet Radio (Source-Available iOS + Android App)
+# Talky: Walkie-Talkie & Internet Radio (Source-Available iOS + Android App)
 
 <img src="docs/screenshots/ios/app_icon.jpg" alt="Talky" width="120">
 
@@ -16,30 +16,33 @@
 [![Commercial use: NOT permitted](https://img.shields.io/badge/Commercial%20use-NOT%20permitted-critical.svg)](#-license)
 [![Source available](https://img.shields.io/badge/Source-Available-brightgreen.svg)]()
 
-> **Talky** is a SwiftUI iOS app that combines **offline peer-to-peer push-to-talk** (Multipeer Connectivity) with a **global internet radio browser** (135 streaming stations across 50+ countries; the iPhone has no FM receiver, and as of 2.46 the app no longer implies it does), **Live Activities + Dynamic Island** controls (iOS 16.2+), a complete **Pro tier** (themes, animated backgrounds, equalizer, recording, sleep timer) and a production-grade **AdMob monetization stack** for the free tier.
+> **Talky** is a SwiftUI iOS app that combines **offline peer-to-peer push-to-talk** (Multipeer Connectivity), **real live radio** (HF shortwave and the **CB 27 MHz band** from public KiwiSDR receivers, public POC channels on Mumble, no fake audio anywhere), a **global internet radio browser** (135 streaming stations across 50+ countries; the iPhone has no FM receiver, and as of 2.46 the app no longer implies it does), **Live Activities + Dynamic Island** controls (iOS 16.2+), a complete **Pro tier** (themes, animated backgrounds, equalizer, recording, sleep timer) and a production-grade **AdMob monetization stack** for the free tier.
 
-> ⚠️ **This project is source-available, NOT MIT/Apache/BSD/GPL.** It is distributed under the **[PolyForm Noncommercial License 1.0.0](LICENSE)** — you may read, fork, modify and run it for personal/educational/non-profit purposes, but **commercial use (including shipping a derived app on any app store, paid services, ad-supported services and consulting deliverables) is strictly prohibited without a separate written commercial license.** See [License](#-license) for details and commercial-license contact.
+> ⚠️ **This project is source-available, NOT MIT/Apache/BSD/GPL.** It is distributed under the **[PolyForm Noncommercial License 1.0.0](LICENSE)**: you may read, fork, modify and run it for personal/educational/non-profit purposes, but **commercial use (including shipping a derived app on any app store, paid services, ad-supported services and consulting deliverables) is strictly prohibited without a separate written commercial license.** See [License](#-license) for details and commercial-license contact.
 
 **Website**: <https://walkie-talky.vercel.app>
-**App Store**: [Talky — Walkie Talkie, Radio](https://apps.apple.com/app/id6748584483) · Free · Bundle ID `com.immaginet.talky`
+**App Store**: [Talky: Walkie Talkie, Radio](https://apps.apple.com/app/id6748584483) · Free · Bundle ID `com.immaginet.talky`
 **Repository**: <https://github.com/andreapianidev/WalkieTalkie>
 
 ---
 
 ## 📱 Talky on iPhone
 
-| Talk — hold to transmit | Explore — nearby devices | Connections | Settings |
+| Talk: hold to transmit | Explore: nearby devices | Connections | Settings |
 |---|---|---|---|
 | ![Talky Talk screen, push to talk](docs/screenshots/ios/talk_ptt.png) | ![Talky Explore, radar of nearby devices](docs/screenshots/ios/explore_radar.png) | ![Talky Connections, advertising and browsing state](docs/screenshots/ios/connections.png) | ![Talky Settings, white noise and haptics](docs/screenshots/ios/settings.png) |
 
-- **Talk** — the frequency display, the channel, and the hold-to-talk key. The dot
+- **Talk**: the frequency display, the channel, and the hold-to-talk key. The dot
   row under the buttons is the level meter; the line at the bottom says how many
   devices are connected and whether anyone is transmitting.
-- **Explore** — a radar of the devices around you, with estimated distance and
+- **Explore**: a radar of the devices around you, with estimated distance and
   signal strength. Tap one to connect.
-- **Connections** — advertising and browsing state, the list of connected devices,
+- **Connections**: advertising and browsing state, the list of connected devices,
   and the two buttons that fix most problems: disconnect all, restart discovery.
-- **Settings** — notifications, white noise and its volume, haptics, auto-connect.
+- **Settings**: notifications, haptics, auto-connect.
+- **LOCAL / HF / CB / POC**: the band selector above the display. LOCAL is the
+  walkie between nearby phones; the other three are real radio, listen only
+  (see [Live Radio](#-live-radio-hf-cb-27-mhz-poc)).
 
 > These are the App Store screenshots of the current build (2.46). They were shot
 > in July 2025 and still show the older yellow look: the radio, the 16 themes and
@@ -53,16 +56,17 @@
 
 > ⬇️ **Download**: grab `macTalky.zip` from [**GitHub Releases**](https://github.com/andreapianidev/WalkieTalkie/releases) (macOS 26+, Apple Silicon). First launch: right-click → Open (the GitHub build is not notarized). In-app purchases work only in the Mac App Store version, currently in review on the same App Store record as Talky iOS (universal purchase).
 
-| Walkie — Night Ops backdrop | World-band radio — 343 stations | Walkie — Olive Drab backdrop |
+| Walkie: Night Ops backdrop | World-band radio: 343 stations | Walkie: Olive Drab backdrop |
 |---|---|---|
 | ![macTalky Walkie, Night Ops](docs/screenshots/macos/walkie_nightops.png) | ![macTalky Radio](docs/screenshots/macos/radio_carbon.png) | ![macTalky Walkie, Olive Drab](docs/screenshots/macos/walkie_olive.png) |
 
-- **Design**: "tactical field console" UI — graphite panels, amber phosphor VFD typography, and a full Metal shader suite via SwiftUI `colorEffect`/`layerEffect`: **5 selectable tactical backdrops** (Carbon, Night Ops, Olive Drab, Desert Fox, Naval Grey — grid, radar sweep, canvas weave, TX/RX-reactive tinting), a phosphor **spectrum VU visualizer** with peak-hold, a **CRT effect** (chromatic aberration + scanlines) on the VFD displays and radio pulse rings around the PTT key.
-- **Push-to-talk**: giant TALK key — hold with the mouse **or hold the Space bar**. 10 s max per transmission (TALKY1 frame cap), segmented VU meter, TX/RX/NET lamps.
+- **Design**: "tactical field console" UI, graphite panels, amber phosphor VFD typography, and a full Metal shader suite via SwiftUI `colorEffect`/`layerEffect`: **5 selectable tactical backdrops** (Carbon, Night Ops, Olive Drab, Desert Fox, Naval Grey, grid, radar sweep, canvas weave, TX/RX-reactive tinting), a phosphor **spectrum VU visualizer** with peak-hold, a **CRT effect** (chromatic aberration + scanlines) on the VFD displays and radio pulse rings around the PTT key.
+- **Push-to-talk**: giant TALK key, hold with the mouse **or hold the Space bar**. 10 s max per transmission (TALKY1 frame cap), segmented VU meter, TX/RX/NET lamps.
 - **Radio**: the full 343-station worldwide browser with search, filters, favorites and recents, Media-key/Now Playing integration.
+- **Live receiver**: HF shortwave, **CB 27 MHz** (40 channels, DX 27.555, scan, squelch, typed frequency) and POC channels, on the same engine as the iPhone ([`Shared/RealRadio/`](Shared/RealRadio/)).
 - **Private channels**: same SHA256 password-derived channel IDs as iOS/Android (Pro).
 - **Universal purchases**: same bundle ID as the iOS app → the Talky Pro subscription and Themes Pack bought on iPhone unlock on the Mac and vice versa (StoreKit 2, no Firebase on macOS). Pro/Themes Pack also unlocks the three premium backdrops.
-- **Build**: `xcodebuild -project WalkieTalkie.xcodeproj -scheme macTalky -configuration Release build` (sandboxed, hardened runtime; network client/server + audio-input entitlements). The `macTalky` scheme is shared, ready for an **Xcode Cloud** "Archive – macOS" workflow.
+- **Build**: `xcodebuild -project WalkieTalkie.xcodeproj -scheme macTalky -configuration Release build` (sandboxed, hardened runtime; network client/server + audio-input entitlements). The `macTalky` scheme is shared, ready for an **Xcode Cloud** "Archive - macOS" workflow.
 
 ## Table of Contents
 
@@ -70,12 +74,13 @@
 - [Android (Beta)](#-android-beta)
 - [Feature Matrix (Free vs Pro)](#-feature-matrix-free-vs-pro)
 - [Walkie-Talkie Engine](#-walkie-talkie-engine)
+- [Live Radio: HF, CB 27 MHz, POC](#-live-radio-hf-cb-27-mhz-poc)
 - [TALKY1 protocol specification](docs/TALKY1.md)
 - [Changelog](CHANGELOG.md)
 - [Radio Browser (135 stations)](#-radio-browser-135-stations)
 - [Live Activities & Dynamic Island](#-live-activities--dynamic-island)
 - [Theme System (16 themes)](#-theme-system-16-themes)
-- [Pro Tier — IAP & Paywall](#-pro-tier--iap--paywall)
+- [Pro Tier: IAP & Paywall](#-pro-tier-iap--paywall)
 - [AdMob Monetization](#-admob-monetization)
 - [Privacy & Consent (UMP + ATT)](#-privacy--consent-ump--att)
 - [Localization](#-localization)
@@ -93,25 +98,26 @@
 
 ## ✨ Highlights
 
-- 🎙️ **Push-to-Talk** over peer-to-peer (no internet, no servers) — up to 8 simultaneous peers
+- 🎙️ **Push-to-Talk** over peer-to-peer (no internet, no servers), up to 8 simultaneous peers
+- 📡 **Real radio, no fake audio**: HF shortwave and the **CB 27 MHz band** (all 40 channels plus the SSB DX area, calling on **27.555 USB**) from public KiwiSDR receivers, and public POC channels on Mumble. Auto and manual scan, automatic squelch, typed frequency
 - 📻 **135 verified live radio stations** across **50+ countries**, with favorites, recents, nearby, search and grouping by country/genre
-- 🏝️ **Live Activities + Dynamic Island** (iOS 16.2+) for both radio and walkie modes — with iOS 17+ interactive controls (play/pause, next/previous from the lock screen and Dynamic Island)
+- 🏝️ **Live Activities + Dynamic Island** (iOS 16.2+) for both radio and walkie modes, with iOS 17+ interactive controls (play/pause, next/previous from the lock screen and Dynamic Island)
 - 🎨 **16 themes** (5 free + 11 paid/Pro) including 2 fully-animated GPU backgrounds (Black Hole, Galaxy)
 - 🔊 **5-band EQ**, **sleep timer**, **session recording** and **transmission history**
 - 💎 **Talky Pro** subscription (weekly/yearly) with paywall, restore purchases and StoreKit 2
 - 📣 **Full AdMob stack** (App Open, Interstitial, Rewarded, **Native Advanced**) with UMP + ATT consent flow
-- 🌍 **5 localizations**: 🇮🇹 Italian · 🇬🇧 English · 🇪🇸 Spanish · 🇲🇾 Malay · 🇹🇼 Traditional Chinese
+- 🌍 **14 localizations**: Italian, English, Spanish, French, German, Portuguese (Brazil), Japanese, Korean, Malay, Thai, Turkish, Vietnamese, Simplified and Traditional Chinese
 - 🔒 **Privacy-first**: walkie-talkie audio never leaves the device, no accounts, no cloud
 - 🧱 **Clean MVVM + SwiftUI + Combine**, singleton managers, Swift 6 strict concurrency-ready
-- ⚖️ **Source-available** under PolyForm Noncommercial 1.0.0 — fork it, study it, learn from it; commercial reuse requires a separate license
+- ⚖️ **Source-available** under PolyForm Noncommercial 1.0.0: fork it, study it, learn from it; commercial reuse requires a separate license
 
 ---
 
 ## 🤖 Android (Beta)
 
-Talky now ships an **Android port** too — it lives in [`Android/`](Android/) inside this same repo and is distributed under the **same [PolyForm Noncommercial License](LICENSE)** as the iOS app.
+Talky now ships an **Android port** too. It lives in [`Android/`](Android/) inside this same repo and is distributed under the **same [PolyForm Noncommercial License](LICENSE)** as the iOS app.
 
-> ⬇️ **[Download the latest Talky for Android (signed APK)](https://github.com/andreapianidev/WalkieTalkie/releases/latest)** — Android 13/API 33 or newer. Android may ask you to authorize installation from your browser or file manager.
+> ⬇️ **[Download the latest Talky for Android (signed APK)](https://github.com/andreapianidev/WalkieTalkie/releases/latest)**: Android 13/API 33 or newer. Android may ask you to authorize installation from your browser or file manager.
 >
 > The link points at the releases page, not at one file, so it cannot go stale
 > the way the old hard-coded v1.1 link did. Devices still on Android 11 or 12 can
@@ -122,8 +128,8 @@ Talky now ships an **Android port** too — it lives in [`Android/`](Android/) i
 
 ### What works today
 - 🎙️ **Push-to-talk** over the local network (`CrossPlatformWalkieManager`, Network Service Discovery / NSD) with an `AudioManager` PTT pipeline
-- 📻 **343 radio stations** — the **same catalogue as iOS**, kept in sync from [`RadioManager.swift`](WalkieTalkie/RadioManager.swift) into [`Android/.../radio/RadioManager.kt`](Android/app/src/main/java/com/immaginet/talky/radio/RadioManager.kt)
-- 📣 **AdMob** stack (banner / interstitial / rewarded / app-open) with **UMP consent** — uses Google **test ad units** by default (see note below)
+- 📻 **343 radio stations**: the **same catalogue as iOS**, kept in sync from [`RadioManager.swift`](WalkieTalkie/RadioManager.swift) into [`Android/.../radio/RadioManager.kt`](Android/app/src/main/java/com/immaginet/talky/radio/RadioManager.kt)
+- 📣 **AdMob** stack (banner / interstitial / rewarded / app-open) with **UMP consent**: uses Google **test ad units** by default (see note below)
 - 🔥 **Firebase** Analytics + Crashlytics
 - 🎨 **Jetpack Compose** UI (Material 3), dark "hardware radio" aesthetic
 
@@ -150,7 +156,7 @@ cp keystore.properties.sample keystore.properties   # then edit values, or remov
 - Requires the Android SDK and a `local.properties` with `sdk.dir` (Android Studio generates it automatically).
 - `google-services.json` is included for Firebase; replace it with yours or remove the Firebase plugins.
 
-> 📣 **Ad units note** — for the open-source / sideload APK, [`AdConfig.kt`](Android/app/src/main/java/com/immaginet/talky/ads/AdConfig.kt) intentionally uses Google's **test** ad units (and a test AdMob App ID in the manifest). This is the policy-compliant choice for an APK that is **not** distributed via the Play Store. Replace the `LIVE_*` IDs and the manifest App ID with your own real AdMob IDs before any Play Store release — the config switches to live IDs automatically once real (non-placeholder) values are present in a release build.
+> 📣 **Ad units note**: for the open-source / sideload APK, [`AdConfig.kt`](Android/app/src/main/java/com/immaginet/talky/ads/AdConfig.kt) intentionally uses Google's **test** ad units (and a test AdMob App ID in the manifest). This is the policy-compliant choice for an APK that is **not** distributed via the Play Store. Replace the `LIVE_*` IDs and the manifest App ID with your own real AdMob IDs before any Play Store release, the config switches to live IDs automatically once real (non-placeholder) values are present in a release build.
 
 > 🚫 **Not on Google Play (yet).** This repo ships the Android **source + a [signed APK](https://github.com/andreapianidev/WalkieTalkie/releases/download/android-v1.1/Talky-Android-v1.1.apk) via [GitHub Releases](https://github.com/andreapianidev/WalkieTalkie/releases)** for sideloading. A Play Store listing would additionally require real AdMob IDs and a Play Console upload.
 
@@ -161,7 +167,10 @@ cp keystore.properties.sample keystore.properties   # then edit values, or remov
 | Capability | Free | Talky Pro |
 |---|:--:|:--:|
 | Push-to-talk over Multipeer (up to 8 peers) | ✅ | ✅ |
-| 24 frequency channels (f1.mp3 … f24.mp3) | ✅ | ✅ |
+| Live HF, CB 27 MHz and POC listening (real receivers, listen only) | ✅ | ✅ |
+| CB channel step, fine tuning, mode, squelch, typed frequency | ✅ | ✅ |
+| Auto SCAN (CB and POC) | 24 h with a rewarded video (iPhone) | ✅ |
+| Live listening with the screen off | ❌ | ✅ |
 | Radio stations available | 30 free | **All 135** |
 | Station browser (search / favorites / recents / nearby) | ✅ | ✅ |
 | Themes available | 5 base | **All 16** |
@@ -185,17 +194,62 @@ Backed by **`MultipeerManager`** and **`AudioManager`**:
 - **Service type**: `walkie-talkie` (MCSession / MCNearbyServiceAdvertiser + Browser)
 - **Cross-platform**: MultipeerConnectivity only reaches other Apple devices. Mac
   and Android are reached over **TALKY1**, the local protocol documented in
-  [`docs/TALKY1.md`](docs/TALKY1.md) — Bonjour `_walkie-talkie._tcp.`, TCP,
+  [`docs/TALKY1.md`](docs/TALKY1.md), Bonjour `_walkie-talkie._tcp.`, TCP,
   length-prefixed frames, PCM16 mono 48 kHz. That spec is everything you need to
   write a fourth implementation without reading this codebase.
-- **No internet required** — works over Wi-Fi, peer-to-peer Wi-Fi, or Bluetooth
+- **No internet required**: works over Wi-Fi, peer-to-peer Wi-Fi, or Bluetooth
 - **Up to 8 simultaneous peers**
 - **Audio session** `.playAndRecord` with `.defaultToSpeaker`, mixWithOthers off during PTT
 - **Background audio** entitlement for radio + incoming PTT alerts
 - **Anti-spam** notifications via `NotificationManager` cooldown
 - **Haptic feedback** on PTT press/release via `HapticManager`
 - **Auto-reconnect** with exponential backoff
-- **24 frequency channels** for quick audible signalling (`f1.mp3` … `f24.mp3`)
+
+---
+
+## 📡 Live Radio: HF, CB 27 MHz, POC
+
+Since 3.0 (iOS) and 2.0 (Mac) there is **no recorded or simulated audio** in
+Talky: the old fake frequencies (`f1.mp3` … `f24.mp3`, the white noise) are
+gone. Next to LOCAL, the walkie has three bands that are real radio, listen
+only, from free public services with no keys and no accounts. The engine is
+shared by iPhone and Mac in [`Shared/RealRadio/`](Shared/RealRadio/).
+
+| Band | Source | What you hear |
+|---|---|---|
+| **HF** | public [KiwiSDR](http://kiwisdr.com) receivers | aviation weather (VOLMET), time signals, radio amateurs on 80/40/20 m, FT8 |
+| **CB** (3.1 / 2.1) | public KiwiSDR receivers | the citizens band on 27 MHz, live |
+| **POC** | public [Mumble](https://www.mumble.info) servers | push-to-talk channels with people in them right now; Talky joins muted |
+
+### CB 27 MHz (new in iOS 3.1 / Mac 2.1)
+
+- **All 40 channels**, the same in CEPT and FCC countries (channels 24 and 25
+  sit below 23, as they always have). AM on 1 to 35 and LSB on 36 to 40 by
+  default, which is the operators' custom; AM, FM, LSB and USB are all one tap
+  away.
+- **The DX area** above channel 40 (27.415 to 27.855 MHz) in USB, where the
+  11 m SSB stations work and call on **27.555**. That is the DX calling
+  frequency of the citizens band, not an amateur one: the 10 m amateur band
+  starts at 28.000.
+- **Manual**: CH up/down, ±1 kHz fine tuning, or type the frequency
+  (`27.555`, `27,555` or `27555` all work).
+- **Auto SCAN**, like a CB rig: a moment on each channel, it stops while there
+  is a signal and moves on 3 s after it ends. It scans the part you are in,
+  the 40 channels or the DX area on a 5 kHz raster.
+- **Automatic squelch** on the receiver's S-meter, so the hiss stays muted
+  between transmissions. Tuned on 2 Nov 2026 on two real receivers (Dordogna
+  and Fuerteventura): it ignores the zero S-meter of a receiver's first
+  packet, adapts the noise floor in seconds rather than packets (one receiver
+  sends 6 packets a second, another 50), and treats a level that stays flat
+  for 4 s as noise or a dead carrier instead of someone talking. See
+  `Squelch` in [`CitizensBand.swift`](Shared/RealRadio/CitizensBand.swift).
+- Talky listens through the free public receiver nearest to you. CB is heard
+  when propagation opens the band, usually in daytime; at night it is often
+  quiet, and that is the real band, not a bug.
+
+The receivers and servers are offered for free by volunteers, so listening
+itself stays free for everyone. Talky Pro adds the comforts: auto SCAN and
+listening with the screen off.
 
 ---
 
@@ -209,19 +263,19 @@ The radio side is a full streaming client (`RadioManager` + `StationBrowserSheet
   - 🔍 Full-text search by name / country / genre
   - ⭐ **Favorites** (persisted in `UserDefaults`)
   - 🕘 **Recents** (auto-tracked)
-  - 📍 **Nearby** — surfaces stations matching `deviceCountry` (CoreTelephony / Locale)
+  - 📍 **Nearby**: surfaces stations matching `deviceCountry` (CoreTelephony / Locale)
   - 🌍 Grouping by country (with flag emoji)
   - 🎵 Grouping by genre
 - **Native AdMob slot** rendered between personal sections and country list (non-Pro only)
 - **Background playback** (radio keeps streaming when app is backgrounded)
-- **Sleep timer** (`SleepTimerSheet` + `SleepTimerManager`) — 5/10/15/30/45/60 min or end-of-track
+- **Sleep timer** (`SleepTimerSheet` + `SleepTimerManager`), 5/10/15/30/45/60 min or end-of-track
 - **Pro paywall trigger** when a free user taps a locked station
 
 ---
 
 ## 🏝️ Live Activities & Dynamic Island
 
-Shipped in commit [`4c0f54e`](https://github.com/andreapianidev/WalkieTalkie/commit/4c0f54e) — a full **ActivityKit** widget extension (`TalkyLiveActivities/`) plus a main-app **LiveActivityManager** that surfaces both modes on the Lock Screen and the Dynamic Island.
+Shipped in commit [`4c0f54e`](https://github.com/andreapianidev/WalkieTalkie/commit/4c0f54e), a full **ActivityKit** widget extension (`TalkyLiveActivities/`) plus a main-app **LiveActivityManager** that surfaces both modes on the Lock Screen and the Dynamic Island.
 
 ### Targets & files
 | Component | Path |
@@ -234,17 +288,17 @@ Shipped in commit [`4c0f54e`](https://github.com/andreapianidev/WalkieTalkie/com
 | App-side orchestrator (start / update / end) | [`WalkieTalkie/LiveActivity/LiveActivityManager.swift`](WalkieTalkie/LiveActivity/LiveActivityManager.swift) |
 | Deep-link routing from LA → app | [`WalkieTalkie/LiveActivity/LiveActivityDeepLink.swift`](WalkieTalkie/LiveActivity/LiveActivityDeepLink.swift) |
 
-### Radio Live Activity — content state
+### Radio Live Activity: content state
 - Station name, country, flag emoji, frequency, genre
 - `isPlaying` and `isBuffering` flags driving the play/pause glyph
-- **Interactive controls (iOS 17+)**: ⏮ previous · ⏯ play/pause · ⏭ next — wired via `LiveActivityIntent` and broadcast back to the app through `NotificationCenter` (`talkyRadioTogglePlayPause`, `talkyRadioNextStation`, `talkyRadioPreviousStation`)
+- **Interactive controls (iOS 17+)**: ⏮ previous · ⏯ play/pause · ⏭ next, wired via `LiveActivityIntent` and broadcast back to the app through `NotificationCenter` (`talkyRadioTogglePlayPause`, `talkyRadioNextStation`, `talkyRadioPreviousStation`)
 - "Next/previous" prioritises **favorites** when the user has any, otherwise walks the full available station pool
 
-### Walkie Live Activity — content state
+### Walkie Live Activity: content state
 - Connected peer count (badge in Dynamic Island compact view)
 - First 3 peer names (Lock Screen expanded view)
 - Current channel name
-- Optional **`talkerName`** — surfaced live when a peer is transmitting, so the user can see who's on the air without opening the app
+- Optional **`talkerName`**: surfaced live when a peer is transmitting, so the user can see who's on the air without opening the app
 
 ### Lifecycle & safety
 - `@MainActor`-isolated singleton (`LiveActivityManager.shared`), gated to **iOS 16.2+**
@@ -252,7 +306,7 @@ Shipped in commit [`4c0f54e`](https://github.com/andreapianidev/WalkieTalkie/com
 - Bootstrap on app launch reconnects to any in-flight Activity (e.g. app killed while LA is still on screen)
 - Respects user toggle in iOS Settings → Talky → Live Activities (`ActivityAuthorizationInfo().areActivitiesEnabled`)
 - Mirrors the data already pushed into `MPNowPlayingInfoCenter`, so older devices (< iOS 16.2) keep the existing Now-Playing behaviour
-- No push token / no `pushType: nil` — pure local updates from the app
+- No push token / no `pushType: nil`: pure local updates from the app
 
 > Design spec lives in [`docs/`](docs/) (see commit [`23e97ac`](https://github.com/andreapianidev/WalkieTalkie/commit/23e97ac)). The two widget files contain the full SwiftUI layout for the Lock Screen card, the compact/minimal/expanded Dynamic Island regions, and the iOS 17 interactive button rows.
 
@@ -262,7 +316,7 @@ Shipped in commit [`4c0f54e`](https://github.com/andreapianidev/WalkieTalkie/com
 
 Themes are organised into 3 pluggable **packs** registered into a central `ThemeRegistry`:
 
-### 🎨 Color Pack — Free (5 themes)
+### 🎨 Color Pack: Free (5 themes)
 | Theme | Accent | Icon |
 |---|---|---|
 | Default (Talky Yellow) | `#FFCC00` | `radio` |
@@ -271,7 +325,7 @@ Themes are organised into 3 pluggable **packs** registered into a central `Theme
 | Sunset | Orange | `sun.horizon.fill` |
 | Midnight | Indigo | `moon.stars.fill` |
 
-### 🎭 Identity Pack — included in Pro, or in the All Themes Pack (9 themes)
+### 🎭 Identity Pack: included in Pro, or in the All Themes Pack (9 themes)
 - **Military** · **Retro 80s** · **Vintage Radio** · **Cyberpunk** · **Stealth** · **Aurora** · **Submarine** · **Ham Radio** · **Festival**
 
 Each Identity theme bundles:
@@ -279,9 +333,9 @@ Each Identity theme bundles:
 - Optional custom PostScript font (e.g. `PressStart2P-Regular` for Retro 80s) via `FontManager`
 - Optional themed sound pack (e.g. `morse`, `sonar`, `glitch`) via `ThemeSoundManager`
 
-### 🌌 Animated Pack — included in Pro, or in the All Themes Pack (2 themes)
-- **Black Hole** — GPU shader gravitational lensing background
-- **Galaxy** — Procedural starfield
+### 🌌 Animated Pack: included in Pro, or in the All Themes Pack (2 themes)
+- **Black Hole**: GPU shader gravitational lensing background
+- **Galaxy**: Procedural starfield
 
 Rendered by `AnimatedBackgroundView` using `TimelineView` + Canvas for 60 fps.
 
@@ -289,7 +343,7 @@ Rendered by `AnimatedBackgroundView` using `TimelineView` + Canvas for 60 fps.
 
 ---
 
-## 💎 Pro Tier — IAP & Paywall
+## 💎 Pro Tier: IAP & Paywall
 
 Backed by **StoreKit 2** in [`IAP/IAPManager.swift`](WalkieTalkie/WalkieTalkie/IAP/IAPManager.swift) with product IDs declared in [`IAP/IAPProducts.swift`](WalkieTalkie/WalkieTalkie/IAP/IAPProducts.swift).
 
@@ -300,9 +354,9 @@ Backed by **StoreKit 2** in [`IAP/IAPManager.swift`](WalkieTalkie/WalkieTalkie/I
 | `app.immaginet.talky.pro.yearly` | Yearly (best value) |
 
 ### One-shot theme purchases (non-consumable)
-- `app.immaginet.talky.theme.<name>` — one per Identity / Animated theme
+- `app.immaginet.talky.theme.<name>`: one per Identity / Animated theme
 
-### Paywall — [`IAP/PaywallView.swift`](WalkieTalkie/WalkieTalkie/IAP/PaywallView.swift)
+### Paywall: [`IAP/PaywallView.swift`](WalkieTalkie/WalkieTalkie/IAP/PaywallView.swift)
 - Trigger-aware (`station_browser`, `theme_locked`, `equalizer`, …) for analytics
 - Restore Purchases
 - Receipt validation via Apple's `Transaction.currentEntitlements`
@@ -322,12 +376,12 @@ A complete, **policy-compliant** AdMob stack lives under [`Ads/`](WalkieTalkie/W
 | ~~**Native Advanced**~~ | `NativeAdCoordinator` + `NativeAdCardView` | **Not wired.** Removed from `AdManager` after 14 days at $0.00 with 9 impressions. The files stay for a future placement; the `nativowalkie` unit on AdMob receives no requests. |
 
 Implementation notes:
-- **SDK**: Google Mobile Ads SDK **13.x** (modern types: `InterstitialAd`, `Request`, `MobileAds.shared.start`, etc. — no `GAD` prefix)
+- **SDK**: Google Mobile Ads SDK **13.x** (modern types: `InterstitialAd`, `Request`, `MobileAds.shared.start`, etc., no `GAD` prefix)
 - **DEBUG**: always uses Google's test ad unit IDs (no risk of policy strikes during development)
 - **Release**: production unit IDs under account `ca-app-pub-1193280742171051`
 - **Native ad card** is styled with the app's design tokens (`Color("SurfaceColor")`, `Color("PrimaryTextColor")`) so it visually matches the surrounding station rows; the AdMob "Ad" badge is always visible (policy compliance)
 - **Frequency capping**: `AdConfig.FrequencyCap` enforces interstitial cool-downs + rewarded-ads remove-ads duration
-- **Pro / `adsRemoved` users**: every coordinator guards on `IAPManager.shared.isProUser` and `AdManager.shared.adsRemoved` — Pro users never see an ad
+- **Pro / `adsRemoved` users**: every coordinator guards on `IAPManager.shared.isProUser` and `AdManager.shared.adsRemoved`: Pro users never see an ad
 
 ### Bootstrap order ([`Ads/AdManager.swift`](WalkieTalkie/WalkieTalkie/Ads/AdManager.swift))
 ```
@@ -359,27 +413,36 @@ This order is mandatory for both Apple review and AdMob eCPM (Google must see th
 - **Privacy policy & terms** hosted at <https://privacypolicyhub.vercel.app>
 - **What we DON'T collect**:
   - Walkie-talkie audio (stays on-device, peer-to-peer encrypted by Multipeer)
-  - Location (no GPS in this app — radio "nearby" uses Locale country only)
+  - Location (no GPS in this app, radio "nearby" uses Locale country only)
   - Personally identifiable information
 - **What we DO collect** (only with consent):
   - Anonymous Firebase Analytics + Crashlytics
-  - AdMob ad-targeting signals (IDFA) — only if user consents to ATT
+  - AdMob ad-targeting signals (IDFA), only if user consents to ATT
 
 ---
 
 ## 🌍 Localization
 
-5 full translations under `WalkieTalkie/<locale>.lproj/Localizable.strings`:
+14 full translations under `WalkieTalkie/<locale>.lproj/Localizable.strings`:
 
 | Locale | Language |
 |---|---|
 | `it` | 🇮🇹 Italiano |
 | `en` | 🇬🇧 English |
 | `es` | 🇪🇸 Español |
+| `fr` | 🇫🇷 Français |
+| `de` | 🇩🇪 Deutsch |
+| `pt-BR` | 🇧🇷 Português (Brasil) |
+| `ja` | 🇯🇵 日本語 |
+| `ko` | 🇰🇷 한국어 |
 | `ms` | 🇲🇾 Bahasa Melayu |
+| `th` | 🇹🇭 ไทย |
+| `tr` | 🇹🇷 Türkçe |
+| `vi` | 🇻🇳 Tiếng Việt |
+| `zh-Hans` | 🇨🇳 简体中文 (Simplified Chinese) |
 | `zh-Hant` | 🇹🇼 繁體中文 (Traditional Chinese) |
 
-All UI strings flow through `String+Localization.swift` (`.localized`). i18n keys are kept in sync across languages — see commit `6ba6d06` for the latest dedup audit.
+All UI strings flow through `String+Localization.swift` (`.localized`). i18n keys are kept in sync across languages, see commit `6ba6d06` for the latest dedup audit.
 
 ---
 
@@ -535,10 +598,10 @@ WalkieTalkie/                            ← Repo root (Xcode project + Android 
 
 ### Prerequisites
 - **macOS** with **Xcode 16.0+** (Xcode 17 fully supported)
-- **iOS 15.6+** target device (physical device required — Multipeer Connectivity does not run in the Simulator)
+- **iOS 15.6+** target device (physical device required, Multipeer Connectivity does not run in the Simulator)
 - **Apple Developer account** for code signing
-- **(Optional) Firebase project** — replace `GoogleService-Info.plist` with yours or remove Firebase frameworks
-- **(Optional) AdMob account** — replace production unit IDs in [`Ads/AdConfig.swift`](WalkieTalkie/WalkieTalkie/Ads/AdConfig.swift); DEBUG builds always use Google's test IDs
+- **(Optional) Firebase project**: replace `GoogleService-Info.plist` with yours or remove Firebase frameworks
+- **(Optional) AdMob account**: replace production unit IDs in [`Ads/AdConfig.swift`](WalkieTalkie/WalkieTalkie/Ads/AdConfig.swift); DEBUG builds always use Google's test IDs
 
 ### Clone & open
 ```bash
@@ -573,10 +636,10 @@ xcodebuild -project WalkieTalkie/WalkieTalkie.xcodeproj \
 
 ## ⚙️ Configuration
 
-### AdMob unit IDs — [`Ads/AdConfig.swift`](WalkieTalkie/WalkieTalkie/Ads/AdConfig.swift)
+### AdMob unit IDs: [`Ads/AdConfig.swift`](WalkieTalkie/WalkieTalkie/Ads/AdConfig.swift)
 ```swift
 #if DEBUG
-// Google's official test ad units — safe during development.
+// Google's official test ad units, safe during development.
 static let appOpenAdUnitID       = "ca-app-pub-3940256099942544/5575463023"
 static let interstitialAdUnitID  = "ca-app-pub-3940256099942544/4411468910"
 static let rewardedAdUnitID      = "ca-app-pub-3940256099942544/1712485313"
@@ -601,12 +664,12 @@ enum FrequencyCap {
 ```
 
 ### Info.plist permission strings
-- `NSMicrophoneUsageDescription` — walkie-talkie recording
-- `NSLocalNetworkUsageDescription` — Multipeer Connectivity discovery
-- `NSBonjourServices` — `_walkie-talkie._tcp`, `_walkie-talkie._udp`
-- `NSUserTrackingUsageDescription` — ATT prompt copy
-- `GADApplicationIdentifier` — AdMob app ID
-- `SKAdNetworkItems` — see Info.plist (full list of partner SKAdNetwork IDs)
+- `NSMicrophoneUsageDescription`: walkie-talkie recording
+- `NSLocalNetworkUsageDescription`: Multipeer Connectivity discovery
+- `NSBonjourServices`: `_walkie-talkie._tcp`, `_walkie-talkie._udp`
+- `NSUserTrackingUsageDescription`: ATT prompt copy
+- `GADApplicationIdentifier`: AdMob app ID
+- `SKAdNetworkItems`: see Info.plist (full list of partner SKAdNetwork IDs)
 
 ### Audio session
 - Category `.playAndRecord` with `.defaultToSpeaker, .allowBluetooth, .mixWithOthers`
@@ -627,7 +690,7 @@ Recommended test matrix:
 - **Consent**: change device region to EU → UMP consent form must appear on first launch, then ATT prompt
 - **Theme purchase**: try to apply a locked theme → `ThemePurchaseSheet` should open with the correct price
 
-There is no automated test target in this repo — contributions welcome.
+There is no automated test target in this repo, contributions welcome.
 
 ---
 
@@ -647,10 +710,10 @@ There is no automated test target in this repo — contributions welcome.
 Contributions are welcome! Please:
 
 1. **Fork** the repo and create a feature branch (`feat/<short-name>` or `fix/<short-name>`)
-2. **Match the existing code style** — Swift API Design Guidelines, no force-unwraps, prefer `@MainActor` and `nonisolated` correctness over `@unchecked Sendable`
+2. **Match the existing code style**: Swift API Design Guidelines, no force-unwraps, prefer `@MainActor` and `nonisolated` correctness over `@unchecked Sendable`
 3. **Update localizations** if you change any UI string (`it`, `en`, `es`, `ms`, `zh-Hant` must stay in sync)
 4. **Build & run on a physical device** before opening the PR
-5. **Bump the build number in the same commit** — `versionCode` on Android,
+5. **Bump the build number in the same commit**: `versionCode` on Android,
    `CURRENT_PROJECT_VERSION` on Xcode. Every change, no exceptions. A number
    raised separately afterwards no longer says which work it belongs to.
 6. **Add a [`CHANGELOG.md`](CHANGELOG.md) entry** saying what changes for whoever
@@ -672,7 +735,7 @@ By opening a pull request you agree that **your contribution is licensed under t
 ### Good first issues
 - Add more radio stations (extend `RadioManager.radioStations`)
 - Add additional language translations (clone an existing `.lproj` folder)
-- New themes — add a new file under `Theme/` and register into `ThemeRegistry`
+- New themes, add a new file under `Theme/` and register into `ThemeRegistry`
 - Apple Watch companion app
 - Home Screen / Lock Screen widgets for quick PTT (separate from the Live Activity)
 - StandBy mode large-radio widget (iOS 17+)
@@ -686,32 +749,32 @@ By opening a pull request you agree that **your contribution is licensed under t
 > 🚫 **This is NOT an MIT/Apache/BSD/GPL project.** It is **source-available**, not "open-source" in the OSI sense. Commercial use is **strictly prohibited** without a separate written license signed by the copyright holder.
 
 ### ✅ What you ARE allowed to do (free of charge)
-- **Read, study and learn** from the code — this repo exists primarily as an educational reference for production-grade SwiftUI / Multipeer / StoreKit / AdMob / ActivityKit integration.
+- **Read, study and learn** from the code, this repo exists primarily as an educational reference for production-grade SwiftUI / Multipeer / StoreKit / AdMob / ActivityKit integration.
 - **Fork and modify** for personal, academic, research, journalism, hobby or non-profit purposes.
 - **Run** your modified copy on your own devices.
 - **Share** the source or your patches, as long as the [`LICENSE`](LICENSE) file and the copyright notice stay intact.
 - **Use by educational institutions, public-research organisations, NGOs, charities and government bodies** is explicitly permitted (see PolyForm §"Noncommercial Organizations").
 
 ### 🚫 What you ARE NOT allowed to do without a commercial license
-- ❌ **Publish, distribute or sell** this app — or any app substantially derived from this codebase — on the **Apple App Store, Google Play, AltStore, Setapp, or any other paid or ad-supported channel**.
+- ❌ **Publish, distribute or sell** this app, or any app substantially derived from this codebase, on the **Apple App Store, Google Play, AltStore, Setapp, or any other paid or ad-supported channel**.
 - ❌ Use this code, in whole or in part, in any **product, service, SaaS, enterprise deployment, paid app, ad-supported service, sponsored build, consulting deliverable** or any activity primarily directed toward **commercial advantage or monetary compensation**.
 - ❌ Train **commercial machine-learning models** on this codebase.
-- ❌ **Re-license** the code under more permissive terms (MIT, Apache-2.0, BSD, GPL, …) — this is explicitly forbidden.
+- ❌ **Re-license** the code under more permissive terms (MIT, Apache-2.0, BSD, GPL, …), this is explicitly forbidden.
 - ❌ Remove, alter, or obscure the **copyright notice**, the [`LICENSE`](LICENSE) file, the in-app "About" attribution, the project name, or the identifying branding from any distributed copy.
 - ❌ Pretend the code is yours.
 
 ### 💼 Commercial license
 
-If you want to use Talky (or a derivative) in any commercial context — including shipping it on an app store, bundling it inside another paid product, or offering it as a service — you must obtain a **separate written commercial license** from the copyright holder.
+If you want to use Talky (or a derivative) in any commercial context, including shipping it on an app store, bundling it inside another paid product, or offering it as a service, you must obtain a **separate written commercial license** from the copyright holder.
 
 📧 **Commercial licensing contact**: **andreapiani.dev@gmail.com**
 🌐 https://www.andreapiani.com
 
-Reasonable commercial terms are available for individuals, startups and enterprises. Just write — we'll work it out.
+Reasonable commercial terms are available for individuals, startups and enterprises. Just write, we'll work it out.
 
 ### 🛡️ Enforcement & DMCA
 
-Violations of this license — including unauthorised App Store submissions, paid-app derivatives and trademark-passing-off — will be enforced through **App Store / Play Store DMCA take-down requests**, **GitHub DMCA**, and where appropriate **legal action under Italian and EU copyright law (Law 633/1941 as amended) and the Berne Convention**. Please don't make us do that — just email instead.
+Violations of this license, including unauthorised App Store submissions, paid-app derivatives and trademark-passing-off, will be enforced through **App Store / Play Store DMCA take-down requests**, **GitHub DMCA**, and where appropriate **legal action under Italian and EU copyright law (Law 633/1941 as amended) and the Berne Convention**. Please don't make us do that, just email instead.
 
 ### 📜 Full legal text
 
@@ -728,11 +791,11 @@ The plain-language summary above is informational only and does not replace the 
 - **Privacy policy**: <https://privacypolicyhub.vercel.app>
 - **Support coffee** ☕: <https://buymeacoffee.com/andreapianidev>
 
-### Sister app — Peak (GPS Altimeter + Walkie)
-The walkie-talkie engine from Talky also powers **Peak — GPS Altimeter Barometer**, an outdoor companion app with professional altimetry and built-in PTT.
+### Sister app: Peak (GPS Altimeter + Walkie)
+The walkie-talkie engine from Talky also powers **Peak, GPS Altimeter Barometer**, an outdoor companion app with professional altimetry and built-in PTT.
 
 [![Download Peak](https://img.shields.io/badge/Download-Peak%20on%20App%20Store-blue?style=for-the-badge&logo=apple&logoColor=white)](https://apps.apple.com/app/peak-altimetro-gps-barometro/id6477742031)
 
 ---
 
-> 💛 If Talky helped you, ship something cool with it, or just learn how to build a freemium SwiftUI app — drop a ⭐ on GitHub and consider a coffee. Pull requests, station packs and theme contributions are always welcome.
+> 💛 If Talky helped you, ship something cool with it, or just learn how to build a freemium SwiftUI app, drop a ⭐ on GitHub and consider a coffee. Pull requests, station packs and theme contributions are always welcome.
