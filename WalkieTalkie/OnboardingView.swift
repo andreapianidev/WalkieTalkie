@@ -17,7 +17,7 @@ struct OnboardingView: View {
     @Binding var isOnboardingComplete: Bool
     @ObservedObject var notificationManager: NotificationManager
 
-    private let totalPages = 7
+    private let totalPages = 8
 
     var body: some View {
         ZStack {
@@ -42,13 +42,17 @@ struct OnboardingView: View {
                 // UI troncata su schermi corti e' gia' costata recensioni da una
                 // stella. Su schermi grandi lo ScrollView non si vede.
                 TabView(selection: $currentPage) {
+                    // La radio dal vivo prima del walkie: e' quello che Talky ha
+                    // e le altre app no, e chi installa per la CB deve vederlo
+                    // subito, non alla sesta pagina.
                     ScrollableOnboardingPage { OnboardingHookPage() }.tag(0)
-                    ScrollableOnboardingPage { OnboardingNoInternetPage() }.tag(1)
-                    ScrollableOnboardingPage { OnboardingPTTPage() }.tag(2)
-                    ScrollableOnboardingPage { OnboardingFrequencyPage() }.tag(3)
-                    ScrollableOnboardingPage { OnboardingRadioModePage() }.tag(4)
-                    ScrollableOnboardingPage { OnboardingLiveRadioPage() }.tag(5)
-                    ScrollableOnboardingPage { OnboardingStepsPage() }.tag(6)
+                    ScrollableOnboardingPage { OnboardingLiveRadioPage() }.tag(1)
+                    ScrollableOnboardingPage { OnboardingRadioModePage() }.tag(2)
+                    ScrollableOnboardingPage { OnboardingWidgetsPage() }.tag(3)
+                    ScrollableOnboardingPage { OnboardingNoInternetPage() }.tag(4)
+                    ScrollableOnboardingPage { OnboardingPTTPage() }.tag(5)
+                    ScrollableOnboardingPage { OnboardingFrequencyPage() }.tag(6)
+                    ScrollableOnboardingPage { OnboardingStepsPage() }.tag(7)
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                 .animation(.easeInOut, value: currentPage)
@@ -115,7 +119,7 @@ struct OnboardingView: View {
     }
 }
 
-// MARK: - Page 1: Hook
+// MARK: - Hook
 
 private struct OnboardingHookPage: View {
     var body: some View {
@@ -161,7 +165,7 @@ private struct ScrollableOnboardingPage<Content: View>: View {
     }
 }
 
-// MARK: - Page 2: No internet
+// MARK: - No internet
 
 private struct OnboardingNoInternetPage: View {
     var body: some View {
@@ -231,7 +235,7 @@ private struct OnboardingNoInternetPage: View {
     }
 }
 
-// MARK: - Page 3: Push to Talk
+// MARK: - Push to Talk
 
 private struct OnboardingPTTPage: View {
     @State private var isPulsing = false
@@ -281,7 +285,7 @@ private struct OnboardingPTTPage: View {
     }
 }
 
-// MARK: - Page 4: Frequency
+// MARK: - Frequency
 
 private struct OnboardingFrequencyPage: View {
     var body: some View {
@@ -325,7 +329,7 @@ private struct OnboardingFrequencyPage: View {
     }
 }
 
-// MARK: - Page 5: Radio Mode (WT <-> FM toggle)
+// MARK: - Radio mode
 
 private struct OnboardingRadioModePage: View {
     @State private var showFM = false
@@ -349,26 +353,15 @@ private struct OnboardingRadioModePage: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 24)
 
-                // Mock toggle illustration (larger than the real one for emphasis)
-                HStack(spacing: 8) {
-                    Image(systemName: showFM ? "radio" : "antenna.radiowaves.left.and.right")
-                        .foregroundColor(Color("PrimaryTextColor"))
-                        .font(.title2)
-                    Text(showFM ? "FM" : "WT")
-                        .font(.headline)
-                        .fontWeight(.bold)
-                        .foregroundColor(Color("PrimaryTextColor"))
+                // Lo stesso selettore che c'e' in alto nell'app, con le sue
+                // etichette: prima qui c'era "WT / FM", e l'FM nell'app non
+                // esiste (le stazioni arrivano da internet).
+                HStack(spacing: 4) {
+                    modeChip("antenna.radiowaves.left.and.right", "walkie_talkie".localized, active: !showFM)
+                    modeChip("radio", "radio_fm".localized, active: showFM)
                 }
-                .padding(.horizontal, 18)
-                .padding(.vertical, 10)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color("PrimaryTextColor").opacity(0.12))
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color("PrimaryTextColor").opacity(0.25), lineWidth: 1)
-                )
+                .padding(4)
+                .background(Capsule().fill(Color("PrimaryTextColor").opacity(0.12)))
                 .padding(.top, 8)
 
                 Text(OnboardingStrings.radioModeBody)
@@ -388,15 +381,23 @@ private struct OnboardingRadioModePage: View {
         }
         .padding()
         .onAppear {
-            // Gentle illustrative toggle animation to communicate the switch action.
+            // Il selettore passa avanti e indietro da solo, per far vedere il gesto.
             withAnimation(.easeInOut(duration: 1.4).repeatForever(autoreverses: true)) {
                 showFM = true
             }
         }
     }
+    private func modeChip(_ symbol: String, _ title: String, active: Bool) -> some View {
+        Label(title, systemImage: symbol)
+            .font(.subheadline.weight(.semibold))
+            .foregroundColor(Color("PrimaryTextColor").opacity(active ? 1 : 0.5))
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
+            .background(Capsule().fill(active ? Color("BackgroundColor") : Color.clear))
+    }
 }
 
-// MARK: - Page 6: Live radio (HF, CB, POC)
+// MARK: - Live radio (HF, CB, POC)
 
 /// La radio vera: tre bande che si ascoltano da ricevitori e server pubblici.
 private struct OnboardingLiveRadioPage: View {
@@ -417,6 +418,10 @@ private struct OnboardingLiveRadioPage: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 24)
             }
+
+            SpectrumSketch()
+                .frame(height: 96)
+                .padding(.horizontal, 28)
 
             VStack(alignment: .leading, spacing: 14) {
                 bandRow("HF", OnboardingStrings.liveHF)
@@ -449,7 +454,97 @@ private struct OnboardingLiveRadioPage: View {
     }
 }
 
-// MARK: - Page 7: Steps
+// MARK: - Widgets
+
+private struct OnboardingWidgetsPage: View {
+    var body: some View {
+        VStack(spacing: 24) {
+            Image(systemName: "square.grid.2x2")
+                .font(.system(size: 72, weight: .light))
+                .foregroundColor(Color("PrimaryTextColor"))
+
+            VStack(spacing: 12) {
+                Text(OnboardingStrings.widgetsTitle)
+                    .font(.title.bold())
+                    .foregroundColor(Color("PrimaryTextColor"))
+                    .multilineTextAlignment(.center)
+                Text(OnboardingStrings.widgetsSubtitle)
+                    .font(.title3)
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.75))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 24)
+            }
+
+            VStack(alignment: .leading, spacing: 14) {
+                row("dot.radiowaves.left.and.right", OnboardingStrings.widgetsChannel)
+                row("chart.bar.fill", OnboardingStrings.widgetsPropagation)
+                row("sun.horizon.fill", OnboardingStrings.widgetsSun)
+            }
+            .padding(.horizontal, 28)
+
+            Text(Tour.text("tour.perk.widgets.where"))
+                .font(.footnote)
+                .foregroundColor(Color("PrimaryTextColor").opacity(0.6))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 24)
+        }
+        .padding()
+    }
+
+    private func row(_ symbol: String, _ text: String) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: symbol)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundColor(.yellow)
+                .frame(width: 34, height: 26)
+                .background(RoundedRectangle(cornerRadius: 7).fill(Color.black))
+            Text(text)
+                .font(.subheadline)
+                .foregroundColor(Color("PrimaryTextColor"))
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
+/// Uno schizzo dello schermo HF/CB: la traccia dello spettro sopra e la
+/// cascata sotto, con due portanti. E' un disegno e non un segnale vero:
+/// l'onboarding non si collega a nessun ricevitore.
+private struct SpectrumSketch: View {
+    var body: some View {
+        Canvas { ctx, size in
+            let w = size.width, h = size.height, split = h * 0.38
+            let carriers: [CGFloat] = [0.32, 0.61]
+            func level(_ x: CGFloat, _ row: Int) -> CGFloat {
+                let noise = (sin(x * 61 + CGFloat(row) * 1.7) + sin(x * 23 + CGFloat(row) * 0.9)) * 0.08
+                let peaks = carriers.map { c in max(0, 1 - abs(x - c) * 40) }.reduce(0, +)
+                return min(1, 0.2 + noise + peaks * 0.7)
+            }
+            let rows = 14
+            let rowH = (h - split) / CGFloat(rows)
+            for row in 0..<rows {
+                var x: CGFloat = 0
+                while x < w {
+                    let v = level(x / w, row)
+                    ctx.fill(Path(CGRect(x: x, y: split + CGFloat(row) * rowH, width: 3, height: rowH + 0.5)),
+                             with: .color(Color(red: 1, green: 0.78, blue: 0).opacity(Double(v) * 0.9)))
+                    x += 3
+                }
+            }
+            var line = Path()
+            var x: CGFloat = 0
+            while x <= w {
+                let y = split - 4 - level(x / w, 0) * (split - 8)
+                if x == 0 { line.move(to: CGPoint(x: x, y: y)) } else { line.addLine(to: CGPoint(x: x, y: y)) }
+                x += 2
+            }
+            ctx.stroke(line, with: .color(.yellow), lineWidth: 1.5)
+        }
+        .background(Color.black)
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+}
+
+// MARK: - Steps
 
 private struct OnboardingStepsPage: View {
     var body: some View {

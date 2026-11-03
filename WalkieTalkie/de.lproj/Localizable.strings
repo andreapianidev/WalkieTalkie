@@ -208,8 +208,8 @@
 "no_connected_peers" = "Keine verbundenen Geräte";
 
 // MARK: - Onboarding
-"onboarding_p1_title" = "Ein Funkgerät in deinem iPhone";
-"onboarding_p1_subtitle" = "Auf dem Berg, auf dem Festival, auf einem vollen Platz: Sprich mit deinen Freunden, auch wo es keinen Empfang gibt.";
+"onboarding_p1_title" = "Echter Funk und ein Walkie-Talkie in deinem iPhone";
+"onboarding_p1_subtitle" = "Hör CB-Funk, Kurzwelle und POC live, spiel über 330 Sender aus aller Welt und sprich mit deinen Freunden auch ohne Netz.";
 
 "onboarding_p2_no_internet_title" = "Kein Internet, keine SIM";
 "onboarding_p2_no_internet_body" = "Zwischen iPhone und iPad geht die Stimme direkt von Gerät zu Gerät über WLAN und Bluetooth: kein Router, kein Server, kein Konto.";
@@ -417,7 +417,7 @@
 "got_it" = "Verstanden";
 "onboarding.radio_mode.title" = "Walkie-Talkie + Radio";
 "onboarding.radio_mode.subtitle" = "Mit einem Tippen zwischen den Modi wechseln";
-"onboarding.radio_mode.body" = "Mit der Taste oben links wechselst du zwischen Walkie-Talkie, um mit Freunden zu sprechen, und Internetradio mit Hunderten internationalen Sendern.";
+"onboarding.radio_mode.body" = "Der Schalter oben bringt dich vom Walkie-Talkie zum Weltradio: über 330 Internetsender aus mehr als 80 Ländern, mit Pegelbalken, die der Musik folgen.";
 "onboarding.radio_mode.streaming_note" = "Das Radio nutzt Internet-Streaming, keine physische UKW-Antenne. Eine aktive Datenverbindung (WLAN oder Mobilfunk) ist erforderlich.";
 // MARK: - Live Activities
 "live_activities.title" = "Live-Aktivitäten";
@@ -527,11 +527,16 @@
 "live_free_left" = "Heute gratis %@";
 "live_pro_free_message" = "Du hast die %d Gratisminuten Live-Funk für heute verbraucht. Mit Talky Pro hörst du ohne Limit, oder sieh dir ein kurzes Video für 24 Stunden an.";
 "onboarding.live.title" = "Echter Funk, live";
-"onboarding.live.subtitle" = "Höre echte Empfänger und Kanäle auf der ganzen Welt.";
-"onboarding.live.hf" = "Kurzwelle: Flugwetter, Zeitzeichen und Funkamateure, mit dem Spektrum des Empfängers auf dem Bildschirm.";
+"onboarding.live.subtitle" = "Echte Empfänger auf der ganzen Welt, der nächste zu dir, mit Spektrum und Wasserfall live auf dem Bildschirm.";
+"onboarding.live.hf" = "Kurzwelle: Flugwetter, Zeitzeichen und Funkamateure.";
 "onboarding.live.cb" = "Alle 40 CB-Kanäle und der DX-Anruf auf 27.555, mit automatischer Rauschsperre und SCAN.";
 "onboarding.live.poc" = "Echte Push-to-Talk-Kanäle auf öffentlichen Servern.";
 "onboarding.live.note" = "Nur Empfang. %d Gratisminuten am Tag, ohne Limit mit Talky Pro.";
+"onboarding.widgets.title" = "Widgets mit der aktuellen Ausbreitung";
+"onboarding.widgets.subtitle" = "Auf dem Home- und dem Sperrbildschirm, sie aktualisieren sich selbst.";
+"onboarding.widgets.channel" = "Talky-Kanal: dein CB-Kanal und der Zustand der Bänder. Kostenlos.";
+"onboarding.widgets.propagation" = "Ausbreitung: SFI, Kp, die Bänder 11, 20, 40 und 80 m und die Kp-Vorhersage. Talky Pro.";
+"onboarding.widgets.sun" = "Sonne & Bänder: Sonnenauf- und -untergang und das gerade beste Band. Talky Pro.";
 "live_info_distance" = "Entfernung";
 "live_info_signal" = "Signal";
 "live_info_mode" = "Modus";

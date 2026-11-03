@@ -208,8 +208,8 @@
 "no_connected_peers" = "Chưa có thiết bị nào kết nối";
 
 // MARK: - Onboarding
-"onboarding_p1_title" = "Một chiếc bộ đàm ngay trong iPhone";
-"onboarding_p1_subtitle" = "Trên núi, ở lễ hội, giữa quảng trường đông người: nói chuyện với bạn bè ngay cả nơi không có sóng.";
+"onboarding_p1_title" = "Radio thật và bộ đàm trong iPhone của bạn";
+"onboarding_p1_subtitle" = "Nghe trực tiếp CB, sóng ngắn và POC, mở hơn 330 đài thế giới và nói chuyện với bạn bè cả ở nơi không có sóng.";
 
 "onboarding_p2_no_internet_title" = "Không internet, không SIM";
 "onboarding_p2_no_internet_body" = "Giữa iPhone và iPad, giọng nói đi thẳng từ máy này sang máy kia qua Wi-Fi và Bluetooth: không router, không máy chủ, không tài khoản.";
@@ -417,7 +417,7 @@
 "got_it" = "Đã hiểu";
 "onboarding.radio_mode.title" = "Bộ đàm + radio";
 "onboarding.radio_mode.subtitle" = "Chuyển chế độ chỉ với một lần chạm";
-"onboarding.radio_mode.body" = "Nút góc trên bên trái cho phép bạn chuyển giữa bộ đàm để nói chuyện với bạn bè và radio internet với hàng trăm đài quốc tế.";
+"onboarding.radio_mode.body" = "Công tắc ở trên đưa bạn từ bộ đàm sang radio thế giới: hơn 330 đài internet từ hơn 80 quốc gia, với thanh mức âm chạy theo âm nhạc.";
 "onboarding.radio_mode.streaming_note" = "Radio dùng luồng phát qua internet, không phải ăng-ten FM thật. Cần có kết nối dữ liệu (Wi-Fi hoặc di động).";
 // MARK: - Live Activities
 "live_activities.title" = "Hoạt động trực tiếp";
@@ -527,11 +527,16 @@
 "live_free_left" = "Miễn phí hôm nay %@";
 "live_pro_free_message" = "Bạn đã dùng hết %d phút radio trực tiếp miễn phí hôm nay. Với Talky Pro bạn nghe không giới hạn, hoặc xem một video ngắn để dùng 24 giờ.";
 "onboarding.live.title" = "Radio thật, trực tiếp";
-"onboarding.live.subtitle" = "Nghe các máy thu và kênh thật trên khắp thế giới.";
-"onboarding.live.hf" = "Sóng ngắn: thời tiết hàng không, tín hiệu giờ và vô tuyến nghiệp dư, với phổ của máy thu trên màn hình.";
+"onboarding.live.subtitle" = "Máy thu thật khắp thế giới, chọn máy gần bạn nhất, với phổ tần và thác nước trực tiếp trên màn hình.";
+"onboarding.live.hf" = "Sóng ngắn: thời tiết hàng không, tín hiệu giờ và vô tuyến nghiệp dư.";
 "onboarding.live.cb" = "Đủ 40 kênh CB và tần số gọi DX 27.555, có squelch tự động và SCAN.";
 "onboarding.live.poc" = "Các kênh bấm-để-nói thật trên máy chủ công cộng.";
 "onboarding.live.note" = "Chỉ nghe. %d phút miễn phí mỗi ngày, không giới hạn với Talky Pro.";
+"onboarding.widgets.title" = "Widget hiển thị truyền sóng trực tiếp";
+"onboarding.widgets.subtitle" = "Trên Màn hình chính và màn hình khóa, tự cập nhật.";
+"onboarding.widgets.channel" = "Kênh Talky: kênh CB của bạn và tình trạng băng tần. Miễn phí.";
+"onboarding.widgets.propagation" = "Truyền sóng: SFI, Kp, các băng 11, 20, 40 và 80 m và dự báo Kp. Talky Pro.";
+"onboarding.widgets.sun" = "Mặt trời và băng tần: bình minh, hoàng hôn và băng tần tốt nhất lúc này. Talky Pro.";
 "live_info_distance" = "Khoảng cách";
 "live_info_signal" = "Tín hiệu";
 "live_info_mode" = "Chế độ";

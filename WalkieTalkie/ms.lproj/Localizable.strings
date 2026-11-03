@@ -191,8 +191,8 @@
 "no_connected_peers" = "Tiada peranti disambung";
 
 // MARK: - Onboarding
-"onboarding_p1_title" = "Walkie-talkie dalam iPhone anda";
-"onboarding_p1_subtitle" = "Di gunung, di dataran, di konsert: bercakap dengan kawan walaupun tiada talian.";
+"onboarding_p1_title" = "Radio sebenar dan walkie-talkie dalam iPhone anda";
+"onboarding_p1_subtitle" = "Dengar CB, gelombang pendek dan POC secara langsung, mainkan lebih 330 stesen dunia dan bercakap dengan rakan walaupun tiada isyarat.";
 
 "onboarding_p2_no_internet_title" = "Tanpa internet, tanpa SIM";
 "onboarding_p2_no_internet_body" = "Antara iPhone dan iPad, suara bergerak terus dari satu peranti ke peranti lain melalui Wi-Fi dan Bluetooth: tiada penghala, tiada pelayan, tiada akaun.";
@@ -408,7 +408,7 @@
 "got_it" = "Faham";
 "onboarding.radio_mode.title" = "Walkie-Talkie + Radio";
 "onboarding.radio_mode.subtitle" = "Bertukar mod dengan satu ketukan";
-"onboarding.radio_mode.body" = "Butang kiri atas membolehkan anda bertukar antara Walkie-Talkie untuk berbual dengan rakan dan ratusan stesen radio antarabangsa melalui penstriman internet.";
+"onboarding.radio_mode.body" = "Suis di atas membawa anda dari walkie-talkie ke radio dunia: lebih 330 stesen internet dari lebih 80 negara, dengan bar tahap yang mengikut muzik.";
 "onboarding.radio_mode.streaming_note" = "Radio menggunakan penstriman internet, bukan antena FM fizikal. Sambungan data aktif (Wi-Fi atau selular) diperlukan.";
 // MARK: - Live Activities
 "live_activities.title" = "Live Activities";
@@ -529,11 +529,16 @@
 "live_free_left" = "Percuma hari ini %@";
 "live_pro_free_message" = "Anda telah menggunakan %d minit percuma radio langsung hari ini. Dengan Talky Pro anda mendengar tanpa had, atau tonton video pendek untuk 24 jam.";
 "onboarding.live.title" = "Radio sebenar, secara langsung";
-"onboarding.live.subtitle" = "Dengar penerima dan saluran sebenar di seluruh dunia.";
-"onboarding.live.hf" = "Gelombang pendek: cuaca penerbangan, isyarat masa dan amatur radio, dengan spektrum penerima pada skrin.";
+"onboarding.live.subtitle" = "Penerima sebenar di seluruh dunia, yang paling dekat dengan anda, dengan spektrum dan air terjun secara langsung di skrin.";
+"onboarding.live.hf" = "Gelombang pendek: cuaca penerbangan, isyarat masa dan radio amatur.";
 "onboarding.live.cb" = "Kesemua 40 saluran CB dan panggilan DX pada 27.555, dengan squelch automatik dan SCAN.";
 "onboarding.live.poc" = "Saluran tekan-untuk-bercakap sebenar pada pelayan awam.";
 "onboarding.live.note" = "Dengar sahaja. %d minit percuma sehari, tanpa had dengan Talky Pro.";
+"onboarding.widgets.title" = "Widget dengan perambatan secara langsung";
+"onboarding.widgets.subtitle" = "Di Skrin Utama dan skrin kunci, dikemas kini sendiri.";
+"onboarding.widgets.channel" = "Saluran Talky: saluran CB anda dan keadaan jalur. Percuma.";
+"onboarding.widgets.propagation" = "Perambatan: SFI, Kp, jalur 11, 20, 40 dan 80 m dan ramalan Kp. Talky Pro.";
+"onboarding.widgets.sun" = "Matahari & jalur: matahari terbit, terbenam dan jalur terbaik sekarang. Talky Pro.";
 "live_info_distance" = "Jarak";
 "live_info_signal" = "Isyarat";
 "live_info_mode" = "Mod";

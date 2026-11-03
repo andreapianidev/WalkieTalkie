@@ -208,8 +208,8 @@
 "no_connected_peers" = "接続中のデバイスはありません";
 
 // MARK: - Onboarding
-"onboarding_p1_title" = "iPhoneの中のトランシーバー";
-"onboarding_p1_subtitle" = "山でも、フェスでも、人混みの広場でも。電波が届かない場所でも仲間と話せます。";
+"onboarding_p1_title" = "本物の無線とトランシーバーをiPhoneに";
+"onboarding_p1_subtitle" = "CB、短波、POCをライブで受信、世界330局以上のラジオ、そして電波のない場所でも友だちと話せます。";
 
 "onboarding_p2_no_internet_title" = "インターネットもSIMも不要";
 "onboarding_p2_no_internet_body" = "iPhoneとiPadの間では、声はWi-FiとBluetoothで端末から端末へ直接届きます。ルーターもサーバーもアカウントも要りません。";
@@ -417,7 +417,7 @@
 "got_it" = "わかりました";
 "onboarding.radio_mode.title" = "トランシーバー＋ラジオ";
 "onboarding.radio_mode.subtitle" = "ワンタップでモードを切り替え";
-"onboarding.radio_mode.body" = "左上のボタンで、仲間と話すトランシーバーと、世界数百局のインターネットラジオを切り替えられます。";
+"onboarding.radio_mode.body" = "上のスイッチでトランシーバーから世界のラジオへ。80か国以上、330局以上のネットラジオを、音楽に合わせて動くレベルバーと一緒に。";
 "onboarding.radio_mode.streaming_note" = "ラジオはインターネット配信を使います。物理的なFMアンテナではありません。データ通信（Wi-Fiまたはモバイル通信）が必要です。";
 
 // MARK: - Live Activities
@@ -528,11 +528,16 @@
 "live_free_left" = "今日の無料 %@";
 "live_pro_free_message" = "今日のライブ無線の無料%d分を使い切りました。Talky Proなら無制限で聴けます。短い動画を見ると24時間使えます。";
 "onboarding.live.title" = "本物の無線をライブで";
-"onboarding.live.subtitle" = "世界中の本物の受信機とチャンネルを聴けます。";
-"onboarding.live.hf" = "短波：航空気象、時報、アマチュア無線。受信機のスペクトラムを画面に表示します。";
+"onboarding.live.subtitle" = "世界中の本物の受信機から、いちばん近いものを選び、スペクトラムとウォーターフォールを画面にライブ表示。";
+"onboarding.live.hf" = "短波：航空気象、時報、アマチュア無線。";
 "onboarding.live.cb" = "CB全40チャンネルと27.555のDX呼び出し。自動スケルチとスキャン付き。";
 "onboarding.live.poc" = "公開サーバー上の本物のプッシュトゥトークチャンネル。";
 "onboarding.live.note" = "受信のみ。1日%d分無料、Talky Proなら無制限。";
+"onboarding.widgets.title" = "伝搬をライブで表示するウィジェット";
+"onboarding.widgets.subtitle" = "ホーム画面とロック画面に。自動で更新されます。";
+"onboarding.widgets.channel" = "Talkyチャンネル：CBチャンネルとバンドの状態。無料。";
+"onboarding.widgets.propagation" = "伝搬：SFI、Kp、11・20・40・80mバンド、Kp予報。Talky Pro。";
+"onboarding.widgets.sun" = "太陽とバンド：日の出、日の入り、今いちばん良いバンド。Talky Pro。";
 "live_info_distance" = "距離";
 "live_info_signal" = "信号";
 "live_info_mode" = "モード";

@@ -200,8 +200,8 @@
 "no_connected_peers" = "Nessun dispositivo connesso";
 
 // MARK: - Onboarding
-"onboarding_p1_title" = "Un walkie-talkie nel tuo iPhone";
-"onboarding_p1_subtitle" = "In montagna, in piazza, al concerto: parla con i tuoi amici anche dove non c'è linea.";
+"onboarding_p1_title" = "Radio vera e walkie talkie nel tuo iPhone";
+"onboarding_p1_subtitle" = "Ascolta dal vivo CB, onde corte e POC, metti oltre 330 radio del mondo e parla con i tuoi amici anche dove non c'è campo.";
 
 "onboarding_p2_no_internet_title" = "Niente internet, niente SIM";
 "onboarding_p2_no_internet_body" = "Tra iPhone e iPad la voce passa dritta da un dispositivo all'altro via Wi-Fi e Bluetooth: niente router, niente server, niente account.";
@@ -406,7 +406,7 @@
 "got_it" = "Capito";
 "onboarding.radio_mode.title" = "Walkie-Talkie + Radio";
 "onboarding.radio_mode.subtitle" = "Passa tra le due modalità con un tap";
-"onboarding.radio_mode.body" = "Il pulsante in alto a sinistra ti permette di passare da Walkie-Talkie per parlare con gli amici a centinaia di stazioni radio internazionali in streaming.";
+"onboarding.radio_mode.body" = "Il selettore in alto ti porta dal walkie talkie alla radio del mondo: oltre 330 stazioni via internet da più di 80 paesi, con le barre del livello che seguono la musica.";
 "onboarding.radio_mode.streaming_note" = "La radio usa lo streaming internet, non un'antenna FM fisica. Serve una connessione dati attiva (Wi-Fi o cellulare).";
 // MARK: - Live Activities
 "live_activities.title" = "Live Activities";
@@ -527,11 +527,16 @@
 "live_free_left" = "Gratis oggi %@";
 "live_pro_free_message" = "Hai usato i %d minuti gratis di oggi della radio dal vivo. Con Talky Pro ascolti senza limiti, oppure guarda un breve video per 24 ore.";
 "onboarding.live.title" = "La radio vera, dal vivo";
-"onboarding.live.subtitle" = "Ascolta ricevitori e canali veri in tutto il mondo.";
-"onboarding.live.hf" = "Onde corte: meteo per l'aviazione, segnali orari e radioamatori, con lo spettro del ricevitore sullo schermo.";
+"onboarding.live.subtitle" = "Ricevitori veri in tutto il mondo, quello più vicino a te, con spettro e cascata dal vivo sullo schermo.";
+"onboarding.live.hf" = "Onde corte: meteo aeronautico, segnali orari e radioamatori.";
 "onboarding.live.cb" = "Tutti i 40 canali CB e la chiamata DX sulla 27.555, con squelch automatico e SCAN.";
 "onboarding.live.poc" = "Canali push-to-talk veri su server pubblici.";
 "onboarding.live.note" = "Solo ascolto. %d minuti gratis al giorno, senza limiti con Talky Pro.";
+"onboarding.widgets.title" = "Widget con la propagazione dal vivo";
+"onboarding.widgets.subtitle" = "Sulla schermata Home e su quella di blocco, si aggiornano da soli.";
+"onboarding.widgets.channel" = "Canale Talky: il tuo canale CB e lo stato delle bande. Gratis.";
+"onboarding.widgets.propagation" = "Propagazione: SFI, Kp, le bande 11, 20, 40 e 80 m e la previsione del Kp. Talky Pro.";
+"onboarding.widgets.sun" = "Sole e bande: alba, tramonto e la banda migliore in questo momento. Talky Pro.";
 "live_info_distance" = "Distanza";
 "live_info_signal" = "Segnale";
 "live_info_mode" = "Modo";

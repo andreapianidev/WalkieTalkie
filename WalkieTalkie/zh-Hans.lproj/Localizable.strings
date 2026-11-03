@@ -208,8 +208,8 @@
 "no_connected_peers" = "没有已连接的设备";
 
 // MARK: - Onboarding
-"onboarding_p1_title" = "把对讲机装进 iPhone";
-"onboarding_p1_subtitle" = "在山上、在音乐节、在拥挤的广场：就算没有信号，也能和朋友说话。";
+"onboarding_p1_title" = "iPhone 里的真无线电和对讲机";
+"onboarding_p1_subtitle" = "实时收听 CB、短波和 POC，播放全球 330 多个电台，没有信号的地方也能和朋友通话。";
 
 "onboarding_p2_no_internet_title" = "不用网络，不用 SIM 卡";
 "onboarding_p2_no_internet_body" = "在 iPhone 和 iPad 之间，声音通过 Wi-Fi 和蓝牙直接从一台设备传到另一台：不需要路由器、不需要服务器、不需要账号。";
@@ -417,7 +417,7 @@
 "got_it" = "知道了";
 "onboarding.radio_mode.title" = "对讲 + 电台";
 "onboarding.radio_mode.subtitle" = "一点即可切换模式";
-"onboarding.radio_mode.body" = "左上角的按钮可以在与朋友通话的对讲模式，和拥有数百个国际电台的网络电台之间切换。";
+"onboarding.radio_mode.body" = "顶部的开关让你从对讲机切换到世界电台：来自 80 多个国家的 330 多个网络电台，电平条随音乐跳动。";
 "onboarding.radio_mode.streaming_note" = "电台使用网络流媒体，而不是真正的 FM 天线，需要可用的数据连接（Wi-Fi 或蜂窝网络）。";
 
 // MARK: - Live Activities
@@ -528,11 +528,16 @@
 "live_free_left" = "今日免费 %@";
 "live_pro_free_message" = "你已用完今天 %d 分钟的免费直播电台。使用 Talky Pro 可无限收听，或观看一段短视频获得 24 小时。";
 "onboarding.live.title" = "真正的电台，实时收听";
-"onboarding.live.subtitle" = "收听世界各地真实的接收机和频道。";
-"onboarding.live.hf" = "短波：航空气象、标准时间信号和业余无线电，屏幕上显示接收机的频谱。";
+"onboarding.live.subtitle" = "来自全球的真实接收机，为你选最近的一台，频谱和瀑布图实时显示在屏幕上。";
+"onboarding.live.hf" = "短波：航空气象、标准时间信号和业余无线电。";
 "onboarding.live.cb" = "全部 40 个 CB 信道和 27.555 DX 呼叫频率，带自动静噪和扫描。";
 "onboarding.live.poc" = "公共服务器上真实的一键通频道。";
 "onboarding.live.note" = "仅收听。每天免费 %d 分钟，Talky Pro 无限制。";
+"onboarding.widgets.title" = "实时显示传播状况的小组件";
+"onboarding.widgets.subtitle" = "放在主屏幕和锁定屏幕，自动更新。";
+"onboarding.widgets.channel" = "Talky 频道：你的 CB 频道和波段状况。免费。";
+"onboarding.widgets.propagation" = "传播：SFI、Kp、11、20、40 和 80 米波段以及 Kp 预报。Talky Pro。";
+"onboarding.widgets.sun" = "太阳与波段：日出、日落和此刻最佳波段。Talky Pro。";
 "live_info_distance" = "距离";
 "live_info_signal" = "信号";
 "live_info_mode" = "模式";

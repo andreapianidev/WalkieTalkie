@@ -44,6 +44,13 @@ struct OnboardingStrings {
     static let livePOC = NSLocalizedString("onboarding.live.poc", comment: "What POC offers")
     static let liveNote = NSLocalizedString("onboarding.live.note", comment: "Listen only, free minutes per day (%d)")
 
+    // MARK: - Widgets
+    static let widgetsTitle = NSLocalizedString("onboarding.widgets.title", comment: "Widgets page title")
+    static let widgetsSubtitle = NSLocalizedString("onboarding.widgets.subtitle", comment: "Widgets page subtitle")
+    static let widgetsChannel = NSLocalizedString("onboarding.widgets.channel", comment: "Channel widget, free")
+    static let widgetsPropagation = NSLocalizedString("onboarding.widgets.propagation", comment: "Propagation widget, Pro")
+    static let widgetsSun = NSLocalizedString("onboarding.widgets.sun", comment: "Sun and bands widget, Pro")
+
     // MARK: - Page 7 — Next steps
     static let p5Title = NSLocalizedString("onboarding_p5_steps_title", comment: "Page 5 title")
     static let p5Step1 = NSLocalizedString("onboarding_p5_step1", comment: "Page 5 step 1")

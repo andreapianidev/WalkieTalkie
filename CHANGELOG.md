@@ -94,7 +94,12 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
-### [2.1] (119), not submitted yet
+### [2.1] (120), not submitted yet
+
+#### New in (120)
+- **Onboarding redone**, 5 pages in 14 languages: live CB, HF and POC first,
+  then the walkie-talkie, network and microphone, the 330+ stations (it said
+  343 from 50+ countries) and the desktop widgets.
 
 #### Fixed in (119)
 - Radio list and Now Playing show each station's country in the Mac's
@@ -184,7 +189,13 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [3.2] (119), not submitted yet
+### [3.2] (120), not submitted yet
+
+#### New in (120)
+- **Onboarding redone**, 8 pages in 14 languages: live CB, HF and POC come
+  second (with a sketch of the spectrum and waterfall), then the world radio
+  with the real switch (it showed "WT / FM", and there is no FM), a new page on
+  the widgets, then the walkie-talkie pages.
 
 #### Fixed in (119)
 - Radio: the country of a station is shown in your language ("Germany",

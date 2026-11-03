@@ -208,8 +208,8 @@
 "no_connected_peers" = "연결된 기기가 없습니다";
 
 // MARK: - Onboarding
-"onboarding_p1_title" = "iPhone 속의 무전기";
-"onboarding_p1_subtitle" = "산에서도, 페스티벌에서도, 붐비는 광장에서도. 신호가 닿지 않는 곳에서도 친구와 이야기하세요.";
+"onboarding_p1_title" = "iPhone 속 진짜 무선과 무전기";
+"onboarding_p1_subtitle" = "CB, 단파, POC를 실시간으로 듣고, 전 세계 330개 이상의 라디오를 틀고, 신호가 없는 곳에서도 친구와 이야기하세요.";
 
 "onboarding_p2_no_internet_title" = "인터넷도, 유심도 필요 없음";
 "onboarding_p2_no_internet_body" = "iPhone과 iPad 사이에서는 목소리가 Wi-Fi와 블루투스로 기기에서 기기로 바로 전달됩니다. 공유기도, 서버도, 계정도 필요 없습니다.";
@@ -417,7 +417,7 @@
 "got_it" = "알겠어요";
 "onboarding.radio_mode.title" = "무전기 + 라디오";
 "onboarding.radio_mode.subtitle" = "한 번의 탭으로 모드 전환";
-"onboarding.radio_mode.body" = "왼쪽 위 버튼으로 친구와 이야기하는 무전기와, 수백 개의 해외 방송국을 들을 수 있는 인터넷 라디오를 오갈 수 있습니다.";
+"onboarding.radio_mode.body" = "위쪽 스위치로 무전기에서 세계 라디오로. 80개국 이상, 330개 이상의 인터넷 방송국을 음악에 맞춰 움직이는 레벨 막대와 함께.";
 "onboarding.radio_mode.streaming_note" = "라디오는 인터넷 스트리밍을 사용합니다. 실제 FM 안테나가 아닙니다. 데이터 연결(Wi-Fi 또는 셀룰러)이 필요합니다.";
 
 // MARK: - Live Activities
@@ -528,11 +528,16 @@
 "live_free_left" = "오늘 무료 %@";
 "live_pro_free_message" = "오늘 라이브 무선 무료 %d분을 모두 사용했습니다. Talky Pro로 제한 없이 듣거나, 짧은 동영상을 보고 24시간 동안 이용하세요.";
 "onboarding.live.title" = "진짜 무선, 실시간으로";
-"onboarding.live.subtitle" = "전 세계의 실제 수신기와 채널을 들어 보세요.";
-"onboarding.live.hf" = "단파: 항공 기상, 시보, 아마추어 무선. 수신기의 스펙트럼을 화면에 보여 줍니다.";
+"onboarding.live.subtitle" = "전 세계의 실제 수신기 중 가장 가까운 것을 골라, 스펙트럼과 워터폴을 화면에 실시간으로 보여줍니다.";
+"onboarding.live.hf" = "단파: 항공 기상, 시보, 아마추어 무선.";
 "onboarding.live.cb" = "CB 40개 채널 전체와 27.555 DX 호출, 자동 스퀠치와 스캔 포함.";
 "onboarding.live.poc" = "공개 서버의 실제 푸시투토크 채널.";
 "onboarding.live.note" = "청취 전용. 하루 %d분 무료, Talky Pro로 무제한.";
+"onboarding.widgets.title" = "실시간 전파 상태 위젯";
+"onboarding.widgets.subtitle" = "홈 화면과 잠금 화면에서 스스로 업데이트됩니다.";
+"onboarding.widgets.channel" = "Talky 채널: CB 채널과 밴드 상태. 무료.";
+"onboarding.widgets.propagation" = "전파 상태: SFI, Kp, 11·20·40·80m 밴드와 Kp 예보. Talky Pro.";
+"onboarding.widgets.sun" = "태양과 밴드: 일출, 일몰, 지금 가장 좋은 밴드. Talky Pro.";
 "live_info_distance" = "거리";
 "live_info_signal" = "신호";
 "live_info_mode" = "모드";

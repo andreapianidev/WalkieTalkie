@@ -208,8 +208,8 @@
 "no_connected_peers" = "Bağlı cihaz yok";
 
 // MARK: - Onboarding
-"onboarding_p1_title" = "iPhone'unun içinde bir telsiz";
-"onboarding_p1_subtitle" = "Dağda, festivalde, kalabalık bir meydanda: sinyalin olmadığı yerlerde bile arkadaşlarınla konuş.";
+"onboarding_p1_title" = "iPhone'unda gerçek telsiz ve walkie-talkie";
+"onboarding_p1_subtitle" = "CB, kısa dalga ve POC'yi canlı dinle, dünyadan 330'dan fazla radyo aç ve çekmeyen yerlerde bile arkadaşlarınla konuş.";
 
 "onboarding_p2_no_internet_title" = "İnternet yok, SIM yok";
 "onboarding_p2_no_internet_body" = "iPhone ile iPad arasında ses, Wi-Fi ve Bluetooth üzerinden doğrudan cihazdan cihaza gider: yönlendirici yok, sunucu yok, hesap yok.";
@@ -417,7 +417,7 @@
 "got_it" = "Anladım";
 "onboarding.radio_mode.title" = "Telsiz + radyo";
 "onboarding.radio_mode.subtitle" = "Modlar arasında tek dokunuşla geçiş yap";
-"onboarding.radio_mode.body" = "Sol üstteki düğme, arkadaşlarınla konuştuğun telsiz ile yüzlerce uluslararası istasyonun bulunduğu internet radyosu arasında geçiş yapmanı sağlar.";
+"onboarding.radio_mode.body" = "Üstteki anahtar seni telsizden dünya radyosuna götürür: 80'den fazla ülkeden 330'dan fazla internet istasyonu, müziği izleyen seviye çubuklarıyla.";
 "onboarding.radio_mode.streaming_note" = "Radyo internet yayını kullanır, fiziksel bir FM anteni değil. Etkin bir veri bağlantısı (Wi-Fi ya da hücresel) gerekir.";
 // MARK: - Live Activities
 "live_activities.title" = "Canlı Etkinlikler";
@@ -527,11 +527,16 @@
 "live_free_left" = "Bugün ücretsiz %@";
 "live_pro_free_message" = "Bugünün %d dakikalık ücretsiz canlı radyo süresini kullandınız. Talky Pro ile sınırsız dinleyin ya da 24 saat için kısa bir video izleyin.";
 "onboarding.live.title" = "Gerçek radyo, canlı";
-"onboarding.live.subtitle" = "Dünyanın dört bir yanındaki gerçek alıcıları ve kanalları dinleyin.";
-"onboarding.live.hf" = "Kısa dalga: havacılık hava durumu, saat sinyalleri ve radyo amatörleri, alıcının spektrumu ekranda.";
+"onboarding.live.subtitle" = "Dünyanın her yerinden gerçek alıcılar, sana en yakını, spektrumu ve şelalesiyle ekranda canlı.";
+"onboarding.live.hf" = "Kısa dalga: havacılık meteorolojisi, zaman sinyalleri ve amatör telsizciler.";
 "onboarding.live.cb" = "40 CB kanalının tamamı ve 27.555 DX çağrısı, otomatik squelch ve SCAN ile.";
 "onboarding.live.poc" = "Herkese açık sunucularda gerçek bas-konuş kanalları.";
 "onboarding.live.note" = "Yalnızca dinleme. Günde %d dakika ücretsiz, Talky Pro ile sınırsız.";
+"onboarding.widgets.title" = "Canlı yayılım gösteren widget'lar";
+"onboarding.widgets.subtitle" = "Ana ekranda ve kilit ekranında, kendiliğinden güncellenir.";
+"onboarding.widgets.channel" = "Talky kanalı: CB kanalın ve bantların durumu. Ücretsiz.";
+"onboarding.widgets.propagation" = "Yayılım: SFI, Kp, 11, 20, 40 ve 80 m bantları ve Kp tahmini. Talky Pro.";
+"onboarding.widgets.sun" = "Güneş ve bantlar: gün doğumu, gün batımı ve şu anki en iyi bant. Talky Pro.";
 "live_info_distance" = "Mesafe";
 "live_info_signal" = "Sinyal";
 "live_info_mode" = "Mod";
