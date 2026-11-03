@@ -74,10 +74,6 @@ struct ContentView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Sfondo adattivo (animato per i temi blackHole/galaxy)
-                AnimatedBackgroundView()
-                    .ignoresSafeArea()
-                
                 // Contenuto principale
                 VStack(spacing: 0) {
                     if selectedTab == 0 {
@@ -158,6 +154,11 @@ struct ContentView: View {
                 restorePersistedAudioMode()
             }
         }
+        // Sfondo del tema (animato per blackHole e galaxy) dietro tutto lo
+        // schermo, barra di stato compresa: messo dentro il GeometryReader
+        // si fermava sotto l'ora e in modalita' chiara lasciava una fascia
+        // bianca sopra il walkie giallo.
+        .background(AnimatedBackgroundView().ignoresSafeArea())
     }
 
     /// La schermata principale del walkie: header, stato, display, comandi e PTT.

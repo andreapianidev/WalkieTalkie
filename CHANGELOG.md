@@ -91,7 +91,7 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
-### [2.1] (107), not submitted yet
+### [2.1] (108), not submitted yet
 
 #### New in (106)
 - **Spectrum and waterfall** of the receiver on HF and CB, with the CB
@@ -150,7 +150,7 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [3.2] (107), not submitted yet
+### [3.2] (108), not submitted yet
 
 #### New
 - **No talk button on HF, CB and POC**, which are listen only: the
@@ -170,6 +170,8 @@ Sandboxed, no ads, no tracking.
 - **Black text on a black background in light mode.** Since 2.4 the default
   theme painted the screen almost black while the text stayed black; the
   walkie is yellow again in light mode, and the dark themes force dark mode.
+- The theme background now reaches under the status bar: in light mode a
+  white band sat above the yellow walkie.
 - The receiver is chosen near you from your time zone: from the Canary
   Islands the app picked one in France, 2,300 km away.
 
