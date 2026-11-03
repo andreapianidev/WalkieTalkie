@@ -38,6 +38,10 @@ struct LiveView: View {
             showPaywall = true
         }
         .onChange(of: iap.isProUser) { _, _ in live.entitlementsChanged() }
+        // La banda mostrata segue quella del ricevitore: se la CB parte da un
+        // widget (talky://live/cb), la vista non deve restare sulla lista HF.
+        .onAppear { if let current = live.band { band = current } }
+        .onChange(of: live.band) { _, current in if let current { band = current } }
     }
 
     // MARK: - Header

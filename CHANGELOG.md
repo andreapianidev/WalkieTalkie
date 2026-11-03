@@ -94,7 +94,14 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
-### [2.1] (123), not submitted yet
+### [2.1] (124), not submitted yet
+
+#### Fixed in (124)
+- Opening CB from the Channel widget showed the HF list and an HF station
+  name next to the CB frequency: the live view now follows the band the
+  receiver is on.
+- The window can no longer be made so narrow that the sidebar is cut off
+  (minimum 1100 x 640).
 
 #### New in (120)
 - **Onboarding redone**, 5 pages in 14 languages: live CB, HF and POC first,
@@ -189,7 +196,12 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [3.2] (123), not submitted yet
+### [3.2] (124), not submitted yet
+
+#### Fixed in (124)
+- Onboarding titles and notes no longer end in "..." on smaller iPhones: in
+  Chinese, Thai, Italian, Japanese, Turkish and Vietnamese they wrap and the
+  page scrolls (checked on all 8 pages in 14 languages on iPhone 17e).
 
 #### Changed in (123)
 - On wide screens the spectrum, waterfall and level bars take all the free

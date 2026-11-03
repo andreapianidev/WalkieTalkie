@@ -70,7 +70,7 @@ struct macTalkyApp: App {
                 .environmentObject(radio)
                 .environmentObject(iap)
                 .environmentObject(settings)
-                .frame(minWidth: 880, minHeight: 600)
+                .frame(minWidth: 1100, minHeight: 640)
                 .preferredColorScheme(.dark)
                 // `.task` rigira a ogni ricostruzione della finestra: il
                 // bootstrap vero è idempotente e vive in AppBootstrap, così

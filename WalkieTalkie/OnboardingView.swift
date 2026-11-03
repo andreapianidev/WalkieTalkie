@@ -11,13 +11,23 @@ import UserNotifications
 import FirebaseAnalytics
 
 struct OnboardingView: View {
-    @State private var currentPage = 0
+    @State private var currentPage = OnboardingView.startPage
     @State private var showingPermissions = false
     @State private var lastTrackedPage = -1
     @Binding var isOnboardingComplete: Bool
     @ObservedObject var notificationManager: NotificationManager
 
     private let totalPages = 8
+
+    /// Solo Debug sul simulatore: `-screenshotOnboardingPage N` apre la pagina
+    /// N, per controllare ogni pagina in ogni lingua senza sfogliarle a mano.
+    private static var startPage: Int {
+        #if DEBUG && targetEnvironment(simulator)
+        return UserDefaults.standard.integer(forKey: "screenshotOnboardingPage")
+        #else
+        return 0
+        #endif
+    }
 
     var body: some View {
         ZStack {
@@ -157,7 +167,12 @@ private struct ScrollableOnboardingPage<Content: View>: View {
     var body: some View {
         GeometryReader { proxy in
             ScrollView(.vertical, showsIndicators: false) {
+                // Altezza ideale prima del minHeight: senza, la pagina riceveva
+                // l'altezza dello schermo e i testi lunghi (cinese, thai,
+                // italiano, turco sul 17e) venivano troncati con "..." invece
+                // di andare a capo e far scorrere la pagina.
                 content
+                    .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity)
                     .frame(minHeight: proxy.size.height)
             }
@@ -420,7 +435,7 @@ private struct OnboardingLiveRadioPage: View {
             }
 
             SpectrumSketch()
-                .frame(height: 96)
+                .frame(height: 80)
                 .padding(.horizontal, 28)
 
             VStack(alignment: .leading, spacing: 14) {
