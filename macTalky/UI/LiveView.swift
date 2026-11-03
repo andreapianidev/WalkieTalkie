@@ -222,7 +222,7 @@ struct LiveView: View {
                                  words: PanoramaWords(overNoise: "%d dB ABOVE NOISE",
                                                       noiseOnly: "NOISE ONLY",
                                                       waiting: live.isOutOfFreeTime ? freeTimeUp : "WAITING FOR SPECTRUM"))
-                        .frame(height: 170)
+                        .frame(height: 230)
                         .onTapGesture { if live.isOutOfFreeTime { showPaywall = true } }
                 }
 

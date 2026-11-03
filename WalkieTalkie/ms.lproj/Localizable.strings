@@ -51,7 +51,6 @@
 "unplugged" = "Tidak Dipasang";
 
 // MARK: - Main Interface
-"frequency_owner" = "Pemilik Frekuensi";
 "radio_fm" = "Radio Dunia";
 "walkie_talkie" = "Walkie Talkie";
 "device" = "Peranti";
@@ -509,8 +508,6 @@
 "live_tune_up" = "Tala naik 1 kHz";
 "live_scan" = "Imbasan automatik";
 "live_refresh" = "Muat semula";
-"live_listen_only" = "DENGAR SAHAJA";
-"live_on_air" = "LANGSUNG";
 "live_speaking" = "Bercakap: %@";
 "live_listeners" = "%d orang dalam saluran";
 "live_scan_holding" = "Imbasan berhenti, ada orang bercakap";
@@ -549,3 +546,14 @@
 "onboarding.live.cb" = "Kesemua 40 saluran CB dan panggilan DX pada 27.555, dengan squelch automatik dan SCAN.";
 "onboarding.live.poc" = "Saluran tekan-untuk-bercakap sebenar pada pelayan awam.";
 "onboarding.live.note" = "Dengar sahaja. %d minit percuma sehari, tanpa had dengan Talky Pro.";
+"live_info_distance" = "Jarak";
+"live_info_signal" = "Isyarat";
+"live_info_mode" = "Mod";
+"live_info_squelch" = "Squelch";
+"live_info_open" = "BUKA";
+"live_info_closed" = "TUTUP";
+"live_info_free" = "Percuma hari ini";
+"live_info_listening" = "Dengar";
+"live_info_channel" = "Saluran";
+"live_info_listeners" = "Pendengar";
+"live_info_talker" = "Bercakap";

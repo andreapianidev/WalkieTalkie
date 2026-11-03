@@ -51,7 +51,6 @@
 "unplugged" = "Desconectado da tomada";
 
 // MARK: - Main Interface
-"frequency_owner" = "Dono da frequência";
 "radio_fm" = "Rádio Mundial";
 "walkie_talkie" = "WalkieTalkie";
 "device" = "Dispositivo";
@@ -507,8 +506,6 @@
 "live_tune_up" = "Sintonia mais 1 kHz";
 "live_scan" = "Varredura automática";
 "live_refresh" = "Atualizar";
-"live_listen_only" = "SÓ ESCUTA";
-"live_on_air" = "AO VIVO";
 "live_speaking" = "Falando: %@";
 "live_listeners" = "%d pessoas no canal";
 "live_scan_holding" = "Varredura parada, alguém está falando";
@@ -547,3 +544,14 @@
 "onboarding.live.cb" = "Os 40 canais da PX e a chamada DX em 27.555, com squelch automático e SCAN.";
 "onboarding.live.poc" = "Canais push-to-talk reais em servidores públicos.";
 "onboarding.live.note" = "Só escuta. %d minutos grátis por dia, sem limites com o Talky Pro.";
+"live_info_distance" = "Distância";
+"live_info_signal" = "Sinal";
+"live_info_mode" = "Modo";
+"live_info_squelch" = "Squelch";
+"live_info_open" = "ABERTO";
+"live_info_closed" = "FECHADO";
+"live_info_free" = "Grátis hoje";
+"live_info_listening" = "Escuta";
+"live_info_channel" = "Canal";
+"live_info_listeners" = "Ouvintes";
+"live_info_talker" = "Falando";

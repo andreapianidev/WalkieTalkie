@@ -93,6 +93,8 @@ final class LiveRadio: ObservableObject {
     /// Ricevitore HF o server POC a cui siamo collegati.
     @Published private(set) var sourceName = ""
     @Published private(set) var sourcePlace = ""
+    /// Quanto e' lontano da chi ascolta il ricevitore KiwiSDR, in km.
+    @Published private(set) var receiverKm: Int?
     /// Canale POC in cui siamo davvero entrati.
     @Published private(set) var channelName = ""
     @Published private(set) var talker: String?
@@ -200,6 +202,7 @@ final class LiveRadio: ObservableObject {
         case .poc:
             sourceName = ""
             sourcePlace = ""
+            receiverKm = nil
             if pocChannels.isEmpty || (scoutedAt.map { Date().timeIntervalSince($0) > 600 } ?? true) {
                 scoutPOC()
             } else {
@@ -588,6 +591,8 @@ final class LiveRadio: ObservableObject {
         let receiver = candidates[candidateIndex]
         sourceName = receiver.name
         sourcePlace = receiver.location
+        let here = ApproximatePlace.current
+        receiverKm = Int(receiver.distance(toLatitude: here.latitude, longitude: here.longitude).rounded())
         wasOnline = false
         retried = fresh ? false : retried
         squelch.reset(for: tuning)

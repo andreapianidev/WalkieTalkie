@@ -51,7 +51,6 @@
 "unplugged" = "ไม่ได้เสียบสายชาร์จ";
 
 // MARK: - Main Interface
-"frequency_owner" = "เจ้าของความถี่";
 "radio_fm" = "วิทยุโลก";
 "walkie_talkie" = "WalkieTalkie";
 "device" = "อุปกรณ์";
@@ -508,8 +507,6 @@
 "live_tune_up" = "เพิ่มคลื่น 1 kHz";
 "live_scan" = "สแกนอัตโนมัติ";
 "live_refresh" = "รีเฟรช";
-"live_listen_only" = "ฟังอย่างเดียว";
-"live_on_air" = "สด";
 "live_speaking" = "กำลังพูด: %@";
 "live_listeners" = "มี %d คนในช่อง";
 "live_scan_holding" = "หยุดสแกน มีคนกำลังพูด";
@@ -548,3 +545,14 @@
 "onboarding.live.cb" = "CB ครบ 40 ช่องและการเรียก DX ที่ 27.555 พร้อมสเควลช์อัตโนมัติและ SCAN";
 "onboarding.live.poc" = "ช่องกดเพื่อพูดจริงบนเซิร์ฟเวอร์สาธารณะ";
 "onboarding.live.note" = "ฟังอย่างเดียว ฟรีวันละ %d นาที ไม่จำกัดกับ Talky Pro";
+"live_info_distance" = "ระยะทาง";
+"live_info_signal" = "สัญญาณ";
+"live_info_mode" = "โหมด";
+"live_info_squelch" = "สเควลช์";
+"live_info_open" = "เปิด";
+"live_info_closed" = "ปิด";
+"live_info_free" = "ฟรีวันนี้";
+"live_info_listening" = "การฟัง";
+"live_info_channel" = "ช่อง";
+"live_info_listeners" = "ผู้ฟัง";
+"live_info_talker" = "กำลังพูด";

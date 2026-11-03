@@ -51,7 +51,6 @@
 "unplugged" = "전원 미연결";
 
 // MARK: - Main Interface
-"frequency_owner" = "주파수 사용자";
 "radio_fm" = "월드 라디오";
 "walkie_talkie" = "WalkieTalkie";
 "device" = "기기";
@@ -508,8 +507,6 @@
 "live_tune_up" = "1 kHz 올리기";
 "live_scan" = "자동 스캔";
 "live_refresh" = "새로고침";
-"live_listen_only" = "수신 전용";
-"live_on_air" = "실시간";
 "live_speaking" = "말하는 중: %@";
 "live_listeners" = "채널에 %d명";
 "live_scan_holding" = "누군가 말하고 있어 스캔 멈춤";
@@ -548,3 +545,14 @@
 "onboarding.live.cb" = "CB 40개 채널 전체와 27.555 DX 호출, 자동 스퀠치와 스캔 포함.";
 "onboarding.live.poc" = "공개 서버의 실제 푸시투토크 채널.";
 "onboarding.live.note" = "청취 전용. 하루 %d분 무료, Talky Pro로 무제한.";
+"live_info_distance" = "거리";
+"live_info_signal" = "신호";
+"live_info_mode" = "모드";
+"live_info_squelch" = "스퀠치";
+"live_info_open" = "열림";
+"live_info_closed" = "닫힘";
+"live_info_free" = "오늘 무료";
+"live_info_listening" = "청취";
+"live_info_channel" = "채널";
+"live_info_listeners" = "청취자";
+"live_info_talker" = "말하는 중";

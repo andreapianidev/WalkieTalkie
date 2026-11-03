@@ -30,7 +30,6 @@
 "peak_app_subtitle" = "App completa de altimetría con funciones walkie-talkie integradas";
 
 // MARK: - Main Interface
-"frequency_owner" = "Propietario de Frecuencia";
 "radio_fm" = "Radio del mundo";
 "walkie_talkie" = "WalkieTalkie";
 "device" = "Dispositivo";
@@ -513,8 +512,6 @@
 "live_tune_up" = "Sintonía más 1 kHz";
 "live_scan" = "Escaneo automático";
 "live_refresh" = "Actualizar";
-"live_listen_only" = "SOLO ESCUCHA";
-"live_on_air" = "EN DIRECTO";
 "live_speaking" = "Habla: %@";
 "live_listeners" = "%d personas en el canal";
 "live_scan_holding" = "Escaneo detenido, alguien habla";
@@ -553,3 +550,14 @@
 "onboarding.live.cb" = "Los 40 canales CB y la llamada DX en 27.555, con squelch automático y SCAN.";
 "onboarding.live.poc" = "Canales push-to-talk reales en servidores públicos.";
 "onboarding.live.note" = "Solo escucha. %d minutos gratis al día, sin límites con Talky Pro.";
+"live_info_distance" = "Distancia";
+"live_info_signal" = "Señal";
+"live_info_mode" = "Modo";
+"live_info_squelch" = "Squelch";
+"live_info_open" = "ABIERTO";
+"live_info_closed" = "CERRADO";
+"live_info_free" = "Gratis hoy";
+"live_info_listening" = "Escucha";
+"live_info_channel" = "Canal";
+"live_info_listeners" = "Oyentes";
+"live_info_talker" = "Habla";

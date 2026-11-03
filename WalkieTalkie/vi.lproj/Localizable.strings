@@ -51,7 +51,6 @@
 "unplugged" = "Chưa cắm sạc";
 
 // MARK: - Main Interface
-"frequency_owner" = "Chủ tần số";
 "radio_fm" = "Radio thế giới";
 "walkie_talkie" = "WalkieTalkie";
 "device" = "Thiết bị";
@@ -507,8 +506,6 @@
 "live_tune_up" = "Tăng 1 kHz";
 "live_scan" = "Quét tự động";
 "live_refresh" = "Làm mới";
-"live_listen_only" = "CHỈ NGHE";
-"live_on_air" = "TRỰC TIẾP";
 "live_speaking" = "Đang nói: %@";
 "live_listeners" = "%d người trong kênh";
 "live_scan_holding" = "Đã dừng quét, có người đang nói";
@@ -547,3 +544,14 @@
 "onboarding.live.cb" = "Đủ 40 kênh CB và tần số gọi DX 27.555, có squelch tự động và SCAN.";
 "onboarding.live.poc" = "Các kênh bấm-để-nói thật trên máy chủ công cộng.";
 "onboarding.live.note" = "Chỉ nghe. %d phút miễn phí mỗi ngày, không giới hạn với Talky Pro.";
+"live_info_distance" = "Khoảng cách";
+"live_info_signal" = "Tín hiệu";
+"live_info_mode" = "Chế độ";
+"live_info_squelch" = "Squelch";
+"live_info_open" = "MỞ";
+"live_info_closed" = "ĐÓNG";
+"live_info_free" = "Miễn phí hôm nay";
+"live_info_listening" = "Nghe";
+"live_info_channel" = "Kênh";
+"live_info_listeners" = "Người nghe";
+"live_info_talker" = "Đang nói";

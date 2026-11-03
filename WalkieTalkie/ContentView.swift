@@ -242,19 +242,21 @@ struct ContentView: View {
                     .stroke(Color.black.opacity(0.12), lineWidth: 0.5)
             )
             
-            Spacer()
-            
-            VStack {
-                Text(isRadioMode ? "radio_fm".localized : "frequency_owner".localized)
-                    .font(.caption)
-                    .foregroundColor(Color("PrimaryTextColor"))
-                Text(isRadioMode ? (radioManager.currentStation?.name ?? "radio_fm".localized) : "walkie_talkie".localized)
+            Spacer(minLength: 8)
+
+            // Fra il selettore e la campanella resta poco spazio: niente
+            // doppione di "WalkieTalkie" (lo dice gia' il selettore) e il nome
+            // della stazione si rimpicciolisce invece di finire in puntini.
+            if isRadioMode, let station = radioManager.currentStation?.name {
+                Text(station)
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(Color("PrimaryTextColor"))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.55)
+                    .layoutPriority(-1)
+                Spacer(minLength: 8)
             }
-            
-            Spacer()
             
             Button(action: {
                     notificationManager.toggleNotifications()
@@ -797,38 +799,45 @@ struct ContentView: View {
         }
     }
 
+    @ViewBuilder
     private var speakerAreaView: some View {
+        // HF, CB e POC si ascoltano soltanto: niente tasto per parlare, al
+        // suo posto lo schermo del ricevitore e le letture.
+        if !isRadioMode, walkieBand != .local, #available(iOS 16.0, *) {
+            LiveListeningDeck(band: walkieBand, compact: isCompactHeight)
+                .opacity(isPoweredOn ? 1 : 0.4)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, isCompactHeight ? 8 : 16)
+        } else {
+            pushToTalkArea
+        }
+    }
+
+    /// Il walkie locale e la radio: griglia dell'altoparlante e tasto PTT.
+    private var pushToTalkArea: some View {
         VStack(spacing: isCompactHeight ? 10 : 30) {
-            // HF e CB: spettro e cascata del ricevitore. POC: la griglia
-            // dell'altoparlante, accesa dall'audio vero.
-            if !isRadioMode, walkieBand == .hf || walkieBand == .cb, #available(iOS 16.0, *) {
-                LivePanoramaScreen(compact: isCompactHeight)
-            } else if !isRadioMode, walkieBand != .local, #available(iOS 16.0, *) {
-                LiveSpeakerGrid(count: isCompactHeight ? 24 : 88)
-            } else {
-                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 8), spacing: 6) {
-                    ForEach(0..<(isCompactHeight ? 24 : 88), id: \.self) { _ in
-                        Circle()
-                            .fill(Color.black)
-                            .frame(width: 5, height: 5)
-                    }
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 8), spacing: 6) {
+                ForEach(0..<(isCompactHeight ? 24 : 88), id: \.self) { _ in
+                    Circle()
+                        .fill(Color.black)
+                        .frame(width: 5, height: 5)
                 }
-                .padding(.horizontal, 40)
             }
-            
+            .padding(.horizontal, 40)
+
             // Push to talk button migliorato con gesture (disabilitato in modalità FM)
             VStack(spacing: isCompactHeight ? 10 : 15) {
                 ZStack {
                     // Cerchio esterno
                     Circle()
-                        .fill(isRadioMode || walkieBand != .local ? Color.gray.opacity(0.5) : (isTransmitting ? Color.red : Color.black))
+                        .fill(isRadioMode ? Color.gray.opacity(0.5) : (isTransmitting ? Color.red : Color.black))
                         .frame(width: isCompactHeight ? 106 : 140, height: isCompactHeight ? 106 : 140)
 
                     // Cerchio interno
                     Circle()
-                        .fill(isRadioMode || walkieBand != .local ? Color.gray.opacity(0.3) : Color.white)
+                        .fill(isRadioMode ? Color.gray.opacity(0.3) : Color.white)
                         .frame(width: isCompactHeight ? 90 : 120, height: isCompactHeight ? 90 : 120)
-                    
+
                     // Testo centrale
                     VStack(spacing: 4) {
                         if isRadioMode {
@@ -841,8 +850,6 @@ struct ContentView: View {
                             Text("active".localized)
                                 .font(.system(size: 12, weight: .medium))
                                 .foregroundColor(.gray)
-                        } else if walkieBand != .local, #available(iOS 16.0, *) {
-                            LivePTTFace()
                         } else {
                             Text(isTransmitting ? "release".localized : "hold".localized)
                                 .font(.system(size: 16, weight: .bold))
@@ -855,7 +862,7 @@ struct ContentView: View {
                                 .foregroundColor(.black)
                         }
                     }
-                    
+
                     // Effetto pulsazione quando trasmette (solo in modalità walkie-talkie)
                     if isTransmitting && !isRadioMode {
                         Circle()
@@ -867,10 +874,10 @@ struct ContentView: View {
                 }
                 .scaleEffect(isTransmitting && !isRadioMode ? 0.95 : 1.0)
                 .animation(.easeInOut(duration: 0.1), value: isTransmitting)
-                .opacity(isPoweredOn && (walkieBand == .local || isRadioMode) ? 1.0 : 0.3)
+                .opacity(isPoweredOn ? 1.0 : 0.3)
                 .gesture(
-                    // Disabilita gesture in modalità FM, quando spento, o in ascolto HF/POC
-                    (isRadioMode || !isPoweredOn || walkieBand != .local) ? nil : DragGesture(minimumDistance: 0)
+                    // Disabilita gesture in modalità FM o quando spento
+                    (isRadioMode || !isPoweredOn) ? nil : DragGesture(minimumDistance: 0)
                         .onChanged { _ in
                             if !isTransmitting && isPoweredOn && walkieBand == .local {
                                 // Controlla permessi prima di trasmettere
@@ -887,15 +894,9 @@ struct ContentView: View {
                             }
                         }
                 )
-                
+
                 // Status sotto il pulsante
-                VStack(spacing: 4) {
-                    if !isRadioMode, walkieBand != .local, #available(iOS 16.0, *) {
-                        LiveSpeakerStatus()
-                    } else {
-                        localSpeakerStatus
-                    }
-                }
+                localSpeakerStatus
             }
         }
         .frame(maxWidth: .infinity)

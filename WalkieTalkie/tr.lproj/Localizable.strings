@@ -51,7 +51,6 @@
 "unplugged" = "Fişten çıkarıldı";
 
 // MARK: - Main Interface
-"frequency_owner" = "Frekans sahibi";
 "radio_fm" = "Dünya Radyosu";
 "walkie_talkie" = "WalkieTalkie";
 "device" = "Cihaz";
@@ -507,8 +506,6 @@
 "live_tune_up" = "1 kHz yukarı";
 "live_scan" = "Otomatik tarama";
 "live_refresh" = "Yenile";
-"live_listen_only" = "YALNIZCA DİNLE";
-"live_on_air" = "CANLI";
 "live_speaking" = "Konuşan: %@";
 "live_listeners" = "Kanalda %d kişi";
 "live_scan_holding" = "Tarama durdu, biri konuşuyor";
@@ -547,3 +544,14 @@
 "onboarding.live.cb" = "40 CB kanalının tamamı ve 27.555 DX çağrısı, otomatik squelch ve SCAN ile.";
 "onboarding.live.poc" = "Herkese açık sunucularda gerçek bas-konuş kanalları.";
 "onboarding.live.note" = "Yalnızca dinleme. Günde %d dakika ücretsiz, Talky Pro ile sınırsız.";
+"live_info_distance" = "Mesafe";
+"live_info_signal" = "Sinyal";
+"live_info_mode" = "Mod";
+"live_info_squelch" = "Squelch";
+"live_info_open" = "AÇIK";
+"live_info_closed" = "KAPALI";
+"live_info_free" = "Bugün ücretsiz";
+"live_info_listening" = "Dinleme";
+"live_info_channel" = "Kanal";
+"live_info_listeners" = "Dinleyici";
+"live_info_talker" = "Konuşuyor";

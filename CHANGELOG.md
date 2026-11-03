@@ -91,7 +91,7 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
-### [2.1] (106), not submitted yet
+### [2.1] (107), not submitted yet
 
 #### New in (106)
 - **Spectrum and waterfall** of the receiver on HF and CB, with the CB
@@ -150,9 +150,15 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [3.2] (106), not submitted yet
+### [3.2] (107), not submitted yet
 
 #### New
+- **No talk button on HF, CB and POC**, which are listen only: the
+  receiver's screen takes its place, wider, with a panel of readings
+  (receiver, distance, signal in S units and dBm, mode and bandwidth, squelch
+  or UTC, free minutes left).
+- Header and display texts shrink to fit instead of ending in "...": the
+  receiver is shown by its place, not by the long name its owner gave it.
 - **Spectrum and waterfall** of the receiver on HF and CB, in place of the
   speaker grille, with the CB channel numbers on the scale and the signal's
   margin over the noise.

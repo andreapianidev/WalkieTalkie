@@ -51,7 +51,6 @@
 "unplugged" = "未插電";
 
 // MARK: - Main Interface
-"frequency_owner" = "頻率擁有者";
 "radio_fm" = "世界電台";
 "walkie_talkie" = "對講機";
 "device" = "裝置";
@@ -509,8 +508,6 @@
 "live_tune_up" = "調高1 kHz";
 "live_scan" = "自動掃描";
 "live_refresh" = "重新整理";
-"live_listen_only" = "僅收聽";
-"live_on_air" = "直播";
 "live_speaking" = "正在說話：%@";
 "live_listeners" = "頻道內%d人";
 "live_scan_holding" = "有人在說話，掃描已暫停";
@@ -549,3 +546,14 @@
 "onboarding.live.cb" = "全部 40 個 CB 頻道和 27.555 DX 呼叫頻率，具備自動靜噪和掃描。";
 "onboarding.live.poc" = "公共伺服器上真實的一鍵通頻道。";
 "onboarding.live.note" = "僅收聽。每天免費 %d 分鐘，Talky Pro 無限制。";
+"live_info_distance" = "距離";
+"live_info_signal" = "信號";
+"live_info_mode" = "模式";
+"live_info_squelch" = "靜噪";
+"live_info_open" = "開";
+"live_info_closed" = "關";
+"live_info_free" = "今日免費";
+"live_info_listening" = "收聽";
+"live_info_channel" = "頻道";
+"live_info_listeners" = "聽眾";
+"live_info_talker" = "正在講話";

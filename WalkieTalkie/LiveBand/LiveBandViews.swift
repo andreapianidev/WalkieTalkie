@@ -121,6 +121,14 @@ extension LiveRadio {
         }
     }
 
+    /// Da dove si ascolta, in poche parole: per un KiwiSDR il luogo, perche'
+    /// i nomi scritti dai proprietari sono lunghi ("0-30 MHz SDR, EA8-DF4UE,
+    /// Fuerteventura, Canary Islands") e su un telefono finivano in puntini.
+    var shortSource: String {
+        if band?.isKiwi == true, !sourcePlace.isEmpty { return sourcePlace }
+        return sourceName
+    }
+
     /// Accensione delle 5 spie del display: S-meter in HF e CB, voce in POC.
     var meterDots: Int {
         if band?.isKiwi == true, let dBm = signalDBm {
@@ -165,6 +173,7 @@ struct LiveDisplayView: View {
                         .foregroundColor(.white)
                         .font(.caption)
                         .lineLimit(1)
+                        .minimumScaleFactor(0.7)
                     Spacer()
                     Circle()
                         .fill(live.statusColor)
@@ -209,6 +218,7 @@ struct LiveDisplayView: View {
                         .foregroundColor(.white.opacity(0.85))
                         .font(.caption2)
                         .lineLimit(1)
+                        .minimumScaleFactor(0.7)
                     Spacer()
                     HStack(spacing: 6) {
                         ForEach(0 ..< 5, id: \.self) { i in
@@ -234,7 +244,7 @@ struct LiveDisplayView: View {
         case .cb:
             let where_ = live.cbChannel.map { "CH \($0)" } ?? (live.cbIsDX ? "DX" : "CB")
             return "CB · " + where_ + (live.squelchOn ? " · SQL" : "")
-        default: return "POC · \(live.sourceName)"
+        default: return "POC · \(live.shortSource)"
         }
     }
 
@@ -243,8 +253,8 @@ struct LiveDisplayView: View {
             return (live.scanHolding ? "live_scan_holding" : "live_scan_searching").localized
         }
         if live.band?.isKiwi == true {
-            if let dBm = live.signalDBm { return "\(SignalScale.label(dBm: dBm)) · \(live.sourceName)" }
-            return live.sourceName
+            if let dBm = live.signalDBm { return "\(SignalScale.label(dBm: dBm)) · \(live.shortSource)" }
+            return live.shortSource
         }
         if let talker = live.talker { return String(format: "live_speaking".localized, talker) }
         if let n = live.audience { return String(format: "live_listeners".localized, n) }
@@ -272,6 +282,7 @@ struct LiveStatusCard: View {
                         .fontWeight(.medium)
                         .foregroundColor(Color("PrimaryTextColor"))
                         .lineLimit(1)
+                        .minimumScaleFactor(0.7)
                     if live.state == .connecting || live.isScouting {
                         ProgressView()
                             .scaleEffect(0.8)
@@ -285,6 +296,7 @@ struct LiveStatusCard: View {
                     .font(.caption2)
                     .foregroundColor(Color("PrimaryTextColor").opacity(0.6))
                     .lineLimit(1)
+                    .minimumScaleFactor(0.75)
             }
             Spacer()
             Circle()
@@ -306,7 +318,7 @@ struct LiveStatusCard: View {
     }
 
     private var sourceText: String {
-        live.sourceName.isEmpty ? "--" : live.sourceName
+        live.shortSource.isEmpty ? "--" : live.shortSource
     }
 
     /// Minuti gratis rimasti oggi davanti a tutto, poi da dove si ascolta.
@@ -317,8 +329,7 @@ struct LiveStatusCard: View {
 
     private var place: String {
         if live.band?.isKiwi == true {
-            let town = live.sourcePlace.isEmpty ? "" : live.sourcePlace + " · "
-            return town + (live.band == .cb ? HFChannel.Kind.citizens : live.currentHF.kind).subtitle
+            return (live.band == .cb ? HFChannel.Kind.citizens : live.currentHF.kind).subtitle
         }
         let town = live.sourcePlace.isEmpty ? "" : live.sourcePlace + " · "
         return town + "live_listen_only_note".localized
@@ -510,8 +521,112 @@ struct LiveSpeakerGrid: View {
     }
 }
 
-/// In HF e CB, al posto della griglia dell'altoparlante, lo schermo con lo
-/// spettro e la cascata del ricevitore.
+/// HF, CB e POC si ascoltano soltanto: al posto del tasto per parlare, lo
+/// schermo del ricevitore a tutta larghezza e le letture che servono.
+@available(iOS 16.0, *)
+struct LiveListeningDeck: View {
+    let band: WalkieBand
+    let compact: Bool
+
+    var body: some View {
+        VStack(spacing: compact ? 8 : 12) {
+            if band == .poc {
+                LiveSpeakerGrid(count: compact ? 24 : 48)
+            } else {
+                LivePanoramaScreen(compact: compact)
+            }
+            LiveReadings(band: band, compact: compact)
+            LiveSpeakerStatus()
+        }
+    }
+}
+
+/// Le letture di una radio vera: da dove si ascolta, quanto arriva forte,
+/// come si sta demodulando, quanto ascolto gratis resta.
+@available(iOS 16.0, *)
+struct LiveReadings: View {
+    @ObservedObject var live = LiveRadio.shared
+    let band: WalkieBand
+    let compact: Bool
+
+    private let amber = Color(red: 1.0, green: 0.8, blue: 0.0)
+
+    var body: some View {
+        TimelineView(.periodic(from: .now, by: 30)) { context in
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 3), spacing: compact ? 6 : 8) {
+                ForEach(cells(at: context.date), id: \.label) { cell in
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(cell.label)
+                            .font(.system(size: 9, weight: .semibold, design: .monospaced))
+                            .foregroundColor(.white.opacity(0.55))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                        Text(cell.value)
+                            .font(.system(size: compact ? 12 : 13, weight: .bold, design: .monospaced))
+                            .foregroundColor(cell.lit ? amber : .white)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.6)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, compact ? 7 : 9)
+            .background(RoundedRectangle(cornerRadius: 12).fill(Color.black))
+        }
+        .padding(.horizontal, 12)
+        .accessibilityElement(children: .combine)
+    }
+
+    private struct Cell {
+        let label: String
+        let value: String
+        var lit = false
+    }
+
+    private func cells(at date: Date) -> [Cell] {
+        let none = "--"
+        var out: [Cell] = []
+        if band == .poc {
+            out.append(Cell(label: "live_server".localized, value: live.sourceName.isEmpty ? none : live.sourceName))
+            out.append(Cell(label: "live_info_channel".localized, value: live.channelName.isEmpty ? none : live.channelName))
+            out.append(Cell(label: "live_info_listeners".localized, value: live.audience.map(String.init) ?? none))
+            out.append(Cell(label: "live_info_talker".localized, value: live.talker ?? none, lit: live.talker != nil))
+        } else {
+            out.append(Cell(label: "live_receiver".localized, value: live.shortSource.isEmpty ? none : live.shortSource))
+            out.append(Cell(label: "live_info_distance".localized, value: live.receiverKm.map { "\($0) km" } ?? none))
+            out.append(Cell(label: "live_info_signal".localized,
+                            value: live.signalDBm.map { "\(SignalScale.label(dBm: $0)) \(Int($0.rounded())) dBm" } ?? none,
+                            lit: live.squelchOpen))
+            let pb = KiwiFrame.passband(live.tuning)
+            out.append(Cell(label: "live_info_mode".localized,
+                            value: live.tuning.emission.rawValue + String(format: " %.1f kHz", Double(pb.high - pb.low) / 1000)))
+            if band == .cb {
+                let sql = !live.squelchOn ? "OFF" : (live.squelchOpen ? "live_info_open" : "live_info_closed").localized
+                out.append(Cell(label: "live_info_squelch".localized, value: sql, lit: live.squelchOpen))
+            }
+        }
+        if band != .cb {
+            out.append(Cell(label: "UTC", value: Self.utc.string(from: date)))
+        }
+        out.append(freeCell)
+        return out
+    }
+
+    private var freeCell: Cell {
+        guard let left = live.freeSecondsLeft else { return Cell(label: "live_info_listening".localized, value: "PRO", lit: true) }
+        return Cell(label: "live_info_free".localized, value: String(format: "%d:%02d", left / 60, left % 60), lit: left < 60)
+    }
+
+    private static let utc: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "HH:mm"
+        f.timeZone = TimeZone(identifier: "UTC")
+        return f
+    }()
+}
+
+/// Lo schermo con lo spettro e la cascata del ricevitore, in HF e CB.
 @available(iOS 16.0, *)
 struct LivePanoramaScreen: View {
     @ObservedObject var live = LiveRadio.shared
@@ -524,37 +639,15 @@ struct LivePanoramaScreen: View {
                      words: PanoramaWords(overNoise: "live_pan_over_noise".localized,
                                           noiseOnly: "live_pan_noise_only".localized,
                                           waiting: (live.isOutOfFreeTime ? "live_free_time_up" : "live_pan_waiting").localized))
-            .frame(height: compact ? 92 : 136)
-            .padding(.horizontal, 20)
+            .frame(height: compact ? 132 : 185)
+            .padding(.horizontal, 12)
             .onTapGesture {
                 if live.isOutOfFreeTime { live.proPrompt = .freeTime }
             }
     }
 }
 
-/// Testo al centro del tasto quando il walkie ascolta HF o POC.
-@available(iOS 16.0, *)
-struct LivePTTFace: View {
-    @ObservedObject var live = LiveRadio.shared
-
-    var body: some View {
-        VStack(spacing: 4) {
-            Text("live_listen_only".localized)
-                .font(.system(size: 14, weight: .bold))
-                .foregroundColor(.gray)
-                .multilineTextAlignment(.center)
-            Text(live.band == .hf ? "HF" : live.band == .cb ? "CB" : "POC")
-                .font(.system(size: 12, weight: .medium))
-                .foregroundColor(.gray)
-            Text("live_on_air".localized)
-                .font(.system(size: 12, weight: .medium))
-                .foregroundColor(.gray)
-        }
-        .minimumScaleFactor(0.7)
-    }
-}
-
-/// Riga sotto il tasto: chi parla, o lo stato del collegamento.
+/// Riga sotto le letture: chi parla, o lo stato del collegamento.
 @available(iOS 16.0, *)
 struct LiveSpeakerStatus: View {
     @ObservedObject var live = LiveRadio.shared

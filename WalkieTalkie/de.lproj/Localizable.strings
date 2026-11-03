@@ -51,7 +51,6 @@
 "unplugged" = "Nicht angeschlossen";
 
 // MARK: - Main Interface
-"frequency_owner" = "Frequenzinhaber";
 "radio_fm" = "Weltradio";
 "walkie_talkie" = "WalkieTalkie";
 "device" = "Gerät";
@@ -507,8 +506,6 @@
 "live_tune_up" = "1 kHz höher";
 "live_scan" = "Automatischer Suchlauf";
 "live_refresh" = "Aktualisieren";
-"live_listen_only" = "NUR HÖREN";
-"live_on_air" = "LIVE";
 "live_speaking" = "Spricht: %@";
 "live_listeners" = "%d Personen im Kanal";
 "live_scan_holding" = "Suchlauf angehalten, jemand spricht";
@@ -547,3 +544,14 @@
 "onboarding.live.cb" = "Alle 40 CB-Kanäle und der DX-Anruf auf 27.555, mit automatischer Rauschsperre und SCAN.";
 "onboarding.live.poc" = "Echte Push-to-Talk-Kanäle auf öffentlichen Servern.";
 "onboarding.live.note" = "Nur Empfang. %d Gratisminuten am Tag, ohne Limit mit Talky Pro.";
+"live_info_distance" = "Entfernung";
+"live_info_signal" = "Signal";
+"live_info_mode" = "Modus";
+"live_info_squelch" = "Squelch";
+"live_info_open" = "OFFEN";
+"live_info_closed" = "ZU";
+"live_info_free" = "Heute gratis";
+"live_info_listening" = "Empfang";
+"live_info_channel" = "Kanal";
+"live_info_listeners" = "Hörer";
+"live_info_talker" = "Spricht";

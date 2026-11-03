@@ -51,7 +51,6 @@
 "unplugged" = "未接电源";
 
 // MARK: - Main Interface
-"frequency_owner" = "频率占用者";
 "radio_fm" = "世界电台";
 "walkie_talkie" = "WalkieTalkie";
 "device" = "设备";
@@ -508,8 +507,6 @@
 "live_tune_up" = "调高1 kHz";
 "live_scan" = "自动扫描";
 "live_refresh" = "刷新";
-"live_listen_only" = "仅收听";
-"live_on_air" = "直播";
 "live_speaking" = "正在讲话：%@";
 "live_listeners" = "频道内%d人";
 "live_scan_holding" = "有人在讲话，扫描已暂停";
@@ -548,3 +545,14 @@
 "onboarding.live.cb" = "全部 40 个 CB 信道和 27.555 DX 呼叫频率，带自动静噪和扫描。";
 "onboarding.live.poc" = "公共服务器上真实的一键通频道。";
 "onboarding.live.note" = "仅收听。每天免费 %d 分钟，Talky Pro 无限制。";
+"live_info_distance" = "距离";
+"live_info_signal" = "信号";
+"live_info_mode" = "模式";
+"live_info_squelch" = "静噪";
+"live_info_open" = "开";
+"live_info_closed" = "关";
+"live_info_free" = "今日免费";
+"live_info_listening" = "收听";
+"live_info_channel" = "频道";
+"live_info_listeners" = "听众";
+"live_info_talker" = "正在讲话";

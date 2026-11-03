@@ -51,7 +51,6 @@
 "unplugged" = "電源未接続";
 
 // MARK: - Main Interface
-"frequency_owner" = "周波数の所有者";
 "radio_fm" = "ワールドラジオ";
 "walkie_talkie" = "WalkieTalkie";
 "device" = "デバイス";
@@ -508,8 +507,6 @@
 "live_tune_up" = "1 kHz上げる";
 "live_scan" = "自動スキャン";
 "live_refresh" = "更新";
-"live_listen_only" = "受信のみ";
-"live_on_air" = "ライブ";
 "live_speaking" = "発言中: %@";
 "live_listeners" = "チャンネルに%d人";
 "live_scan_holding" = "誰かが話しているのでスキャン停止中";
@@ -548,3 +545,14 @@
 "onboarding.live.cb" = "CB全40チャンネルと27.555のDX呼び出し。自動スケルチとスキャン付き。";
 "onboarding.live.poc" = "公開サーバー上の本物のプッシュトゥトークチャンネル。";
 "onboarding.live.note" = "受信のみ。1日%d分無料、Talky Proなら無制限。";
+"live_info_distance" = "距離";
+"live_info_signal" = "信号";
+"live_info_mode" = "モード";
+"live_info_squelch" = "スケルチ";
+"live_info_open" = "開";
+"live_info_closed" = "閉";
+"live_info_free" = "今日の無料";
+"live_info_listening" = "受信";
+"live_info_channel" = "チャンネル";
+"live_info_listeners" = "聴取者";
+"live_info_talker" = "発言中";
