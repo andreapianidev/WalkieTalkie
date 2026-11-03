@@ -250,15 +250,6 @@
 "paywall.title" = "Desbloquea Talky Pro";
 "paywall.subtitle" = "Todo Talky, sin límites";
 "paywall.error_title" = "Compra fallida";
-"paywall.feature.no_ads" = "Sin anuncios";
-"paywall.feature.unlimited_stations" = "Emisoras de radio ilimitadas";
-"paywall.feature.premium_international" = "Radios internacionales premium";
-"paywall.feature.record_transmissions" = "Graba tus propias transmisiones";
-"paywall.feature.private_channels" = "Canales walkie privados";
-"paywall.feature.custom_themes" = "Temas personalizados";
-"paywall.feature.history" = "Historial de transmisiones";
-"paywall.feature.sleep_timer" = "Temporizador de apagado";
-"paywall.feature.equalizer" = "Ecualizador de audio premium";
 "paywall.plan.weekly" = "Semanal";
 "paywall.plan.weekly_suffix" = "/semana";
 "paywall.plan.yearly" = "Anual";
@@ -522,7 +513,6 @@
 "live_pro_background_message" = "La escucha HF, CB y POC se detuvo al salir de Talky. Con Talky Pro sigue también con la pantalla apagada. Puedes probarlo gratis 24 horas viendo un vídeo corto.";
 "live_pro_discover" = "Descubre Talky Pro";
 "live_pro_video" = "Mira un vídeo: 24 horas gratis";
-"paywall.feature.live" = "Escucha HF, CB y POC sin límites, SCAN automático y pantalla apagada";
 // CB 27 MHz (3.1)
 "live_cb_section" = "Cambiar entre canales y DX";
 "live_cb_mode" = "Modo de recepción: AM, FM, LSB o USB";

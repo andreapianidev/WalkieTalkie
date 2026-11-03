@@ -244,15 +244,6 @@
 "paywall.title" = "解鎖 Talky Pro";
 "paywall.subtitle" = "完整 Talky，無任何限制";
 "paywall.error_title" = "購買失敗";
-"paywall.feature.no_ads" = "無廣告";
-"paywall.feature.unlimited_stations" = "無限制廣播電台";
-"paywall.feature.premium_international" = "進階國際廣播";
-"paywall.feature.record_transmissions" = "錄製您的對講內容";
-"paywall.feature.private_channels" = "私人對講頻道";
-"paywall.feature.custom_themes" = "自訂主題";
-"paywall.feature.history" = "傳輸歷史紀錄";
-"paywall.feature.sleep_timer" = "廣播睡眠定時器";
-"paywall.feature.equalizer" = "進階音訊等化器";
 "paywall.plan.weekly" = "每週";
 "paywall.plan.weekly_suffix" = "/週";
 "paywall.plan.yearly" = "每年";
@@ -518,7 +509,6 @@
 "live_pro_background_message" = "離開 Talky 後，HF、CB 和 POC 收聽已停止。使用 Talky Pro，關閉螢幕後也能繼續收聽。觀看一段短片即可免費試用24小時。";
 "live_pro_discover" = "了解 Talky Pro";
 "live_pro_video" = "看短片：免費24小時";
-"paywall.feature.live" = "無限收聽 HF、CB 和 POC，自動掃描，關閉螢幕收聽";
 // CB 27 MHz (3.1)
 "live_cb_section" = "在頻道與 DX 之間切換";
 "live_cb_mode" = "接收模式：AM、FM、LSB 或 USB";

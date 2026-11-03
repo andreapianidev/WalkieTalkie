@@ -264,15 +264,6 @@
 "paywall.title" = "Mở khoá Talky Pro";
 "paywall.subtitle" = "Trọn bộ Talky, không giới hạn";
 "paywall.error_title" = "Mua không thành công";
-"paywall.feature.no_ads" = "Không quảng cáo";
-"paywall.feature.unlimited_stations" = "Không giới hạn đài radio";
-"paywall.feature.premium_international" = "Đài quốc tế cao cấp";
-"paywall.feature.record_transmissions" = "Ghi lại tín hiệu bạn phát";
-"paywall.feature.private_channels" = "Kênh bộ đàm riêng";
-"paywall.feature.custom_themes" = "Giao diện tuỳ chỉnh";
-"paywall.feature.history" = "Lịch sử liên lạc";
-"paywall.feature.sleep_timer" = "Hẹn giờ tắt radio";
-"paywall.feature.equalizer" = "Bộ chỉnh âm cao cấp";
 "paywall.plan.weekly" = "Hằng tuần";
 "paywall.plan.weekly_suffix" = "/tuần";
 "paywall.plan.yearly" = "Hằng năm";
@@ -516,7 +507,6 @@
 "live_pro_background_message" = "Việc nghe HF, CB và POC đã dừng khi bạn rời Talky. Với Talky Pro, bạn vẫn nghe được khi tắt màn hình. Bạn có thể dùng thử miễn phí 24 giờ bằng cách xem một video ngắn.";
 "live_pro_discover" = "Khám phá Talky Pro";
 "live_pro_video" = "Xem video: miễn phí 24 giờ";
-"paywall.feature.live" = "Nghe HF, CB và POC không giới hạn, quét tự động và nghe khi tắt màn hình";
 // CB 27 MHz (3.1)
 "live_cb_section" = "Chuyển giữa kênh và DX";
 "live_cb_mode" = "Chế độ thu: AM, FM, LSB hoặc USB";

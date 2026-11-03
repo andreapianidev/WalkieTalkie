@@ -264,15 +264,6 @@
 "paywall.title" = "Talky Proを解放";
 "paywall.subtitle" = "Talkyのすべてを、制限なしで";
 "paywall.error_title" = "購入できませんでした";
-"paywall.feature.no_ads" = "広告なし";
-"paywall.feature.unlimited_stations" = "ラジオ局が無制限";
-"paywall.feature.premium_international" = "海外のプレミアム局";
-"paywall.feature.record_transmissions" = "自分の送信を録音";
-"paywall.feature.private_channels" = "プライベートチャンネル";
-"paywall.feature.custom_themes" = "カスタムテーマ";
-"paywall.feature.history" = "送受信履歴";
-"paywall.feature.sleep_timer" = "ラジオのスリープタイマー";
-"paywall.feature.equalizer" = "プレミアムイコライザー";
 "paywall.plan.weekly" = "週額";
 "paywall.plan.weekly_suffix" = "/週";
 "paywall.plan.yearly" = "年額";
@@ -517,7 +508,6 @@
 "live_pro_background_message" = "Talkyを離れたときにHF、CB、POCの受信が止まりました。Talky Proなら画面を消しても受信が続きます。短い動画を見ると24時間無料で試せます。";
 "live_pro_discover" = "Talky Proを見る";
 "live_pro_video" = "動画を見る：24時間無料";
-"paywall.feature.live" = "HF・CB・POCを無制限に受信、自動スキャン、画面オフでも受信";
 // CB 27 MHz (3.1)
 "live_cb_section" = "チャンネルとDXを切り替え";
 "live_cb_mode" = "受信モード：AM、FM、LSB、USB";

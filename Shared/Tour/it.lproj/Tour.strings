@@ -1,0 +1,33 @@
+/* Talky Pro: cosa comprende e dove si trova. Le stesse chiavi in tutte le 14 lingue. */
+
+"tour.perk.live.title" = "HF, CB e POC senza limite giornaliero";
+"tour.perk.live.detail" = "Senza Pro l'ascolto dal vivo si ferma dopo 5 minuti al giorno. Con Pro va finché vuoi, con lo SCAN automatico e anche a schermo spento.";
+"tour.perk.widgets.title" = "Tutti i widget";
+"tour.perk.widgets.detail" = "Propagazione, Sole e bande e i widget della schermata di blocco, con SFI, Kp e bande veri.";
+"tour.perk.widgets.detail.mac" = "Propagazione e Sole e bande sulla scrivania, con SFI, Kp e bande veri.";
+"tour.perk.widgets.where" = "Tieni premuto sulla schermata Home, tocca +, cerca Talky";
+"tour.perk.widgets.where.mac" = "Clic destro sulla scrivania, Modifica widget, cerca Talky";
+"tour.perk.noads.title" = "Niente pubblicità";
+"tour.perk.noads.detail" = "Niente banner, niente video, niente annunci a tutto schermo.";
+"tour.perk.stations.title" = "Tutte le %d stazioni radio";
+"tour.perk.stations.detail" = "Anche quelle internazionali, non solo le gratuite, tutte nell'elenco della radio.";
+"tour.perk.private.title" = "Canali privati";
+"tour.perk.private.detail" = "Canali walkie con password: ti sente solo chi la conosce.";
+"tour.perk.recordings.title" = "Registrazioni";
+"tour.perk.recordings.detail" = "Salvi quello che trasmetti e lo riascolti.";
+"tour.perk.history.title" = "Cronologia trasmissioni";
+"tour.perk.history.detail" = "Le tue trasmissioni passate, in un elenco.";
+"tour.perk.themes.title" = "Tutti i temi";
+"tour.perk.themes.detail" = "Tutti i temi colore del walkie su iPhone e iPad.";
+"tour.perk.sleep.title" = "Sleep timer";
+"tour.perk.sleep.detail" = "La radio si spegne da sola dopo il tempo che scegli.";
+"tour.perk.eq.title" = "Equalizzatore";
+"tour.perk.eq.detail" = "Regoli il suono della radio come piace a te.";
+"tour.perk.devices.title" = "iPhone, iPad e Mac";
+"tour.perk.devices.detail" = "Un solo acquisto vale su tutti i dispositivi con lo stesso Apple Account. Se su un altro dispositivo il Pro non compare, usa Ripristina acquisti.";
+"tour.yourpro.title" = "Il tuo Talky Pro";
+"tour.yourpro.subtitle" = "Tutto questo è sbloccato. Ecco cosa fa e dove trovarlo.";
+"tour.yourpro.thanks" = "Grazie. Talky lo fa una persona sola e il codice è pubblico: il tuo acquisto lo tiene in vita.";
+"tour.yourpro.done" = "Ho capito";
+"tour.yourpro.open" = "Cosa comprende il tuo Pro";
+"tour.where.settings" = "Impostazioni › Personalizzazione";

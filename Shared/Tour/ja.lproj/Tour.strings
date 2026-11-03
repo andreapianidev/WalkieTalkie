@@ -1,0 +1,33 @@
+/* Talky Pro: cosa comprende e dove si trova. Le stesse chiavi in tutte le 14 lingue. */
+
+"tour.perk.live.title" = "HF・CB・POCを1日の制限なしで";
+"tour.perk.live.detail" = "Proなしではライブ受信は1日5分で止まります。Proなら好きなだけ聴けて、自動スキャンも画面オフでの受信もできます。";
+"tour.perk.widgets.title" = "すべてのウィジェット";
+"tour.perk.widgets.detail" = "伝搬、太陽とバンド、ロック画面のウィジェット。SFI・Kp・バンドの実データを表示します。";
+"tour.perk.widgets.detail.mac" = "デスクトップに伝搬と太陽とバンド。SFI・Kp・バンドの実データを表示します。";
+"tour.perk.widgets.where" = "ホーム画面を長押し、＋をタップ、Talkyを検索";
+"tour.perk.widgets.where.mac" = "デスクトップを右クリック、ウィジェットを編集、Talkyを検索";
+"tour.perk.noads.title" = "広告なし";
+"tour.perk.noads.detail" = "バナーも動画も全画面広告もありません。";
+"tour.perk.stations.title" = "全%d局のラジオ";
+"tour.perk.stations.detail" = "無料局だけでなく海外の局も、すべてラジオのリストにあります。";
+"tour.perk.private.title" = "プライベートチャンネル";
+"tour.perk.private.detail" = "パスワード付きのトランシーバーチャンネル。知っている人だけが聞けます。";
+"tour.perk.recordings.title" = "録音";
+"tour.perk.recordings.detail" = "送信した音声を保存して、あとで聴き直せます。";
+"tour.perk.history.title" = "送信履歴";
+"tour.perk.history.detail" = "これまでの送信を一覧で確認できます。";
+"tour.perk.themes.title" = "すべてのテーマ";
+"tour.perk.themes.detail" = "iPhoneとiPadのトランシーバーのカラーテーマがすべて使えます。";
+"tour.perk.sleep.title" = "スリープタイマー";
+"tour.perk.sleep.detail" = "選んだ時間が経つとラジオが自動で止まります。";
+"tour.perk.eq.title" = "イコライザー";
+"tour.perk.eq.detail" = "ラジオの音を好みに合わせて調整できます。";
+"tour.perk.devices.title" = "iPhone・iPad・Mac";
+"tour.perk.devices.detail" = "1回の購入で、同じApple Accountのすべてのデバイスで使えます。別のデバイスでProが表示されない場合は「購入を復元」を使ってください。";
+"tour.yourpro.title" = "あなたのTalky Pro";
+"tour.yourpro.subtitle" = "以下はすべて解除されています。内容と場所はこちらです。";
+"tour.yourpro.thanks" = "ありがとうございます。Talkyは一人で作っていて、コードは公開されています。あなたの購入が開発を支えています。";
+"tour.yourpro.done" = "OK";
+"tour.yourpro.open" = "Proに含まれるもの";
+"tour.where.settings" = "設定 › カスタマイズ";

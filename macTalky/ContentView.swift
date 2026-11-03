@@ -206,14 +206,19 @@ struct ContentView: View {
             // Pro upsell / badge + Impostazioni
             HStack(spacing: 8) {
                 if iap.isProUser {
-                    HStack(spacing: 6) {
-                        Image(systemName: "checkmark.seal.fill")
-                            .foregroundStyle(Talky.amber)
-                        Text("TALKY PRO")
-                            .font(.vfd(10, weight: .bold))
-                            .kerning(1.5)
-                            .foregroundStyle(Talky.amber)
+                    // Apre la pagina del Pro: cosa e' sbloccato e dove si trova.
+                    Button { showPaywall = true } label: {
+                        HStack(spacing: 6) {
+                            Image(systemName: "checkmark.seal.fill")
+                                .foregroundStyle(Talky.amber)
+                            Text("TALKY PRO")
+                                .font(.vfd(10, weight: .bold))
+                                .kerning(1.5)
+                                .foregroundStyle(Talky.amber)
+                        }
                     }
+                    .buttonStyle(.plain)
+                    .help(Tour.text("tour.yourpro.open"))
                 } else {
                     Button {
                         NSApp.keyWindow?.makeFirstResponder(nil)

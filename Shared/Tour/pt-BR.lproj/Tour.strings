@@ -1,0 +1,33 @@
+/* Talky Pro: cosa comprende e dove si trova. Le stesse chiavi in tutte le 14 lingue. */
+
+"tour.perk.live.title" = "HF, PX e POC sem limite diário";
+"tour.perk.live.detail" = "Sem o Pro, a escuta ao vivo para depois de 5 minutos por dia. Com o Pro toca o quanto você quiser, com SCAN automático e também com a tela desligada.";
+"tour.perk.widgets.title" = "Todos os widgets";
+"tour.perk.widgets.detail" = "Propagação, Sol e faixas e os widgets da tela bloqueada, com dados reais de SFI, Kp e bandas.";
+"tour.perk.widgets.detail.mac" = "Propagação e Sol e faixas na mesa, com dados reais de SFI, Kp e bandas.";
+"tour.perk.widgets.where" = "Toque e segure a tela de início, toque em +, procure Talky";
+"tour.perk.widgets.where.mac" = "Clique com o botão direito na mesa, Editar widgets, procure Talky";
+"tour.perk.noads.title" = "Sem anúncios";
+"tour.perk.noads.detail" = "Sem banners, sem vídeos, sem anúncios em tela cheia.";
+"tour.perk.stations.title" = "Todas as %d estações de rádio";
+"tour.perk.stations.detail" = "As internacionais também, não só as gratuitas, todas na lista do rádio.";
+"tour.perk.private.title" = "Canais privados";
+"tour.perk.private.detail" = "Canais de walkie com senha: só quem a conhece ouve você.";
+"tour.perk.recordings.title" = "Gravações";
+"tour.perk.recordings.detail" = "Salve o que você transmite e ouça de novo.";
+"tour.perk.history.title" = "Histórico de transmissões";
+"tour.perk.history.detail" = "Suas transmissões anteriores, em uma lista.";
+"tour.perk.themes.title" = "Todos os temas";
+"tour.perk.themes.detail" = "Todos os temas de cor do walkie no iPhone e no iPad.";
+"tour.perk.sleep.title" = "Timer de desligamento";
+"tour.perk.sleep.detail" = "O rádio desliga sozinho depois do tempo que você escolher.";
+"tour.perk.eq.title" = "Equalizador";
+"tour.perk.eq.detail" = "Ajuste o som do rádio do seu jeito.";
+"tour.perk.devices.title" = "iPhone, iPad e Mac";
+"tour.perk.devices.detail" = "Uma só compra vale em todos os dispositivos com a mesma Conta Apple. Se o Pro não aparecer em outro dispositivo, use Restaurar compras.";
+"tour.yourpro.title" = "Seu Talky Pro";
+"tour.yourpro.subtitle" = "Tudo isto está desbloqueado. Veja o que faz e onde encontrar.";
+"tour.yourpro.thanks" = "Obrigado. O Talky é feito por uma pessoa só e o código é público: sua compra mantém ele vivo.";
+"tour.yourpro.done" = "Entendi";
+"tour.yourpro.open" = "O que seu Pro inclui";
+"tour.where.settings" = "Ajustes › Personalização";

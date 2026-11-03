@@ -94,7 +94,14 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
-### [2.1] (114), not submitted yet
+### [2.1] (116), not submitted yet
+
+#### New in (116)
+- **The Pro panel says what you have.** The paywall lists the same features in
+  every language (live bands without the daily limit, widgets, all stations,
+  private channels, themes, iPhone + iPad + Mac). For a Pro user the TALKY PRO
+  badge in the sidebar now opens it, with what each feature does and where the
+  widgets are.
 
 #### New in (114)
 - **Widgets on the Mac desktop**: Channel, Propagation (small, medium, large)
@@ -173,7 +180,19 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [3.2] (114), not submitted yet
+### [3.2] (116), not submitted yet
+
+#### New in (116)
+- **"Your Talky Pro".** Right after buying, the paywall turns into a page with
+  everything Pro unlocks, what it does and where to find it (Settings ›
+  Personalization, or the widget gallery). It opens again from Settings,
+  "What your Pro includes". 14 languages.
+- The paywall list now matches that page, item for item, and adds the widgets
+  and the iPhone + iPad + Mac line.
+
+#### Fixed in (115)
+- Radio bars no longer go dark between HLS segments (BBC and the other HLS
+  streams arrive in 6-10 second blocks).
 
 #### New in (114)
 - **The station list keeps itself clean.** A station that fails to start

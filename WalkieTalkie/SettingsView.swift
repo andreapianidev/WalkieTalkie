@@ -23,6 +23,7 @@ struct SettingsView: View {
     @State private var showHistory = false
     @State private var showSleepTimer = false
     @State private var showEqualizer = false
+    @State private var showYourPro = false
     @State private var showRecordings = false
     @State private var showPrivateChannels = false
     @State private var rewardClock = Date()
@@ -117,6 +118,9 @@ struct SettingsView: View {
                 }
             })
         }
+        .sheet(isPresented: $showYourPro) {
+            YourProView { showYourPro = false }
+        }
         .sheet(isPresented: $showEqualizer) {
             EqualizerView(onLockedTap: {
                 showEqualizer = false
@@ -167,6 +171,7 @@ struct SettingsView: View {
             }
 
             if iapManager.isProUser {
+                yourProButton
                 proActiveCard
             } else {
                 proUnlockCard
@@ -179,6 +184,35 @@ struct SettingsView: View {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(Color("SurfaceColor"))
         )
+    }
+
+    /// Riapre "il tuo Talky Pro": cosa e' sbloccato e dove si trova.
+    private var yourProButton: some View {
+        Button { showYourPro = true } label: {
+            HStack(spacing: 12) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .fill(proBrand)
+                        .frame(width: 36, height: 36)
+                    Image(systemName: "checkmark.seal.fill")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(.black)
+                }
+                Text(Tour.text("tour.yourpro.open"))
+                    .font(.system(size: 15, weight: .semibold, design: .rounded))
+                    .foregroundColor(Color("PrimaryTextColor"))
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.5))
+            }
+            .padding(12)
+            .background(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color("BackgroundColor").opacity(0.6))
+            )
+        }
+        .buttonStyle(.plain)
     }
 
     /// Card "TX active": Pro attivo. Tap → apri gestione abbonamento.

@@ -1,0 +1,33 @@
+/* Talky Pro: cosa comprende e dove si trova. Le stesse chiavi in tutte le 14 lingue. */
+
+"tour.perk.live.title" = "HF、CB 和 POC 不限每日时长";
+"tour.perk.live.detail" = "没有 Pro 时，实时收听每天 5 分钟后停止。有了 Pro，想听多久就听多久，还能自动扫描和息屏收听。";
+"tour.perk.widgets.title" = "全部小组件";
+"tour.perk.widgets.detail" = "传播、太阳与波段以及锁定屏幕小组件，显示真实的 SFI、Kp 和波段数据。";
+"tour.perk.widgets.detail.mac" = "桌面上的传播和太阳与波段，显示真实的 SFI、Kp 和波段数据。";
+"tour.perk.widgets.where" = "长按主屏幕，轻点 +，搜索 Talky";
+"tour.perk.widgets.where.mac" = "在桌面上点按右键，编辑小组件，搜索 Talky";
+"tour.perk.noads.title" = "无广告";
+"tour.perk.noads.detail" = "没有横幅、视频或全屏广告。";
+"tour.perk.stations.title" = "全部 %d 个电台";
+"tour.perk.stations.detail" = "不只是免费电台，国际电台也都在电台列表里。";
+"tour.perk.private.title" = "私人频道";
+"tour.perk.private.detail" = "带密码的对讲频道：只有知道密码的人能听到你。";
+"tour.perk.recordings.title" = "录音";
+"tour.perk.recordings.detail" = "保存你发送的内容，随时重听。";
+"tour.perk.history.title" = "发送记录";
+"tour.perk.history.detail" = "以列表查看你以往的发送。";
+"tour.perk.themes.title" = "全部主题";
+"tour.perk.themes.detail" = "iPhone 和 iPad 上对讲机的全部颜色主题。";
+"tour.perk.sleep.title" = "睡眠定时";
+"tour.perk.sleep.detail" = "到了你选的时间，电台会自动关闭。";
+"tour.perk.eq.title" = "均衡器";
+"tour.perk.eq.detail" = "按你的喜好调整电台的声音。";
+"tour.perk.devices.title" = "iPhone、iPad 和 Mac";
+"tour.perk.devices.detail" = "一次购买，同一 Apple 账户的所有设备都可使用。如果在另一台设备上没有显示 Pro，请使用“恢复购买”。";
+"tour.yourpro.title" = "你的 Talky Pro";
+"tour.yourpro.subtitle" = "以下功能均已解锁。这里说明每项的作用和位置。";
+"tour.yourpro.thanks" = "谢谢。Talky 由一个人开发，代码公开：你的购买让它继续下去。";
+"tour.yourpro.done" = "知道了";
+"tour.yourpro.open" = "Pro 包含的内容";
+"tour.where.settings" = "设置 › 个性化";

@@ -52,6 +52,9 @@ struct PaywallView: View {
     /// usato la prova, o e' gia' stato abbonato nel gruppo, non la riceverebbe,
     /// quindi a lui la paywall non la deve mostrare.
     @State private var isEligibleForTrial: Bool = false
+    /// Acquisto riuscito: al posto di chiudersi la paywall mostra "il tuo
+    /// Talky Pro", cosi' chi ha appena pagato vede subito cosa ha sbloccato.
+    @State private var showYourPro: Bool = false
 
     // MARK: - Palette adattiva
 
@@ -214,6 +217,12 @@ struct PaywallView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
+        .overlay {
+            if showYourPro {
+                YourProView { dismiss() }
+                    .transition(.move(edge: .bottom))
+            }
+        }
         // Palette segue le preferenze dell'app, NON il colorScheme di sistema.
         .preferredColorScheme(isAppDark ? .dark : .light)
         .onAppear {
@@ -361,22 +370,17 @@ struct PaywallView: View {
 
     // MARK: - Features
 
+    /// La stessa lista di "il tuo Talky Pro": quello che si promette qui e'
+    /// quello che si ritrova dopo l'acquisto.
     private var featuresList: some View {
         VStack(alignment: .leading, spacing: 14) {
-            featureRow("xmark.circle.fill", "paywall.feature.no_ads")
-            featureRow("waveform", "paywall.feature.live")
-            featureRow("antenna.radiowaves.left.and.right", "paywall.feature.unlimited_stations")
-            featureRow("globe", "paywall.feature.premium_international")
-            featureRow("mic.circle.fill", "paywall.feature.record_transmissions")
-            featureRow("lock.shield.fill", "paywall.feature.private_channels")
-            featureRow("paintpalette.fill", "paywall.feature.custom_themes")
-            featureRow("clock.arrow.circlepath", "paywall.feature.history")
-            featureRow("moon.zzz.fill", "paywall.feature.sleep_timer")
-            featureRow("slider.horizontal.3", "paywall.feature.equalizer")
+            ForEach(ProPerk.here) { perk in
+                featureRow(perk.symbol, perk.title(stations: RadioManager.shared.radioStations.count))
+            }
         }
     }
 
-    private func featureRow(_ symbol: String, _ key: String) -> some View {
+    private func featureRow(_ symbol: String, _ title: String) -> some View {
         HStack(spacing: 12) {
             Image(systemName: symbol)
                 .font(.system(size: 14, weight: .semibold))
@@ -386,7 +390,7 @@ struct PaywallView: View {
                     Circle().fill(brandSoft)
                 )
 
-            Text(key.localized)
+            Text(title)
                 .font(.system(size: 15, weight: .medium))
                 .foregroundColor(ink)
 
@@ -858,9 +862,8 @@ struct PaywallView: View {
         defer { isPurchasing = false }
 
         do {
-            let success = try await iap.purchase(product)
-            if success {
-                dismiss()
+            if try await iap.purchase(product) {
+                withAnimation(.spring(response: 0.45, dampingFraction: 0.9)) { showYourPro = true }
             }
         } catch {
             errorMessage = "paywall.error.purchase_failed".localized
@@ -875,7 +878,7 @@ struct PaywallView: View {
         Analytics.logEvent("lifetime_purchase_initiated", parameters: ["trigger": trigger])
         do {
             if try await iap.purchase(product) {
-                dismiss()
+                withAnimation(.spring(response: 0.45, dampingFraction: 0.9)) { showYourPro = true }
             }
         } catch {
             errorMessage = "paywall.error.purchase_failed".localized

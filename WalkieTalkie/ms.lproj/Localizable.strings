@@ -244,15 +244,6 @@
 "paywall.title" = "Buka Kunci Talky Pro";
 "paywall.subtitle" = "Semua Talky, tanpa had";
 "paywall.error_title" = "Pembelian gagal";
-"paywall.feature.no_ads" = "Tiada iklan";
-"paywall.feature.unlimited_stations" = "Stesen radio tanpa had";
-"paywall.feature.premium_international" = "Radio antarabangsa premium";
-"paywall.feature.record_transmissions" = "Rakam penghantaran anda sendiri";
-"paywall.feature.private_channels" = "Saluran walkie peribadi";
-"paywall.feature.custom_themes" = "Tema tersuai";
-"paywall.feature.history" = "Sejarah penghantaran";
-"paywall.feature.sleep_timer" = "Pemasa tidur radio";
-"paywall.feature.equalizer" = "Penyamaan audio premium";
 "paywall.plan.weekly" = "Mingguan";
 "paywall.plan.weekly_suffix" = "/minggu";
 "paywall.plan.yearly" = "Tahunan";
@@ -518,7 +509,6 @@
 "live_pro_background_message" = "Pendengaran HF, CB dan POC berhenti apabila anda keluar dari Talky. Dengan Talky Pro ia terus berjalan walaupun skrin dimatikan. Anda boleh mencubanya secara percuma selama 24 jam dengan menonton video pendek.";
 "live_pro_discover" = "Kenali Talky Pro";
 "live_pro_video" = "Tonton video: 24 jam percuma";
-"paywall.feature.live" = "Dengar HF, CB dan POC tanpa had, imbasan automatik dan skrin dimatikan";
 // CB 27 MHz (3.1)
 "live_cb_section" = "Tukar antara saluran dan DX";
 "live_cb_mode" = "Mod penerimaan: AM, FM, LSB atau USB";

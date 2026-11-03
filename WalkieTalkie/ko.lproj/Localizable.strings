@@ -264,15 +264,6 @@
 "paywall.title" = "Talky Pro 잠금 해제";
 "paywall.subtitle" = "Talky의 모든 것을, 제한 없이";
 "paywall.error_title" = "구매 실패";
-"paywall.feature.no_ads" = "광고 없음";
-"paywall.feature.unlimited_stations" = "무제한 라디오 방송국";
-"paywall.feature.premium_international" = "프리미엄 해외 라디오";
-"paywall.feature.record_transmissions" = "내 송신 녹음";
-"paywall.feature.private_channels" = "비공개 무전 채널";
-"paywall.feature.custom_themes" = "맞춤 테마";
-"paywall.feature.history" = "송수신 기록";
-"paywall.feature.sleep_timer" = "라디오 취침 타이머";
-"paywall.feature.equalizer" = "프리미엄 이퀄라이저";
 "paywall.plan.weekly" = "주간";
 "paywall.plan.weekly_suffix" = "/주";
 "paywall.plan.yearly" = "연간";
@@ -517,7 +508,6 @@
 "live_pro_background_message" = "Talky를 나가자 HF, CB, POC 수신이 멈췄습니다. Talky Pro에서는 화면이 꺼져도 계속 들을 수 있습니다. 짧은 동영상을 보면 24시간 무료로 써 볼 수 있습니다.";
 "live_pro_discover" = "Talky Pro 알아보기";
 "live_pro_video" = "동영상 보기: 24시간 무료";
-"paywall.feature.live" = "HF, CB, POC 무제한 청취, 자동 스캔, 화면 꺼짐 청취";
 // CB 27 MHz (3.1)
 "live_cb_section" = "채널과 DX 전환";
 "live_cb_mode" = "수신 모드: AM, FM, LSB, USB";

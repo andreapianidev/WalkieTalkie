@@ -1,0 +1,33 @@
+/* Talky Pro: cosa comprende e dove si trova. Le stesse chiavi in tutte le 14 lingue. */
+
+"tour.perk.live.title" = "HF, CB et POC sans limite quotidienne";
+"tour.perk.live.detail" = "Sans Pro, l'écoute en direct s'arrête après 5 minutes par jour. Avec Pro, elle continue aussi longtemps que vous voulez, avec le SCAN automatique et même écran éteint.";
+"tour.perk.widgets.title" = "Tous les widgets";
+"tour.perk.widgets.detail" = "Propagation, Soleil et bandes et les widgets de l'écran verrouillé, avec de vraies données SFI, Kp et bandes.";
+"tour.perk.widgets.detail.mac" = "Propagation et Soleil et bandes sur le bureau, avec de vraies données SFI, Kp et bandes.";
+"tour.perk.widgets.where" = "Touchez longuement l'écran d'accueil, touchez +, cherchez Talky";
+"tour.perk.widgets.where.mac" = "Clic droit sur le bureau, Modifier les widgets, cherchez Talky";
+"tour.perk.noads.title" = "Aucune publicité";
+"tour.perk.noads.detail" = "Pas de bannières, pas de vidéos, pas de publicités plein écran.";
+"tour.perk.stations.title" = "Les %d stations de radio";
+"tour.perk.stations.detail" = "Les stations internationales aussi, pas seulement les gratuites, toutes dans la liste de la radio.";
+"tour.perk.private.title" = "Canaux privés";
+"tour.perk.private.detail" = "Des canaux talkie avec mot de passe : seuls ceux qui le connaissent vous entendent.";
+"tour.perk.recordings.title" = "Enregistrements";
+"tour.perk.recordings.detail" = "Gardez ce que vous transmettez et réécoutez-le.";
+"tour.perk.history.title" = "Historique des transmissions";
+"tour.perk.history.detail" = "Vos transmissions passées, dans une liste.";
+"tour.perk.themes.title" = "Tous les thèmes";
+"tour.perk.themes.detail" = "Tous les thèmes de couleur du talkie sur iPhone et iPad.";
+"tour.perk.sleep.title" = "Minuteur de veille";
+"tour.perk.sleep.detail" = "La radio s'éteint toute seule après la durée choisie.";
+"tour.perk.eq.title" = "Égaliseur";
+"tour.perk.eq.detail" = "Réglez le son de la radio à votre goût.";
+"tour.perk.devices.title" = "iPhone, iPad et Mac";
+"tour.perk.devices.detail" = "Un seul achat vaut sur tous les appareils avec le même compte Apple. Si Pro n'apparaît pas sur un autre appareil, utilisez Restaurer les achats.";
+"tour.yourpro.title" = "Votre Talky Pro";
+"tour.yourpro.subtitle" = "Tout ceci est débloqué. Voici ce que ça fait et où le trouver.";
+"tour.yourpro.thanks" = "Merci. Talky est fait par une seule personne et son code est public : votre achat le fait vivre.";
+"tour.yourpro.done" = "Compris";
+"tour.yourpro.open" = "Ce que comprend votre Pro";
+"tour.where.settings" = "Réglages › Personnalisation";

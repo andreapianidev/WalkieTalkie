@@ -1,0 +1,33 @@
+/* Talky Pro: cosa comprende e dove si trova. Le stesse chiavi in tutte le 14 lingue. */
+
+"tour.perk.live.title" = "HF, CB dan POC tanpa had harian";
+"tour.perk.live.detail" = "Tanpa Pro, pendengaran langsung berhenti selepas 5 minit sehari. Dengan Pro ia berterusan selama yang anda mahu, dengan imbasan automatik dan juga ketika skrin dimatikan.";
+"tour.perk.widgets.title" = "Semua widget";
+"tour.perk.widgets.detail" = "Perambatan, Matahari & jalur dan widget skrin kunci, dengan data SFI, Kp dan jalur yang sebenar.";
+"tour.perk.widgets.detail.mac" = "Perambatan dan Matahari & jalur di desktop, dengan data SFI, Kp dan jalur yang sebenar.";
+"tour.perk.widgets.where" = "Sentuh dan tahan Skrin Utama, ketik +, cari Talky";
+"tour.perk.widgets.where.mac" = "Klik kanan pada desktop, Edit Widget, cari Talky";
+"tour.perk.noads.title" = "Tiada iklan";
+"tour.perk.noads.detail" = "Tiada sepanduk, tiada video, tiada iklan skrin penuh.";
+"tour.perk.stations.title" = "Kesemua %d stesen radio";
+"tour.perk.stations.detail" = "Stesen antarabangsa juga, bukan yang percuma sahaja, semuanya dalam senarai radio.";
+"tour.perk.private.title" = "Saluran peribadi";
+"tour.perk.private.detail" = "Saluran walkie berkata laluan: hanya yang tahu dapat mendengar anda.";
+"tour.perk.recordings.title" = "Rakaman";
+"tour.perk.recordings.detail" = "Simpan apa yang anda pancarkan dan dengar semula.";
+"tour.perk.history.title" = "Sejarah pancaran";
+"tour.perk.history.detail" = "Pancaran lepas anda, dalam satu senarai.";
+"tour.perk.themes.title" = "Semua tema";
+"tour.perk.themes.detail" = "Semua tema warna walkie di iPhone dan iPad.";
+"tour.perk.sleep.title" = "Pemasa tidur";
+"tour.perk.sleep.detail" = "Radio tutup sendiri selepas masa yang anda pilih.";
+"tour.perk.eq.title" = "Penyama";
+"tour.perk.eq.detail" = "Laraskan bunyi radio mengikut citarasa anda.";
+"tour.perk.devices.title" = "iPhone, iPad dan Mac";
+"tour.perk.devices.detail" = "Satu pembelian sah pada semua peranti dengan Akaun Apple yang sama. Jika Pro tidak muncul pada peranti lain, gunakan Pulihkan pembelian.";
+"tour.yourpro.title" = "Talky Pro anda";
+"tour.yourpro.subtitle" = "Semua ini sudah dibuka. Inilah fungsinya dan di mana mencarinya.";
+"tour.yourpro.thanks" = "Terima kasih. Talky dibuat oleh seorang sahaja dan kodnya terbuka: pembelian anda memastikan ia terus hidup.";
+"tour.yourpro.done" = "Faham";
+"tour.yourpro.open" = "Apa yang ada dalam Pro anda";
+"tour.where.settings" = "Tetapan › Pemperibadian";

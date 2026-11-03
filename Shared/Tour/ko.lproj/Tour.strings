@@ -1,0 +1,33 @@
+/* Talky Pro: cosa comprende e dove si trova. Le stesse chiavi in tutte le 14 lingue. */
+
+"tour.perk.live.title" = "HF, CB, POC 하루 제한 없이";
+"tour.perk.live.detail" = "Pro가 없으면 라이브 청취는 하루 5분 후 멈춥니다. Pro라면 원하는 만큼 들을 수 있고, 자동 스캔과 화면 꺼짐 청취도 됩니다.";
+"tour.perk.widgets.title" = "모든 위젯";
+"tour.perk.widgets.detail" = "전파 상태, 태양과 밴드, 잠금 화면 위젯. 실제 SFI, Kp, 밴드 데이터를 보여줍니다.";
+"tour.perk.widgets.detail.mac" = "데스크탑의 전파 상태, 태양과 밴드 위젯. 실제 SFI, Kp, 밴드 데이터를 보여줍니다.";
+"tour.perk.widgets.where" = "홈 화면을 길게 누르고 +를 탭한 뒤 Talky 검색";
+"tour.perk.widgets.where.mac" = "데스크탑에서 오른쪽 클릭, 위젯 편집, Talky 검색";
+"tour.perk.noads.title" = "광고 없음";
+"tour.perk.noads.detail" = "배너, 동영상, 전면 광고가 없습니다.";
+"tour.perk.stations.title" = "라디오 방송국 %d개 전체";
+"tour.perk.stations.detail" = "무료 방송국뿐 아니라 해외 방송국까지 모두 라디오 목록에 있습니다.";
+"tour.perk.private.title" = "비공개 채널";
+"tour.perk.private.detail" = "비밀번호가 있는 무전기 채널. 비밀번호를 아는 사람만 들을 수 있습니다.";
+"tour.perk.recordings.title" = "녹음";
+"tour.perk.recordings.detail" = "송신한 내용을 저장하고 다시 들을 수 있습니다.";
+"tour.perk.history.title" = "송신 기록";
+"tour.perk.history.detail" = "지난 송신을 목록으로 볼 수 있습니다.";
+"tour.perk.themes.title" = "모든 테마";
+"tour.perk.themes.detail" = "iPhone과 iPad 무전기의 모든 색상 테마.";
+"tour.perk.sleep.title" = "취침 타이머";
+"tour.perk.sleep.detail" = "선택한 시간이 지나면 라디오가 자동으로 꺼집니다.";
+"tour.perk.eq.title" = "이퀄라이저";
+"tour.perk.eq.detail" = "라디오 소리를 원하는 대로 조절하세요.";
+"tour.perk.devices.title" = "iPhone, iPad, Mac";
+"tour.perk.devices.detail" = "한 번 구입하면 같은 Apple 계정의 모든 기기에서 사용할 수 있습니다. 다른 기기에 Pro가 보이지 않으면 '구매 복원'을 사용하세요.";
+"tour.yourpro.title" = "나의 Talky Pro";
+"tour.yourpro.subtitle" = "아래 기능이 모두 열렸습니다. 기능과 위치를 확인하세요.";
+"tour.yourpro.thanks" = "감사합니다. Talky는 한 사람이 만들고 코드는 공개되어 있습니다. 여러분의 구매가 개발을 이어가게 합니다.";
+"tour.yourpro.done" = "확인";
+"tour.yourpro.open" = "Pro에 포함된 기능";
+"tour.where.settings" = "설정 › 개인화";

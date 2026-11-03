@@ -1,0 +1,33 @@
+/* Talky Pro: cosa comprende e dove si trova. Le stesse chiavi in tutte le 14 lingue. */
+
+"tour.perk.live.title" = "HF, CB và POC không giới hạn mỗi ngày";
+"tour.perk.live.detail" = "Không có Pro, nghe trực tiếp dừng sau 5 phút mỗi ngày. Có Pro, bạn nghe bao lâu tùy thích, có quét tự động và nghe cả khi tắt màn hình.";
+"tour.perk.widgets.title" = "Tất cả widget";
+"tour.perk.widgets.detail" = "Truyền sóng, Mặt trời và băng tần và các widget màn hình khóa, với dữ liệu SFI, Kp và băng tần thật.";
+"tour.perk.widgets.detail.mac" = "Truyền sóng và Mặt trời và băng tần trên màn hình nền, với dữ liệu SFI, Kp và băng tần thật.";
+"tour.perk.widgets.where" = "Chạm và giữ Màn hình chính, chạm +, tìm Talky";
+"tour.perk.widgets.where.mac" = "Bấm chuột phải vào màn hình nền, Sửa tiện ích, tìm Talky";
+"tour.perk.noads.title" = "Không quảng cáo";
+"tour.perk.noads.detail" = "Không banner, không video, không quảng cáo toàn màn hình.";
+"tour.perk.stations.title" = "Tất cả %d đài phát thanh";
+"tour.perk.stations.detail" = "Cả các đài quốc tế, không chỉ đài miễn phí, đều có trong danh sách radio.";
+"tour.perk.private.title" = "Kênh riêng";
+"tour.perk.private.detail" = "Kênh bộ đàm có mật khẩu: chỉ ai biết mật khẩu mới nghe được bạn.";
+"tour.perk.recordings.title" = "Bản ghi";
+"tour.perk.recordings.detail" = "Lưu những gì bạn phát và nghe lại.";
+"tour.perk.history.title" = "Lịch sử phát";
+"tour.perk.history.detail" = "Các lần phát trước của bạn, trong một danh sách.";
+"tour.perk.themes.title" = "Tất cả chủ đề";
+"tour.perk.themes.detail" = "Mọi chủ đề màu của bộ đàm trên iPhone và iPad.";
+"tour.perk.sleep.title" = "Hẹn giờ tắt";
+"tour.perk.sleep.detail" = "Radio tự tắt sau khoảng thời gian bạn chọn.";
+"tour.perk.eq.title" = "Bộ chỉnh âm";
+"tour.perk.eq.detail" = "Chỉnh âm thanh radio theo ý bạn.";
+"tour.perk.devices.title" = "iPhone, iPad và Mac";
+"tour.perk.devices.detail" = "Một lần mua dùng được trên mọi thiết bị cùng Tài khoản Apple. Nếu Pro không hiện trên thiết bị khác, hãy dùng Khôi phục giao dịch.";
+"tour.yourpro.title" = "Talky Pro của bạn";
+"tour.yourpro.subtitle" = "Tất cả những thứ này đã được mở khóa. Đây là chức năng và nơi tìm chúng.";
+"tour.yourpro.thanks" = "Cảm ơn bạn. Talky do một người làm và mã nguồn công khai: lần mua của bạn giúp nó tiếp tục.";
+"tour.yourpro.done" = "Đã hiểu";
+"tour.yourpro.open" = "Pro của bạn gồm những gì";
+"tour.where.settings" = "Cài đặt › Cá nhân hoá";

@@ -35,31 +35,42 @@ struct PaywallView: View {
             }
             .padding(.top, 26)
 
-            // Features
+            // Cosa comprende il Pro: la stessa lista della paywall iOS e di
+            // "il tuo Talky Pro". Chi e' gia' Pro vede anche cosa fa ogni voce
+            // e dove si trova, cosi' la paywall diventa la pagina del suo Pro.
             ConsolePanel(padding: 14) {
-                VStack(alignment: .leading, spacing: 9) {
-                    feature("antenna.radiowaves.left.and.right", "All \(RadioManager.shared.radioStations.count) worldwide radio stations")
-                    feature("waveform", "Automatic SCAN on live POC channels")
-                    feature("lock.fill", "Private password-protected channels")
-                    feature("paintpalette.fill", "All themes on the iOS app")
-                    feature("heart.fill", "Supports independent development")
+                VStack(alignment: .leading, spacing: iap.isProUser ? 12 : 9) {
+                    if iap.isProUser {
+                        Text(Tour.text("tour.yourpro.title").uppercased())
+                            .font(.vfd(11, weight: .bold))
+                            .kerning(1.6)
+                            .foregroundStyle(Talky.amber)
+                    }
+                    ForEach(ProPerk.here) { perk in
+                        feature(perk, detailed: iap.isProUser)
+                    }
                 }
             }
             .frame(width: 380)
 
-            supporterNote
-                .frame(width: 380)
+            if !iap.isProUser {
+                supporterNote
+                    .frame(width: 380)
+            }
 
             if iap.isProUser {
-                VStack(spacing: 8) {
+                // La nota del developer qui non serve: il grazie e' questo, e
+                // la sheet non ha ScrollView, quindi ogni riga in piu' la allunga.
+                HStack(alignment: .top, spacing: 10) {
                     Image(systemName: "checkmark.seal.fill")
-                        .font(.system(size: 30))
+                        .font(.system(size: 22))
                         .foregroundStyle(Talky.signal)
-                    Text("You are a Pro user. Thank you!")
-                        .font(.system(size: 13, weight: .semibold, design: .rounded))
+                    Text(Tour.text("tour.yourpro.thanks"))
+                        .font(.system(size: 11, design: .rounded))
                         .foregroundStyle(Talky.text)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
-                .padding(.vertical, 8)
+                .frame(width: 380, alignment: .leading)
             } else if iap.products.isEmpty {
                 VStack(spacing: 8) {
                     ProgressView()
@@ -215,16 +226,29 @@ struct PaywallView: View {
         )
     }
 
-    private func feature(_ icon: String, _ text: String) -> some View {
-        HStack(spacing: 10) {
-            Image(systemName: icon)
+    private func feature(_ perk: ProPerk, detailed: Bool) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: perk.symbol)
                 .font(.system(size: 12, weight: .bold))
                 .foregroundStyle(Talky.amber)
                 .frame(width: 18)
-            Text(text)
-                .font(.system(size: 12, design: .rounded))
-                .foregroundStyle(Talky.text)
-            Spacer()
+            VStack(alignment: .leading, spacing: 2) {
+                Text(perk.title(stations: RadioManager.shared.radioStations.count))
+                    .font(.system(size: 12, weight: detailed ? .semibold : .regular, design: .rounded))
+                    .foregroundStyle(Talky.text)
+                if detailed {
+                    Text(perk.detail)
+                        .font(.system(size: 11, design: .rounded))
+                        .foregroundStyle(Talky.dim)
+                        .fixedSize(horizontal: false, vertical: true)
+                    if let location = perk.location {
+                        Text(location)
+                            .font(.system(size: 10, weight: .semibold, design: .rounded))
+                            .foregroundStyle(Talky.amber.opacity(0.85))
+                    }
+                }
+            }
+            Spacer(minLength: 0)
         }
     }
 

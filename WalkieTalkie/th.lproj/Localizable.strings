@@ -264,15 +264,6 @@
 "paywall.title" = "ปลดล็อก Talky Pro";
 "paywall.subtitle" = "Talky ทั้งหมด ไม่มีขีดจำกัด";
 "paywall.error_title" = "ซื้อไม่สำเร็จ";
-"paywall.feature.no_ads" = "ไม่มีโฆษณา";
-"paywall.feature.unlimited_stations" = "สถานีวิทยุไม่จำกัด";
-"paywall.feature.premium_international" = "วิทยุต่างประเทศระดับพรีเมียม";
-"paywall.feature.record_transmissions" = "บันทึกการส่งสัญญาณของคุณ";
-"paywall.feature.private_channels" = "ช่องส่วนตัว";
-"paywall.feature.custom_themes" = "ธีมที่ปรับแต่งเอง";
-"paywall.feature.history" = "ประวัติการส่งสัญญาณ";
-"paywall.feature.sleep_timer" = "ตัวตั้งเวลาปิดวิทยุ";
-"paywall.feature.equalizer" = "อีควอไลเซอร์ระดับพรีเมียม";
 "paywall.plan.weekly" = "รายสัปดาห์";
 "paywall.plan.weekly_suffix" = "/สัปดาห์";
 "paywall.plan.yearly" = "รายปี";
@@ -517,7 +508,6 @@
 "live_pro_background_message" = "การฟัง HF, CB และ POC หยุดเมื่อคุณออกจาก Talky ด้วย Talky Pro จะฟังต่อได้แม้ปิดหน้าจอ ลองใช้ฟรี 24 ชั่วโมงได้โดยดูวิดีโอสั้นๆ";
 "live_pro_discover" = "ดู Talky Pro";
 "live_pro_video" = "ดูวิดีโอ: ฟรี 24 ชั่วโมง";
-"paywall.feature.live" = "ฟัง HF, CB และ POC ไม่จำกัด สแกนอัตโนมัติ และฟังขณะปิดหน้าจอ";
 // CB 27 MHz (3.1)
 "live_cb_section" = "สลับระหว่างช่องกับ DX";
 "live_cb_mode" = "โหมดรับ: AM, FM, LSB หรือ USB";

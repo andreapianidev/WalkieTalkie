@@ -1,0 +1,33 @@
+/* Talky Pro: cosa comprende e dove si trova. Le stesse chiavi in tutte le 14 lingue. */
+
+"tour.perk.live.title" = "HF, CB และ POC ไม่จำกัดต่อวัน";
+"tour.perk.live.detail" = "หากไม่มี Pro การฟังสดจะหยุดหลังจาก 5 นาทีต่อวัน เมื่อมี Pro ฟังได้นานเท่าที่ต้องการ พร้อมสแกนอัตโนมัติและฟังขณะปิดหน้าจอ";
+"tour.perk.widgets.title" = "วิดเจ็ตทั้งหมด";
+"tour.perk.widgets.detail" = "การแพร่กระจายคลื่น, ดวงอาทิตย์และย่าน และวิดเจ็ตหน้าจอล็อก พร้อมข้อมูล SFI, Kp และย่านความถี่จริง";
+"tour.perk.widgets.detail.mac" = "การแพร่กระจายคลื่น และ ดวงอาทิตย์และย่าน บนเดสก์ท็อป พร้อมข้อมูล SFI, Kp และย่านความถี่จริง";
+"tour.perk.widgets.where" = "แตะค้างที่หน้าจอโฮม แตะ + แล้วค้นหา Talky";
+"tour.perk.widgets.where.mac" = "คลิกขวาที่เดสก์ท็อป แก้ไขวิดเจ็ต แล้วค้นหา Talky";
+"tour.perk.noads.title" = "ไม่มีโฆษณา";
+"tour.perk.noads.detail" = "ไม่มีแบนเนอร์ ไม่มีวิดีโอ ไม่มีโฆษณาเต็มหน้าจอ";
+"tour.perk.stations.title" = "สถานีวิทยุทั้งหมด %d สถานี";
+"tour.perk.stations.detail" = "รวมสถานีต่างประเทศด้วย ไม่ใช่แค่สถานีฟรี ทั้งหมดอยู่ในรายการวิทยุ";
+"tour.perk.private.title" = "ช่องส่วนตัว";
+"tour.perk.private.detail" = "ช่องวิทยุสื่อสารที่มีรหัสผ่าน มีเพียงผู้ที่รู้รหัสเท่านั้นที่ได้ยินคุณ";
+"tour.perk.recordings.title" = "การบันทึก";
+"tour.perk.recordings.detail" = "บันทึกสิ่งที่คุณส่งและฟังซ้ำได้";
+"tour.perk.history.title" = "ประวัติการส่ง";
+"tour.perk.history.detail" = "การส่งที่ผ่านมาของคุณในรายการเดียว";
+"tour.perk.themes.title" = "ธีมทั้งหมด";
+"tour.perk.themes.detail" = "ธีมสีทั้งหมดของวิทยุสื่อสารบน iPhone และ iPad";
+"tour.perk.sleep.title" = "ตั้งเวลาปิด";
+"tour.perk.sleep.detail" = "วิทยุจะปิดเองเมื่อครบเวลาที่คุณเลือก";
+"tour.perk.eq.title" = "อีควอไลเซอร์";
+"tour.perk.eq.detail" = "ปรับเสียงวิทยุตามที่คุณชอบ";
+"tour.perk.devices.title" = "iPhone, iPad และ Mac";
+"tour.perk.devices.detail" = "ซื้อครั้งเดียวใช้ได้ทุกอุปกรณ์ที่ใช้บัญชี Apple เดียวกัน หาก Pro ไม่แสดงบนอุปกรณ์อื่น ให้ใช้ กู้คืนการซื้อ";
+"tour.yourpro.title" = "Talky Pro ของคุณ";
+"tour.yourpro.subtitle" = "ทั้งหมดนี้ปลดล็อกแล้ว นี่คือสิ่งที่ทำได้และตำแหน่งที่จะพบ";
+"tour.yourpro.thanks" = "ขอบคุณ Talky สร้างโดยคนคนเดียวและโค้ดเปิดเผยต่อสาธารณะ การซื้อของคุณช่วยให้มันดำเนินต่อไป";
+"tour.yourpro.done" = "เข้าใจแล้ว";
+"tour.yourpro.open" = "สิ่งที่รวมอยู่ใน Pro";
+"tour.where.settings" = "การตั้งค่า › การปรับแต่ง";

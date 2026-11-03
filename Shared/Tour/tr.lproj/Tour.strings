@@ -1,0 +1,33 @@
+/* Talky Pro: cosa comprende e dove si trova. Le stesse chiavi in tutte le 14 lingue. */
+
+"tour.perk.live.title" = "HF, CB ve POC günlük sınır olmadan";
+"tour.perk.live.detail" = "Pro olmadan canlı dinleme günde 5 dakikadan sonra durur. Pro ile istediğin kadar dinlersin, otomatik tarama ve ekran kapalıyken de.";
+"tour.perk.widgets.title" = "Tüm widget'lar";
+"tour.perk.widgets.detail" = "Yayılım, Güneş ve bantlar ve kilit ekranı widget'ları, gerçek SFI, Kp ve bant verileriyle.";
+"tour.perk.widgets.detail.mac" = "Masaüstünde Yayılım ve Güneş ve bantlar, gerçek SFI, Kp ve bant verileriyle.";
+"tour.perk.widgets.where" = "Ana ekrana basılı tut, + simgesine dokun, Talky'yi ara";
+"tour.perk.widgets.where.mac" = "Masaüstüne sağ tıkla, Widget'ları Düzenle, Talky'yi ara";
+"tour.perk.noads.title" = "Reklam yok";
+"tour.perk.noads.detail" = "Banner yok, video yok, tam ekran reklam yok.";
+"tour.perk.stations.title" = "%d radyo istasyonunun tamamı";
+"tour.perk.stations.detail" = "Sadece ücretsizler değil, uluslararası istasyonlar da radyo listesinde.";
+"tour.perk.private.title" = "Özel kanallar";
+"tour.perk.private.detail" = "Şifreli telsiz kanalları: seni sadece şifreyi bilenler duyar.";
+"tour.perk.recordings.title" = "Kayıtlar";
+"tour.perk.recordings.detail" = "Gönderdiklerini kaydet ve tekrar dinle.";
+"tour.perk.history.title" = "Yayın geçmişi";
+"tour.perk.history.detail" = "Geçmiş yayınların bir listede.";
+"tour.perk.themes.title" = "Tüm temalar";
+"tour.perk.themes.detail" = "iPhone ve iPad'de telsizin tüm renk temaları.";
+"tour.perk.sleep.title" = "Uyku zamanlayıcı";
+"tour.perk.sleep.detail" = "Radyo seçtiğin süre sonunda kendiliğinden kapanır.";
+"tour.perk.eq.title" = "Ekolayzer";
+"tour.perk.eq.detail" = "Radyonun sesini zevkine göre ayarla.";
+"tour.perk.devices.title" = "iPhone, iPad ve Mac";
+"tour.perk.devices.detail" = "Tek satın alma, aynı Apple Hesabı'ndaki tüm cihazlarda geçerli. Pro başka bir cihazda görünmezse Satın alımları geri yükle seçeneğini kullan.";
+"tour.yourpro.title" = "Talky Pro'n";
+"tour.yourpro.subtitle" = "Bunların hepsi açık. Ne işe yaradıkları ve nerede oldukları burada.";
+"tour.yourpro.thanks" = "Teşekkürler. Talky'yi tek bir kişi yapıyor ve kodu herkese açık: satın alman onu ayakta tutuyor.";
+"tour.yourpro.done" = "Anladım";
+"tour.yourpro.open" = "Pro'nda neler var";
+"tour.where.settings" = "Ayarlar › Kişiselleştirme";

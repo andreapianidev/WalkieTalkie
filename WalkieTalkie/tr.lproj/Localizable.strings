@@ -264,15 +264,6 @@
 "paywall.title" = "Talky Pro'nun kilidini aç";
 "paywall.subtitle" = "Talky'nin tamamı, sınırsız";
 "paywall.error_title" = "Satın alma başarısız";
-"paywall.feature.no_ads" = "Reklamsız";
-"paywall.feature.unlimited_stations" = "Sınırsız radyo istasyonu";
-"paywall.feature.premium_international" = "Premium uluslararası radyolar";
-"paywall.feature.record_transmissions" = "Kendi yayınlarını kaydet";
-"paywall.feature.private_channels" = "Özel telsiz kanalları";
-"paywall.feature.custom_themes" = "Özel temalar";
-"paywall.feature.history" = "Yayın geçmişi";
-"paywall.feature.sleep_timer" = "Radyo uyku zamanlayıcısı";
-"paywall.feature.equalizer" = "Premium ses ekolayzırı";
 "paywall.plan.weekly" = "Haftalık";
 "paywall.plan.weekly_suffix" = "/hafta";
 "paywall.plan.yearly" = "Yıllık";
@@ -516,7 +507,6 @@
 "live_pro_background_message" = "Talky'den çıktığında HF, CB ve POC dinlemesi durdu. Talky Pro ile ekran kapalıyken de devam eder. Kısa bir video izleyerek 24 saat ücretsiz deneyebilirsin.";
 "live_pro_discover" = "Talky Pro'yu keşfet";
 "live_pro_video" = "Video izle: 24 saat ücretsiz";
-"paywall.feature.live" = "Sınırsız HF, CB ve POC dinleme, otomatik tarama ve ekran kapalıyken dinleme";
 // CB 27 MHz (3.1)
 "live_cb_section" = "Kanallar ve DX arasında geç";
 "live_cb_mode" = "Alış modu: AM, FM, LSB veya USB";

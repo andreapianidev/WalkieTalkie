@@ -1,0 +1,33 @@
+/* Talky Pro: cosa comprende e dove si trova. Le stesse chiavi in tutte le 14 lingue. */
+
+"tour.perk.live.title" = "HF, CB and POC with no daily limit";
+"tour.perk.live.detail" = "Without Pro, live listening stops after 5 minutes a day. With Pro it plays as long as you want, with automatic SCAN and with the screen off.";
+"tour.perk.widgets.title" = "Every widget";
+"tour.perk.widgets.detail" = "Propagation, Sun & bands and the Lock Screen widgets, with real SFI, Kp and band data.";
+"tour.perk.widgets.detail.mac" = "Propagation and Sun & bands on the desktop, with real SFI, Kp and band data.";
+"tour.perk.widgets.where" = "Touch and hold the Home Screen, tap +, search for Talky";
+"tour.perk.widgets.where.mac" = "Right-click the desktop, Edit Widgets, search for Talky";
+"tour.perk.noads.title" = "No ads";
+"tour.perk.noads.detail" = "No banners, no videos, no full-screen ads.";
+"tour.perk.stations.title" = "All %d radio stations";
+"tour.perk.stations.detail" = "The international stations too, not only the free ones, all in the radio list.";
+"tour.perk.private.title" = "Private channels";
+"tour.perk.private.detail" = "Walkie channels with a password: only those who know it can hear you.";
+"tour.perk.recordings.title" = "Recordings";
+"tour.perk.recordings.detail" = "Save what you transmit and listen to it again.";
+"tour.perk.history.title" = "Transmission history";
+"tour.perk.history.detail" = "Your past transmissions, kept in a list.";
+"tour.perk.themes.title" = "Every theme";
+"tour.perk.themes.detail" = "All the color themes for the walkie on iPhone and iPad.";
+"tour.perk.sleep.title" = "Sleep timer";
+"tour.perk.sleep.detail" = "The radio turns itself off after the time you choose.";
+"tour.perk.eq.title" = "Equalizer";
+"tour.perk.eq.detail" = "Shape the sound of the radio to your taste.";
+"tour.perk.devices.title" = "iPhone, iPad and Mac";
+"tour.perk.devices.detail" = "One purchase works on every device with the same Apple Account. If Pro does not show up on another device, use Restore purchases.";
+"tour.yourpro.title" = "Your Talky Pro";
+"tour.yourpro.subtitle" = "All of this is unlocked. Here is what it does and where to find it.";
+"tour.yourpro.thanks" = "Thank you. Talky is made by one person and its code is public: your purchase keeps it going.";
+"tour.yourpro.done" = "Got it";
+"tour.yourpro.open" = "What your Pro includes";
+"tour.where.settings" = "Settings › Personalization";
