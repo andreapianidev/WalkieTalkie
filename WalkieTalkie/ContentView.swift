@@ -114,12 +114,16 @@ struct ContentView: View {
                     Spacer()
                         .frame(height: isCompactHeight ? 80 : 100)
                 }
-                
+                .frame(maxWidth: Self.columnWidth)
+                .frame(maxWidth: .infinity)
+
                 // Tab bar fissa in basso
                 VStack {
                     Spacer()
                     tabBarView
                 }
+                .frame(maxWidth: Self.columnWidth)
+                .frame(maxWidth: .infinity)
 
                 // First-run coach overlay (non-blocking)
                 if !settingsManager.hasSeenFirstRunCoach && selectedTab == 0 && !isRadioMode {
@@ -160,6 +164,11 @@ struct ContentView: View {
         // bianca sopra il walkie giallo.
         .background(AnimatedBackgroundView().ignoresSafeArea())
     }
+
+    /// Larghezza massima della colonna. Su iPad il layout del telefono steso su
+    /// tutto lo schermo dava display lunghi due metri e testi minuscoli: la
+    /// radio resta della sua misura e si centra.
+    private static let columnWidth: CGFloat = 720
 
     /// La schermata principale del walkie: header, stato, display, comandi e PTT.
     private var walkieMainColumn: some View {

@@ -9,12 +9,13 @@ import SwiftUI
 struct RadioScopeDeck: View {
     @ObservedObject var radio: RadioManager
     @ObservedObject private var sleep = SleepTimerManager.shared
+    @Environment(\.horizontalSizeClass) private var sizeClass
     let compact: Bool
 
     var body: some View {
         VStack(spacing: compact ? 8 : 12) {
             RadioScopeScreen(radio: radio)
-                .frame(height: compact ? 132 : 185)
+                .frame(height: ScopeHeight.value(compact: compact, sizeClass: sizeClass))
                 .padding(.horizontal, 12)
             TimelineView(.periodic(from: .now, by: 2)) { _ in
                 DialReadings(cells: cells, compact: compact)

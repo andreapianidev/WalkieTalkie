@@ -94,7 +94,7 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
-### [2.1] (120), not submitted yet
+### [2.1] (121), not submitted yet
 
 #### New in (120)
 - **Onboarding redone**, 5 pages in 14 languages: live CB, HF and POC first,
@@ -189,7 +189,12 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [3.2] (120), not submitted yet
+### [3.2] (121), not submitted yet
+
+#### Fixed in (121)
+- **iPad**: the main screen no longer stretches the phone layout across the
+  whole display. The radio keeps its size, centred, and the spectrum,
+  waterfall and level bars grow taller to use the space.
 
 #### New in (120)
 - **Onboarding redone**, 8 pages in 14 languages: live CB, HF and POC come
