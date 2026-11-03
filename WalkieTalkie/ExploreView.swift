@@ -13,7 +13,7 @@ struct ExploreView: View {
 
     /// iPhone 8/SE (667 pt) e simili: pannello di ricerca piu' basso, cosi' la
     /// lista dei dispositivi, con i "+" per invitare, resta sopra la tab bar.
-    private let isCompact: Bool = UIScreen.main.bounds.height < 700
+    @Environment(\.talkyCompactHeight) private var isCompact
     private var waveSize: CGFloat { isCompact ? 96 : 130 }
 
     var body: some View {

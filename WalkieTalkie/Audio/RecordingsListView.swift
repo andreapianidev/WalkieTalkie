@@ -28,7 +28,7 @@ struct RecordingsListView: View {
     // MARK: - Body
 
     var body: some View {
-        NavigationView {
+        TalkyNavigation {
             Group {
                 if !manager.isProUser {
                     paywallOverlay

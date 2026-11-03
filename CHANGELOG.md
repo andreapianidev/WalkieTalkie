@@ -94,7 +94,7 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
-### [2.1] (121), not submitted yet
+### [2.1] (122), not submitted yet
 
 #### New in (120)
 - **Onboarding redone**, 5 pages in 14 languages: live CB, HF and POC first,
@@ -189,7 +189,22 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [3.2] (121), not submitted yet
+### [3.2] (122), not submitted yet
+
+#### New in (122): iPhone Duo and iPad
+- **Two-panel radio** on wide screens (the inner display of iPhone Duo, iPad):
+  the control head on one side (mode, status, bands, frequency display, keys),
+  the screen on the other (spectrum and waterfall, level bars, or the
+  push-to-talk key). On iPhone Duo the gap between the panels is the hinge,
+  read even when the phone is open flat, so nothing moves when you fold it and
+  no key sits on the crease. Folded on a table (horizontal hinge), the screen
+  goes above and the keys below.
+- Compact layout decided by the app's window, not the main screen: iPhone Duo
+  has two displays.
+- The ad banner takes the width of its container (it changes when you open
+  and close iPhone Duo).
+- Sheets use NavigationStack (NavigationView on iOS 15).
+- Tab bar labels stay on one line on the narrower outer display.
 
 #### Fixed in (121)
 - **iPad**: the main screen no longer stretches the phone layout across the

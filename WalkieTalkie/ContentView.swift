@@ -43,7 +43,17 @@ struct ContentView: View {
 
     /// iPhone SE/8 e simili (≤667pt): il layout a misure fisse sforava lo schermo
     /// e la tab bar risultava tagliata/irraggiungibile (recensioni App Store).
-    private var isCompactHeight: Bool { UIScreen.main.bounds.height < 700 }
+    /// Si misura la finestra, non `UIScreen.main`: sul Duo gli schermi sono due.
+    private var isCompactHeight: Bool { windowSize.height > 0 && windowSize.height < 700 }
+    @State private var windowSize: CGSize = .zero
+    @Environment(\.horizontalSizeClass) private var horizontalSize
+    @Environment(\.verticalSizeClass) private var verticalSize
+
+    /// Display interno del Duo e iPad a schermo intero: la radio a due pannelli.
+    /// Su iPad in Split View la larghezza torna compact e si torna alla colonna.
+    private var isWide: Bool {
+        horizontalSize == .regular && verticalSize == .regular && windowSize.width >= 700
+    }
     @State private var showingConnectionAlert = false
     @State private var showingErrorAlert = false
     @State private var isPoweredOn = true
@@ -114,8 +124,9 @@ struct ContentView: View {
                     Spacer()
                         .frame(height: isCompactHeight ? 80 : 100)
                 }
-                .frame(maxWidth: Self.columnWidth)
+                .frame(maxWidth: isWide && selectedTab == 0 ? Self.wideWidth : Self.columnWidth)
                 .frame(maxWidth: .infinity)
+                .environment(\.talkyCompactHeight, isCompactHeight)
 
                 // Tab bar fissa in basso
                 VStack {
@@ -156,6 +167,10 @@ struct ContentView: View {
             .onAppear {
                 maybeShowModeSwitchHint()
                 restorePersistedAudioMode()
+                windowSize = Self.window(geometry)
+            }
+            .onChange(of: geometry.size) { _ in
+                windowSize = Self.window(geometry)
             }
         }
         // Sfondo del tema (animato per blackHole e galaxy) dietro tutto lo
@@ -169,14 +184,44 @@ struct ContentView: View {
     /// tutto lo schermo dava display lunghi due metri e testi minuscoli: la
     /// radio resta della sua misura e si centra.
     private static let columnWidth: CGFloat = 720
+    /// Con i due pannelli: abbastanza per due colonne da radio, non di piu'.
+    private static let wideWidth: CGFloat = 1180
+
+    private static func window(_ geometry: GeometryProxy) -> CGSize {
+        CGSize(width: geometry.size.width + geometry.safeAreaInsets.leading + geometry.safeAreaInsets.trailing,
+               height: geometry.size.height + geometry.safeAreaInsets.top + geometry.safeAreaInsets.bottom)
+    }
 
     /// La schermata principale del walkie: header, stato, display, comandi e PTT.
+    /// Sugli schermi larghi i comandi e lo schermo stanno affiancati.
+    @ViewBuilder
     private var walkieMainColumn: some View {
+        if isWide {
+            RadioSplit {
+                controlHead
+            } scope: {
+                speakerAreaView
+                    .padding(.top, 10)
+            }
+        } else {
+            VStack(spacing: 0) {
+                controlHead
+
+                Spacer()
+
+                // Area speaker con griglia punti
+                speakerAreaView
+
+                Spacer()
+            }
+        }
+    }
+
+    /// Testa di comando: modo, stato, bande, display della frequenza e tasti.
+    private var controlHead: some View {
         VStack(spacing: 0) {
-            // Header
             headerView
 
-            // Connection status textbox
             connectionStatusView
 
             // Banda del walkie: locale, HF, POC
@@ -185,18 +230,9 @@ struct ContentView: View {
                     .padding(.top, isCompactHeight ? 8 : 12)
             }
 
-            // Display frequenza
             frequencyDisplayView
 
-            // Controlli playback
             playbackControlsView
-
-            Spacer()
-
-            // Area speaker con griglia punti
-            speakerAreaView
-
-            Spacer()
         }
     }
 
@@ -1455,9 +1491,13 @@ struct TabButton: View {
                     .font(.title2)
                     .foregroundColor(isSelected ? .yellow : .white)
                 
+                // Su una riga sola: sul display esterno del Duo la barra e'
+                // piu' stretta e "Impostazioni" andava a capo a meta' parola.
                 Text(title)
                     .font(.caption)
                     .foregroundColor(isSelected ? .yellow : .white)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
             }
         }
         .frame(maxWidth: .infinity)

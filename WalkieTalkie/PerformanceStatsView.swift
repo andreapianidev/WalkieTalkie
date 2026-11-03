@@ -14,7 +14,7 @@ struct PerformanceStatsView: View {
     @State private var showingRecommendations = false
     
     var body: some View {
-        NavigationView {
+        TalkyNavigation {
             ScrollView {
                 VStack(spacing: 20) {
                     // Header con stato generale
@@ -250,7 +250,7 @@ struct RecommendationsView: View {
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
-        NavigationView {
+        TalkyNavigation {
             List {
                 Section("current_recommendations".localized) {
                     let recommendations = performanceMonitor.getPerformanceRecommendations()

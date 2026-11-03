@@ -26,7 +26,7 @@ struct EqualizerView: View {
     // MARK: - Body
 
     var body: some View {
-        NavigationView {
+        TalkyNavigation {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     // Header con preset corrente + barre

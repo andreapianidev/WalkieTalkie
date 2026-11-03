@@ -36,7 +36,7 @@ struct PrivateChannelSheet: View {
     // MARK: - Body
 
     var body: some View {
-        NavigationView {
+        TalkyNavigation {
             ZStack {
                 Color(.systemGroupedBackground).ignoresSafeArea()
 

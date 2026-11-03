@@ -602,7 +602,7 @@ struct PermissionsView: View {
     @State private var hasRequestedOnce = false
 
     var body: some View {
-        NavigationView {
+        TalkyNavigation {
             ZStack {
                 Color("BackgroundColor")
                     .ignoresSafeArea()

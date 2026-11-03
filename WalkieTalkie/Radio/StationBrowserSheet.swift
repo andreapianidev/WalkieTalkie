@@ -42,7 +42,7 @@ struct StationBrowserSheet: View {
     }
 
     var body: some View {
-        NavigationView {
+        TalkyNavigation {
             VStack(spacing: 0) {
                 searchBar
                 streamingNote
@@ -73,7 +73,6 @@ struct StationBrowserSheet: View {
                 }
             }
         }
-        .navigationViewStyle(.stack)
         .onChange(of: radioManager.blockedByPaywall) { blocked in
             if blocked { showPaywall = true }
         }

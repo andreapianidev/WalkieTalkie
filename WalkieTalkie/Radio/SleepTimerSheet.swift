@@ -27,7 +27,7 @@ struct SleepTimerSheet: View {
     }
 
     var body: some View {
-        NavigationView {
+        TalkyNavigation {
             Group {
                 if !isPro {
                     paywallOverlay

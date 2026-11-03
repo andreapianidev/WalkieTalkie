@@ -18,7 +18,7 @@ struct ThemeSelectorView: View {
     }
 
     var body: some View {
-        NavigationView {
+        TalkyNavigation {
             ScrollView {
                 VStack(alignment: .leading, spacing: AppSpacing.md) {
                     Text("theme.subtitle".localized)
