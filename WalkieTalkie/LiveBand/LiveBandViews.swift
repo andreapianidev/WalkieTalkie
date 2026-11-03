@@ -69,6 +69,12 @@ struct BandSelectorRow: View {
                         RoundedRectangle(cornerRadius: 9)
                             .fill(selected == band ? Color.yellow : Color.black)
                     )
+                    // Sul walkie giallo un tasto giallo sparirebbe: il bordo nero
+                    // lo stacca, come le altre manopole.
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 9)
+                            .stroke(Color.black, lineWidth: selected == band ? 2.5 : 0)
+                    )
                 }
                 .buttonStyle(.plain)
                 .accessibilityAddTraits(selected == band ? [.isSelected, .isButton] : .isButton)
