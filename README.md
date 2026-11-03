@@ -16,7 +16,7 @@
 [![Commercial use: NOT permitted](https://img.shields.io/badge/Commercial%20use-NOT%20permitted-critical.svg)](#-license)
 [![Source available](https://img.shields.io/badge/Source-Available-brightgreen.svg)]()
 
-> **Talky** is a SwiftUI iOS app that combines **offline peer-to-peer push-to-talk** (Multipeer Connectivity), **real live radio** (HF shortwave and the **CB 27 MHz band** from public KiwiSDR receivers, public POC channels on Mumble, no fake audio anywhere), a **global internet radio browser** (135 streaming stations across 50+ countries; the iPhone has no FM receiver, and as of 2.46 the app no longer implies it does), **Live Activities + Dynamic Island** controls (iOS 16.2+), a complete **Pro tier** (themes, animated backgrounds, equalizer, recording, sleep timer) and a production-grade **AdMob monetization stack** for the free tier.
+> **Talky** is a SwiftUI iOS app that combines **offline peer-to-peer push-to-talk** (Multipeer Connectivity), **real live radio** (HF shortwave and the **CB 27 MHz band** from public KiwiSDR receivers, public POC channels on Mumble, no fake audio anywhere), a **global internet radio browser** (330+ streaming stations across 80+ countries; the iPhone has no FM receiver, and as of 2.46 the app no longer implies it does), **Live Activities + Dynamic Island** controls (iOS 16.2+), a complete **Pro tier** (themes, animated backgrounds, equalizer, recording, sleep timer) and a production-grade **AdMob monetization stack** for the free tier.
 
 > ⚠️ **This project is source-available, NOT MIT/Apache/BSD/GPL.** It is distributed under the **[PolyForm Noncommercial License 1.0.0](LICENSE)**: you may read, fork, modify and run it for personal/educational/non-profit purposes, but **commercial use (including shipping a derived app on any app store, paid services, ad-supported services and consulting deliverables) is strictly prohibited without a separate written commercial license.** See [License](#-license) for details and commercial-license contact.
 
@@ -26,27 +26,44 @@
 
 ---
 
-## 📱 Talky on iPhone
+## 🆕 New in Talky 3.2: a real radio receiver in your pocket
 
-| Talk: hold to transmit | Explore: nearby devices | Connections | Settings |
+**Live CB, HF shortwave and POC, with the receiver's real spectrum and waterfall.** Talky tunes public KiwiSDR receivers around the world, picks one near you, and draws what that antenna is hearing right now: carriers, voices, data bursts, the whole band moving down the screen. No fake audio, no recorded loops.
+
+| CB 27 MHz, channel 21 | HF shortwave, Shannon VOLMET | World radio, live bars | Walkie, with the band selector |
 |---|---|---|---|
-| ![Talky Talk screen, push to talk](docs/screenshots/ios/talk_ptt.png) | ![Talky Explore, radar of nearby devices](docs/screenshots/ios/explore_radar.png) | ![Talky Connections, advertising and browsing state](docs/screenshots/ios/connections.png) | ![Talky Settings, white noise and haptics](docs/screenshots/ios/settings.png) |
+| ![Talky CB 27 MHz channel 21 with live spectrum and waterfall from a KiwiSDR in Fuerteventura](docs/screenshots/ios/cb_waterfall.jpg) | ![Talky HF 5.505 MHz USB, Shannon VOLMET aviation weather from a receiver in Cobh, Ireland, with spectrum and waterfall](docs/screenshots/ios/hf_waterfall.jpg) | ![Talky world radio, Antenne Bayern with ON AIR level bars](docs/screenshots/ios/radio_bars.jpg) | ![Talky walkie-talkie screen with LOCAL, HF, CB and POC bands](docs/screenshots/ios/walkie_local.jpg) |
 
-- **Talk**: the frequency display, the channel, and the hold-to-talk key. The dot
-  row under the buttons is the level meter; the line at the bottom says how many
-  devices are connected and whether anyone is transmitting.
-- **Explore**: a radar of the devices around you, with estimated distance and
-  signal strength. Tap one to connect.
-- **Connections**: advertising and browsing state, the list of connected devices,
-  and the two buttons that fix most problems: disconnect all, restart discovery.
-- **Settings**: notifications, haptics, auto-connect.
-- **LOCAL / HF / CB / POC**: the band selector above the display. LOCAL is the
-  walkie between nearby phones; the other three are real radio, listen only
-  (see [Live Radio](#-live-radio-hf-cb-27-mhz-poc)).
+- **CB 27 MHz**: all 40 channels plus the DX area (calling on 27.555 USB), AM, FM, LSB and USB, SCAN that stops when someone transmits, automatic squelch. The display shows the receiver, its distance from you, the S-meter and how many dB the signal sits above the noise.
+- **HF shortwave**: aviation weather (VOLMET), time signals, broadcasters and radio amateurs, tuned in 1 kHz steps or typed in.
+- **POC**: public Mumble voice channels where people are talking right now, with live level bars of what you hear.
+- **World radio**: 330+ stations from 80+ countries, now with their own screen and level bars that follow the audio, HLS streams included.
+- **Widgets** on the Home Screen and the Lock Screen (iOS 17+), and on the Mac desktop: your CB channel for free; with Talky Pro, band propagation with SFI, Kp, the 11/20/40/80 m bands and the Kp forecast, plus sunrise, sunset and the best band right now.
+- **"Your Talky Pro"**: after buying, a page lists everything Pro unlocks and where to find it, in 14 languages.
+- 5 minutes of live listening are free every day; Talky Pro removes the limit and adds auto SCAN and listening with the screen off.
 
-> These are the App Store screenshots of the current build (2.46). They were shot
-> in July 2025 and still show the older yellow look: the radio, the 16 themes and
-> the Live Activities are not in them. Worth re-shooting.
+Screenshots taken on an iPhone 15 Plus on 3 November 2026, real receivers, real signals.
+
+### 🙏 Thanks
+
+Talky can show you a live band only because other people share theirs:
+
+- **The radio amateurs who keep their KiwiSDR receivers online** for anyone to listen to, at their own cost in power and bandwidth. Every spectrum and waterfall in these screenshots is one of their antennas.
+- **John Seamons**, who designed the KiwiSDR and keeps its software open.
+- **Pierre Ynard**, whose public list at [rx.linkfanel.net](http://rx.linkfanel.net) is how Talky finds a receiver near you.
+- **The people who run public Mumble servers**, which is where the POC channels come from.
+- **NOAA Space Weather Prediction Center**, for the free solar flux, Kp and forecast data behind the propagation widgets.
+- **[@Joaov41](https://github.com/Joaov41)**, for the pull request on keeping the walkie-talkie alive in the background, and everyone who opened an issue or wrote a review.
+
+If you run a KiwiSDR and would rather Talky did not use it, open an issue and it will be excluded.
+
+### The other screens
+
+- **Talk**: the frequency display, the channel, and the hold-to-talk key. The line under the key says whether anyone is connected.
+- **Explore**: a radar of the devices around you, with estimated distance and signal strength. Tap one to connect.
+- **Connections**: advertising and browsing state, the list of connected devices, and the two buttons that fix most problems: disconnect all, restart discovery.
+- **Settings**: notifications, haptics, auto-connect, and the Pro features (history, sleep timer, equalizer, recordings, private channels).
+- **LOCAL / HF / CB / POC**: the band selector above the display. LOCAL is the walkie between nearby phones; the other three are real radio, listen only (see [Live Radio](#-live-radio-hf-cb-27-mhz-poc)).
 
 ---
 
@@ -77,7 +94,7 @@
 - [Live Radio: HF, CB 27 MHz, POC](#-live-radio-hf-cb-27-mhz-poc)
 - [TALKY1 protocol specification](docs/TALKY1.md)
 - [Changelog](CHANGELOG.md)
-- [Radio Browser (135 stations)](#-radio-browser-135-stations)
+- [Radio Browser (330+ stations)](#-radio-browser-330-stations)
 - [Live Activities & Dynamic Island](#-live-activities--dynamic-island)
 - [Theme System (16 themes)](#-theme-system-16-themes)
 - [Pro Tier: IAP & Paywall](#-pro-tier-iap--paywall)
@@ -100,7 +117,7 @@
 
 - 🎙️ **Push-to-Talk** over peer-to-peer (no internet, no servers), up to 8 simultaneous peers
 - 📡 **Real radio, no fake audio**: HF shortwave and the **CB 27 MHz band** (all 40 channels plus the SSB DX area, calling on **27.555 USB**) from public KiwiSDR receivers, and public POC channels on Mumble. Auto and manual scan, automatic squelch, typed frequency
-- 📻 **135 verified live radio stations** across **50+ countries**, with favorites, recents, nearby, search and grouping by country/genre
+- 📻 **330+ live radio stations** across **80+ countries**, with favorites, recents, nearby, search and grouping by country/genre
 - 🏝️ **Live Activities + Dynamic Island** (iOS 16.2+) for both radio and walkie modes, with iOS 17+ interactive controls (play/pause, next/previous from the lock screen and Dynamic Island)
 - 🎨 **16 themes** (5 free + 11 paid/Pro) including 2 fully-animated GPU backgrounds (Black Hole, Galaxy)
 - 🔊 **5-band EQ**, **sleep timer**, **session recording** and **transmission history**
@@ -167,11 +184,14 @@ cp keystore.properties.sample keystore.properties   # then edit values, or remov
 | Capability | Free | Talky Pro |
 |---|:--:|:--:|
 | Push-to-talk over Multipeer (up to 8 peers) | ✅ | ✅ |
-| Live HF, CB 27 MHz and POC listening (real receivers, listen only) | ✅ | ✅ |
+| Live HF, CB 27 MHz and POC listening (real receivers, listen only) | 5 min a day | ✅ unlimited |
+| Spectrum and waterfall of the receiver | ✅ | ✅ |
+| Widgets: Channel | ✅ | ✅ |
+| Widgets: Propagation, Sun and bands, Lock Screen | ❌ | ✅ |
 | CB channel step, fine tuning, mode, squelch, typed frequency | ✅ | ✅ |
 | Auto SCAN (CB and POC) | 24 h with a rewarded video (iPhone) | ✅ |
 | Live listening with the screen off | ❌ | ✅ |
-| Radio stations available | 30 free | **All 135** |
+| Radio stations available | free selection | **All 330+** |
 | Station browser (search / favorites / recents / nearby) | ✅ | ✅ |
 | Themes available | 5 base | **All 16** |
 | Animated themes (Black Hole, Galaxy) | ❌ | ✅ |
@@ -281,12 +301,12 @@ purchase or the video resume listening on the same band by themselves.
 
 ---
 
-## 📻 Radio Browser (135 stations)
+## 📻 Radio Browser (330+ stations)
 
 The radio side is a full streaming client (`RadioManager` + `StationBrowserSheet`):
 
-- **135 live stations** across 50+ countries (Italy, USA, UK, Spain, France, Germany, Japan, Brazil, Australia, Argentina, Mexico, Canada, Netherlands, Sweden, India, and 30+ more)
-- **30 stations free** · **105 stations Pro-only** (`isPro = id > 30`)
+- **330+ live stations** across 80+ countries (Italy, USA, UK, Spain, France, Germany, Japan, Brazil, Australia, Argentina, Mexico, Canada, Netherlands, Sweden, India, and 30+ more)
+- **A free selection** for everyone, the rest Pro-only (`isPro` per station; the original list uses `id > 30`)
 - **Smart UX**:
   - 🔍 Full-text search by name / country / genre
   - ⭐ **Favorites** (persisted in `UserDefaults`)
@@ -595,7 +615,7 @@ WalkieTalkie/                            ← Repo root (Xcode project + Android 
 │   ├── Managers (core)/
 │   │   ├── AudioManager.swift           ← AVAudioSession + PTT pipeline
 │   │   ├── MultipeerManager.swift       ← MCSession + peer discovery
-│   │   ├── RadioManager.swift           ← AVPlayer + 135 stations
+│   │   ├── RadioManager.swift           ← AVPlayer + 330+ stations
 │   │   ├── NotificationManager.swift    ← Anti-spam local notifications
 │   │   ├── SettingsManager.swift        ← UserDefaults wrapper
 │   │   ├── PowerManager.swift           ← Battery monitoring
