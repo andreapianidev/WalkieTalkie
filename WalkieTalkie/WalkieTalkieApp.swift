@@ -29,7 +29,7 @@ struct WalkieTalkieApp: App {
     @State private var returningFromBackground = false
 
     #if DEBUG && targetEnvironment(simulator)
-    @State private var showDebugTierAlert = true
+    @State private var showDebugTierAlert = !UserDefaults.standard.bool(forKey: "screenshotMode")
     #endif
 
     var body: some Scene {
@@ -71,6 +71,25 @@ struct WalkieTalkieApp: App {
                 }
                 // IAP bootstrap deve precedere AdManager: i guard !isProUser dipendono dallo stato Pro.
                 await iapManager.bootstrap()
+                #if DEBUG && targetEnvironment(simulator)
+                // `-screenshotMode YES`: schermate per lo Store e il README,
+                // con Talky Pro attivo, senza pubblicita' di prova e senza il
+                // prompt ATT. Esiste solo nelle build Debug sul simulatore.
+                if UserDefaults.standard.bool(forKey: "screenshotMode") {
+                    iapManager.applyDebugSimulatedTier(isPro: true)
+                    // `screenshotOpen`: un collegamento talky:// da aprire
+                    // all'avvio, come se arrivasse da un widget.
+                    if let link = UserDefaults.standard.string(forKey: "screenshotOpen"), let url = URL(string: link) {
+                        LiveActivityDeepLink.handle(url)
+                    }
+                    // `screenshotStation`: la stazione da far suonare in modalita' radio.
+                    let id = UserDefaults.standard.integer(forKey: "screenshotStation")
+                    if id > 0, let station = RadioManager.shared.radioStations.first(where: { $0.id == id }) {
+                        RadioManager.shared.playStation(station)
+                    }
+                    return
+                }
+                #endif
                 // Dopo il bootstrap IAP e non prima: `registerSession` deve poter
                 // leggere lo stato Pro aggiornato, altrimenti alla seconda
                 // sessione un abbonato si vedrebbe proporre l'abbonamento.

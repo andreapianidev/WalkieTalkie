@@ -953,7 +953,9 @@ struct ContentView: View {
         VStack(spacing: 0) {
             // Peak promotion button integrated with tab bar (nascosto sugli
             // schermi compatti: ruba altezza alla tab bar su iPhone SE/8)
-            if !isCompactHeight {
+            // Nelle schermate per lo Store (`-screenshotMode`, solo Debug) la
+            // promozione di un'altra app non c'entra.
+            if !isCompactHeight, !UserDefaults.standard.bool(forKey: "screenshotMode") {
                 peakAppPromotionBanner
                     .padding(.horizontal, 20)
                     .padding(.bottom, 8)

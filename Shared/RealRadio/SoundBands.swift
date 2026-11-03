@@ -97,7 +97,15 @@ nonisolated final class SoundBands: @unchecked Sendable {
                 if j < 0 { break }
             }
         }
-        let flowing = now - lastIngest < 1 && index != nil
+        // Con un istante preciso (la radio) conta avere audio per quell'istante:
+        // gli HLS arrivano a blocchi di un segmento ogni 6-10 secondi. Senza
+        // (POC, HF) conta che l'audio sia arrivato nell'ultimo secondo.
+        let flowing: Bool
+        if let time, let last = frames.last {
+            flowing = index != nil && time <= last.time + 1.5
+        } else {
+            flowing = now - lastIngest < 1 && index != nil
+        }
         return Display(bands: shown, history: history, flowing: flowing)
     }
 

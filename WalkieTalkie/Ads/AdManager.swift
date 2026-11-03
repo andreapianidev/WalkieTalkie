@@ -120,6 +120,10 @@ final class AdManager: ObservableObject {
     var appOpenBlockedThisSession = false
 
     func bootstrap() async {
+        #if DEBUG && targetEnvironment(simulator)
+        // Schermate per lo Store: niente consenso, ATT ne' annunci di prova.
+        if UserDefaults.standard.bool(forKey: "screenshotMode") { return }
+        #endif
         if let bootstrapTask {
             PaywallFlowLog.log("bootstrap annunci gia' in corso: non si richiede di nuovo il consenso")
             await bootstrapTask.value
