@@ -500,18 +500,31 @@ struct LiveSecondaryRow: View {
 /// Sul POC non c'e' un ricevitore da mostrare: il display a barre della voce
 /// che arriva dal canale, e chi sta parlando.
 /// Altezza dello schermo con spettro, cascata o barre. Sul telefono e' quella
-/// del display; su iPad (larghezza regolare e altezza piena) cresce e prende
-/// lo spazio che altrimenti resterebbe vuoto fra i comandi e le letture.
-enum ScopeHeight {
-    static func value(compact: Bool, sizeClass: UserInterfaceSizeClass?) -> CGFloat {
-        compact ? 132 : (sizeClass == .regular ? 340 : 185)
+/// di sempre; nei pannelli larghi (iPad, display interno del Duo) lo schermo
+/// prende tutta l'altezza libera, e le letture restano sotto.
+struct ScopeFrame: ViewModifier {
+    let compact: Bool
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(\.talkyScopeFills) private var fills
+
+    func body(content: Content) -> some View {
+        if fills {
+            content
+                .frame(minHeight: 340, maxHeight: .infinity)
+                .layoutPriority(1)
+        } else {
+            content.frame(height: compact ? 132 : (sizeClass == .regular ? 340 : 185))
+        }
     }
+}
+
+extension View {
+    func scopeFrame(compact: Bool) -> some View { modifier(ScopeFrame(compact: compact)) }
 }
 
 @available(iOS 16.0, *)
 struct LiveSoundScreen: View {
     @ObservedObject var live = LiveRadio.shared
-    @Environment(\.horizontalSizeClass) private var sizeClass
     let compact: Bool
     /// In HF e CB senza cascata: cosa si sta guardando.
     var label: String?
@@ -539,7 +552,7 @@ struct LiveSoundScreen: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
         }
-        .frame(height: ScopeHeight.value(compact: compact, sizeClass: sizeClass))
+        .scopeFrame(compact: compact)
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.white.opacity(0.12), lineWidth: 1))
         .padding(.horizontal, 12)
@@ -670,7 +683,6 @@ struct LiveReadings: View {
 @available(iOS 16.0, *)
 struct LivePanoramaScreen: View {
     @ObservedObject var live = LiveRadio.shared
-    @Environment(\.horizontalSizeClass) private var sizeClass
     let compact: Bool
 
     var body: some View {
@@ -691,7 +703,7 @@ struct LivePanoramaScreen: View {
                                                             : live.spectrumSearching ? "live_pan_searching"
                                                             : live.spectrumMissing ? "live_pan_missing"
                                                             : "live_pan_waiting").localized))
-            .frame(height: ScopeHeight.value(compact: compact, sizeClass: sizeClass))
+            .scopeFrame(compact: compact)
             .padding(.horizontal, 12)
             .onTapGesture {
                 if live.isOutOfFreeTime { live.proPrompt = .freeTime }

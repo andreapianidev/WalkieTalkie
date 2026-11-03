@@ -18,44 +18,84 @@ struct RadioSplit<Controls: View, Scope: View>: View {
 
     /// Spazio fra i pannelli quando non c'e' una cerniera (iPad).
     private let gutter: CGFloat = 28
+    /// Larghezza della colonna singola, come sul telefono.
+    private let columnWidth: CGFloat = 720
 
     var body: some View {
         GeometryReader { proxy in
-            let hinge = Hinge.of(proxy)
-            switch hinge {
+            switch Hinge.of(proxy) {
             case .horizontal(let line):
                 // Appoggiato: lo schermo sopra la piega, i comandi sotto.
                 VStack(spacing: 0) {
-                    panel { scope }
+                    scopePanel
                         .frame(height: max(0, line.minY - gutter / 2))
                     Color.clear.frame(height: line.height + gutter)
-                    panel { controls }
-                        .frame(maxHeight: .infinity, alignment: .top)
+                    controlPanel
                 }
             case .vertical(let line):
                 HStack(spacing: 0) {
-                    panel { controls }
-                        .frame(width: max(0, line.minX - gutter / 2), alignment: .top)
+                    controlPanel
+                        .frame(width: max(0, line.minX - gutter / 2))
                     Color.clear.frame(width: line.width + gutter)
-                    panel { scope }
-                        .frame(maxWidth: .infinity)
+                    scopePanel
                 }
-            case .none:
-                HStack(alignment: .top, spacing: gutter) {
-                    panel { controls }
-                    panel { scope }
+            case .none where proxy.size.width > proxy.size.height:
+                // iPad in orizzontale: due pannelli affiancati.
+                HStack(spacing: gutter) {
+                    controlPanel
+                    scopePanel
                 }
                 .padding(.horizontal, gutter / 2)
+            case .none:
+                // iPad in verticale: una colonna, e lo schermo si prende
+                // l'altezza che sul telefono non c'e'.
+                VStack(spacing: 0) {
+                    controls
+                    scope
+                        .environment(\.talkyScopeFills, true)
+                        .padding(.vertical, 16)
+                }
+                .frame(maxWidth: columnWidth)
+                .frame(maxWidth: .infinity)
             }
         }
     }
 
-    private func panel<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
+    /// I comandi al centro del loro pannello, non incollati in alto.
+    private var controlPanel: some View {
         VStack(spacing: 0) {
-            content()
+            Spacer(minLength: 0)
+            controls
             Spacer(minLength: 0)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    /// Lo schermo riempie il pannello; il tasto per parlare, che non si
+    /// allunga, resta centrato.
+    private var scopePanel: some View {
+        VStack(spacing: 0) {
+            Spacer(minLength: 0)
+            scope
+                .environment(\.talkyScopeFills, true)
+                .layoutPriority(1)
+            Spacer(minLength: 0)
+        }
+        .padding(.vertical, 16)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+private struct ScopeFillsKey: EnvironmentKey {
+    static let defaultValue = false
+}
+
+extension EnvironmentValues {
+    /// Lo schermo (spettro, cascata, barre) prende tutta l'altezza libera
+    /// invece della sua altezza da telefono.
+    var talkyScopeFills: Bool {
+        get { self[ScopeFillsKey.self] }
+        set { self[ScopeFillsKey.self] = newValue }
     }
 }
 
