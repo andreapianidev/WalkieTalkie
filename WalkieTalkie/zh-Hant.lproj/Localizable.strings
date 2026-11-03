@@ -565,7 +565,6 @@
 "radio_state_buffering" = "載入中";
 "radio_state_paused" = "已暫停";
 "radio_scope_buffering" = "正在調諧串流...";
-"radio_scope_unsupported" = "此電台的串流不允許讀取波形";
 "radio_scope_paused" = "已暫停";
 "radio_scope_pick" = "選擇電台即可看到波形";
 "live_pan_searching" = "正在尋找能傳送頻譜的接收機";

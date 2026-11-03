@@ -45,8 +45,8 @@ struct RadioScopeDeck: View {
     }
 }
 
-/// Oscilloscopio sopra (la forma d'onda dell'ultimo istante), storia del
-/// livello sotto (gli ultimi sei secondi, il piu' recente a destra).
+/// Il display a barre di quello che suona, con il livello degli ultimi sei
+/// secondi sotto.
 struct RadioScopeScreen: View {
     @ObservedObject var radio: RadioManager
 
@@ -54,23 +54,22 @@ struct RadioScopeScreen: View {
 
     var body: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 30, paused: !radio.isPlaying)) { _ in
-            let picture = RadioScope.shared.picture()
+            let display = RadioScope.shared.display()
             ZStack {
                 Color.black
-                Canvas { ctx, size in
-                    let split = size.height * 0.58
-                    drawWave(ctx, picture.wave, in: CGRect(x: 0, y: 0, width: size.width, height: split))
-                    drawHistory(ctx, picture.history, in: CGRect(x: 0, y: split, width: size.width, height: size.height - split))
-                }
-                .opacity(picture.flowing ? 1 : 0.35)
-                if !picture.flowing {
-                    Text(caption(picture.source))
+                SoundBandsView(display: display, color: amber)
+                    .padding(.horizontal, 6)
+                    .padding(.top, 22)
+                    .padding(.bottom, 6)
+                    .opacity(display.flowing ? 1 : 0.35)
+                if !display.flowing {
+                    Text(caption)
                         .font(.system(size: 11, weight: .medium, design: .monospaced))
                         .foregroundColor(amber.opacity(0.8))
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 16)
                 }
-                if picture.flowing {
+                if display.flowing {
                     HStack(spacing: 5) {
                         Circle().fill(Color.red).frame(width: 6, height: 6)
                         Text("ON AIR")
@@ -87,40 +86,9 @@ struct RadioScopeScreen: View {
         .accessibilityHidden(true)
     }
 
-    private func caption(_ source: RadioScope.Source) -> String {
-        if radio.isBuffering { return "radio_scope_buffering".localized }
+    private var caption: String {
         if radio.currentStation == nil { return "radio_scope_pick".localized }
         if !radio.isPlaying { return "radio_scope_paused".localized }
-        if source == .unsupported { return "radio_scope_unsupported".localized }
         return "radio_scope_buffering".localized
-    }
-
-    private func drawWave(_ ctx: GraphicsContext, _ wave: [Float], in rect: CGRect) {
-        let mid = rect.midY
-        var axis = Path()
-        axis.move(to: CGPoint(x: 0, y: mid))
-        axis.addLine(to: CGPoint(x: rect.width, y: mid))
-        ctx.stroke(axis, with: .color(.white.opacity(0.12)), lineWidth: 1)
-        guard wave.count > 1 else { return }
-        let step = rect.width / CGFloat(wave.count - 1)
-        var line = Path()
-        for (i, v) in wave.enumerated() {
-            let p = CGPoint(x: CGFloat(i) * step, y: mid - CGFloat(max(-1, min(1, v))) * rect.height * 0.46)
-            i == 0 ? line.move(to: p) : line.addLine(to: p)
-        }
-        ctx.stroke(line, with: .color(amber.opacity(0.25)), lineWidth: 5)
-        ctx.stroke(line, with: .color(amber), lineWidth: 1.6)
-    }
-
-    private func drawHistory(_ ctx: GraphicsContext, _ history: [Float], in rect: CGRect) {
-        guard !history.isEmpty else { return }
-        let width = rect.width / CGFloat(history.count)
-        let mid = rect.midY
-        for (i, level) in history.enumerated() {
-            let h = max(1, CGFloat(level) * rect.height * 0.92)
-            let bar = CGRect(x: rect.minX + CGFloat(i) * width + 0.5, y: mid - h / 2, width: max(1, width - 1), height: h)
-            let age = Double(i) / Double(history.count)
-            ctx.fill(Path(bar), with: .color(amber.opacity(0.25 + 0.75 * age)))
-        }
     }
 }

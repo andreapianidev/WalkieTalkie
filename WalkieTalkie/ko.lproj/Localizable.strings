@@ -564,7 +564,6 @@
 "radio_state_buffering" = "불러오는 중";
 "radio_state_paused" = "일시정지";
 "radio_scope_buffering" = "스트림에 맞추는 중...";
-"radio_scope_unsupported" = "이 방송국의 스트림은 파형을 읽을 수 없습니다";
 "radio_scope_paused" = "일시정지";
 "radio_scope_pick" = "방송국을 고르면 파형이 보입니다";
 "live_pan_searching" = "스펙트럼을 보내는 수신기를 찾는 중";

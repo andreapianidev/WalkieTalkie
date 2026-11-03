@@ -563,7 +563,6 @@
 "radio_state_buffering" = "Chargement";
 "radio_state_paused" = "En pause";
 "radio_scope_buffering" = "Accord sur le flux...";
-"radio_scope_unsupported" = "Le flux de cette station ne permet pas de lire ses ondes";
 "radio_scope_paused" = "En pause";
 "radio_scope_pick" = "Choisissez une station pour voir ses ondes";
 "live_pan_searching" = "Recherche d'un récepteur qui envoie le spectre";

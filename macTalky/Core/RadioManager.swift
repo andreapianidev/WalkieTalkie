@@ -641,6 +641,8 @@ class RadioManager: NSObject, ObservableObject {
         let player = AVPlayer(url: url)
         player.volume = volume
         radioPlayer = player
+        // Il display a barre di quello che suona.
+        RadioScope.shared.attach(url: url, player: player)
 
         // KVO sul player per stato di riproduzione e sul currentItem per il fallimento
         // dello stream. AVPlayer.error NON è KVO-osservabile in modo affidabile: gli
@@ -691,6 +693,7 @@ class RadioManager: NSObject, ObservableObject {
     
     func stopRadio(resyncWalkieAfter: Bool = true) {
         teardownPlayer()
+        RadioScope.shared.detach()
         isPlaying = false
         isBuffering = false
         currentStation = nil

@@ -495,35 +495,43 @@ struct LiveSecondaryRow: View {
     }
 }
 
-// MARK: - Altoparlante e tasto
+// MARK: - Display a barre del POC
 
-/// La griglia dell'altoparlante che si accende con l'audio vero in arrivo.
+/// Sul POC non c'e' un ricevitore da mostrare: il display a barre della voce
+/// che arriva dal canale, e chi sta parlando.
 @available(iOS 16.0, *)
-struct LiveSpeakerGrid: View {
+struct LiveSoundScreen: View {
     @ObservedObject var live = LiveRadio.shared
-    let count: Int
+    let compact: Bool
+
+    private let amber = Color(red: 1.0, green: 0.8, blue: 0.0)
 
     var body: some View {
-        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 8), spacing: 6) {
-            ForEach(0 ..< count, id: \.self) { i in
-                Circle()
-                    .fill(Color.black)
-                    .frame(width: 5, height: 5)
-                    .opacity(opacity(i))
+        TimelineView(.animation(minimumInterval: 1.0 / 30, paused: live.state != .online)) { _ in
+            let display = live.soundBands.display()
+            ZStack {
+                Color.black
+                SoundBandsView(display: display, color: amber)
+                    .padding(.horizontal, 6)
+                    .padding(.top, 22)
+                    .padding(.bottom, 6)
+                    .opacity(live.state == .online ? 1 : 0.35)
+                HStack(spacing: 5) {
+                    Circle().fill(live.talker != nil ? Color.red : Color.white.opacity(0.3)).frame(width: 6, height: 6)
+                    Text(live.talker?.uppercased() ?? live.channelName.uppercased())
+                        .font(.system(size: 9, weight: .heavy, design: .monospaced))
+                        .foregroundColor(.white.opacity(0.8))
+                        .lineLimit(1)
+                }
+                .padding(8)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
         }
-        .animation(.linear(duration: 0.1), value: live.level)
-        .padding(.horizontal, 40)
+        .frame(height: compact ? 132 : 185)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.white.opacity(0.12), lineWidth: 1))
+        .padding(.horizontal, 12)
         .accessibilityHidden(true)
-    }
-
-    /// Dal centro verso fuori, come una membrana che vibra.
-    private func opacity(_ i: Int) -> Double {
-        let row = Double(i / 8), col = Double(i % 8)
-        let rows = Double(max(1, count / 8))
-        let dx = abs(col - 3.5) / 3.5, dy = abs(row - (rows - 1) / 2) / max(1, (rows - 1) / 2)
-        let reach = Double(live.level) * 1.6
-        return (dx * dx + dy * dy).squareRoot() / 1.42 < reach ? 1 : 0.25
     }
 }
 
@@ -578,7 +586,7 @@ struct LiveListeningDeck: View {
     var body: some View {
         VStack(spacing: compact ? 8 : 12) {
             if band == .poc {
-                LiveSpeakerGrid(count: compact ? 24 : 48)
+                LiveSoundScreen(compact: compact)
             } else {
                 LivePanoramaScreen(compact: compact)
             }

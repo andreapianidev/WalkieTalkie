@@ -563,7 +563,6 @@
 "radio_state_buffering" = "Loading";
 "radio_state_paused" = "Paused";
 "radio_scope_buffering" = "Tuning in to the stream...";
-"radio_scope_unsupported" = "This station's stream does not let Talky read its waves";
 "radio_scope_paused" = "Paused";
 "radio_scope_pick" = "Pick a station to see its waves";
 "live_pan_searching" = "Looking for a receiver that sends the spectrum";

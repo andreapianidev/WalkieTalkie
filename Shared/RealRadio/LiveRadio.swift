@@ -108,6 +108,8 @@ final class LiveRadio: ObservableObject {
     @Published private(set) var isOutOfFreeTime = false
     /// Spettro e cascata del ricevitore KiwiSDR che si ascolta.
     let panorama = Panorama()
+    /// Le bande di quello che si sente, per il display a barre del POC.
+    let soundBands = SoundBands()
     /// Si sta passando a un altro ricevitore perche' questo non manda lo spettro.
     @Published private(set) var spectrumSearching = false
     /// Nessun ricevitore provato manda lo spettro: si ascolta senza.
@@ -763,12 +765,17 @@ final class LiveRadio: ObservableObject {
         generation += 1
         let gen = generation
         let player = player
+        let bands = soundBands
+        bands.reset()
         state = .connecting
         talker = nil
         level = 0
         signalDBm = nil
         pumps.append(Task.detached(priority: .userInitiated) {
-            for await chunk in audio { player.play(chunk) }
+            for await chunk in audio {
+                player.play(chunk)
+                bands.ingest(chunk.samples, rate: chunk.sampleRate)
+            }
         })
         pumps.append(Task { [weak self] in
             for await event in events {

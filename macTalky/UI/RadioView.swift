@@ -35,10 +35,33 @@ struct RadioView: View {
     var body: some View {
         VStack(spacing: 16) {
             header
+            if radio.currentStation != nil { scopePanel }
             stationList
             nowPlayingBar
         }
         .padding(24)
+    }
+
+    // MARK: - Display a barre
+
+    /// Quello che suona, a barre come un equalizzatore.
+    private var scopePanel: some View {
+        TimelineView(.animation(minimumInterval: 1.0 / 30, paused: !radio.isPlaying)) { _ in
+            let display = RadioScope.shared.display()
+            ZStack(alignment: .topLeading) {
+                RoundedRectangle(cornerRadius: 10).fill(Color.black)
+                SoundBandsView(display: display, color: Talky.amber)
+                    .padding(.horizontal, 8)
+                    .padding(.top, 20)
+                    .padding(.bottom, 6)
+                    .opacity(display.flowing ? 1 : 0.35)
+                Text(display.flowing ? "ON AIR" : (radio.isPlaying ? "TUNING IN…" : "PAUSED"))
+                    .font(.vfd(9, weight: .heavy))
+                    .foregroundStyle(display.flowing ? Talky.amber : Talky.dim)
+                    .padding(8)
+            }
+        }
+        .frame(height: 130)
     }
 
     // MARK: - Header

@@ -564,7 +564,6 @@
 "radio_state_buffering" = "กำลังโหลด";
 "radio_state_paused" = "หยุดชั่วคราว";
 "radio_scope_buffering" = "กำลังจูนสตรีม...";
-"radio_scope_unsupported" = "สตรีมของสถานีนี้ไม่ให้อ่านคลื่นเสียง";
 "radio_scope_paused" = "หยุดชั่วคราว";
 "radio_scope_pick" = "เลือกสถานีเพื่อดูคลื่นเสียง";
 "live_pan_searching" = "กำลังหาเครื่องรับที่ส่งสเปกตรัม";

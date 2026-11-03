@@ -215,6 +215,16 @@ struct LiveView: View {
 
                 SegmentedMeter(level: meterLevel, segments: 24)
 
+                if band == .poc, live.isOn {
+                    TimelineView(.animation(minimumInterval: 1.0 / 30, paused: live.state != .online)) { _ in
+                        SoundBandsView(display: live.soundBands.display(), color: Talky.amber)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 8)
+                            .background(Color.black, in: RoundedRectangle(cornerRadius: 10))
+                    }
+                    .frame(height: 230)
+                }
+
                 if band.isKiwi, live.isOn {
                     PanoramaView(panorama: live.panorama,
                                  tuning: live.tuning,

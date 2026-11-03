@@ -569,7 +569,6 @@
 "radio_state_buffering" = "Cargando";
 "radio_state_paused" = "En pausa";
 "radio_scope_buffering" = "Sintonizando el stream...";
-"radio_scope_unsupported" = "El stream de esta emisora no deja leer sus ondas";
 "radio_scope_paused" = "En pausa";
 "radio_scope_pick" = "Elige una emisora para ver sus ondas";
 "live_pan_searching" = "Buscando un receptor que envíe el espectro";

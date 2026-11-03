@@ -563,7 +563,6 @@
 "radio_state_buffering" = "Carica";
 "radio_state_paused" = "In pausa";
 "radio_scope_buffering" = "Mi sintonizzo sullo stream...";
-"radio_scope_unsupported" = "Lo stream di questa stazione non permette di leggerne le onde";
 "radio_scope_paused" = "In pausa";
 "radio_scope_pick" = "Scegli una stazione per vederne le onde";
 "live_pan_searching" = "Cerco un ricevitore che mandi lo spettro";

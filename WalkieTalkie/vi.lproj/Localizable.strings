@@ -563,7 +563,6 @@
 "radio_state_buffering" = "Đang tải";
 "radio_state_paused" = "Tạm dừng";
 "radio_scope_buffering" = "Đang dò luồng phát...";
-"radio_scope_unsupported" = "Luồng của đài này không cho đọc sóng âm";
 "radio_scope_paused" = "Tạm dừng";
 "radio_scope_pick" = "Chọn một đài để xem sóng âm";
 "live_pan_searching" = "Đang tìm máy thu gửi được phổ tần";

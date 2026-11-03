@@ -751,7 +751,7 @@ class RadioManager: NSObject, ObservableObject {
         player.volume = volume
         radioPlayer = player
         // La forma d'onda sullo schermo della radio.
-        if let item = player.currentItem { RadioScope.shared.attach(to: item) }
+        RadioScope.shared.attach(url: url, player: player)
 
         // KVO sul player per stato di riproduzione e sul currentItem per il fallimento
         // dello stream. AVPlayer.error NON è KVO-osservabile in modo affidabile: gli

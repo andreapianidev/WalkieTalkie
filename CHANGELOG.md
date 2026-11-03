@@ -91,7 +91,11 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
-### [2.1] (111), not submitted yet
+### [2.1] (112), not submitted yet
+
+#### New in (112)
+- The world radio and POC show what you are listening to as equalizer bars,
+  same as iOS 3.2 (112).
 
 #### Fixed in (111)
 - The receiver's spectrum no longer waits for ever: Talky moves to a receiver
@@ -156,7 +160,19 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [3.2] (111), not submitted yet
+### [3.2] (112), not submitted yet
+
+#### New in (112)
+- **The world radio screen shows what you are listening to, as equalizer
+  bars** (24 LED columns, plus the level of the last six seconds), lined up
+  with what the player is playing. The radio player gives no samples of a
+  live stream, so Talky reads the same stream a second time and decodes it
+  (decoder ported from Etere), MPEG-TS and AAC HLS segments included. It
+  runs only while the radio plays with the app in front: in the background
+  and on pause it uses no data. The "this stream cannot be read" caption
+  is gone.
+- **POC has the same bar display** of the voice coming from the channel, with
+  who is talking, in place of the speaker dot grid.
 
 #### Fixed in (111)
 - **The spectrum stayed on "waiting" for ever on many receivers, in every

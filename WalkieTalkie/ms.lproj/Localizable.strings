@@ -565,7 +565,6 @@
 "radio_state_buffering" = "Memuatkan";
 "radio_state_paused" = "Dijeda";
 "radio_scope_buffering" = "Menala strim...";
-"radio_scope_unsupported" = "Strim stesen ini tidak membenarkan gelombangnya dibaca";
 "radio_scope_paused" = "Dijeda";
 "radio_scope_pick" = "Pilih stesen untuk melihat gelombangnya";
 "live_pan_searching" = "Mencari penerima yang menghantar spektrum";
