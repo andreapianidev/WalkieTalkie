@@ -210,6 +210,8 @@ struct PropagationWidget: Widget {
 
 // MARK: - Schermata di blocco
 
+#if os(iOS)
+
 @available(iOS 17.0, *)
 struct BandLockView: View {
     @Environment(\.widgetFamily) private var family
@@ -261,3 +263,4 @@ struct BandLockWidget: Widget {
         .supportedFamilies([.accessoryRectangular, .accessoryCircular, .accessoryInline])
     }
 }
+#endif

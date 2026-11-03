@@ -113,7 +113,9 @@ class RadioManager: NSObject, ObservableObject {
     // Lista di stazioni radio internazionali — URL verificati live (maggio 2026).
     // Il flag Pro è esplicito per ogni stazione; la regola storica `id > 30` vale
     // come default per le prime 135 stazioni, le nuove specificano `isPro` esplicito.
-    let radioStations: [RadioStation] = [
+    /// Le stazioni che l'app conosce. Quelle che non partono vanno a riposo
+    /// da sole (StationHealth): l'elenco mostrato e' `radioStations`.
+    let catalog: [RadioStation] = [
         // MARK: - Free (Italia + grandi broadcaster europei)
         // Italia
         RadioStation(id: 1, name: "RTL 102.5", country: "Italia", frequency: "102.5", streamURL: "https://streamingv2.shoutcast.com/rtl-1025", genre: "Pop"),
@@ -222,7 +224,6 @@ class RadioManager: NSObject, ObservableObject {
         RadioStation(id: 76, name: "NRJ Bulgaria", country: "Bulgaria", frequency: "104.5", streamURL: "http://play.global.audio/nrj128", genre: "Pop"),
         // Estonia
         RadioStation(id: 77, name: "Vikerraadio", country: "Estonia", frequency: "104.1", streamURL: "http://icecast.err.ee/vikerraadio.mp3", genre: "Talk"),
-        RadioStation(id: 78, name: "Retro FM Estonia", country: "Estonia", frequency: "92.8", streamURL: "https://edge02.cdn.bitflip.ee:8888/RETRO?_i=258f436b", genre: "Oldies"),
         // Lettonia
         RadioStation(id: 79, name: "Radio SWH", country: "Lettonia", frequency: "105.2", streamURL: "http://80.232.162.149:8000/swh96mp3", genre: "Pop"),
         // Lituania
@@ -275,7 +276,6 @@ class RadioManager: NSObject, ObservableObject {
         // Thailandia
         RadioStation(id: 110, name: "Cool Fahrenheit", country: "Thailandia", frequency: "93.0", streamURL: "https://coolism-web.cdn.byteark.com/live/playlist.m3u8", genre: "Pop"),
         // Indonesia
-        RadioStation(id: 111, name: "Prambors FM", country: "Indonesia", frequency: "102.2", streamURL: "http://103.24.105.90:9300/pjkt", genre: "Pop"),
         // Malesia
         RadioStation(id: 112, name: "988 FM", country: "Malesia", frequency: "98.8", streamURL: "https://28103.live.streamtheworld.com/988_FMAAC.aac", genre: "Pop"),
         // Filippine
@@ -308,15 +308,12 @@ class RadioManager: NSObject, ObservableObject {
         RadioStation(id: 129, name: "Azul FM", country: "Uruguay", frequency: "101.9", streamURL: "https://azul-2.nty.uy/", genre: "Pop"),
         RadioStation(id: 130, name: "Del Sol FM", country: "Uruguay", frequency: "99.5", streamURL: "http://radio.dl.uy:9950/radio", genre: "Talk"),
         // Cuba
-        RadioStation(id: 131, name: "Cubania Radio", country: "Cuba", frequency: "—", streamURL: "https://streamingv2.shoutcast.com/cubania?type=.mp3", genre: "Latin"),
         // Internet/Genre-based
         RadioStation(id: 132, name: "Frisky", country: "Internet", frequency: "—", streamURL: "http://stream2.friskyradio.com/frisky_mp3_hi", genre: "Electronic"),
         RadioStation(id: 133, name: "Dance Wave!", country: "Internet", frequency: "—", streamURL: "https://dancewave.online/dance.mp3", genre: "Dance"),
         RadioStation(id: 134, name: "Rock Antenne Heavy Metal", country: "Internet", frequency: "—", streamURL: "http://mp3channels.webradio.rockantenne.de/heavy-metal", genre: "Metal"),
-        RadioStation(id: 135, name: "Deep House Lounge", country: "Internet", frequency: "—", streamURL: "http://198.15.94.34:8006/stream", genre: "Electronic"),
 
         // MARK: - Free aggiuntive (verificate maggio 2026) — isPro: false esplicito
-        RadioStation(id: 136, name: "RTL 102.5 Best", country: "Italia", frequency: "—", streamURL: "https://streamingv2.shoutcast.com/rtl-1025-best", genre: "Pop", isPro: false),
         RadioStation(id: 137, name: "Skyrock", country: "Francia", frequency: "96.0", streamURL: "http://icecast.skyrock.net/s/natio_mp3_128k", genre: "Hip-Hop", isPro: false),
         RadioStation(id: 138, name: "RFI Monde", country: "Francia", frequency: "89.0", streamURL: "http://live02.rfi.fr/rfimonde-64.mp3", genre: "News", isPro: false),
         RadioStation(id: 139, name: "NDR 2", country: "Germania", frequency: "87.6", streamURL: "https://icecast.ndr.de/ndr/ndr2/niedersachsen/mp3/128/stream.mp3", genre: "Pop", isPro: false),
@@ -499,14 +496,11 @@ class RadioManager: NSObject, ObservableObject {
         RadioStation(id: 256, name: "Latvijas Radio 2", country: "Lettonia", frequency: "91.5", streamURL: "https://muste.latvijasradio.lv/shoutcast/mp4:lr2a.stream/playlist.m3u8", genre: "Pop"),
         RadioStation(id: 257, name: "Relax FM Lietuva", country: "Lituania", frequency: "—", streamURL: "https://stream1.relaxfm.lt/relaxfm128.mp3", genre: "Easy"),
         RadioStation(id: 258, name: "OK Radio", country: "Serbia", frequency: "—", streamURL: "https://sslstream.okradio.net/", genre: "Pop"),
-        RadioStation(id: 259, name: "Ocean 89", country: "Bermuda", frequency: "89.1", streamURL: "https://us2.internet-radio.com/proxy/ocean89?mp=/stream", genre: "Pop"),
-        RadioStation(id: 260, name: "ZFB Power 95", country: "Bermuda", frequency: "94.9", streamURL: "http://us3.internet-radio.com:8026/live", genre: "Pop"),
         RadioStation(id: 261, name: "Cuban Flow Radio", country: "Cuba", frequency: "—", streamURL: "http://nap.casthost.net:9194/stream.mp3", genre: "Latin"),
         RadioStation(id: 262, name: "Romance 106", country: "Cuba", frequency: "106.1", streamURL: "http://s13.myradiostream.com:41400/;", genre: "Latin"),
         RadioStation(id: 263, name: "Radio Pakistan MW", country: "Pakistan", frequency: "1008", streamURL: "https://whmsonic.radio.gov.pk:8042/stream", genre: "World"),
         RadioStation(id: 264, name: "106 Family News", country: "Thailandia", frequency: "106.0", streamURL: "https://radio11.plathong.net/7138/;stream.mp3", genre: "News"),
         RadioStation(id: 265, name: "Bond 92.9 FM", country: "Nigeria", frequency: "92.9", streamURL: "https://go.webgateready.com/bondfm", genre: "World"),
-        RadioStation(id: 266, name: "Melody FM Malaysia", country: "Malesia", frequency: "103.0", streamURL: "https://n09.rcs.revma.com/2u1n6dtbv4uvv/9_11l86ncot7z1w02/playlist.m3u8", genre: "Pop"),
         RadioStation(id: 267, name: "CNR China News", country: "Cina", frequency: "—", streamURL: "https://lhttp.qtfm.cn/live/15318317/64k.mp3", genre: "News"),
 
         // MARK: - Free aggiuntive (maggio 2026) — grandi broadcaster pubblici europei
@@ -740,6 +734,11 @@ class RadioManager: NSObject, ObservableObject {
         radioPlayer?.volume = newVolume
     }
     
+    /// Il catalogo meno le stazioni che di recente non sono partite.
+    var radioStations: [RadioStation] {
+        catalog.filter { !StationHealth.shared.isResting($0.id) }
+    }
+
     // MARK: - Free / Pro Stations
 
     /// Stazioni disponibili a tutti gli utenti (italiane + grandi broadcaster europei).
@@ -1037,6 +1036,7 @@ class RadioManager: NSObject, ObservableObject {
                 case .playing:
                     self.isBuffering = false
                     self.isPlaying = true
+                    if let id = self.currentStation?.id { StationHealth.shared.played(id) }
                     self.lastError = nil
                     if let station = self.currentStation {
                         self.startOrUpdateLiveActivity(for: station)
@@ -1057,6 +1057,7 @@ class RadioManager: NSObject, ObservableObject {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self, item === self.radioPlayer?.currentItem else { return }
                 if item.status == .failed {
+                    if let id = self.currentStation?.id { StationHealth.shared.failed(id) }
                     self.handlePlaybackError(item.error)
                 }
             }

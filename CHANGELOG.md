@@ -26,6 +26,9 @@ releases and from the git history, so they are less detailed than what follows.
 
 ### [1.3] — unreleased
 
+#### Removed
+- 8 radio stations that no longer exist (same list as iOS 3.2 build 114). `versionCode` 4 → 5.
+
 #### Fixed
 
 - **The app no longer dies on startup.** On Android 16 the published 1.2 APK
@@ -91,7 +94,13 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
-### [2.1] (113), not submitted yet
+### [2.1] (114), not submitted yet
+
+#### New in (114)
+- **Widgets on the Mac desktop**: Channel, Propagation (small, medium, large)
+  and Sun & bands, the same as iOS. A click opens Talky on the band.
+- The station list keeps itself clean, and 8 dead stations are gone, as on
+  iOS 3.2 (114).
 
 #### New in (113)
 - HF and CB show the spectrum of the received audio until the receiver's
@@ -164,7 +173,18 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [3.2] (113), not submitted yet
+### [3.2] (114), not submitted yet
+
+#### New in (114)
+- **The station list keeps itself clean.** A station that fails to start
+  twice in a row is hidden for seven days, then gets another chance; one
+  successful play resets it. Closed stations disappear without waiting for
+  an app update, and stations blocked in a country (the Australian ones
+  outside Australia) disappear only for whoever cannot receive them.
+- Removed 8 stations that no longer exist (404, 400 or no answer, checked
+  on 3 Nov 2026): Retro FM Estonia, Prambors FM, Cubania Radio, Deep House
+  Lounge, RTL 102.5 Best, Ocean 89, ZFB Power 95, Melody FM Malaysia.
+  335 stations remain, on iOS, Mac and Android.
 
 #### New in (113)
 - **HF and CB always show a spectrum.** Many KiwiSDRs accept one connection

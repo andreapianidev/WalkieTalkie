@@ -58,6 +58,32 @@ struct ContentView: View {
     }
 
     var body: some View {
+        console
+            .onOpenURL(perform: openFromWidget)
+    }
+
+    /// talky://pro apre Talky Pro; talky://live/cb?hz=... e talky://live/hf?id=...
+    /// arrivano dai widget e accendono la banda gia' sintonizzata.
+    private func openFromWidget(_ url: URL) {
+        guard url.scheme == "talky" else { return }
+        guard url.host?.lowercased() == "live" else {
+            showPaywall = !iap.isProUser
+            return
+        }
+        let query = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems ?? []
+        let live = LiveRadio.shared
+        section = .live
+        if url.path.lowercased().hasPrefix("/cb") {
+            if live.band != .cb { live.start(.cb) }
+            if let hz = query.first(where: { $0.name == "hz" })?.value.flatMap(Int.init) { _ = live.tuneCB(hz: hz) }
+        } else {
+            if live.band != .hf { live.start(.hf) }
+            if let id = query.first(where: { $0.name == "id" })?.value,
+               let index = HFChannel.all.firstIndex(where: { $0.id == id }) { live.selectHF(index) }
+        }
+    }
+
+    private var console: some View {
         ZStack {
             TacticalBackground(
                 backdrop: backdrop,

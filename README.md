@@ -56,13 +56,13 @@
 
 > ⬇️ **Download**: grab `macTalky.zip` from [**GitHub Releases**](https://github.com/andreapianidev/WalkieTalkie/releases) (macOS 26+, Apple Silicon). First launch: right-click → Open (the GitHub build is not notarized). In-app purchases work only in the Mac App Store version, currently in review on the same App Store record as Talky iOS (universal purchase).
 
-| Walkie: Night Ops backdrop | World-band radio: 343 stations | Walkie: Olive Drab backdrop |
+| Walkie: Night Ops backdrop | World-band radio: 330+ stations | Walkie: Olive Drab backdrop |
 |---|---|---|
 | ![macTalky Walkie, Night Ops](docs/screenshots/macos/walkie_nightops.png) | ![macTalky Radio](docs/screenshots/macos/radio_carbon.png) | ![macTalky Walkie, Olive Drab](docs/screenshots/macos/walkie_olive.png) |
 
 - **Design**: "tactical field console" UI, graphite panels, amber phosphor VFD typography, and a full Metal shader suite via SwiftUI `colorEffect`/`layerEffect`: **5 selectable tactical backdrops** (Carbon, Night Ops, Olive Drab, Desert Fox, Naval Grey, grid, radar sweep, canvas weave, TX/RX-reactive tinting), a phosphor **spectrum VU visualizer** with peak-hold, a **CRT effect** (chromatic aberration + scanlines) on the VFD displays and radio pulse rings around the PTT key.
 - **Push-to-talk**: giant TALK key, hold with the mouse **or hold the Space bar**. 10 s max per transmission (TALKY1 frame cap), segmented VU meter, TX/RX/NET lamps.
-- **Radio**: the full 343-station worldwide browser with search, filters, favorites and recents, Media-key/Now Playing integration.
+- **Radio**: the full worldwide browser (330+ stations) with search, filters, favorites and recents, Media-key/Now Playing integration.
 - **Live receiver**: HF shortwave, **CB 27 MHz** (40 channels, DX 27.555, scan, squelch, typed frequency) and POC channels, on the same engine as the iPhone ([`Shared/RealRadio/`](Shared/RealRadio/)).
 - **Private channels**: same SHA256 password-derived channel IDs as iOS/Android (Pro).
 - **Universal purchases**: same bundle ID as the iOS app → the Talky Pro subscription and Themes Pack bought on iPhone unlock on the Mac and vice versa (StoreKit 2, no Firebase on macOS). Pro/Themes Pack also unlocks the three premium backdrops.
@@ -128,7 +128,7 @@ Talky now ships an **Android port** too. It lives in [`Android/`](Android/) insi
 
 ### What works today
 - 🎙️ **Push-to-talk** over the local network (`CrossPlatformWalkieManager`, Network Service Discovery / NSD) with an `AudioManager` PTT pipeline
-- 📻 **343 radio stations**: the **same catalogue as iOS**, kept in sync from [`RadioManager.swift`](WalkieTalkie/RadioManager.swift) into [`Android/.../radio/RadioManager.kt`](Android/app/src/main/java/com/immaginet/talky/radio/RadioManager.kt)
+- 📻 **330+ radio stations**: the **same catalogue as iOS**, kept in sync from [`RadioManager.swift`](WalkieTalkie/RadioManager.swift) into [`Android/.../radio/RadioManager.kt`](Android/app/src/main/java/com/immaginet/talky/radio/RadioManager.kt)
 - 📣 **AdMob** stack (banner / interstitial / rewarded / app-open) with **UMP consent**: uses Google **test ad units** by default (see note below)
 - 🔥 **Firebase** Analytics + Crashlytics
 - 🎨 **Jetpack Compose** UI (Material 3), dark "hardware radio" aesthetic
@@ -520,7 +520,7 @@ WalkieTalkie/                            ← Repo root (Xcode project + Android 
 │   ├── app/src/main/java/com/immaginet/talky/
 │   │   ├── MainActivity.kt              ← Compose UI (radio + walkie)
 │   │   ├── net/CrossPlatformWalkieManager.kt  ← P2P PTT over NSD
-│   │   ├── radio/RadioManager.kt        ← 343 stations (synced from iOS)
+│   │   ├── radio/RadioManager.kt        ← 335 stations (synced from iOS)
 │   │   ├── audio/ · ads/ · firebase/ · protocol/
 │   ├── keystore.properties.sample       ← signing config template
 │   └── build.gradle.kts                 ← R8 minify + signing
