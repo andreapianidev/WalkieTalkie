@@ -567,3 +567,4 @@
 "radio_scope_pick" = "Scegli una stazione per vederne le onde";
 "live_pan_searching" = "Cerco un ricevitore che mandi lo spettro";
 "live_pan_missing" = "Questi ricevitori non mandano lo spettro: solo audio";
+"live_audio_spectrum" = "Spettro audio";

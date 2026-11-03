@@ -14,3 +14,13 @@
 "w_night" = "Đêm";
 "w_kp_day" = "Kp, 24 giờ qua";
 "w_source" = "NOAA SWPC · cập nhật %@";
+"w_kp_next" = "Kp, 24 giờ tới";
+"w_sun_name" = "Mặt trời và băng tần";
+"w_sun_about" = "Giờ mặt trời mọc và lặn nơi bạn ở, lúc các băng tần mở và đóng, và băng tần tốt nhất lúc này. Talky Pro.";
+"w_sunrise" = "MỌC";
+"w_sunset" = "LẶN";
+"w_best_now" = "Tốt nhất lúc này";
+"w_after_sunset" = "Sau khi lặn";
+"w_after_sunrise" = "Sau khi mọc";
+"w_control_name" = "Talky CB 19";
+"w_control_about" = "Mở Talky ở kênh CB 19.";

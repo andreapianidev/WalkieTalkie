@@ -91,7 +91,11 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
-### [2.1] (112), not submitted yet
+### [2.1] (113), not submitted yet
+
+#### New in (113)
+- HF and CB show the spectrum of the received audio until the receiver's
+  waterfall arrives, as on iOS 3.2 (113).
 
 #### New in (112)
 - The world radio and POC show what you are listening to as equalizer bars,
@@ -160,7 +164,26 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [3.2] (112), not submitted yet
+### [3.2] (113), not submitted yet
+
+#### New in (113)
+- **HF and CB always show a spectrum.** Many KiwiSDRs accept one connection
+  per address, and the waterfall is refused when the audio has taken it
+  (measured: whichever connects first, audio or waterfall, gets the slot).
+  Until the receiver's waterfall arrives, and if it never does, the screen
+  shows the spectrum of the audio being received, as bars, marked "Audio
+  spectrum" (Etere's audio scope idea); Talky keeps looking for a receiver
+  with a waterfall meanwhile.
+- **Widgets.** Propagation now also comes small (Kp, flux, flare class, the
+  four bands), shows the G storm scale, the X-ray flare class and, in the
+  large size, NOAA's Kp forecast for the next 24 hours; the last reading is
+  kept for when the phone is offline (from Etere's propagation widget).
+  New *Sun & bands* (Pro): next sunset or sunrise where you are, the best
+  band now and the bands after the next change, small, medium and Lock
+  Screen. The free *Channel* widget also goes on the Lock Screen. New
+  Control Centre button (iOS 18) that opens Talky on CB 19.
+- The world radio: a stream whose address ends in .m3u8 but sends plain MP3
+  now shows its bars too.
 
 #### New in (112)
 - **The world radio screen shows what you are listening to, as equalizer

@@ -568,3 +568,4 @@
 "radio_scope_pick" = "방송국을 고르면 파형이 보입니다";
 "live_pan_searching" = "스펙트럼을 보내는 수신기를 찾는 중";
 "live_pan_missing" = "이 수신기들은 스펙트럼을 보내지 않습니다: 오디오만";
+"live_audio_spectrum" = "오디오 스펙트럼";

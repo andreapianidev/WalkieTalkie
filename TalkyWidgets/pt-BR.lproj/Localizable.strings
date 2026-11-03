@@ -14,3 +14,13 @@
 "w_night" = "Noite";
 "w_kp_day" = "Kp, últimas 24 horas";
 "w_source" = "NOAA SWPC · atualizado %@";
+"w_kp_next" = "Kp, próximas 24 horas";
+"w_sun_name" = "Sol e faixas";
+"w_sun_about" = "Nascer e pôr do sol onde você está, que abrem e fecham as faixas, e qual faixa está melhor agora. Talky Pro.";
+"w_sunrise" = "NASCER";
+"w_sunset" = "PÔR DO SOL";
+"w_best_now" = "Melhor agora";
+"w_after_sunset" = "Depois do pôr do sol";
+"w_after_sunrise" = "Depois do nascer";
+"w_control_name" = "Talky PX 19";
+"w_control_about" = "Abre o Talky no canal 19 da PX.";

@@ -14,3 +14,13 @@
 "w_night" = "Gece";
 "w_kp_day" = "Kp, son 24 saat";
 "w_source" = "NOAA SWPC · %@ güncellendi";
+"w_kp_next" = "Kp, sonraki 24 saat";
+"w_sun_name" = "Güneş ve bantlar";
+"w_sun_about" = "Bulunduğun yerde gün doğumu ve batımı (bantları açıp kapatan saatler) ve şu an en iyi bant. Talky Pro.";
+"w_sunrise" = "GÜN DOĞUMU";
+"w_sunset" = "GÜN BATIMI";
+"w_best_now" = "Şu an en iyi";
+"w_after_sunset" = "Gün batımından sonra";
+"w_after_sunrise" = "Gün doğumundan sonra";
+"w_control_name" = "Talky CB 19";
+"w_control_about" = "Talky'yi CB 19. kanalda açar.";

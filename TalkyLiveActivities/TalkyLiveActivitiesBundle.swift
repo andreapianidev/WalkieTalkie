@@ -23,7 +23,11 @@ struct TalkyLiveActivitiesBundle: WidgetBundle {
         if #available(iOS 17.0, *) {
             ChannelWidget()
             PropagationWidget()
+            SunWidget()
             BandLockWidget()
+        }
+        if #available(iOS 18.0, *) {
+            ListenCBControl()
         }
     }
 }

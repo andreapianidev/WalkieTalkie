@@ -116,11 +116,50 @@ struct ChannelProvider: AppIntentTimelineProvider {
 
 @available(iOS 17.0, *)
 struct ChannelWidgetView: View {
+    @Environment(\.widgetFamily) private var family
     let entry: ChannelEntry
 
     var body: some View {
+        #if os(iOS)
+        if family == .accessoryRectangular || family == .accessoryInline {
+            lockScreen
+        } else {
+            dial
+        }
+        #else
+        dial
+        #endif
+    }
+
+    #if os(iOS)
+    /// Schermata di blocco, gratis come il widget: canale e banda aperta o no.
+    private var lockScreen: some View {
         let outlook = entry.conditions.outlook(entry.channel.shortwave)
-        VStack(alignment: .leading, spacing: 6) {
+        return Group {
+            if family == .accessoryInline {
+                Text("\(entry.channel.dial) · \(entry.channel.shortwave.name) \(TalkyDial.text(outlook))")
+            } else {
+                VStack(alignment: .leading, spacing: 1) {
+                    Text("\(entry.channel.band) \(entry.channel.dial)")
+                        .font(.headline)
+                        .widgetAccentable()
+                    Text(entry.channel.detail)
+                        .font(.caption)
+                    Text("\(entry.channel.shortwave.name) · \(TalkyDial.text(outlook))")
+                        .font(.caption2)
+                }
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+            }
+        }
+        .widgetURL(entry.channel.link)
+        .containerBackground(.clear, for: .widget)
+    }
+    #endif
+
+    private var dial: some View {
+        let outlook = entry.conditions.outlook(entry.channel.shortwave)
+        return VStack(alignment: .leading, spacing: 6) {
             HStack {
                 Text(entry.channel.band)
                     .font(.system(size: 11, weight: .heavy, design: .monospaced))
@@ -171,6 +210,10 @@ struct ChannelWidget: Widget {
         }
         .configurationDisplayName("w_channel_name")
         .description("w_channel_about")
+        #if os(iOS)
+        .supportedFamilies([.systemSmall, .accessoryRectangular, .accessoryInline])
+        #else
         .supportedFamilies([.systemSmall])
+        #endif
     }
 }

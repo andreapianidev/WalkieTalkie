@@ -567,3 +567,4 @@
 "radio_scope_pick" = "Pick a station to see its waves";
 "live_pan_searching" = "Looking for a receiver that sends the spectrum";
 "live_pan_missing" = "These receivers send no spectrum: audio only";
+"live_audio_spectrum" = "Audio spectrum";

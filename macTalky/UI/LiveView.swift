@@ -215,7 +215,7 @@ struct LiveView: View {
 
                 SegmentedMeter(level: meterLevel, segments: 24)
 
-                if band == .poc, live.isOn {
+                if band == .poc || (band.isKiwi && !live.hasWaterfall && live.state == .online && !live.isOutOfFreeTime), live.isOn {
                     TimelineView(.animation(minimumInterval: 1.0 / 30, paused: live.state != .online)) { _ in
                         SoundBandsView(display: live.soundBands.display(), color: Talky.amber)
                             .padding(.horizontal, 8)
@@ -225,7 +225,7 @@ struct LiveView: View {
                     .frame(height: 230)
                 }
 
-                if band.isKiwi, live.isOn {
+                if band.isKiwi, live.isOn, live.hasWaterfall || live.state != .online || live.isOutOfFreeTime {
                     PanoramaView(panorama: live.panorama,
                                  tuning: live.tuning,
                                  signalDBm: live.signalDBm,

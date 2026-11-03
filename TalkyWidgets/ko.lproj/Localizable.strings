@@ -14,3 +14,13 @@
 "w_night" = "밤";
 "w_kp_day" = "Kp 최근 24시간";
 "w_source" = "NOAA SWPC · %@ 업데이트";
+"w_kp_next" = "Kp, 앞으로 24시간";
+"w_sun_name" = "태양과 밴드";
+"w_sun_about" = "현재 위치의 일출과 일몰(밴드를 열고 닫는 시각)과 지금 가장 좋은 밴드. Talky Pro.";
+"w_sunrise" = "일출";
+"w_sunset" = "일몰";
+"w_best_now" = "지금 가장 좋음";
+"w_after_sunset" = "일몰 후";
+"w_after_sunrise" = "일출 후";
+"w_control_name" = "Talky CB 19";
+"w_control_about" = "CB 19번 채널로 Talky를 엽니다.";

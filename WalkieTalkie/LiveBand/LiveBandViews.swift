@@ -503,6 +503,8 @@ struct LiveSecondaryRow: View {
 struct LiveSoundScreen: View {
     @ObservedObject var live = LiveRadio.shared
     let compact: Bool
+    /// In HF e CB senza cascata: cosa si sta guardando.
+    var label: String?
 
     private let amber = Color(red: 1.0, green: 0.8, blue: 0.0)
 
@@ -518,7 +520,7 @@ struct LiveSoundScreen: View {
                     .opacity(live.state == .online ? 1 : 0.35)
                 HStack(spacing: 5) {
                     Circle().fill(live.talker != nil ? Color.red : Color.white.opacity(0.3)).frame(width: 6, height: 6)
-                    Text(live.talker?.uppercased() ?? live.channelName.uppercased())
+                    Text(label?.uppercased() ?? live.talker?.uppercased() ?? live.channelName.uppercased())
                         .font(.system(size: 9, weight: .heavy, design: .monospaced))
                         .foregroundColor(.white.opacity(0.8))
                         .lineLimit(1)
@@ -661,6 +663,14 @@ struct LivePanoramaScreen: View {
     let compact: Bool
 
     var body: some View {
+        if live.hasWaterfall || live.isOutOfFreeTime || live.state != .online {
+            panorama
+        } else {
+            LiveSoundScreen(compact: compact, label: live.spectrumSearching ? "live_pan_searching".localized : "live_audio_spectrum".localized)
+        }
+    }
+
+    private var panorama: some View {
         PanoramaView(panorama: live.panorama,
                      tuning: live.tuning,
                      signalDBm: live.signalDBm,

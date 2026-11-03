@@ -14,3 +14,13 @@
 "w_night" = "Nacht";
 "w_kp_day" = "Kp, letzte 24 Stunden";
 "w_source" = "NOAA SWPC · aktualisiert %@";
+"w_kp_next" = "Kp, nächste 24 Stunden";
+"w_sun_name" = "Sonne & Bänder";
+"w_sun_about" = "Sonnenauf- und -untergang bei dir, die die Bänder öffnen und schließen, und welches Band jetzt am besten geht. Talky Pro.";
+"w_sunrise" = "AUFGANG";
+"w_sunset" = "UNTERGANG";
+"w_best_now" = "Jetzt am besten";
+"w_after_sunset" = "Nach Sonnenuntergang";
+"w_after_sunrise" = "Nach Sonnenaufgang";
+"w_control_name" = "Talky CB 19";
+"w_control_about" = "Öffnet Talky auf CB-Kanal 19.";

@@ -569,3 +569,4 @@
 "radio_scope_pick" = "Pilih stesen untuk melihat gelombangnya";
 "live_pan_searching" = "Mencari penerima yang menghantar spektrum";
 "live_pan_missing" = "Penerima ini tidak menghantar spektrum: audio sahaja";
+"live_audio_spectrum" = "Spektrum audio";

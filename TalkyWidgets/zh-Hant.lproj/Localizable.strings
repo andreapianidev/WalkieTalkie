@@ -14,3 +14,13 @@
 "w_night" = "夜間";
 "w_kp_day" = "Kp 過去 24 小時";
 "w_source" = "NOAA SWPC · %@ 更新";
+"w_kp_next" = "Kp,未來 24 小時";
+"w_sun_name" = "太陽與波段";
+"w_sun_about" = "你所在地的日出和日落(波段開合的時刻),以及現在最好的波段。Talky Pro。";
+"w_sunrise" = "日出";
+"w_sunset" = "日落";
+"w_best_now" = "現在最好";
+"w_after_sunset" = "日落後";
+"w_after_sunrise" = "日出後";
+"w_control_name" = "Talky CB 19";
+"w_control_about" = "開啟 Talky 並調到 CB 19 頻道。";

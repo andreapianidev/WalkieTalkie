@@ -569,3 +569,4 @@
 "radio_scope_pick" = "選擇電台即可看到波形";
 "live_pan_searching" = "正在尋找能傳送頻譜的接收機";
 "live_pan_missing" = "這些接收機不傳送頻譜：僅有音訊";
+"live_audio_spectrum" = "音訊頻譜";

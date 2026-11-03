@@ -567,3 +567,4 @@
 "radio_scope_pick" = "Chọn một đài để xem sóng âm";
 "live_pan_searching" = "Đang tìm máy thu gửi được phổ tần";
 "live_pan_missing" = "Các máy thu này không gửi phổ tần: chỉ có âm thanh";
+"live_audio_spectrum" = "Phổ âm thanh";

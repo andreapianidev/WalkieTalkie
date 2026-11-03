@@ -568,3 +568,4 @@
 "radio_scope_pick" = "局を選ぶと波形が表示されます";
 "live_pan_searching" = "スペクトラムを送る受信機を探しています";
 "live_pan_missing" = "これらの受信機はスペクトラムを送りません：音声のみ";
+"live_audio_spectrum" = "オーディオスペクトラム";

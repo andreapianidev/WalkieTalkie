@@ -14,3 +14,13 @@
 "w_night" = "Malam";
 "w_kp_day" = "Kp, 24 jam lepas";
 "w_source" = "NOAA SWPC · dikemas kini %@";
+"w_kp_next" = "Kp, 24 jam akan datang";
+"w_sun_name" = "Matahari & jalur";
+"w_sun_about" = "Matahari terbit dan terbenam di tempat anda, yang membuka dan menutup jalur, dan jalur terbaik sekarang. Talky Pro.";
+"w_sunrise" = "TERBIT";
+"w_sunset" = "TERBENAM";
+"w_best_now" = "Terbaik sekarang";
+"w_after_sunset" = "Selepas terbenam";
+"w_after_sunrise" = "Selepas terbit";
+"w_control_name" = "Talky CB 19";
+"w_control_about" = "Membuka Talky pada saluran CB 19.";

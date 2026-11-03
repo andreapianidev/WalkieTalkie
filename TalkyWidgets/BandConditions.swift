@@ -17,6 +17,9 @@ struct BandConditions: TimelineEntry {
     let month: Int
     let southern: Bool
     let hasPro: Bool
+    /// Prossima alba e prossimo tramonto dove si trova chi guarda.
+    let sunrise: Date?
+    let sunset: Date?
 
     func outlook(_ band: ShortwaveBand) -> BandOutlook? {
         report.map { band.outlook($0, sunUp: sunUp, month: month, southern: southern) }
@@ -25,9 +28,21 @@ struct BandConditions: TimelineEntry {
     static func make(report: SpaceReport?, hasPro: Bool, at date: Date = .now) -> BandConditions {
         let place = ApproximatePlace.current
         let sun = SunPosition.elevation(latitude: place.latitude, longitude: place.longitude, at: date)
+        let events = SunPosition.nextEvents(latitude: place.latitude, longitude: place.longitude, after: date)
         return BandConditions(date: date, report: report, sunUp: sun > -3,
                               month: Calendar.current.component(.month, from: date),
-                              southern: place.latitude < 0, hasPro: hasPro)
+                              southern: place.latitude < 0, hasPro: hasPro,
+                              sunrise: events.rise, sunset: events.set)
+    }
+
+    /// La banda piu' alta aperta adesso: quella dove si sente piu' lontano.
+    var bestBand: ShortwaveBand? {
+        ShortwaveBand.allCases.first { outlook($0) == .open } ?? ShortwaveBand.allCases.first { outlook($0) == .weak }
+    }
+
+    /// Come staranno le bande dopo il prossimo cambio fra giorno e notte.
+    func outlookAfterSwitch(_ band: ShortwaveBand) -> BandOutlook? {
+        report.map { band.outlook($0, sunUp: !sunUp, month: month, southern: southern) }
     }
 
     static let preview = make(report: .sample, hasPro: true)
@@ -55,7 +70,8 @@ func bandTimeline(proOnly: Bool) async -> Timeline<BandConditions> {
     async let report = SpaceReport.fetch()
     let pro = await TalkyPro.isActive()
     let now = Date()
-    let fetched = (proOnly && !pro) ? nil : await report
+    var fetched = (proOnly && !pro) ? nil : await report
+    if let fresh = fetched { SpaceReport.save(fresh) } else if !(proOnly && !pro) { fetched = SpaceReport.saved() }
     let entries = (0 ..< 3).map { BandConditions.make(report: fetched, hasPro: pro, at: now.addingTimeInterval(Double($0) * 1200)) }
     return Timeline(entries: entries, policy: .after(now.addingTimeInterval(3600)))
 }

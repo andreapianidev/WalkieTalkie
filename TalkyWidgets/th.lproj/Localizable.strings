@@ -14,3 +14,13 @@
 "w_night" = "กลางคืน";
 "w_kp_day" = "Kp 24 ชั่วโมงล่าสุด";
 "w_source" = "NOAA SWPC · อัปเดต %@";
+"w_kp_next" = "Kp, 24 ชั่วโมงข้างหน้า";
+"w_sun_name" = "ดวงอาทิตย์และย่าน";
+"w_sun_about" = "เวลาพระอาทิตย์ขึ้นและตกที่คุณอยู่ ซึ่งเปิดและปิดย่านความถี่ และย่านที่ดีที่สุดตอนนี้ Talky Pro";
+"w_sunrise" = "ขึ้น";
+"w_sunset" = "ตก";
+"w_best_now" = "ดีที่สุดตอนนี้";
+"w_after_sunset" = "หลังพระอาทิตย์ตก";
+"w_after_sunrise" = "หลังพระอาทิตย์ขึ้น";
+"w_control_name" = "Talky CB 19";
+"w_control_about" = "เปิด Talky ที่ช่อง CB 19";

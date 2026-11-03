@@ -567,3 +567,4 @@
 "radio_scope_pick" = "Escolha uma estação para ver suas ondas";
 "live_pan_searching" = "Procurando um receptor que envie o espectro";
 "live_pan_missing" = "Estes receptores não enviam o espectro: só áudio";
+"live_audio_spectrum" = "Espectro de áudio";

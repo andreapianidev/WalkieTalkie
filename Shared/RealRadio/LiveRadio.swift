@@ -114,6 +114,9 @@ final class LiveRadio: ObservableObject {
     @Published private(set) var spectrumSearching = false
     /// Nessun ricevitore provato manda lo spettro: si ascolta senza.
     @Published private(set) var spectrumMissing = false
+    /// Il ricevitore sta mandando la cascata. Finche' e' falso lo schermo
+    /// mostra lo spettro dell'audio che arriva, come l'AudioScope di Etere.
+    @Published private(set) var hasWaterfall = false
     /// Ascolto fermato perche' l'app e' andata in background senza Pro.
     @Published private(set) var isSuspended = false
     @Published var volume: Float = 0.9 {
@@ -609,6 +612,7 @@ final class LiveRadio: ObservableObject {
         squelch.reset(for: tuning)
         squelchOpen = false
         spectrumMissing = false
+        hasWaterfall = false
         panorama.clear()
         // CB: sei canali in vista (58 kHz); HF: 29 kHz, una manciata di stazioni SSB.
         let listener = KiwiListener(receiver: receiver, tuning: tuning, squelch: band == .cb ? squelch : nil,
@@ -836,6 +840,7 @@ final class LiveRadio: ObservableObject {
         if ok {
             spectrumSearching = false
             spectrumMissing = false
+            hasWaterfall = true
             return
         }
         if spectrumHops < 3, candidates.indices.contains(candidateIndex + 1), !isOutOfFreeTime {

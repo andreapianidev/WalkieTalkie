@@ -567,3 +567,4 @@
 "radio_scope_pick" = "Wähle einen Sender, um seine Wellen zu sehen";
 "live_pan_searching" = "Suche einen Empfänger, der das Spektrum sendet";
 "live_pan_missing" = "Diese Empfänger senden kein Spektrum: nur Ton";
+"live_audio_spectrum" = "Audiospektrum";

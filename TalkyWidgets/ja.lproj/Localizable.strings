@@ -14,3 +14,13 @@
 "w_night" = "夜";
 "w_kp_day" = "Kp 過去24時間";
 "w_source" = "NOAA SWPC · %@ 更新";
+"w_kp_next" = "Kp、今後24時間";
+"w_sun_name" = "太陽とバンド";
+"w_sun_about" = "現在地の日の出と日の入り(バンドを開閉する時刻)と、今いちばん良いバンド。Talky Pro。";
+"w_sunrise" = "日の出";
+"w_sunset" = "日の入り";
+"w_best_now" = "今いちばん良い";
+"w_after_sunset" = "日没後";
+"w_after_sunrise" = "日の出後";
+"w_control_name" = "Talky CB 19";
+"w_control_about" = "CBチャンネル19に合わせてTalkyを開きます。";

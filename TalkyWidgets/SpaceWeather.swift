@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct SpaceReport: Sendable {
+struct SpaceReport: Codable, Sendable {
     /// Flusso solare a 10,7 cm (SFI): sopra 120 le bande alte si aprono di giorno.
     var solarFlux: Int
     /// Indice Kp planetario piu' recente, 0...9: oltre 5 c'e' tempesta geomagnetica.
@@ -17,10 +17,36 @@ struct SpaceReport: Sendable {
     var kpDay: [Double]
     /// Scala R dei blackout radio, 0...5.
     var blackout: Int
+    /// Previsione NOAA dei prossimi otto Kp a tre ore: le prossime 24 ore.
+    var kpNext: [Double] = []
+    /// Raggi X dei GOES (0,1-0,8 nm) in W/m2: i brillamenti spengono l'HF di giorno.
+    var xray: Double?
+    /// Scala G delle tempeste geomagnetiche, 0...5.
+    var storm: Int = 0
     var issued: Date
 
     static let sample = SpaceReport(solarFlux: 128, kp: 2.3, kpDay: [1.7, 2.0, 2.3, 1.3, 1.0, 2.0, 2.7, 2.3],
-                                    blackout: 0, issued: .now)
+                                    blackout: 0, kpNext: [2.0, 2.3, 2.7, 3.0, 2.3, 2.0, 1.7, 2.0],
+                                    xray: 9.9e-7, storm: 0, issued: .now)
+
+    /// "C2.4": la classe del brillamento, come la scrive la NOAA (da Etere).
+    var flareClass: String? {
+        guard let xray, xray > 0 else { return nil }
+        let classes: [(String, Double)] = [("X", 1e-4), ("M", 1e-5), ("C", 1e-6), ("B", 1e-7), ("A", 1e-8)]
+        let (letter, base) = classes.first { xray >= $0.1 } ?? ("A", 1e-8)
+        return letter + String(format: "%.1f", xray / base)
+    }
+
+    /// L'ultima lettura, mostrata quando il telefono non ha rete (da Etere).
+    private static let savedKey = "talky.space.last"
+
+    static func saved() -> SpaceReport? {
+        UserDefaults.standard.data(forKey: savedKey).flatMap { try? JSONDecoder().decode(SpaceReport.self, from: $0) }
+    }
+
+    static func save(_ report: SpaceReport) {
+        UserDefaults.standard.set(try? JSONEncoder().encode(report), forKey: savedKey)
+    }
 
     private static let base = "https://services.swpc.noaa.gov/products/"
 
@@ -28,6 +54,8 @@ struct SpaceReport: Sendable {
         async let flux = json("summary/10cm-flux.json")
         async let kpRows = json("noaa-planetary-k-index.json")
         async let scales = json("noaa-scales.json")
+        async let forecast = json("noaa-planetary-k-index-forecast.json")
+        async let xrays = jsonAt("https://services.swpc.noaa.gov/json/goes/primary/xrays-6-hour.json")
 
         guard let fluxRow = (await flux as? [[String: Any]])?.last,
               let sfi = (fluxRow["flux"] as? NSNumber)?.intValue ?? Int(fluxRow["flux"] as? String ?? ""),
@@ -35,16 +63,29 @@ struct SpaceReport: Sendable {
         let kps = rows.compactMap { ($0["Kp"] as? NSNumber)?.doubleValue }
         guard let latest = kps.last else { return nil }
 
-        var blackout = 0
-        if let now = (await scales as? [String: Any])?["0"] as? [String: Any],
-           let r = now["R"] as? [String: Any], let scale = r["Scale"] as? String {
-            blackout = Int(scale) ?? 0
+        var blackout = 0, storm = 0
+        if let now = (await scales as? [String: Any])?["0"] as? [String: Any] {
+            if let r = now["R"] as? [String: Any], let scale = r["Scale"] as? String { blackout = Int(scale) ?? 0 }
+            if let g = now["G"] as? [String: Any], let scale = g["Scale"] as? String { storm = Int(scale) ?? 0 }
         }
-        return SpaceReport(solarFlux: sfi, kp: latest, kpDay: Array(kps.suffix(8)), blackout: blackout, issued: .now)
+        let next = ((await forecast as? [[String: Any]]) ?? [])
+            .filter { ($0["observed"] as? String) == "predicted" }
+            .compactMap { ($0["kp"] as? NSNumber)?.doubleValue }
+            .prefix(8)
+        let xray = ((await xrays as? [[String: Any]]) ?? [])
+            .filter { ($0["energy"] as? String) == "0.1-0.8nm" }
+            .compactMap { ($0["flux"] as? NSNumber)?.doubleValue }
+            .last
+        return SpaceReport(solarFlux: sfi, kp: latest, kpDay: Array(kps.suffix(8)), blackout: blackout,
+                           kpNext: Array(next), xray: xray, storm: storm, issued: .now)
     }
 
     private static func json(_ path: String) async -> Any? {
-        guard let url = URL(string: base + path) else { return nil }
+        await jsonAt(base + path)
+    }
+
+    private static func jsonAt(_ address: String) async -> Any? {
+        guard let url = URL(string: address) else { return nil }
         var request = URLRequest(url: url, timeoutInterval: 15)
         request.setValue("Talky", forHTTPHeaderField: "User-Agent")
         guard let (data, _) = try? await URLSession.shared.data(for: request) else { return nil }
@@ -130,5 +171,21 @@ enum SunPosition {
         let hourAngle = (sidereal + longitude) * rad - ascension
         let lat = latitude * rad
         return asin(sin(lat) * sin(declination) + cos(lat) * cos(declination) * cos(hourAngle)) / rad
+    }
+
+    /// Prossima alba e prossimo tramonto nelle 24 ore, a passi di 2 minuti
+    /// (sole a -0,83 gradi, con la rifrazione). Nil vicino ai poli.
+    static func nextEvents(latitude: Double, longitude: Double, after start: Date) -> (rise: Date?, set: Date?) {
+        var rise: Date?, set: Date?
+        var previous = elevation(latitude: latitude, longitude: longitude, at: start) > -0.83
+        for step in 1 ... 720 {
+            let t = start.addingTimeInterval(Double(step) * 120)
+            let up = elevation(latitude: latitude, longitude: longitude, at: t) > -0.83
+            if up, !previous, rise == nil { rise = t }
+            if !up, previous, set == nil { set = t }
+            previous = up
+            if rise != nil, set != nil { break }
+        }
+        return (rise, set)
     }
 }

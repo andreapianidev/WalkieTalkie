@@ -145,14 +145,33 @@ nonisolated final class StreamTap: NSObject, URLSessionDataDelegate, @unchecked 
     /// Una playlist master porta alle varianti: si prende la prima.
     private func mediaPlaylist(_ session: URLSession, _ url: URL) async -> URL? {
         guard let (text, base) = await fetchText(session, url) else { return nil }
+        // Alcuni indirizzi finiscono in .m3u8 ma mandano MP3 continuo: si
+        // decide dal contenuto, non dal nome.
+        guard text.hasPrefix("#EXTM3U") else {
+            session.dataTask(with: url).resume()
+            return nil
+        }
         guard text.contains("#EXT-X-STREAM-INF") else { return base }
         let lines = text.split(whereSeparator: \.isNewline).map(String.init)
         guard let first = lines.first(where: { !$0.hasPrefix("#") && !$0.trimmingCharacters(in: .whitespaces).isEmpty }) else { return nil }
         return URL(string: first, relativeTo: base)?.absoluteURL
     }
 
+    /// Una playlist e' piccola; se dietro l'indirizzo c'e' invece uno stream
+    /// continuo ci si ferma ai primi byte, che bastano per capirlo.
     private func fetchText(_ session: URLSession, _ url: URL) async -> (String, URL)? {
-        guard let (data, response) = try? await session.data(from: url) else { return nil }
+        guard let (bytes, response) = try? await session.bytes(from: url) else { return nil }
+        var data = Data()
+        do {
+            for try await byte in bytes {
+                data.append(byte)
+                if data.count == 7, data != Data("#EXTM3U".utf8) { break }
+                if data.count > 1 << 20 { break }
+            }
+        } catch {
+            return nil
+        }
+        bytes.task.cancel()
         return (String(decoding: data, as: UTF8.self), response.url ?? url)
     }
 
