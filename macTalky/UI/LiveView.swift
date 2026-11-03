@@ -221,7 +221,10 @@ struct LiveView: View {
                                  signalDBm: live.signalDBm,
                                  words: PanoramaWords(overNoise: "%d dB ABOVE NOISE",
                                                       noiseOnly: "NOISE ONLY",
-                                                      waiting: live.isOutOfFreeTime ? freeTimeUp : "WAITING FOR SPECTRUM"))
+                                                      waiting: live.isOutOfFreeTime ? freeTimeUp
+                                                          : live.spectrumSearching ? "LOOKING FOR A RECEIVER WITH SPECTRUM"
+                                                          : live.spectrumMissing ? "NO SPECTRUM FROM THESE RECEIVERS, AUDIO ONLY"
+                                                          : "WAITING FOR SPECTRUM"))
                         .frame(height: 230)
                         .onTapGesture { if live.isOutOfFreeTime { showPaywall = true } }
                 }

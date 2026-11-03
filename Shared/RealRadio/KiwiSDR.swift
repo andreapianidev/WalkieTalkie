@@ -118,11 +118,17 @@ actor KiwiListener {
     private let eventSink: AsyncStream<LiveEvent>.Continuation
 
     private var snd: WebSocketLink?
+    /// Indirizzo vero: i ricevitori dietro proxy.kiwisdr.com rimandano a un
+    /// altro host, e il WebSocket di Network.framework non segue i rimandi.
+    private var host: String
+    private var port: Int
     /// La cascata viaggia su un secondo WebSocket con lo stesso timestamp
     /// dell'audio. Se il ricevitore la rifiuta (alcuni hanno meno canali
     /// cascata che audio) si continua ad ascoltare senza.
     private var wf: WebSocketLink?
     private var wfReady = false
+    /// Lo spettro e' arrivato, o si e' gia' detto che non arriva: un solo avviso.
+    private var spectrumTold = false
     private var stamp: UInt32 = 0
     private var kiwiBandwidth = 30_000_000.0
     private var fftSize = 1024.0
@@ -140,6 +146,8 @@ actor KiwiListener {
         self.tuning = tuning
         self.squelch = squelch
         self.spectrumZoom = spectrumZoom
+        host = receiver.host
+        port = receiver.port
         (audio, audioSink) = AsyncStream.makeStream(of: PCMChunk.self, bufferingPolicy: .bufferingNewest(32))
         (events, eventSink) = AsyncStream.makeStream(of: LiveEvent.self, bufferingPolicy: .bufferingNewest(128))
     }
@@ -147,6 +155,9 @@ actor KiwiListener {
     func connect() async {
         eventSink.yield(.link(.connecting))
         stamp = UInt32(truncatingIfNeeded: Int(Date().timeIntervalSince1970))
+        if host.hasSuffix(".proxy.kiwisdr.com") {
+            (host, port) = await KiwiAddress.resolve(host: host, port: port, path: "/\(stamp &- 1)/SND")
+        }
         guard let sndURL = streamURL("SND") else {
             refuse(.refused)
             return
@@ -198,8 +209,8 @@ actor KiwiListener {
     private func streamURL(_ kind: String) -> URL? {
         var url = URLComponents()
         url.scheme = "ws"
-        url.host = receiver.host
-        url.port = receiver.port
+        url.host = host
+        url.port = port
         url.path = "/\(stamp)/\(kind)"
         return url.url
     }
@@ -219,6 +230,15 @@ actor KiwiListener {
             return
         }
         link.send("SET auth t=kiwi p=")
+        // Molti Kiwi danno l'audio a otto persone e la cascata solo a tre: chi
+        // arriva dopo resta senza spettro e il ricevitore non lo dice sempre.
+        // Dopo sei secondi senza righe si avvisa, e LiveRadio cerca un altro
+        // ricevitore.
+        tasks.append(Task { [weak self] in
+            try? await Task.sleep(for: .seconds(6))
+            guard !Task.isCancelled else { return }
+            await self?.waterfallDeadline()
+        })
         tasks.append(Task { [weak self] in
             do {
                 for try await message in link.messages {
@@ -254,6 +274,10 @@ actor KiwiListener {
             }
         case let .waterfall(xBin, zoom, bins):
             guard !bins.isEmpty else { return }
+            if !spectrumTold {
+                spectrumTold = true
+                eventSink.yield(.spectrum(true))
+            }
             // x_bin e' contato in fette dello zoom massimo, dal bordo a 0 Hz.
             let startHz = Double(xBin) * kiwiBandwidth / (fftSize * pow(2, zoomMax))
             let binHz = kiwiBandwidth / (fftSize * pow(2, Double(zoom)))
@@ -264,10 +288,18 @@ actor KiwiListener {
         }
     }
 
+    private func waterfallDeadline() {
+        if !spectrumTold { dropWaterfall() }
+    }
+
     private func dropWaterfall() {
         wf?.close()
         wf = nil
         wfReady = false
+        if !spectrumTold {
+            spectrumTold = true
+            eventSink.yield(.spectrum(false))
+        }
     }
 
     private func sendZoom() {

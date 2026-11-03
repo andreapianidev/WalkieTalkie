@@ -566,3 +566,5 @@
 "radio_scope_unsupported" = "Bu istasyonun yayını dalgalarının okunmasına izin vermiyor";
 "radio_scope_paused" = "Duraklatıldı";
 "radio_scope_pick" = "Dalgalarını görmek için bir istasyon seç";
+"live_pan_searching" = "Spektrum gönderen bir alıcı aranıyor";
+"live_pan_missing" = "Bu alıcılar spektrum göndermiyor: yalnızca ses";

@@ -658,7 +658,10 @@ struct LivePanoramaScreen: View {
                      signalDBm: live.signalDBm,
                      words: PanoramaWords(overNoise: "live_pan_over_noise".localized,
                                           noiseOnly: "live_pan_noise_only".localized,
-                                          waiting: (live.isOutOfFreeTime ? "live_free_time_up" : "live_pan_waiting").localized))
+                                          waiting: (live.isOutOfFreeTime ? "live_free_time_up"
+                                                            : live.spectrumSearching ? "live_pan_searching"
+                                                            : live.spectrumMissing ? "live_pan_missing"
+                                                            : "live_pan_waiting").localized))
             .frame(height: compact ? 132 : 185)
             .padding(.horizontal, 12)
             .onTapGesture {

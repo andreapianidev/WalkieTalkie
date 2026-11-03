@@ -59,6 +59,8 @@ nonisolated enum LiveEvent: Sendable {
     case squelch(Bool)
     /// Una riga dello spettro del ricevitore intorno alla sintonia.
     case sweep(SpectrumSweep)
+    /// Il ricevitore manda lo spettro (true) oppure no (false): una volta sola.
+    case spectrum(Bool)
 }
 
 /// Una riga della cascata di un KiwiSDR: potenza per fetta di frequenza,

@@ -566,3 +566,5 @@
 "radio_scope_unsupported" = "Der Stream dieses Senders lässt Talky die Wellen nicht lesen";
 "radio_scope_paused" = "Pause";
 "radio_scope_pick" = "Wähle einen Sender, um seine Wellen zu sehen";
+"live_pan_searching" = "Suche einen Empfänger, der das Spektrum sendet";
+"live_pan_missing" = "Diese Empfänger senden kein Spektrum: nur Ton";

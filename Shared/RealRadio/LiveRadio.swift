@@ -108,6 +108,10 @@ final class LiveRadio: ObservableObject {
     @Published private(set) var isOutOfFreeTime = false
     /// Spettro e cascata del ricevitore KiwiSDR che si ascolta.
     let panorama = Panorama()
+    /// Si sta passando a un altro ricevitore perche' questo non manda lo spettro.
+    @Published private(set) var spectrumSearching = false
+    /// Nessun ricevitore provato manda lo spettro: si ascolta senza.
+    @Published private(set) var spectrumMissing = false
     /// Ascolto fermato perche' l'app e' andata in background senza Pro.
     @Published private(set) var isSuspended = false
     @Published var volume: Float = 0.9 {
@@ -134,6 +138,9 @@ final class LiveRadio: ObservableObject {
     private var candidates: [KiwiReceiver] = []
     private var candidateIndex = 0
     private var benched: [String: Date] = [:]
+    /// Salti fatti per trovare un ricevitore con lo spettro, dall'ultima accensione.
+    private var spectrumHops = 0
+    private let spectrumMemory = SpectrumMemory()
     private var directoryTask: Task<Void, Never>?
 
     private var scoutTask: Task<Void, Never>?
@@ -578,6 +585,8 @@ final class LiveRadio: ObservableObject {
             candidates = band == .cb ? rankReceivers(latitude: nil, longitude: nil)
                                      : rankReceivers(latitude: currentHF.latitude, longitude: currentHF.longitude)
             candidateIndex = 0
+            spectrumHops = 0
+            spectrumSearching = false
             if band == .hf { tuning = currentHF.tuning }
         }
         guard !receivers.isEmpty else {
@@ -597,6 +606,7 @@ final class LiveRadio: ObservableObject {
         retried = fresh ? false : retried
         squelch.reset(for: tuning)
         squelchOpen = false
+        spectrumMissing = false
         panorama.clear()
         // CB: sei canali in vista (58 kHz); HF: 29 kHz, una manciata di stazioni SSB.
         let listener = KiwiListener(receiver: receiver, tuning: tuning, squelch: band == .cb ? squelch : nil,
@@ -613,9 +623,14 @@ final class LiveRadio: ObservableObject {
         let lat = latitude ?? here.latitude
         let lon = longitude ?? here.longitude
         let now = Date()
+        // Chi di recente non ha mandato lo spettro scivola in fondo, come se
+        // fosse 5000 km piu' lontano: resta una riserva se gli altri sono pieni.
+        func rank(_ r: KiwiReceiver) -> Double {
+            r.distance(toLatitude: lat, longitude: lon) + (spectrumMemory.lacksSpectrum(r.id) ? 5000 : 0)
+        }
         return receivers
             .filter { $0.freeSlots > 0 && (benched[$0.id].map { $0 < now } ?? true) }
-            .sorted { $0.distance(toLatitude: lat, longitude: lon) < $1.distance(toLatitude: lat, longitude: lon) }
+            .sorted { rank($0) < rank($1) }
             .prefix(10)
             .map { $0 }
     }
@@ -800,6 +815,30 @@ final class LiveRadio: ObservableObject {
             level = v
         case .sweep(let sweep):
             panorama.add(sweep, dialHz: tuning.hz, passband: KiwiFrame.passband(tuning))
+        case .spectrum(let ok):
+            spectrumArrived(ok)
+        }
+    }
+
+    /// Lo spettro e' parte di quello che si promette su HF e CB: se il
+    /// ricevitore non lo manda si prova il successivo, fino a tre volte.
+    private func spectrumArrived(_ ok: Bool) {
+        guard candidates.indices.contains(candidateIndex) else { return }
+        let receiver = candidates[candidateIndex]
+        spectrumMemory.note(receiver.id, sends: ok)
+        if ok {
+            spectrumSearching = false
+            spectrumMissing = false
+            return
+        }
+        if spectrumHops < 3, candidates.indices.contains(candidateIndex + 1), !isOutOfFreeTime {
+            spectrumHops += 1
+            spectrumSearching = true
+            candidateIndex += 1
+            connectHF(fresh: false)
+        } else {
+            spectrumSearching = false
+            spectrumMissing = true
         }
     }
 
@@ -820,3 +859,26 @@ final class LiveRadio: ObservableObject {
         squelchOpen = false
     }
 }
+
+/// Quali ricevitori hanno mandato lo spettro e quali no, ricordato fra un
+/// avvio e l'altro: la volta dopo si va dritti su uno che lo manda. Un "no"
+/// vale sei ore, perche' dipende da quanti ascoltano in quel momento.
+@available(iOS 16.0, macOS 13.0, *)
+nonisolated final class SpectrumMemory: @unchecked Sendable {
+    private let key = "live_spectrum_missing"
+    private let defaults = UserDefaults.standard
+
+    func lacksSpectrum(_ id: String) -> Bool {
+        guard let when = (defaults.dictionary(forKey: key) as? [String: Double])?[id] else { return false }
+        return Date().timeIntervalSince1970 - when < 6 * 3600
+    }
+
+    func note(_ id: String, sends: Bool) {
+        var map = (defaults.dictionary(forKey: key) as? [String: Double]) ?? [:]
+        let now = Date().timeIntervalSince1970
+        map = map.filter { now - $0.value < 6 * 3600 }
+        map[id] = sends ? nil : now
+        defaults.set(map, forKey: key)
+    }
+}
+

@@ -566,3 +566,5 @@
 "radio_scope_unsupported" = "Le flux de cette station ne permet pas de lire ses ondes";
 "radio_scope_paused" = "En pause";
 "radio_scope_pick" = "Choisissez une station pour voir ses ondes";
+"live_pan_searching" = "Recherche d'un récepteur qui envoie le spectre";
+"live_pan_missing" = "Ces récepteurs n'envoient pas le spectre : audio seul";

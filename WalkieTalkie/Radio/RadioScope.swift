@@ -3,9 +3,9 @@
 //
 //  L'audio della stazione che suona, letto mentre passa nel player: la forma
 //  d'onda dell'ultimo istante e il livello degli ultimi secondi. Un tap di
-//  MediaToolbox sulla traccia audio dello stream; funziona sugli stream
-//  continui (Icecast, Shoutcast, MP3 e AAC), non sugli HLS, dove AVFoundation
-//  non da' accesso ai campioni.
+//  MediaToolbox sulla traccia audio. ATTENZIONE, misurato il 03/11/2026: sugli
+//  stream dal vivo il tap non riceve nessun campione, ne' Icecast ne' HLS
+//  (funziona solo sui file). Va sostituito con una decodifica propria.
 
 import AVFoundation
 import MediaToolbox

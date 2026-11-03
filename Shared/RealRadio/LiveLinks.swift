@@ -190,3 +190,70 @@ nonisolated extension Duration {
         Double(components.seconds) + Double(components.attoseconds) * 1e-18
     }
 }
+
+/// Dove risponde davvero un KiwiSDR. Quelli dietro il proxy di kiwisdr.com
+/// (`nome.proxy.kiwisdr.com:8073`) rispondono "307" verso `proxy2`, e il
+/// WebSocket di Network.framework non segue i rimandi: senza questo passaggio
+/// la connessione scade dopo dieci secondi e si passa a un ricevitore piu'
+/// lontano. Si fa la stessa richiesta di apertura e si legge solo l'intestazione.
+@available(iOS 16.0, macOS 13.0, *)
+nonisolated enum KiwiAddress {
+    static func resolve(host: String, port: Int, path: String) async -> (String, Int) {
+        var host = host, port = port
+        for _ in 0 ..< 3 {
+            guard let head = await header(host: host, port: port, path: path),
+                  let status = head.split(separator: " ").dropFirst().first.flatMap({ Int($0) }),
+                  [301, 302, 307, 308].contains(status) else { break }
+            guard let line = head.split(separator: "\r\n").first(where: { $0.lowercased().hasPrefix("location:") }),
+                  let url = URL(string: line.dropFirst("location:".count).trimmingCharacters(in: .whitespaces)),
+                  let next = url.host else { break }
+            host = next
+            port = url.port ?? 80
+        }
+        return (host, port)
+    }
+
+    private static func header(host: String, port: Int, path: String) async -> String? {
+        guard let nwPort = NWEndpoint.Port(rawValue: UInt16(clamping: port)) else { return nil }
+        let connection = NWConnection(host: NWEndpoint.Host(host), port: nwPort, using: .tcp)
+        let queue = DispatchQueue(label: "kiwi resolve \(host)")
+        let request = "GET \(path) HTTP/1.1\r\nHost: \(host):\(port)\r\nConnection: Upgrade\r\nUpgrade: websocket\r\n"
+            + "Sec-WebSocket-Version: 13\r\nSec-WebSocket-Key: dGFsa3lyZXNvbHZlMDAwMQ==\r\n\r\n"
+        let text: String? = await withCheckedContinuation { cont in
+            let once = OnceValue<String?>(cont)
+            connection.stateUpdateHandler = { state in
+                switch state {
+                case .ready:
+                    connection.send(content: Data(request.utf8), completion: .contentProcessed { _ in })
+                    connection.receive(minimumIncompleteLength: 1, maximumLength: 4096) { data, _, _, _ in
+                        once.resume(data.map { String(decoding: $0, as: UTF8.self) })
+                    }
+                case .failed, .waiting, .cancelled:
+                    once.resume(nil)
+                default: break
+                }
+            }
+            connection.start(queue: queue)
+            queue.asyncAfter(deadline: .now() + 5) { once.resume(nil) }
+        }
+        connection.cancel()
+        return text
+    }
+}
+
+/// Come Once, per una continuazione che restituisce un valore.
+nonisolated final class OnceValue<T: Sendable>: @unchecked Sendable {
+    private var cont: CheckedContinuation<T, Never>?
+    private let lock = NSLock()
+
+    init(_ cont: CheckedContinuation<T, Never>) { self.cont = cont }
+
+    func resume(_ value: T) {
+        lock.lock()
+        let c = cont
+        cont = nil
+        lock.unlock()
+        c?.resume(returning: value)
+    }
+}
+

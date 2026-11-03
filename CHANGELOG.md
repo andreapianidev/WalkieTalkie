@@ -91,7 +91,13 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
-### [2.1] (110), not submitted yet
+### [2.1] (111), not submitted yet
+
+#### Fixed in (111)
+- The receiver's spectrum no longer waits for ever: Talky moves to a receiver
+  that sends it, follows the proxy.kiwisdr.com redirects and says when no
+  receiver sends one. Same fix and same measurements as iOS 3.2 (111).
+
 
 #### New in (106)
 - **Spectrum and waterfall** of the receiver on HF and CB, with the CB
@@ -150,7 +156,31 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [3.2] (110), not submitted yet
+### [3.2] (111), not submitted yet
+
+#### Fixed in (111)
+- **The spectrum stayed on "waiting" for ever on many receivers, in every
+  country.** Most public KiwiSDRs give audio to 8 listeners but the waterfall
+  to only 3 (709 of 840 in the public list are `rx8.wf3`): whoever arrives
+  later gets sound and no spectrum, often without being told. Measured near
+  the top download countries (Taipei, New York, Los Angeles, Berlin, Toronto,
+  Hong Kong, London, Paris, Sao Paulo, Rome, Sydney): 25 of the 55 nearest
+  receivers sent the waterfall, and every city had at least one among its
+  nearest five. Talky now waits 6 seconds for the spectrum, then moves to
+  the next receiver by itself (up to three times), remembers for six hours
+  which receivers sent none, and says so when none of them does.
+- **Receivers behind proxy.kiwisdr.com were skipped after a 10 second
+  timeout.** They answer with a redirect to `proxy2` that the WebSocket did
+  not follow, and in the US, Germany, the UK, Hong Kong and Australia they
+  are often the nearest ones. The redirect is now followed.
+
+#### Correction
+- The (110) notes below said the radio waveform works "on 317 of the 344
+  stations". It was never measured, and it was wrong: the audio tap that
+  build used receives no samples from any live stream, HLS or not (measured
+  on 20 stations; the same tap works on local files). It is being replaced.
+
+#### In (110)
 
 #### New
 - **Widgets.** Free: *Talky channel*, your favourite channel (CB 19, CB 9,

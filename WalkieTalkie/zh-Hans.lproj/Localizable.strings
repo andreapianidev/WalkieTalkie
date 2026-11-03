@@ -567,3 +567,5 @@
 "radio_scope_unsupported" = "此电台的流不允许读取波形";
 "radio_scope_paused" = "已暂停";
 "radio_scope_pick" = "选择电台即可看到波形";
+"live_pan_searching" = "正在寻找能发送频谱的接收机";
+"live_pan_missing" = "这些接收机不发送频谱：仅有音频";

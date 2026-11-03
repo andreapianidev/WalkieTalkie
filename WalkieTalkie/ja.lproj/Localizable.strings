@@ -567,3 +567,5 @@
 "radio_scope_unsupported" = "この局のストリームは波形を読み取れません";
 "radio_scope_paused" = "一時停止";
 "radio_scope_pick" = "局を選ぶと波形が表示されます";
+"live_pan_searching" = "スペクトラムを送る受信機を探しています";
+"live_pan_missing" = "これらの受信機はスペクトラムを送りません：音声のみ";

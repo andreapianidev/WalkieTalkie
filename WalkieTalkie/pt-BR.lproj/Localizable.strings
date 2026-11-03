@@ -566,3 +566,5 @@
 "radio_scope_unsupported" = "O stream desta estação não permite ler suas ondas";
 "radio_scope_paused" = "Pausado";
 "radio_scope_pick" = "Escolha uma estação para ver suas ondas";
+"live_pan_searching" = "Procurando um receptor que envie o espectro";
+"live_pan_missing" = "Estes receptores não enviam o espectro: só áudio";
