@@ -2,7 +2,7 @@
 //  macTalky
 //
 //  Onboarding al primo avvio, replicato dallo spirito di quello iOS ma in
-//  forma di sheet desktop: 3 pagine (Walkie, Rete+Microfono, Radio+Pro).
+//  forma di sheet desktop: 4 pagine (Walkie, Rete+Microfono, Live, Radio+Pro).
 //  Localizzato in-code in 14 lingue (le 13 dell'App Store + malese, come iOS).
 
 import SwiftUI
@@ -13,6 +13,7 @@ import SwiftUI
 private enum OBString {
     case welcomeTitle, welcomeBody
     case networkTitle, networkBody, networkTip, micGranted
+    case liveTitle, liveBody
     case radioTitle, radioBody
     case proNote
     case next, back, start
@@ -40,6 +41,8 @@ private enum OBString {
             .networkBody: "Talky finds Talky devices (iPhone, Android, Mac) on your Wi-Fi network automatically. Grant microphone access to transmit your voice.",
             .networkTip: "All devices must be on the same Wi-Fi network. There's nothing to pair: everyone starts on the public channel and finds each other on their own.",
             .micGranted: "Microphone authorized",
+            .liveTitle: "Real radio, live",
+            .liveBody: "Shortwave, CB 27 MHz and POC channels from real receivers and servers around the world, with the receiver's spectrum and waterfall. Listen only, 5 free minutes a day, unlimited with Talky Pro.",
             .radioTitle: "343 world radio stations",
             .radioBody: "Switch to the Radio module for verified stations from 50+ countries, with favorites, filters and media keys.",
             .proNote: "Talky Pro and the Themes Pack are shared with the iOS app: one purchase unlocks iPhone, iPad and Mac.",
@@ -52,6 +55,8 @@ private enum OBString {
             .networkBody: "Talky trova i dispositivi Talky (iPhone, Android, Mac) sulla tua rete Wi-Fi automaticamente. Concedi il microfono per trasmettere la voce.",
             .networkTip: "Tutti i dispositivi devono stare sulla stessa rete Wi-Fi. Non c'è niente da abbinare a mano: si parte tutti dal canale pubblico e ci si trova da soli.",
             .micGranted: "Microfono autorizzato",
+            .liveTitle: "La radio vera, dal vivo",
+            .liveBody: "Onde corte, CB 27 MHz e canali POC da ricevitori e server veri in tutto il mondo, con lo spettro e la cascata del ricevitore. Solo ascolto, 5 minuti gratis al giorno, senza limiti con Talky Pro.",
             .radioTitle: "343 stazioni radio dal mondo",
             .radioBody: "Passa al modulo Radio per stazioni verificate da oltre 50 Paesi, con preferiti, filtri e tasti multimediali.",
             .proNote: "Talky Pro e il Pacchetto Temi sono condivisi con l'app iOS: un solo acquisto sblocca iPhone, iPad e Mac.",
@@ -64,6 +69,8 @@ private enum OBString {
             .networkBody: "Talky findet Talky-Geräte (iPhone, Android, Mac) in deinem WLAN automatisch. Erlaube den Mikrofonzugriff, um deine Stimme zu übertragen.",
             .networkTip: "Alle Geräte müssen im selben WLAN sein. Es gibt nichts zu koppeln: Alle starten auf dem öffentlichen Kanal und finden sich von selbst.",
             .micGranted: "Mikrofon autorisiert",
+            .liveTitle: "Echter Funk, live",
+            .liveBody: "Kurzwelle, CB 27 MHz und POC-Kanäle von echten Empfängern und Servern auf der ganzen Welt, mit Spektrum und Wasserfall des Empfängers. Nur Empfang, 5 Gratisminuten am Tag, ohne Limit mit Talky Pro.",
             .radioTitle: "343 Radiosender aus aller Welt",
             .radioBody: "Wechsle zum Radio-Modul: verifizierte Sender aus über 50 Ländern, mit Favoriten, Filtern und Medientasten.",
             .proNote: "Talky Pro und das Themes-Paket werden mit der iOS-App geteilt: Ein Kauf schaltet iPhone, iPad und Mac frei.",
@@ -76,6 +83,8 @@ private enum OBString {
             .networkBody: "Talky encuentra automáticamente los dispositivos Talky (iPhone, Android, Mac) en tu red Wi-Fi. Concede acceso al micrófono para transmitir tu voz.",
             .networkTip: "Todos los dispositivos deben estar en la misma red Wi-Fi. No hay nada que emparejar: todos empiezan en el canal público y se encuentran solos.",
             .micGranted: "Micrófono autorizado",
+            .liveTitle: "Radio real, en directo",
+            .liveBody: "Onda corta, CB 27 MHz y canales POC de receptores y servidores reales de todo el mundo, con el espectro y la cascada del receptor. Solo escucha, 5 minutos gratis al día, sin límites con Talky Pro.",
             .radioTitle: "343 emisoras de radio del mundo",
             .radioBody: "Cambia al módulo Radio: emisoras verificadas de más de 50 países, con favoritos, filtros y teclas multimedia.",
             .proNote: "Talky Pro y el Pack de Temas se comparten con la app de iOS: una sola compra desbloquea iPhone, iPad y Mac.",
@@ -88,6 +97,8 @@ private enum OBString {
             .networkBody: "Talky trouve automatiquement les appareils Talky (iPhone, Android, Mac) sur votre réseau Wi-Fi. Autorisez le micro pour transmettre votre voix.",
             .networkTip: "Tous les appareils doivent être sur le même réseau Wi-Fi. Rien à appairer : tout le monde démarre sur le canal public et se trouve tout seul.",
             .micGranted: "Micro autorisé",
+            .liveTitle: "La vraie radio, en direct",
+            .liveBody: "Ondes courtes, CB 27 MHz et canaux POC depuis de vrais récepteurs et serveurs du monde entier, avec le spectre et la cascade du récepteur. Écoute seule, 5 minutes gratuites par jour, sans limite avec Talky Pro.",
             .radioTitle: "343 stations de radio du monde",
             .radioBody: "Passez au module Radio : stations vérifiées de plus de 50 pays, avec favoris, filtres et touches multimédia.",
             .proNote: "Talky Pro et le Pack de thèmes sont partagés avec l'app iOS : un seul achat débloque iPhone, iPad et Mac.",
@@ -100,6 +111,8 @@ private enum OBString {
             .networkBody: "TalkyはWi-Fiネットワーク上のTalkyデバイス(iPhone、Android、Mac)を自動で見つけます。声を送信するにはマイクを許可してください。",
             .networkTip: "すべての端末を同じWi-Fiネットワークに接続してください。手動でペアリングするものはありません。全員が公開チャンネルから始まり、自動で見つかります。",
             .micGranted: "マイク許可済み",
+            .liveTitle: "本物の無線をライブで",
+            .liveBody: "世界中の本物の受信機とサーバーから短波、CB 27 MHz、POCチャンネルを受信。受信機のスペクトラムとウォーターフォールも表示します。受信のみ、1日5分無料、Talky Proなら無制限。",
             .radioTitle: "世界343のラジオ局",
             .radioBody: "ラジオモジュールに切り替えると、50か国以上の検証済みステーションをお気に入り・フィルタ・メディアキーで楽しめます。",
             .proNote: "Talky ProとテーマパックはiOSアプリと共通。1回の購入でiPhone・iPad・Macすべてで使えます。",
@@ -112,6 +125,8 @@ private enum OBString {
             .networkBody: "Talky는 Wi-Fi 네트워크의 Talky 기기(iPhone, Android, Mac)를 자동으로 찾습니다. 음성을 전송하려면 마이크를 허용하세요.",
             .networkTip: "모든 기기가 같은 Wi-Fi 네트워크에 있어야 합니다. 따로 페어링할 것은 없습니다. 모두 공개 채널에서 시작해 알아서 서로를 찾습니다.",
             .micGranted: "마이크 허용됨",
+            .liveTitle: "진짜 무선, 실시간으로",
+            .liveBody: "전 세계 실제 수신기와 서버에서 단파, CB 27 MHz, POC 채널을 수신하고 수신기의 스펙트럼과 워터폴을 보여 줍니다. 청취 전용, 하루 5분 무료, Talky Pro로 무제한.",
             .radioTitle: "세계 343개 라디오 방송국",
             .radioBody: "라디오 모듈로 전환하면 50개국 이상의 검증된 방송국을 즐겨찾기, 필터, 미디어 키와 함께 들을 수 있습니다.",
             .proNote: "Talky Pro와 테마 팩은 iOS 앱과 공유됩니다. 한 번 구매로 iPhone, iPad, Mac 모두 잠금 해제.",
@@ -124,6 +139,8 @@ private enum OBString {
             .networkBody: "O Talky encontra automaticamente os dispositivos Talky (iPhone, Android, Mac) na sua rede Wi-Fi. Conceda o microfone para transmitir sua voz.",
             .networkTip: "Todos os aparelhos precisam estar na mesma rede Wi-Fi. Não há nada para parear: todo mundo começa no canal público e se encontra sozinho.",
             .micGranted: "Microfone autorizado",
+            .liveTitle: "Rádio de verdade, ao vivo",
+            .liveBody: "Ondas curtas, PX 27 MHz e canais POC de receptores e servidores reais do mundo todo, com o espectro e a cascata do receptor. Só escuta, 5 minutos grátis por dia, sem limites com o Talky Pro.",
             .radioTitle: "343 estações de rádio do mundo",
             .radioBody: "Mude para o módulo Rádio: estações verificadas de mais de 50 países, com favoritos, filtros e teclas de mídia.",
             .proNote: "O Talky Pro e o Pacote de Temas são compartilhados com o app iOS: uma compra desbloqueia iPhone, iPad e Mac.",
@@ -136,6 +153,8 @@ private enum OBString {
             .networkBody: "Talky ค้นหาอุปกรณ์ Talky (iPhone, Android, Mac) บนเครือข่าย Wi-Fi โดยอัตโนมัติ อนุญาตไมโครโฟนเพื่อส่งเสียงของคุณ",
             .networkTip: "อุปกรณ์ทุกเครื่องต้องอยู่บนเครือข่าย Wi-Fi เดียวกัน ไม่มีอะไรต้องจับคู่ ทุกคนเริ่มที่ช่องสาธารณะและหากันเจอเอง",
             .micGranted: "อนุญาตไมโครโฟนแล้ว",
+            .liveTitle: "วิทยุจริง แบบสด",
+            .liveBody: "คลื่นสั้น CB 27 MHz และช่อง POC จากเครื่องรับและเซิร์ฟเวอร์จริงทั่วโลก พร้อมสเปกตรัมและวอเตอร์ฟอลของเครื่องรับ ฟังอย่างเดียว ฟรีวันละ 5 นาที ไม่จำกัดกับ Talky Pro",
             .radioTitle: "วิทยุ 343 สถานีทั่วโลก",
             .radioBody: "สลับไปที่โมดูลวิทยุ: สถานีที่ตรวจสอบแล้วจากกว่า 50 ประเทศ พร้อมรายการโปรด ตัวกรอง และปุ่มมีเดีย",
             .proNote: "Talky Pro และแพ็กธีมใช้ร่วมกับแอป iOS: ซื้อครั้งเดียวปลดล็อกทั้ง iPhone, iPad และ Mac",
@@ -148,6 +167,8 @@ private enum OBString {
             .networkBody: "Talky, Wi-Fi ağınızdaki Talky cihazlarını (iPhone, Android, Mac) otomatik bulur. Sesinizi iletmek için mikrofona izin verin.",
             .networkTip: "Tüm cihazlar aynı Wi-Fi ağında olmalı. Eşleştirilecek bir şey yok: herkes ortak kanaldan başlar ve birbirini kendiliğinden bulur.",
             .micGranted: "Mikrofon izni verildi",
+            .liveTitle: "Gerçek radyo, canlı",
+            .liveBody: "Dünyanın dört bir yanındaki gerçek alıcı ve sunuculardan kısa dalga, CB 27 MHz ve POC kanalları, alıcının spektrumu ve şelalesiyle. Yalnızca dinleme, günde 5 dakika ücretsiz, Talky Pro ile sınırsız.",
             .radioTitle: "Dünyadan 343 radyo istasyonu",
             .radioBody: "Radyo modülüne geçin: 50'den fazla ülkeden doğrulanmış istasyonlar, favoriler, filtreler ve medya tuşlarıyla.",
             .proNote: "Talky Pro ve Tema Paketi iOS uygulamasıyla ortaktır: tek satın alma iPhone, iPad ve Mac'i açar.",
@@ -160,6 +181,8 @@ private enum OBString {
             .networkBody: "Talky tự động tìm các thiết bị Talky (iPhone, Android, Mac) trên mạng Wi-Fi của bạn. Cho phép micrô để truyền giọng nói.",
             .networkTip: "Tất cả thiết bị phải ở cùng một mạng Wi-Fi. Không có gì phải ghép nối: mọi người đều bắt đầu ở kênh công khai và tự tìm thấy nhau.",
             .micGranted: "Đã cho phép micrô",
+            .liveTitle: "Radio thật, trực tiếp",
+            .liveBody: "Sóng ngắn, CB 27 MHz và các kênh POC từ máy thu và máy chủ thật trên khắp thế giới, kèm phổ và thác nước của máy thu. Chỉ nghe, 5 phút miễn phí mỗi ngày, không giới hạn với Talky Pro.",
             .radioTitle: "343 đài radio khắp thế giới",
             .radioBody: "Chuyển sang mô-đun Radio: các đài đã xác minh từ hơn 50 quốc gia, với yêu thích, bộ lọc và phím media.",
             .proNote: "Talky Pro và Gói chủ đề dùng chung với ứng dụng iOS: mua một lần, mở khóa iPhone, iPad và Mac.",
@@ -172,6 +195,8 @@ private enum OBString {
             .networkBody: "Talky mencari peranti Talky (iPhone, Android, Mac) pada rangkaian Wi-Fi anda secara automatik. Benarkan mikrofon untuk menghantar suara anda.",
             .networkTip: "Semua peranti mesti berada pada rangkaian Wi-Fi yang sama. Tiada apa-apa untuk digandingkan: semua bermula pada saluran awam dan menemui satu sama lain sendiri.",
             .micGranted: "Mikrofon dibenarkan",
+            .liveTitle: "Radio sebenar, secara langsung",
+            .liveBody: "Gelombang pendek, CB 27 MHz dan saluran POC daripada penerima dan pelayan sebenar di seluruh dunia, dengan spektrum dan air terjun penerima. Dengar sahaja, 5 minit percuma sehari, tanpa had dengan Talky Pro.",
             .radioTitle: "343 stesen radio dunia",
             .radioBody: "Tukar ke modul Radio: stesen yang disahkan dari lebih 50 negara, dengan kegemaran, penapis dan kekunci media.",
             .proNote: "Talky Pro dan Pek Tema dikongsi dengan apl iOS: satu pembelian membuka iPhone, iPad dan Mac.",
@@ -184,6 +209,8 @@ private enum OBString {
             .networkBody: "Talky 会自动发现 Wi-Fi 网络中的 Talky 设备(iPhone、Android、Mac)。授权麦克风即可传输语音。",
             .networkTip: "所有设备必须连到同一个 Wi-Fi 网络。没有什么需要手动配对：大家都从公开频道开始，会自己找到彼此。",
             .micGranted: "麦克风已授权",
+            .liveTitle: "真正的电台，实时收听",
+            .liveBody: "来自世界各地真实接收机和服务器的短波、CB 27 MHz 和 POC 频道，并显示接收机的频谱和瀑布图。仅收听，每天免费 5 分钟，Talky Pro 无限制。",
             .radioTitle: "343 个全球电台",
             .radioBody: "切换到电台模块:来自 50 多个国家的经过验证的电台,支持收藏、筛选和媒体键。",
             .proNote: "Talky Pro 和主题包与 iOS 应用通用:一次购买,解锁 iPhone、iPad 和 Mac。",
@@ -196,6 +223,8 @@ private enum OBString {
             .networkBody: "Talky 會自動發現 Wi-Fi 網路中的 Talky 裝置(iPhone、Android、Mac)。授權麥克風即可傳送語音。",
             .networkTip: "所有裝置必須連到同一個 Wi-Fi 網路。沒有什麼需要手動配對：大家都從公開頻道開始，會自己找到彼此。",
             .micGranted: "麥克風已授權",
+            .liveTitle: "真正的電台，即時收聽",
+            .liveBody: "來自世界各地真實接收機和伺服器的短波、CB 27 MHz 和 POC 頻道，並顯示接收機的頻譜和瀑布圖。僅收聽，每天免費 5 分鐘，Talky Pro 無限制。",
             .radioTitle: "343 個全球電台",
             .radioBody: "切換到電台模組:來自 50 多個國家的已驗證電台,支援收藏、篩選與媒體鍵。",
             .proNote: "Talky Pro 與主題包與 iOS 應用程式通用:一次購買,解鎖 iPhone、iPad 與 Mac。",
@@ -213,7 +242,7 @@ struct OnboardingView: View {
     var onFinish: () -> Void
 
     @State private var page = 0
-    private let pageCount = 3
+    private let pageCount = 4
 
     var body: some View {
         VStack(spacing: 0) {
@@ -231,6 +260,10 @@ struct OnboardingView: View {
                                      title: OBString.welcomeTitle.text,
                                      body: OBString.welcomeBody.text)
                     case 1: networkPage
+                    case 2: pageView(icon: "dot.radiowaves.left.and.right",
+                                     tint: Talky.amber,
+                                     title: OBString.liveTitle.text,
+                                     body: OBString.liveBody.text)
                     default: radioPage
                     }
                 }

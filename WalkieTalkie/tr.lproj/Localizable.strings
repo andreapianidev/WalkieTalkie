@@ -521,8 +521,7 @@
 "live_pro_background_message" = "Talky'den çıktığında HF, CB ve POC dinlemesi durdu. Talky Pro ile ekran kapalıyken de devam eder. Kısa bir video izleyerek 24 saat ücretsiz deneyebilirsin.";
 "live_pro_discover" = "Talky Pro'yu keşfet";
 "live_pro_video" = "Video izle: 24 saat ücretsiz";
-"paywall.feature.live" = "Otomatik tarama ve ekran kapalıyken HF, CB ve POC dinleme";
-
+"paywall.feature.live" = "Sınırsız HF, CB ve POC dinleme, otomatik tarama ve ekran kapalıyken dinleme";
 // CB 27 MHz (3.1)
 "live_cb_section" = "Kanallar ve DX arasında geç";
 "live_cb_mode" = "Alış modu: AM, FM, LSB veya USB";
@@ -536,3 +535,15 @@
 "live_cb_dx_call" = "SSB DX çağrı frekansı";
 "live_cb_channels" = "40 kanal";
 "live_cb_footer" = "Gerçek CB, sana en yakın herkese açık KiwiSDR alıcılarından. Yayılım bandı açtığında, genellikle gündüz, yayın yapanları duyarsın. Squelch açıkken iki yayın arasındaki hışırtı sessiz kalır.";
+"live_pan_over_noise" = "Gürültünün %d dB üstünde";
+"live_pan_noise_only" = "Yalnızca gürültü";
+"live_pan_waiting" = "Spektrum bekleniyor";
+"live_free_time_up" = "Bugünün ücretsiz dakikaları bitti. Dinlemeye devam etmek için dokunun.";
+"live_free_left" = "Bugün ücretsiz %@";
+"live_pro_free_message" = "Bugünün %d dakikalık ücretsiz canlı radyo süresini kullandınız. Talky Pro ile sınırsız dinleyin ya da 24 saat için kısa bir video izleyin.";
+"onboarding.live.title" = "Gerçek radyo, canlı";
+"onboarding.live.subtitle" = "Dünyanın dört bir yanındaki gerçek alıcıları ve kanalları dinleyin.";
+"onboarding.live.hf" = "Kısa dalga: havacılık hava durumu, saat sinyalleri ve radyo amatörleri, alıcının spektrumu ekranda.";
+"onboarding.live.cb" = "40 CB kanalının tamamı ve 27.555 DX çağrısı, otomatik squelch ve SCAN ile.";
+"onboarding.live.poc" = "Herkese açık sunucularda gerçek bas-konuş kanalları.";
+"onboarding.live.note" = "Yalnızca dinleme. Günde %d dakika ücretsiz, Talky Pro ile sınırsız.";

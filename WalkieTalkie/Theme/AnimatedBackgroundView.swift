@@ -154,8 +154,16 @@ struct AnimatedBackgroundView: View {
 
     // MARK: - Static Background
 
+    /// Il tema base e' il walkie giallo in chiaro e grigio scuro in scuro, come
+    /// prima dei temi: con il suo `backgroundPrimary` quasi nero i testi
+    /// dell'app, neri in modalita' chiara, sparivano.
+    @ViewBuilder
     private var themeStaticBackground: some View {
-        themeManager.currentTheme.backgroundPrimary
+        if themeManager.currentTheme == .defaultTheme {
+            Color("BackgroundColor")
+        } else {
+            themeManager.currentTheme.backgroundPrimary
+        }
     }
 
     // MARK: - Black Hole

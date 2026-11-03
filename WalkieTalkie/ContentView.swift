@@ -799,8 +799,11 @@ struct ContentView: View {
 
     private var speakerAreaView: some View {
         VStack(spacing: isCompactHeight ? 10 : 30) {
-            // Griglia dell'altoparlante: in HF e POC si accende con l'audio vero
-            if !isRadioMode, walkieBand != .local, #available(iOS 16.0, *) {
+            // HF e CB: spettro e cascata del ricevitore. POC: la griglia
+            // dell'altoparlante, accesa dall'audio vero.
+            if !isRadioMode, walkieBand == .hf || walkieBand == .cb, #available(iOS 16.0, *) {
+                LivePanoramaScreen(compact: isCompactHeight)
+            } else if !isRadioMode, walkieBand != .local, #available(iOS 16.0, *) {
                 LiveSpeakerGrid(count: isCompactHeight ? 24 : 88)
             } else {
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 8), spacing: 6) {

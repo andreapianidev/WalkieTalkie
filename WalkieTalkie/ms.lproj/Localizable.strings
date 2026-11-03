@@ -523,8 +523,7 @@
 "live_pro_background_message" = "Pendengaran HF, CB dan POC berhenti apabila anda keluar dari Talky. Dengan Talky Pro ia terus berjalan walaupun skrin dimatikan. Anda boleh mencubanya secara percuma selama 24 jam dengan menonton video pendek.";
 "live_pro_discover" = "Kenali Talky Pro";
 "live_pro_video" = "Tonton video: 24 jam percuma";
-"paywall.feature.live" = "Imbasan automatik dan pendengaran HF, CB dan POC dengan skrin dimatikan";
-
+"paywall.feature.live" = "Dengar HF, CB dan POC tanpa had, imbasan automatik dan skrin dimatikan";
 // CB 27 MHz (3.1)
 "live_cb_section" = "Tukar antara saluran dan DX";
 "live_cb_mode" = "Mod penerimaan: AM, FM, LSB atau USB";
@@ -538,3 +537,15 @@
 "live_cb_dx_call" = "frekuensi panggilan DX SSB";
 "live_cb_channels" = "40 saluran";
 "live_cb_footer" = "CB sebenar, daripada penerima KiwiSDR awam yang paling dekat dengan anda. Anda dengar sesiapa yang memancar apabila perambatan membuka jalur, biasanya pada waktu siang. Dengan squelch dihidupkan, desis kekal senyap antara pancaran.";
+"live_pan_over_noise" = "%d dB di atas hingar";
+"live_pan_noise_only" = "Hingar sahaja";
+"live_pan_waiting" = "Menunggu spektrum";
+"live_free_time_up" = "Minit percuma hari ini sudah habis. Ketik untuk terus mendengar.";
+"live_free_left" = "Percuma hari ini %@";
+"live_pro_free_message" = "Anda telah menggunakan %d minit percuma radio langsung hari ini. Dengan Talky Pro anda mendengar tanpa had, atau tonton video pendek untuk 24 jam.";
+"onboarding.live.title" = "Radio sebenar, secara langsung";
+"onboarding.live.subtitle" = "Dengar penerima dan saluran sebenar di seluruh dunia.";
+"onboarding.live.hf" = "Gelombang pendek: cuaca penerbangan, isyarat masa dan amatur radio, dengan spektrum penerima pada skrin.";
+"onboarding.live.cb" = "Kesemua 40 saluran CB dan panggilan DX pada 27.555, dengan squelch automatik dan SCAN.";
+"onboarding.live.poc" = "Saluran tekan-untuk-bercakap sebenar pada pelayan awam.";
+"onboarding.live.note" = "Dengar sahaja. %d minit percuma sehari, tanpa had dengan Talky Pro.";

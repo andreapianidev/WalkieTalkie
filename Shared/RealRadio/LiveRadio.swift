@@ -67,20 +67,14 @@ final class LiveRadio: ObservableObject {
     /// Funzione Pro chiesta da chi non ce l'ha: l'interfaccia propone
     /// Talky Pro o, su iPhone, un video per 24 ore.
     enum ProPrompt: String, Identifiable {
-        case scan, background
+        case scan, background, freeTime
         var id: String { rawValue }
     }
 
-    /// Talky Pro (o un pass a tempo) per le comodita' dell'ascolto dal vivo:
-    /// SCAN automatico e ascolto a schermo spento. L'ascolto in se' resta
-    /// gratis: i ricevitori e i server sono offerti da volontari. Ogni app
-    /// imposta il suo controllo all'avvio.
+    /// Talky Pro (o, su iPhone, il pass di 24 ore guadagnato con un video):
+    /// ascolto senza limite, SCAN automatico e ascolto a schermo spento.
+    /// Ogni app imposta il suo controllo all'avvio.
     var proGate: () -> Bool = { true }
-    /// Chiamato quando l'ascolto dal vivo ha superato `listeningMilestone`
-    /// secondi in tutto. Chi lo riceve decide se e quando mostrare il paywall
-    /// (su iPhone lo consuma PaywallTriggerManager, una volta sola).
-    var onListeningMilestone: (() -> Void)?
-    static let listeningMilestone = 600
 
     @Published private(set) var band: Band?
     @Published private(set) var hfIndex = 0
@@ -106,6 +100,12 @@ final class LiveRadio: ObservableObject {
     @Published private(set) var signalDBm: Double?
     @Published private(set) var level: Float = 0
     @Published var proPrompt: ProPrompt?
+    /// Secondi gratis rimasti oggi, nil con Pro o con il pass.
+    @Published private(set) var freeSecondsLeft: Int?
+    /// I minuti gratis di oggi sono finiti: la banda resta scelta, muta.
+    @Published private(set) var isOutOfFreeTime = false
+    /// Spettro e cascata del ricevitore KiwiSDR che si ascolta.
+    let panorama = Panorama()
     /// Ascolto fermato perche' l'app e' andata in background senza Pro.
     @Published private(set) var isSuspended = false
     @Published var volume: Float = 0.9 {
@@ -146,7 +146,8 @@ final class LiveRadio: ObservableObject {
 
     private var listenTask: Task<Void, Never>?
     private let defaults = UserDefaults.standard
-    private static let listenedKey = "live_listened_seconds"
+    private static let freeDayKey = "live_free_day"
+    private static let freeUsedKey = "live_free_used"
     private static let cbHzKey = "live_cb_hz"
     private static let cbEmissionKey = "live_cb_emission"
     private static let squelchKey = "live_cb_squelch"
@@ -179,6 +180,13 @@ final class LiveRadio: ObservableObject {
             isScouting = false
         }
         self.band = band
+        panorama.clear()
+        refreshFreeTime()
+        guard !isOutOfFreeTime else {
+            state = .idle
+            proPrompt = .freeTime
+            return
+        }
         player.start()
         switch band {
         case .hf:
@@ -203,7 +211,9 @@ final class LiveRadio: ObservableObject {
     func stop() {
         stopScan()
         isSuspended = false
+        isOutOfFreeTime = false
         disconnect()
+        panorama.clear()
         scoutTask?.cancel()
         scoutTask = nil
         isScouting = false
@@ -463,7 +473,7 @@ final class LiveRadio: ObservableObject {
 
     /// Ritorno in primo piano dopo una sospensione: riparte e propone il Pro.
     func resumeFromBackground() {
-        guard isSuspended, let band else { return }
+        guard isSuspended, !isOutOfFreeTime, let band else { return }
         isSuspended = false
         player.start()
         switch band {
@@ -475,22 +485,67 @@ final class LiveRadio: ObservableObject {
 
     // MARK: tempo d'ascolto
 
+    /// Conta solo l'ascolto vero: collegati e con il ricevitore in linea.
     private func startListeningClock() {
         guard listenTask == nil else { return }
         listenTask = Task { [weak self] in
             while !Task.isCancelled {
-                try? await Task.sleep(for: .seconds(15))
+                try? await Task.sleep(for: .seconds(5))
                 guard let self, !Task.isCancelled, self.state == .online else { continue }
-                self.addListened(15)
+                self.spendFreeTime(5)
             }
         }
     }
 
-    private func addListened(_ seconds: Int) {
-        let total = defaults.integer(forKey: Self.listenedKey) + seconds
-        defaults.set(total, forKey: Self.listenedKey)
-        guard total >= Self.listeningMilestone, !proGate() else { return }
-        onListeningMilestone?()
+    private func spendFreeTime(_ seconds: Int) {
+        guard !proGate() else {
+            freeSecondsLeft = nil
+            return
+        }
+        let used = usedToday + seconds
+        defaults.set(Self.today, forKey: Self.freeDayKey)
+        defaults.set(used, forKey: Self.freeUsedKey)
+        freeSecondsLeft = max(0, FreeListening.secondsPerDay - used)
+        guard used >= FreeListening.secondsPerDay else { return }
+        stopScan()
+        disconnect()
+        player.stop()
+        state = .idle
+        isOutOfFreeTime = true
+        proPrompt = .freeTime
+    }
+
+    private var usedToday: Int {
+        defaults.string(forKey: Self.freeDayKey) == Self.today ? defaults.integer(forKey: Self.freeUsedKey) : 0
+    }
+
+    private static var today: String {
+        let d = Calendar.current.dateComponents([.year, .month, .day], from: Date())
+        return "\(d.year ?? 0)-\(d.month ?? 0)-\(d.day ?? 0)"
+    }
+
+    private func refreshFreeTime() {
+        if proGate() {
+            freeSecondsLeft = nil
+            isOutOfFreeTime = false
+        } else {
+            freeSecondsLeft = max(0, FreeListening.secondsPerDay - usedToday)
+            isOutOfFreeTime = freeSecondsLeft == 0
+        }
+    }
+
+    /// Arrivati Pro o il pass, o cominciato un giorno nuovo: se l'ascolto era
+    /// fermo per i minuti finiti, riparte sulla stessa banda.
+    func entitlementsChanged() {
+        let wasOut = isOutOfFreeTime
+        refreshFreeTime()
+        guard wasOut, !isOutOfFreeTime, let band else { return }
+        if proPrompt == .freeTime { proPrompt = nil }
+        player.start()
+        switch band {
+        case .hf, .cb: connectHF(fresh: true)
+        case .poc: pocChannels.isEmpty ? scoutPOC() : connectPOC()
+        }
     }
 
     // MARK: HF
@@ -537,7 +592,10 @@ final class LiveRadio: ObservableObject {
         retried = fresh ? false : retried
         squelch.reset(for: tuning)
         squelchOpen = false
-        let listener = KiwiListener(receiver: receiver, tuning: tuning, squelch: band == .cb ? squelch : nil)
+        panorama.clear()
+        // CB: sei canali in vista (58 kHz); HF: 29 kHz, una manciata di stazioni SSB.
+        let listener = KiwiListener(receiver: receiver, tuning: tuning, squelch: band == .cb ? squelch : nil,
+                                    spectrumZoom: band == .cb ? 9 : 10)
         kiwi = listener
         attach(audio: listener.audio, events: listener.events)
         Task { await listener.connect() }
@@ -735,6 +793,8 @@ final class LiveRadio: ObservableObject {
             guard now.timeIntervalSince(lastLevelPush) > 0.1 || (v == 0 && level != 0) else { return }
             lastLevelPush = now
             level = v
+        case .sweep(let sweep):
+            panorama.add(sweep, dialHz: tuning.hz, passband: KiwiFrame.passband(tuning))
         }
     }
 
@@ -756,12 +816,16 @@ final class LiveRadio: ObservableObject {
     }
 }
 
-/// Dove si trova, piu' o meno, chi ascolta: dal fuso orario e dal paese,
-/// senza chiedere la posizione. Serve solo a scegliere un ricevitore vicino.
+/// Dove si trova, piu' o meno, chi ascolta, senza chiedere la posizione:
+/// il capoluogo del suo fuso orario (Atlantic/Canary e' Las Palmas, non la
+/// Francia che dava la sola differenza da UTC). Serve solo a scegliere un
+/// ricevitore vicino.
 @available(iOS 16.0, macOS 13.0, *)
 nonisolated enum ApproximatePlace {
     static var current: (latitude: Double, longitude: Double) {
         let tz = TimeZone.current
+        if let spot = zoneSpots[tz.identifier] { return spot }
+        // Fuso fuori tabella (GMT+3 e simili): dalla differenza da UTC e dal paese.
         let offset = Double(tz.secondsFromGMT() - Int(tz.daylightSavingTimeOffset())) / 3600
         let region = Locale.current.region?.identifier ?? ""
         let south: Set<String> = ["AU", "NZ", "BR", "AR", "CL", "ZA", "UY", "PY", "BO", "PE"]
@@ -769,4 +833,17 @@ nonisolated enum ApproximatePlace {
         let latitude = south.contains(region) ? -30.0 : tropics.contains(region) ? 15.0 : 45.0
         return (latitude, offset * 15)
     }
+
+    /// TimeZoneSpots.txt: `Europe/Rome 41.90 12.48`, una riga per fuso.
+    private static let zoneSpots: [String: (latitude: Double, longitude: Double)] = {
+        guard let url = Bundle.main.url(forResource: "TimeZoneSpots", withExtension: "txt"),
+              let text = try? String(contentsOf: url, encoding: .utf8) else { return [:] }
+        var spots: [String: (latitude: Double, longitude: Double)] = [:]
+        for line in text.split(separator: "\n") where !line.hasPrefix("#") {
+            let f = line.split(separator: " ")
+            guard f.count == 3, let lat = Double(f[1]), let lon = Double(f[2]) else { continue }
+            spots[String(f[0])] = (lat, lon)
+        }
+        return spots
+    }()
 }

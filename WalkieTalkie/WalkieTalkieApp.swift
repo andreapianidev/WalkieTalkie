@@ -44,7 +44,9 @@ struct WalkieTalkieApp: App {
                     )
                 }
             }
-            .preferredColorScheme(settingsManager.isDarkModeEnabled ? .dark : .light)
+            // I temi Pro hanno tutti lo sfondo scuro: in chiaro i testi
+            // dell'app sarebbero neri su nero.
+            .preferredColorScheme(settingsManager.isDarkModeEnabled || themeManager.currentTheme != .defaultTheme ? .dark : .light)
             .tint(themeManager.currentTheme.accentColor)
             .environmentObject(adManager)
             .environmentObject(iapManager)
@@ -62,13 +64,10 @@ struct WalkieTalkieApp: App {
             }
             #endif
             .task {
-                // Ascolto dal vivo: SCAN e schermo spento con Pro o pass 24 ore,
-                // paywall morbido dopo 10 minuti d'ascolto.
+                // Ascolto dal vivo: 5 minuti gratis al giorno; senza limite, con
+                // SCAN e schermo spento, con Pro o con il pass di 24 ore.
                 if #available(iOS 16.0, *) {
                     LiveRadio.shared.proGate = { LivePassManager.shared.hasLiveExtras }
-                    LiveRadio.shared.onListeningMilestone = {
-                        PaywallTriggerManager.shared.requestForLiveListening()
-                    }
                 }
                 // IAP bootstrap deve precedere AdManager: i guard !isProUser dipendono dallo stato Pro.
                 await iapManager.bootstrap()
@@ -96,6 +95,10 @@ struct WalkieTalkieApp: App {
                 // Live Activity (iOS 16.x fallback) deep links: talky://radio/<action>.
                 LiveActivityDeepLink.handle(url)
             }
+            .onReceive(iapManager.$isProUser) { _ in
+                // Comprato Pro (o scaduto): l'ascolto fermo per i minuti finiti riparte.
+                if #available(iOS 16.0, *) { LiveRadio.shared.entitlementsChanged() }
+            }
             .onChange(of: scenePhase) { newPhase in
                 if newPhase == .background {
                     returningFromBackground = true
@@ -110,6 +113,8 @@ struct WalkieTalkieApp: App {
                     // Pro fino al riavvio — e chi ha disdetto continuerebbe a non
                     // vedere pubblicità.
                     Task { await iapManager.updateEntitlements() }
+                    // Un giorno nuovo rimette a disposizione i minuti gratis.
+                    if #available(iOS 16.0, *) { LiveRadio.shared.entitlementsChanged() }
                 }
                 if newPhase == .active {
                     // Riprova il bootstrap se al lancio non e' andato a buon fine.

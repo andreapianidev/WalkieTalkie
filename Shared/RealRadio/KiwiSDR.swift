@@ -111,11 +111,22 @@ actor KiwiListener {
     nonisolated let receiver: KiwiReceiver
     /// Solo per la CB: decide pacchetto per pacchetto se l'audio passa.
     nonisolated let squelch: Squelch?
+    /// Zoom della cascata (30 MHz / 2^zoom in vista), nil senza spettro.
+    nonisolated let spectrumZoom: Int?
 
     private let audioSink: AsyncStream<PCMChunk>.Continuation
     private let eventSink: AsyncStream<LiveEvent>.Continuation
 
     private var snd: WebSocketLink?
+    /// La cascata viaggia su un secondo WebSocket con lo stesso timestamp
+    /// dell'audio. Se il ricevitore la rifiuta (alcuni hanno meno canali
+    /// cascata che audio) si continua ad ascoltare senza.
+    private var wf: WebSocketLink?
+    private var wfReady = false
+    private var stamp: UInt32 = 0
+    private var kiwiBandwidth = 30_000_000.0
+    private var fftSize = 1024.0
+    private var zoomMax = 14.0
     private var tasks: [Task<Void, Never>] = []
     private var tuning: Tuning
     private var adpcm = ImaAdpcm()
@@ -124,23 +135,19 @@ actor KiwiListener {
     private var failed = false
     private var pendingTune: Task<Void, Never>?
 
-    init(receiver: KiwiReceiver, tuning: Tuning, squelch: Squelch? = nil) {
+    init(receiver: KiwiReceiver, tuning: Tuning, squelch: Squelch? = nil, spectrumZoom: Int? = nil) {
         self.receiver = receiver
         self.tuning = tuning
         self.squelch = squelch
+        self.spectrumZoom = spectrumZoom
         (audio, audioSink) = AsyncStream.makeStream(of: PCMChunk.self, bufferingPolicy: .bufferingNewest(32))
         (events, eventSink) = AsyncStream.makeStream(of: LiveEvent.self, bufferingPolicy: .bufferingNewest(128))
     }
 
     func connect() async {
         eventSink.yield(.link(.connecting))
-        let stamp = UInt32(truncatingIfNeeded: Int(Date().timeIntervalSince1970))
-        var url = URLComponents()
-        url.scheme = "ws"
-        url.host = receiver.host
-        url.port = receiver.port
-        url.path = "/\(stamp)/SND"
-        guard let sndURL = url.url else {
+        stamp = UInt32(truncatingIfNeeded: Int(Date().timeIntervalSince1970))
+        guard let sndURL = streamURL("SND") else {
             refuse(.refused)
             return
         }
@@ -171,6 +178,8 @@ actor KiwiListener {
         pendingTune = nil
         snd?.close()
         snd = nil
+        wf?.close()
+        wf = nil
         audioSink.finish()
         eventSink.yield(.link(.idle))
         eventSink.finish()
@@ -184,6 +193,86 @@ actor KiwiListener {
             try? await Task.sleep(for: .milliseconds(40))
             await self?.flushTune()
         }
+    }
+
+    private func streamURL(_ kind: String) -> URL? {
+        var url = URLComponents()
+        url.scheme = "ws"
+        url.host = receiver.host
+        url.port = receiver.port
+        url.path = "/\(stamp)/\(kind)"
+        return url.url
+    }
+
+    // MARK: cascata
+
+    /// Si apre dopo l'audio: chi accende vuole sentire subito, lo spettro
+    /// arriva un attimo dopo.
+    private func openWaterfall() async {
+        guard spectrumZoom != nil, wf == nil, let url = streamURL("W/F") else { return }
+        let link = WebSocketLink(url: url)
+        wf = link
+        do {
+            try await link.open()
+        } catch {
+            dropWaterfall()
+            return
+        }
+        link.send("SET auth t=kiwi p=")
+        tasks.append(Task { [weak self] in
+            do {
+                for try await message in link.messages {
+                    guard case .data(let data) = message, let frame = KiwiFrame.parse(data) else { continue }
+                    await self?.handleWaterfall(frame)
+                }
+            } catch {}
+            await self?.dropWaterfall()
+        })
+    }
+
+    private func handleWaterfall(_ frame: KiwiFrame) {
+        switch frame {
+        case .message(let p):
+            if p["too_busy"] != nil || (p["badp"].flatMap { $0 }.map { $0 != "0" } ?? false) || p["down"] != nil {
+                dropWaterfall()
+                return
+            }
+            if let v = p["bandwidth"] ?? nil, let bw = Double(v), bw > 0 { kiwiBandwidth = bw }
+            if let v = p["wf_fft_size"] ?? nil, let n = Double(v), n > 0 { fftSize = n }
+            if let v = p["zoom_max"] ?? nil, let z = Double(v) { zoomMax = z }
+            if p["wf_setup"] != nil, !wfReady {
+                wfReady = true
+                wf?.send("SET ident_user=Talky")
+                sendZoom()
+                wf?.send("SET maxdb=-10 mindb=-110")
+                // Velocita' 3 di 4: circa nove righe al secondo, abbastanza
+                // per vedere la voce senza consumare il traffico di un video.
+                wf?.send("SET wf_speed=3")
+                wf?.send("SET wf_comp=0")
+                wf?.send("SET interp=13")
+                wf?.send("SET keepalive")
+            }
+        case let .waterfall(xBin, zoom, bins):
+            guard !bins.isEmpty else { return }
+            // x_bin e' contato in fette dello zoom massimo, dal bordo a 0 Hz.
+            let startHz = Double(xBin) * kiwiBandwidth / (fftSize * pow(2, zoomMax))
+            let binHz = kiwiBandwidth / (fftSize * pow(2, Double(zoom)))
+            // Un byte per fetta: dBm + 255.
+            eventSink.yield(.sweep(SpectrumSweep(startHz: startHz, binHz: binHz, dBm: bins.map { Float($0) - 255 })))
+        default:
+            break
+        }
+    }
+
+    private func dropWaterfall() {
+        wf?.close()
+        wf = nil
+        wfReady = false
+    }
+
+    private func sendZoom() {
+        guard wfReady, let zoom = spectrumZoom else { return }
+        wf?.send(String(format: "SET zoom=%d cf=%.3f", zoom, Double(tuning.hz) / 1000))
     }
 
     // MARK: flusso
@@ -240,7 +329,7 @@ actor KiwiListener {
             }
             audioSink.yield(chunk)
             eventSink.yield(.level(chunk.envelope))
-        case .other:
+        case .waterfall, .other:
             break
         }
     }
@@ -279,16 +368,19 @@ actor KiwiListener {
             snd?.send("SET compression=1")
             snd?.send("SET keepalive")
             eventSink.yield(.link(.online))
+            tasks.append(Task { [weak self] in await self?.openWaterfall() })
         }
     }
 
     private func keepAlive() {
         snd?.send("SET keepalive")
+        if wfReady { wf?.send("SET keepalive") }
     }
 
     private func flushTune() {
         pendingTune = nil
         sendTune()
+        sendZoom()
     }
 
     private func sendTune() {
@@ -349,6 +441,8 @@ nonisolated struct ImaAdpcm: Sendable {
 nonisolated enum KiwiFrame {
     case message([String: String?])
     case sound(flags: UInt8, rssi: Double, payload: Data)
+    /// Riga della cascata: inizio in fette dello zoom massimo, zoom, un byte per fetta.
+    case waterfall(xBin: UInt32, zoom: Int, bins: Data)
     case other
 
     static let compressed: UInt8 = 0x10
@@ -365,6 +459,12 @@ nonisolated enum KiwiFrame {
             guard bytes.count >= 10 else { return nil }
             let meter = UInt16(bytes[8]) << 8 | UInt16(bytes[9])
             return .sound(flags: bytes[3], rssi: 0.1 * Double(meter) - 127, payload: Data(bytes[10...]))
+        case "W/F":
+            guard bytes.count > 16 else { return nil }
+            func word(_ at: Int) -> UInt32 {
+                UInt32(bytes[at]) | UInt32(bytes[at + 1]) << 8 | UInt32(bytes[at + 2]) << 16 | UInt32(bytes[at + 3]) << 24
+            }
+            return .waterfall(xBin: word(4), zoom: Int(word(8) & 0xFFFF), bins: Data(bytes[16...]))
         default:
             return .other
         }

@@ -527,8 +527,7 @@
 "live_pro_background_message" = "La escucha HF, CB y POC se detuvo al salir de Talky. Con Talky Pro sigue también con la pantalla apagada. Puedes probarlo gratis 24 horas viendo un vídeo corto.";
 "live_pro_discover" = "Descubre Talky Pro";
 "live_pro_video" = "Mira un vídeo: 24 horas gratis";
-"paywall.feature.live" = "Escaneo automático y escucha HF, CB y POC con la pantalla apagada";
-
+"paywall.feature.live" = "Escucha HF, CB y POC sin límites, SCAN automático y pantalla apagada";
 // CB 27 MHz (3.1)
 "live_cb_section" = "Cambiar entre canales y DX";
 "live_cb_mode" = "Modo de recepción: AM, FM, LSB o USB";
@@ -542,3 +541,15 @@
 "live_cb_dx_call" = "llamada DX en SSB";
 "live_cb_channels" = "40 canales";
 "live_cb_footer" = "La CB real, desde los receptores KiwiSDR públicos más cercanos a ti. Oyes a quien transmite cuando la propagación abre la banda, normalmente de día. Con el squelch activado, el ruido queda en silencio entre una transmisión y otra.";
+"live_pan_over_noise" = "%d dB sobre el ruido";
+"live_pan_noise_only" = "Solo ruido";
+"live_pan_waiting" = "Esperando el espectro";
+"live_free_time_up" = "Se acabaron los minutos gratis de hoy. Toca para seguir escuchando.";
+"live_free_left" = "Gratis hoy %@";
+"live_pro_free_message" = "Has usado los %d minutos gratis de hoy de radio en directo. Con Talky Pro escuchas sin límites, o mira un vídeo corto para 24 horas.";
+"onboarding.live.title" = "Radio real, en directo";
+"onboarding.live.subtitle" = "Escucha receptores y canales reales de todo el mundo.";
+"onboarding.live.hf" = "Onda corta: meteo aeronáutica, señales horarias y radioaficionados, con el espectro del receptor en pantalla.";
+"onboarding.live.cb" = "Los 40 canales CB y la llamada DX en 27.555, con squelch automático y SCAN.";
+"onboarding.live.poc" = "Canales push-to-talk reales en servidores públicos.";
+"onboarding.live.note" = "Solo escucha. %d minutos gratis al día, sin límites con Talky Pro.";

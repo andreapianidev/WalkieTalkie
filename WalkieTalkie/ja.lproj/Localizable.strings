@@ -522,8 +522,7 @@
 "live_pro_background_message" = "Talkyを離れたときにHF、CB、POCの受信が止まりました。Talky Proなら画面を消しても受信が続きます。短い動画を見ると24時間無料で試せます。";
 "live_pro_discover" = "Talky Proを見る";
 "live_pro_video" = "動画を見る：24時間無料";
-"paywall.feature.live" = "自動スキャンと、画面オフでのHF・CB・POC受信";
-
+"paywall.feature.live" = "HF・CB・POCを無制限に受信、自動スキャン、画面オフでも受信";
 // CB 27 MHz (3.1)
 "live_cb_section" = "チャンネルとDXを切り替え";
 "live_cb_mode" = "受信モード：AM、FM、LSB、USB";
@@ -537,3 +536,15 @@
 "live_cb_dx_call" = "SSBのDX呼び出し周波数";
 "live_cb_channels" = "40チャンネル";
 "live_cb_footer" = "本物のCB無線を、近くの公開KiwiSDR受信機から聞けます。伝搬でバンドが開くと（たいてい日中）、送信している人の声が聞こえます。スケルチをオンにすると、交信の合間のノイズは無音になります。";
+"live_pan_over_noise" = "ノイズより%d dB上";
+"live_pan_noise_only" = "ノイズのみ";
+"live_pan_waiting" = "スペクトラムを待っています";
+"live_free_time_up" = "今日の無料時間は終了しました。タップして聴き続ける。";
+"live_free_left" = "今日の無料 %@";
+"live_pro_free_message" = "今日のライブ無線の無料%d分を使い切りました。Talky Proなら無制限で聴けます。短い動画を見ると24時間使えます。";
+"onboarding.live.title" = "本物の無線をライブで";
+"onboarding.live.subtitle" = "世界中の本物の受信機とチャンネルを聴けます。";
+"onboarding.live.hf" = "短波：航空気象、時報、アマチュア無線。受信機のスペクトラムを画面に表示します。";
+"onboarding.live.cb" = "CB全40チャンネルと27.555のDX呼び出し。自動スケルチとスキャン付き。";
+"onboarding.live.poc" = "公開サーバー上の本物のプッシュトゥトークチャンネル。";
+"onboarding.live.note" = "受信のみ。1日%d分無料、Talky Proなら無制限。";

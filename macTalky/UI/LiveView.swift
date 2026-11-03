@@ -31,6 +31,13 @@ struct LiveView: View {
         }
         .padding(24)
         .onDisappear { live.stop() }
+        // Minuti gratis di oggi finiti: il Mac non ha video premio, solo Pro.
+        .onChange(of: live.proPrompt) { _, prompt in
+            guard prompt == .freeTime else { return }
+            live.proPrompt = nil
+            showPaywall = true
+        }
+        .onChange(of: iap.isProUser) { _, _ in live.entitlementsChanged() }
     }
 
     // MARK: - Header
@@ -208,6 +215,17 @@ struct LiveView: View {
 
                 SegmentedMeter(level: meterLevel, segments: 24)
 
+                if band.isKiwi, live.isOn {
+                    PanoramaView(panorama: live.panorama,
+                                 tuning: live.tuning,
+                                 signalDBm: live.signalDBm,
+                                 words: PanoramaWords(overNoise: "%d dB ABOVE NOISE",
+                                                      noiseOnly: "NOISE ONLY",
+                                                      waiting: live.isOutOfFreeTime ? freeTimeUp : "WAITING FOR SPECTRUM"))
+                        .frame(height: 170)
+                        .onTapGesture { if live.isOutOfFreeTime { showPaywall = true } }
+                }
+
                 HStack {
                     Text((band.isKiwi ? "RECEIVER " : "SERVER ") + (live.sourceName.isEmpty ? "--" : live.sourceName.uppercased()))
                         .font(.vfd(9, weight: .semibold))
@@ -361,7 +379,13 @@ struct LiveView: View {
         }
     }
 
+    private var freeTimeUp: String { "TODAY'S \(FreeListening.secondsPerDay / 60) FREE MINUTES ARE USED" }
+
     private var statusText: String {
+        if live.isOutOfFreeTime { return freeTimeUp }
+        if let left = live.freeSecondsLeft, live.state == .online {
+            return String(format: "LIVE · FREE %d:%02d", left / 60, left % 60)
+        }
         if live.band == .poc, live.isScouting, live.pocChannels.isEmpty { return "SEARCHING CHANNELS" }
         switch live.state {
         case .idle, .connecting: return "CONNECTING"

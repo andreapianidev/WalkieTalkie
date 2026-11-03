@@ -85,6 +85,9 @@ struct BandSelectorRow: View {
 @available(iOS 16.0, *)
 extension LiveRadio {
     var statusText: String {
+        if isOutOfFreeTime {
+            return "live_free_time_up".localized
+        }
         if band == .poc, isScouting, pocChannels.isEmpty {
             return "live_scouting".localized
         }
@@ -99,6 +102,7 @@ extension LiveRadio {
     }
 
     var statusColor: Color {
+        if isOutOfFreeTime { return .orange }
         switch state {
         case .online: return .green
         case .idle, .connecting: return .orange
@@ -295,19 +299,29 @@ struct LiveStatusCard: View {
         )
         .padding(.horizontal, 20)
         .padding(.top, compact ? 6 : 10)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            if live.isOutOfFreeTime { live.proPrompt = .freeTime }
+        }
     }
 
     private var sourceText: String {
         live.sourceName.isEmpty ? "--" : live.sourceName
     }
 
+    /// Minuti gratis rimasti oggi davanti a tutto, poi da dove si ascolta.
     private var detail: String {
+        guard let left = live.freeSecondsLeft, !live.isOutOfFreeTime else { return place }
+        return String(format: "live_free_left".localized, String(format: "%d:%02d", left / 60, left % 60)) + " · " + place
+    }
+
+    private var place: String {
         if live.band?.isKiwi == true {
-            let place = live.sourcePlace.isEmpty ? "" : live.sourcePlace + " · "
-            return place + (live.band == .cb ? HFChannel.Kind.citizens : live.currentHF.kind).subtitle
+            let town = live.sourcePlace.isEmpty ? "" : live.sourcePlace + " · "
+            return town + (live.band == .cb ? HFChannel.Kind.citizens : live.currentHF.kind).subtitle
         }
-        let place = live.sourcePlace.isEmpty ? "" : live.sourcePlace + " · "
-        return place + "live_listen_only_note".localized
+        let town = live.sourcePlace.isEmpty ? "" : live.sourcePlace + " · "
+        return town + "live_listen_only_note".localized
     }
 }
 
@@ -330,6 +344,7 @@ struct LiveSecondaryRow: View {
                             presenting: live.proPrompt) { prompt in
             Button("live_pro_video".localized) {
                 AdManager.shared.presentRewardedLivePass(source: "live_\(prompt.rawValue)", onGranted: {
+                    live.entitlementsChanged()
                     if prompt == .scan { live.startScan() }
                 }, onUnavailable: {
                     HapticManager.shared.warning()
@@ -340,7 +355,15 @@ struct LiveSecondaryRow: View {
             }
             Button("cancel".localized, role: .cancel) {}
         } message: { prompt in
-            Text((prompt == .scan ? "live_pro_scan_message" : "live_pro_background_message").localized)
+            Text(message(for: prompt))
+        }
+    }
+
+    private func message(for prompt: LiveRadio.ProPrompt) -> String {
+        switch prompt {
+        case .scan: return "live_pro_scan_message".localized
+        case .background: return "live_pro_background_message".localized
+        case .freeTime: return String(format: "live_pro_free_message".localized, FreeListening.secondsPerDay / 60)
         }
     }
 
@@ -484,6 +507,28 @@ struct LiveSpeakerGrid: View {
         let dx = abs(col - 3.5) / 3.5, dy = abs(row - (rows - 1) / 2) / max(1, (rows - 1) / 2)
         let reach = Double(live.level) * 1.6
         return (dx * dx + dy * dy).squareRoot() / 1.42 < reach ? 1 : 0.25
+    }
+}
+
+/// In HF e CB, al posto della griglia dell'altoparlante, lo schermo con lo
+/// spettro e la cascata del ricevitore.
+@available(iOS 16.0, *)
+struct LivePanoramaScreen: View {
+    @ObservedObject var live = LiveRadio.shared
+    let compact: Bool
+
+    var body: some View {
+        PanoramaView(panorama: live.panorama,
+                     tuning: live.tuning,
+                     signalDBm: live.signalDBm,
+                     words: PanoramaWords(overNoise: "live_pan_over_noise".localized,
+                                          noiseOnly: "live_pan_noise_only".localized,
+                                          waiting: (live.isOutOfFreeTime ? "live_free_time_up" : "live_pan_waiting").localized))
+            .frame(height: compact ? 92 : 136)
+            .padding(.horizontal, 20)
+            .onTapGesture {
+                if live.isOutOfFreeTime { live.proPrompt = .freeTime }
+            }
     }
 }
 

@@ -57,6 +57,18 @@ nonisolated enum LiveEvent: Sendable {
     case level(Float)
     /// Lo squelch CB si e' aperto o chiuso.
     case squelch(Bool)
+    /// Una riga dello spettro del ricevitore intorno alla sintonia.
+    case sweep(SpectrumSweep)
+}
+
+/// Una riga della cascata di un KiwiSDR: potenza per fetta di frequenza,
+/// dal bordo sinistro in su.
+nonisolated struct SpectrumSweep: Sendable {
+    var startHz: Double
+    var binHz: Double
+    var dBm: [Float]
+
+    var endHz: Double { startHz + binHz * Double(dBm.count) }
 }
 
 nonisolated enum Emission: String, Sendable, Codable, CaseIterable {
@@ -78,6 +90,12 @@ nonisolated struct Tuning: Sendable, Hashable, Codable {
     var megahertzText: String {
         String(format: "%.3f", Double(hz) / 1_000_000)
     }
+}
+
+/// Ascolto dal vivo gratis ogni giorno. Finito, l'ascolto si ferma finche'
+/// non arriva Talky Pro o il pass, oppure il giorno dopo.
+nonisolated enum FreeListening {
+    static let secondsPerDay = 300
 }
 
 /// Convenzione IARU per l'HF: S9 vale -73 dBm, ogni unita' S 6 dB.

@@ -522,8 +522,7 @@
 "live_pro_background_message" = "离开 Talky 后，HF、CB 和 POC 收听已停止。使用 Talky Pro，熄屏后也能继续收听。观看一段短视频即可免费试用24小时。";
 "live_pro_discover" = "了解 Talky Pro";
 "live_pro_video" = "看视频：免费24小时";
-"paywall.feature.live" = "自动扫描，熄屏收听 HF、CB 和 POC";
-
+"paywall.feature.live" = "无限收听 HF、CB 和 POC，自动扫描，息屏收听";
 // CB 27 MHz (3.1)
 "live_cb_section" = "在信道和 DX 之间切换";
 "live_cb_mode" = "接收模式：AM、FM、LSB 或 USB";
@@ -537,3 +536,15 @@
 "live_cb_dx_call" = "SSB DX 呼叫频率";
 "live_cb_channels" = "40 个信道";
 "live_cb_footer" = "真正的 CB 民用波段，来自离你最近的公共 KiwiSDR 接收机。当电波传播打开波段时（通常在白天），你就能听到正在发射的人。开启静噪后，两次通话之间的噪声保持静音。";
+"live_pan_over_noise" = "高出噪声 %d dB";
+"live_pan_noise_only" = "只有噪声";
+"live_pan_waiting" = "正在等待频谱";
+"live_free_time_up" = "今天的免费时间已用完。轻点继续收听。";
+"live_free_left" = "今日免费 %@";
+"live_pro_free_message" = "你已用完今天 %d 分钟的免费直播电台。使用 Talky Pro 可无限收听，或观看一段短视频获得 24 小时。";
+"onboarding.live.title" = "真正的电台，实时收听";
+"onboarding.live.subtitle" = "收听世界各地真实的接收机和频道。";
+"onboarding.live.hf" = "短波：航空气象、标准时间信号和业余无线电，屏幕上显示接收机的频谱。";
+"onboarding.live.cb" = "全部 40 个 CB 信道和 27.555 DX 呼叫频率，带自动静噪和扫描。";
+"onboarding.live.poc" = "公共服务器上真实的一键通频道。";
+"onboarding.live.note" = "仅收听。每天免费 %d 分钟，Talky Pro 无限制。";

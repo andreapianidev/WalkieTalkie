@@ -522,8 +522,7 @@
 "live_pro_background_message" = "Talky를 나가자 HF, CB, POC 수신이 멈췄습니다. Talky Pro에서는 화면이 꺼져도 계속 들을 수 있습니다. 짧은 동영상을 보면 24시간 무료로 써 볼 수 있습니다.";
 "live_pro_discover" = "Talky Pro 알아보기";
 "live_pro_video" = "동영상 보기: 24시간 무료";
-"paywall.feature.live" = "자동 스캔과 화면 꺼짐 상태의 HF·CB·POC 수신";
-
+"paywall.feature.live" = "HF, CB, POC 무제한 청취, 자동 스캔, 화면 꺼짐 청취";
 // CB 27 MHz (3.1)
 "live_cb_section" = "채널과 DX 전환";
 "live_cb_mode" = "수신 모드: AM, FM, LSB, USB";
@@ -537,3 +536,15 @@
 "live_cb_dx_call" = "SSB DX 호출 주파수";
 "live_cb_channels" = "40개 채널";
 "live_cb_footer" = "가장 가까운 공개 KiwiSDR 수신기로 듣는 진짜 CB입니다. 전파 상태가 대역을 열면(주로 낮 시간) 송신하는 사람의 목소리가 들립니다. 스퀠치를 켜면 교신 사이의 잡음이 들리지 않습니다.";
+"live_pan_over_noise" = "잡음보다 %d dB 높음";
+"live_pan_noise_only" = "잡음뿐";
+"live_pan_waiting" = "스펙트럼을 기다리는 중";
+"live_free_time_up" = "오늘의 무료 시간이 끝났습니다. 탭하여 계속 들으세요.";
+"live_free_left" = "오늘 무료 %@";
+"live_pro_free_message" = "오늘 라이브 무선 무료 %d분을 모두 사용했습니다. Talky Pro로 제한 없이 듣거나, 짧은 동영상을 보고 24시간 동안 이용하세요.";
+"onboarding.live.title" = "진짜 무선, 실시간으로";
+"onboarding.live.subtitle" = "전 세계의 실제 수신기와 채널을 들어 보세요.";
+"onboarding.live.hf" = "단파: 항공 기상, 시보, 아마추어 무선. 수신기의 스펙트럼을 화면에 보여 줍니다.";
+"onboarding.live.cb" = "CB 40개 채널 전체와 27.555 DX 호출, 자동 스퀠치와 스캔 포함.";
+"onboarding.live.poc" = "공개 서버의 실제 푸시투토크 채널.";
+"onboarding.live.note" = "청취 전용. 하루 %d분 무료, Talky Pro로 무제한.";

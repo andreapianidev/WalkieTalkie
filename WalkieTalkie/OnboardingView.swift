@@ -17,7 +17,7 @@ struct OnboardingView: View {
     @Binding var isOnboardingComplete: Bool
     @ObservedObject var notificationManager: NotificationManager
 
-    private let totalPages = 6
+    private let totalPages = 7
 
     var body: some View {
         ZStack {
@@ -47,7 +47,8 @@ struct OnboardingView: View {
                     ScrollableOnboardingPage { OnboardingPTTPage() }.tag(2)
                     ScrollableOnboardingPage { OnboardingFrequencyPage() }.tag(3)
                     ScrollableOnboardingPage { OnboardingRadioModePage() }.tag(4)
-                    ScrollableOnboardingPage { OnboardingStepsPage() }.tag(5)
+                    ScrollableOnboardingPage { OnboardingLiveRadioPage() }.tag(5)
+                    ScrollableOnboardingPage { OnboardingStepsPage() }.tag(6)
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                 .animation(.easeInOut, value: currentPage)
@@ -395,7 +396,60 @@ private struct OnboardingRadioModePage: View {
     }
 }
 
-// MARK: - Page 6: Steps
+// MARK: - Page 6: Live radio (HF, CB, POC)
+
+/// La radio vera: tre bande che si ascoltano da ricevitori e server pubblici.
+private struct OnboardingLiveRadioPage: View {
+    var body: some View {
+        VStack(spacing: 24) {
+            Image(systemName: "dot.radiowaves.left.and.right")
+                .font(.system(size: 72, weight: .light))
+                .foregroundColor(Color("PrimaryTextColor"))
+
+            VStack(spacing: 12) {
+                Text(OnboardingStrings.liveTitle)
+                    .font(.title.bold())
+                    .foregroundColor(Color("PrimaryTextColor"))
+                    .multilineTextAlignment(.center)
+                Text(OnboardingStrings.liveSubtitle)
+                    .font(.title3)
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.75))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 24)
+            }
+
+            VStack(alignment: .leading, spacing: 14) {
+                bandRow("HF", OnboardingStrings.liveHF)
+                bandRow("CB", OnboardingStrings.liveCB)
+                bandRow("POC", OnboardingStrings.livePOC)
+            }
+            .padding(.horizontal, 28)
+
+            Text(String(format: OnboardingStrings.liveNote, FreeListening.secondsPerDay / 60))
+                .font(.footnote)
+                .foregroundColor(Color("PrimaryTextColor").opacity(0.6))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 24)
+        }
+        .padding()
+    }
+
+    private func bandRow(_ band: String, _ text: String) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            Text(band)
+                .font(.system(size: 13, weight: .heavy, design: .monospaced))
+                .foregroundColor(.yellow)
+                .frame(width: 46, height: 26)
+                .background(RoundedRectangle(cornerRadius: 7).fill(Color.black))
+            Text(text)
+                .font(.subheadline)
+                .foregroundColor(Color("PrimaryTextColor"))
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+}
+
+// MARK: - Page 7: Steps
 
 private struct OnboardingStepsPage: View {
     var body: some View {

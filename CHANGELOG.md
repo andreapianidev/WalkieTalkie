@@ -91,7 +91,16 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
-### [2.1] (105), in review
+### [2.1] (106), not submitted yet
+
+#### New in (106)
+- **Spectrum and waterfall** of the receiver on HF and CB, with the CB
+  channel numbers on the scale and the signal's margin over the noise.
+- **5 free minutes of live radio a day**, then Talky Pro.
+- The receiver is chosen near you from your time zone: from the Canary
+  Islands the app picked one in France, 2,300 km away.
+- Onboarding: a page on live radio, in 14 languages.
+
 
 #### New
 - **CB 27 MHz** in the Live receiver: all 40 channels, the DX area above
@@ -141,7 +150,24 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [3.1.1] (105), in review
+### [3.2] (106), not submitted yet
+
+#### New
+- **Spectrum and waterfall** of the receiver on HF and CB, in place of the
+  speaker grille, with the CB channel numbers on the scale and the signal's
+  margin over the noise.
+- **5 free minutes of live radio a day**, then Talky Pro or a short video
+  for 24 hours. The one-time paywall after 10 minutes is gone.
+- Onboarding: a page on live radio, in 14 languages.
+
+#### Fixed
+- **Black text on a black background in light mode.** Since 2.4 the default
+  theme painted the screen almost black while the text stayed black; the
+  walkie is yellow again in light mode, and the dark themes force dark mode.
+- The receiver is chosen near you from your time zone: from the Canary
+  Islands the app picked one in France, 2,300 km away.
+
+### [3.1.1] (105), never submitted, folded into 3.2
 
 #### Fixed
 - **The squelch no longer cuts AM and FM stations mid sentence.** After 4

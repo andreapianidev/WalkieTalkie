@@ -521,8 +521,7 @@
 "live_pro_background_message" = "Der HF-, CB- und POC-Empfang wurde beim Verlassen von Talky beendet. Mit Talky Pro läuft er auch bei ausgeschaltetem Bildschirm weiter. Du kannst es 24 Stunden kostenlos testen, wenn du ein kurzes Video ansiehst.";
 "live_pro_discover" = "Talky Pro entdecken";
 "live_pro_video" = "Video ansehen: 24 Stunden gratis";
-"paywall.feature.live" = "Automatischer Suchlauf und HF-, CB- und POC-Empfang bei ausgeschaltetem Bildschirm";
-
+"paywall.feature.live" = "HF, CB und POC ohne Limit hören, automatischer Suchlauf und Bildschirm aus";
 // CB 27 MHz (3.1)
 "live_cb_section" = "Zwischen Kanälen und DX wechseln";
 "live_cb_mode" = "Empfangsart: AM, FM, LSB oder USB";
@@ -536,3 +535,15 @@
 "live_cb_dx_call" = "DX-Anruffrequenz in SSB";
 "live_cb_channels" = "40 Kanäle";
 "live_cb_footer" = "Echter CB-Funk, über die öffentlichen KiwiSDR-Empfänger in deiner Nähe. Du hörst, wer sendet, wenn die Ausbreitung das Band öffnet, meist tagsüber. Mit eingeschaltetem Squelch bleibt das Rauschen zwischen den Durchgängen stumm.";
+"live_pan_over_noise" = "%d dB über dem Rauschen";
+"live_pan_noise_only" = "Nur Rauschen";
+"live_pan_waiting" = "Warte auf das Spektrum";
+"live_free_time_up" = "Die Gratisminuten für heute sind verbraucht. Tippen, um weiterzuhören.";
+"live_free_left" = "Heute gratis %@";
+"live_pro_free_message" = "Du hast die %d Gratisminuten Live-Funk für heute verbraucht. Mit Talky Pro hörst du ohne Limit, oder sieh dir ein kurzes Video für 24 Stunden an.";
+"onboarding.live.title" = "Echter Funk, live";
+"onboarding.live.subtitle" = "Höre echte Empfänger und Kanäle auf der ganzen Welt.";
+"onboarding.live.hf" = "Kurzwelle: Flugwetter, Zeitzeichen und Funkamateure, mit dem Spektrum des Empfängers auf dem Bildschirm.";
+"onboarding.live.cb" = "Alle 40 CB-Kanäle und der DX-Anruf auf 27.555, mit automatischer Rauschsperre und SCAN.";
+"onboarding.live.poc" = "Echte Push-to-Talk-Kanäle auf öffentlichen Servern.";
+"onboarding.live.note" = "Nur Empfang. %d Gratisminuten am Tag, ohne Limit mit Talky Pro.";

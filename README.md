@@ -240,16 +240,34 @@ shared by iPhone and Mac in [`Shared/RealRadio/`](Shared/RealRadio/).
   between transmissions. Tuned on 2 Nov 2026 on two real receivers (Dordogna
   and Fuerteventura): it ignores the zero S-meter of a receiver's first
   packet, adapts the noise floor in seconds rather than packets (one receiver
-  sends 6 packets a second, another 50), and treats a level that stays flat
-  for 4 s as noise or a dead carrier instead of someone talking. See
-  `Squelch` in [`CitizensBand.swift`](Shared/RealRadio/CitizensBand.swift).
-- Talky listens through the free public receiver nearest to you. CB is heard
-  when propagation opens the band, usually in daytime; at night it is often
-  quiet, and that is the real band, not a bug.
+  sends 6 packets a second, another 50), and treats a signal as a dead
+  carrier only when both the S-meter and the audio stay flat for 4 s. The
+  first version (3.1 / 2.1, build 103) looked at the S-meter alone and muted
+  AM and FM stations after 4 s of talking, because in AM the S-meter follows
+  the carrier, not the voice; fixed in build 104. See `Squelch` in
+  [`CitizensBand.swift`](Shared/RealRadio/CitizensBand.swift).
+- Talky listens through the free public receiver nearest to you, worked out
+  from your time zone without asking for your location
+  ([`TimeZoneSpots.txt`](Shared/RealRadio/TimeZoneSpots.txt), from the tz
+  database). CB is heard when propagation opens the band, usually in
+  daytime; at night it is often quiet, and that is the real band, not a bug.
 
-The receivers and servers are offered for free by volunteers, so listening
-itself stays free for everyone. Talky Pro adds the comforts: auto SCAN and
-listening with the screen off.
+### Spectrum and waterfall (iOS 3.2 / Mac 2.1)
+
+In HF and CB the walkie's speaker grille becomes a panoramic screen: the
+spectrum around the dial on top, the waterfall of the last few seconds below,
+the passband you are hearing shaded, the CB channel numbers (or the kHz) on
+the scale, and the margin of the signal over the noise. It is the receiver's
+own waterfall, a second WebSocket to the same KiwiSDR (`W/F`, about nine rows
+a second); a receiver that refuses it keeps playing audio with an empty
+screen. See [`Panorama.swift`](Shared/RealRadio/Panorama.swift).
+
+### Free minutes and Talky Pro
+
+Live listening is free for 5 minutes a day. After that the audio stops and
+Talky offers Talky Pro (unlimited listening, auto SCAN, screen off) or, on
+iPhone, a short video that unlocks the same for 24 hours. A new day, a
+purchase or the video resume listening on the same band by themselves.
 
 ---
 

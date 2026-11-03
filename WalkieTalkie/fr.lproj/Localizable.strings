@@ -521,8 +521,7 @@
 "live_pro_background_message" = "L'écoute HF, CB et POC s'est arrêtée quand tu as quitté Talky. Avec Talky Pro, elle continue même écran éteint. Tu peux l'essayer gratuitement pendant 24 heures en regardant une courte vidéo.";
 "live_pro_discover" = "Découvrir Talky Pro";
 "live_pro_video" = "Regarder une vidéo : 24 heures gratuites";
-"paywall.feature.live" = "Balayage automatique et écoute HF, CB et POC écran éteint";
-
+"paywall.feature.live" = "Écoute HF, CB et POC sans limite, SCAN automatique et écran éteint";
 // CB 27 MHz (3.1)
 "live_cb_section" = "Passer des canaux au DX";
 "live_cb_mode" = "Mode de réception : AM, FM, LSB ou USB";
@@ -536,3 +535,15 @@
 "live_cb_dx_call" = "appel DX en BLU";
 "live_cb_channels" = "40 canaux";
 "live_cb_footer" = "La vraie CB, depuis les récepteurs KiwiSDR publics les plus proches de toi. Tu entends ceux qui émettent quand la propagation ouvre la bande, en général dans la journée. Avec le squelch activé, le souffle reste muet entre deux passages.";
+"live_pan_over_noise" = "%d dB au-dessus du bruit";
+"live_pan_noise_only" = "Bruit seul";
+"live_pan_waiting" = "En attente du spectre";
+"live_free_time_up" = "Les minutes gratuites du jour sont épuisées. Touchez pour continuer à écouter.";
+"live_free_left" = "Gratuit aujourd'hui %@";
+"live_pro_free_message" = "Vous avez utilisé les %d minutes gratuites de radio en direct du jour. Avec Talky Pro, écoutez sans limite, ou regardez une courte vidéo pour 24 heures.";
+"onboarding.live.title" = "La vraie radio, en direct";
+"onboarding.live.subtitle" = "Écoutez de vrais récepteurs et canaux du monde entier.";
+"onboarding.live.hf" = "Ondes courtes : météo aéronautique, signaux horaires et radioamateurs, avec le spectre du récepteur à l'écran.";
+"onboarding.live.cb" = "Les 40 canaux CB et l'appel DX sur 27.555, avec squelch automatique et SCAN.";
+"onboarding.live.poc" = "De vrais canaux push-to-talk sur des serveurs publics.";
+"onboarding.live.note" = "Écoute seule. %d minutes gratuites par jour, sans limite avec Talky Pro.";
