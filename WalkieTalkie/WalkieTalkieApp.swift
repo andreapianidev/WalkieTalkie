@@ -71,6 +71,12 @@ struct WalkieTalkieApp: App {
                 }
                 // IAP bootstrap deve precedere AdManager: i guard !isProUser dipendono dallo stato Pro.
                 await iapManager.bootstrap()
+                #if DEBUG && !targetEnvironment(simulator)
+                // Build Debug sull'iPhone di Andrea: tutto sbloccato, cosi' il
+                // collaudo non si ferma ai 5 minuti gratis ne' alla paywall.
+                // La Release di Xcode Cloud, quella dello Store, non lo vede.
+                iapManager.applyDebugSimulatedTier(isPro: true)
+                #endif
                 #if DEBUG && targetEnvironment(simulator)
                 // `-screenshotMode YES`: schermate per lo Store e il README,
                 // con Talky Pro attivo, senza pubblicita' di prova e senza il

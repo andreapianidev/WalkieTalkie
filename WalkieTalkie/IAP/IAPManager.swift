@@ -56,7 +56,7 @@ final class IAPManager: ObservableObject {
     /// Bridge fast-boot per l'acquisto a vita.
     private static let fastBootLifetimeKey = "fastboot_hasLifetime"
 
-    #if DEBUG && targetEnvironment(simulator)
+    #if DEBUG
     private var debugSimulatedProOverride: Bool? = nil
     #endif
 
@@ -342,7 +342,7 @@ final class IAPManager: ObservableObject {
 
         logger.logInfo("IAPManager: updateEntitlements isProUser=\(isPro) product=\(foundActiveProduct?.id ?? "nil") hasThemesPack=\(packOwned) hasLifetime=\(lifetimeOwned)")
 
-        #if DEBUG && targetEnvironment(simulator)
+        #if DEBUG
         if let override = debugSimulatedProOverride {
             self.isProUser = override
             UserDefaults.standard.set(override, forKey: Self.fastBootKey)
@@ -356,7 +356,7 @@ final class IAPManager: ObservableObject {
         await updateEntitlements()
     }
 
-    #if DEBUG && targetEnvironment(simulator)
+    #if DEBUG
     func applyDebugSimulatedTier(isPro: Bool) {
         debugSimulatedProOverride = isPro
         self.isProUser = isPro

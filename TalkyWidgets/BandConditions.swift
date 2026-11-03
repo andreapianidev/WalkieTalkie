@@ -56,12 +56,17 @@ enum TalkyPro {
     /// StoreKit risponde anche nell'estensione: il widget non aspetta che
     /// l'app venga aperta per sapere che l'abbonamento c'e'.
     static func isActive() async -> Bool {
+        #if DEBUG
+        // Come l'app in Debug: il collaudo vede i widget Pro senza acquisto.
+        return true
+        #else
         for await result in Transaction.currentEntitlements {
             if case .verified(let t) = result, products.contains(t.productID), t.revocationDate == nil {
                 return true
             }
         }
         return false
+        #endif
     }
 }
 
