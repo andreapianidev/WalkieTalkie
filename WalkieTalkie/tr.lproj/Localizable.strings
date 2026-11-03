@@ -63,8 +63,6 @@
 "to_talk" = "KONUŞMAK İÇİN";
 "release" = "BIRAK";
 "to_send" = "GÖNDERMEK İÇİN";
-"radio_mode" = "RADYO";
-"radio_fm_caps" = "RADYO";
 "active" = "ETKİN";
 "no_connection" = "Bağlantı yok";
 "devices_connected" = "cihaz bağlı";
@@ -555,3 +553,16 @@
 "live_info_channel" = "Kanal";
 "live_info_listeners" = "Dinleyici";
 "live_info_talker" = "Konuşuyor";
+"radio_info_country" = "Ülke";
+"radio_info_genre" = "Tür";
+"radio_info_bitrate" = "Bit hızı";
+"radio_info_state" = "Durum";
+"radio_info_volume" = "Ses";
+"radio_info_sleep" = "Zamanlayıcı";
+"radio_state_on_air" = "Yayında";
+"radio_state_buffering" = "Yükleniyor";
+"radio_state_paused" = "Duraklatıldı";
+"radio_scope_buffering" = "Yayına bağlanılıyor...";
+"radio_scope_unsupported" = "Bu istasyonun yayını dalgalarının okunmasına izin vermiyor";
+"radio_scope_paused" = "Duraklatıldı";
+"radio_scope_pick" = "Dalgalarını görmek için bir istasyon seç";

@@ -1,0 +1,16 @@
+/* Widget di Talky: canale, propagazione, schermata di blocco. */
+"w_channel_name" = "Talky 频道";
+"w_channel_about" = "在对讲机屏幕上显示你喜爱的频道，并显示该波段现在是否开通。轻点收听。";
+"w_channel_param" = "频道";
+"w_prop_name" = "传播";
+"w_prop_about" = "根据 NOAA 空间天气数据，显示你所在地现在哪些 CB 和短波波段开通。Talky Pro。";
+"w_prop_title" = "电波传播";
+"w_lock_name" = "波段状况";
+"w_lock_about" = "在锁定屏幕上显示 CB 和短波状况及 Kp 指数。Talky Pro。";
+"w_open" = "开通";
+"w_weak" = "较弱";
+"w_closed" = "关闭";
+"w_day" = "白天";
+"w_night" = "夜间";
+"w_kp_day" = "Kp 过去 24 小时";
+"w_source" = "NOAA SWPC · %@ 更新";

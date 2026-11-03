@@ -42,8 +42,6 @@
 "to_talk" = "PARA HABLAR";
 "release" = "SUELTA";
 "to_send" = "PARA ENVIAR";
-"radio_mode" = "MODO";
-"radio_fm_caps" = "RADIO";
 "active" = "ACTIVA";
 "no_connection" = "Sin conexión";
 "devices_connected" = "dispositivos conectados";
@@ -561,3 +559,16 @@
 "live_info_channel" = "Canal";
 "live_info_listeners" = "Oyentes";
 "live_info_talker" = "Habla";
+"radio_info_country" = "País";
+"radio_info_genre" = "Género";
+"radio_info_bitrate" = "Bitrate";
+"radio_info_state" = "Estado";
+"radio_info_volume" = "Volumen";
+"radio_info_sleep" = "Temporiz.";
+"radio_state_on_air" = "En el aire";
+"radio_state_buffering" = "Cargando";
+"radio_state_paused" = "En pausa";
+"radio_scope_buffering" = "Sintonizando el stream...";
+"radio_scope_unsupported" = "El stream de esta emisora no deja leer sus ondas";
+"radio_scope_paused" = "En pausa";
+"radio_scope_pick" = "Elige una emisora para ver sus ondas";

@@ -1,0 +1,16 @@
+/* Widget di Talky: canale, propagazione, schermata di blocco. */
+"w_channel_name" = "Talky 채널";
+"w_channel_about" = "즐겨 찾는 채널을 무전기 화면에 보여 주고 지금 밴드가 열려 있는지 알려 줍니다. 탭하여 듣기.";
+"w_channel_param" = "채널";
+"w_prop_name" = "전파 상태";
+"w_prop_about" = "지금 내 위치에서 어떤 CB와 단파 밴드가 열려 있는지 NOAA 우주 기상 데이터로 보여 줍니다. Talky Pro.";
+"w_prop_title" = "전파 상태";
+"w_lock_name" = "밴드 상태";
+"w_lock_about" = "잠금 화면에 CB와 단파 상태, Kp 지수를 표시합니다. Talky Pro.";
+"w_open" = "열림";
+"w_weak" = "약함";
+"w_closed" = "닫힘";
+"w_day" = "낮";
+"w_night" = "밤";
+"w_kp_day" = "Kp 최근 24시간";
+"w_source" = "NOAA SWPC · %@ 업데이트";

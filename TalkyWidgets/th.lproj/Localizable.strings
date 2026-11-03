@@ -1,0 +1,16 @@
+/* Widget di Talky: canale, propagazione, schermata di blocco. */
+"w_channel_name" = "ช่อง Talky";
+"w_channel_about" = "ช่องโปรดของคุณบนจอวิทยุสื่อสาร พร้อมบอกว่าย่านนั้นเปิดอยู่ไหมตอนนี้ แตะเพื่อฟัง";
+"w_channel_param" = "ช่อง";
+"w_prop_name" = "การแพร่กระจายคลื่น";
+"w_prop_about" = "ย่าน CB และคลื่นสั้นใดเปิดอยู่ตอนนี้ที่ที่คุณอยู่ จากข้อมูลสภาพอวกาศของ NOAA Talky Pro";
+"w_prop_title" = "การแพร่กระจาย";
+"w_lock_name" = "สภาพย่านความถี่";
+"w_lock_about" = "สภาพ CB และคลื่นสั้นและดัชนี Kp บนหน้าจอล็อก Talky Pro";
+"w_open" = "เปิด";
+"w_weak" = "อ่อน";
+"w_closed" = "ปิด";
+"w_day" = "กลางวัน";
+"w_night" = "กลางคืน";
+"w_kp_day" = "Kp 24 ชั่วโมงล่าสุด";
+"w_source" = "NOAA SWPC · อัปเดต %@";

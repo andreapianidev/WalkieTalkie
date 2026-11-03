@@ -804,7 +804,13 @@ struct ContentView: View {
     private var speakerAreaView: some View {
         // HF, CB e POC si ascoltano soltanto: niente tasto per parlare, al
         // suo posto lo schermo del ricevitore e le letture.
-        if !isRadioMode, walkieBand != .local, #available(iOS 16.0, *) {
+        if isRadioMode {
+            // La radio non trasmette: la forma d'onda della stazione al posto del PTT.
+            RadioScopeDeck(radio: radioManager, compact: isCompactHeight)
+                .opacity(isPoweredOn ? 1 : 0.4)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, isCompactHeight ? 8 : 16)
+        } else if walkieBand != .local, #available(iOS 16.0, *) {
             LiveListeningDeck(band: walkieBand, compact: isCompactHeight)
                 .opacity(isPoweredOn ? 1 : 0.4)
                 .frame(maxWidth: .infinity)
@@ -814,7 +820,7 @@ struct ContentView: View {
         }
     }
 
-    /// Il walkie locale e la radio: griglia dell'altoparlante e tasto PTT.
+    /// Il walkie locale: griglia dell'altoparlante e tasto per parlare.
     private var pushToTalkArea: some View {
         VStack(spacing: isCompactHeight ? 10 : 30) {
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 8), spacing: 6) {
@@ -826,46 +832,33 @@ struct ContentView: View {
             }
             .padding(.horizontal, 40)
 
-            // Push to talk button migliorato con gesture (disabilitato in modalità FM)
             VStack(spacing: isCompactHeight ? 10 : 15) {
                 ZStack {
                     // Cerchio esterno
                     Circle()
-                        .fill(isRadioMode ? Color.gray.opacity(0.5) : (isTransmitting ? Color.red : Color.black))
+                        .fill(isTransmitting ? Color.red : Color.black)
                         .frame(width: isCompactHeight ? 106 : 140, height: isCompactHeight ? 106 : 140)
 
                     // Cerchio interno
                     Circle()
-                        .fill(isRadioMode ? Color.gray.opacity(0.3) : Color.white)
+                        .fill(Color.white)
                         .frame(width: isCompactHeight ? 90 : 120, height: isCompactHeight ? 90 : 120)
 
                     // Testo centrale
                     VStack(spacing: 4) {
-                        if isRadioMode {
-                            Text("radio_mode".localized)
-                                .font(.system(size: 16, weight: .bold))
-                                .foregroundColor(.gray)
-                            Text("radio_fm_caps".localized)
-                                .font(.system(size: 12, weight: .medium))
-                                .foregroundColor(.gray)
-                            Text("active".localized)
-                                .font(.system(size: 12, weight: .medium))
-                                .foregroundColor(.gray)
-                        } else {
-                            Text(isTransmitting ? "release".localized : "hold".localized)
-                                .font(.system(size: 16, weight: .bold))
-                                .foregroundColor(.black)
-                            Text(isTransmitting ? "to_send".localized : "pressed".localized)
-                                .font(.system(size: 12, weight: .medium))
-                                .foregroundColor(.black)
-                            Text(isTransmitting ? "" : "to_talk".localized)
-                                .font(.system(size: 12, weight: .medium))
-                                .foregroundColor(.black)
-                        }
+                        Text(isTransmitting ? "release".localized : "hold".localized)
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(.black)
+                        Text(isTransmitting ? "to_send".localized : "pressed".localized)
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundColor(.black)
+                        Text(isTransmitting ? "" : "to_talk".localized)
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundColor(.black)
                     }
 
-                    // Effetto pulsazione quando trasmette (solo in modalità walkie-talkie)
-                    if isTransmitting && !isRadioMode {
+                    // Effetto pulsazione quando trasmette
+                    if isTransmitting {
                         Circle()
                             .stroke(Color.red.opacity(0.6), lineWidth: 3)
                             .frame(width: isCompactHeight ? 106 : 140, height: isCompactHeight ? 106 : 140)
@@ -873,12 +866,12 @@ struct ContentView: View {
                             .animation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true), value: isTransmitting)
                     }
                 }
-                .scaleEffect(isTransmitting && !isRadioMode ? 0.95 : 1.0)
+                .scaleEffect(isTransmitting ? 0.95 : 1.0)
                 .animation(.easeInOut(duration: 0.1), value: isTransmitting)
                 .opacity(isPoweredOn ? 1.0 : 0.3)
                 .gesture(
-                    // Disabilita gesture in modalità FM o quando spento
-                    (isRadioMode || !isPoweredOn) ? nil : DragGesture(minimumDistance: 0)
+                    // Spento non trasmette
+                    !isPoweredOn ? nil : DragGesture(minimumDistance: 0)
                         .onChanged { _ in
                             if !isTransmitting && isPoweredOn && walkieBand == .local {
                                 // Controlla permessi prima di trasmettere
@@ -1062,6 +1055,11 @@ struct ContentView: View {
         }) {
             PaywallView(trigger: paywallTrigger)
         }
+        .onReceive(WidgetLinkInbox.shared.$pending) { url in
+            guard let url else { return }
+            WidgetLinkInbox.shared.pending = nil
+            openFromWidget(url)
+        }
         .onReceive(radioManager.$blockedByPaywall) { blocked in
             // Se la radio segnala paywall e il browser non è in primo piano, mostralo qui.
             if blocked && !showBrowser {
@@ -1227,6 +1225,29 @@ struct ContentView: View {
         // Ascolto appena finito: qui l'interstitial non interrompe niente.
         if band == .local { maybeShowInterstitialOnChannelChange() }
         FirebaseManager.shared.trackFrequencyChange(frequency: "band_\(band.rawValue)")
+    }
+
+    /// talky://pro apre Talky Pro; talky://live/cb?hz=... e talky://live/hf?id=...
+    /// accendono la banda e sintonizzano.
+    private func openFromWidget(_ url: URL) {
+        guard url.host?.lowercased() == "live" else {
+            PaywallTriggerManager.shared.requestForLiveFeature()
+            return
+        }
+        guard #available(iOS 16.0, *) else { return }
+        let query = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems ?? []
+        let band: WalkieBand = url.path.lowercased().hasPrefix("/cb") ? .cb : .hf
+        selectedTab = 0
+        if isRadioMode { switchMode(toRadio: false) }
+        if !isPoweredOn { togglePower() }
+        selectBand(band)
+        let live = LiveRadio.shared
+        if band == .cb, let hz = query.first(where: { $0.name == "hz" })?.value.flatMap(Int.init) {
+            live.tuneCB(hz: hz)
+        } else if let id = query.first(where: { $0.name == "id" })?.value,
+                  let index = HFChannel.all.firstIndex(where: { $0.id == id }) {
+            live.selectHF(index)
+        }
     }
 
     private func stopLiveBand() {

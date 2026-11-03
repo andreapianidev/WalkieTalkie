@@ -1,0 +1,16 @@
+/* Widget di Talky: canale, propagazione, schermata di blocco. */
+"w_channel_name" = "Canale Talky";
+"w_channel_about" = "Il tuo canale preferito sul display del walkie, con la banda aperta o chiusa adesso. Tocca per ascoltare.";
+"w_channel_param" = "Canale";
+"w_prop_name" = "Propagazione";
+"w_prop_about" = "Quali bande CB e onde corte sono aperte adesso da dove sei, dai dati di meteo spaziale della NOAA. Talky Pro.";
+"w_prop_title" = "PROPAGAZIONE";
+"w_lock_name" = "Condizioni banda";
+"w_lock_about" = "Condizioni della CB e delle onde corte e indice Kp sulla schermata di blocco. Talky Pro.";
+"w_open" = "Aperta";
+"w_weak" = "Debole";
+"w_closed" = "Chiusa";
+"w_day" = "Giorno";
+"w_night" = "Notte";
+"w_kp_day" = "Kp, ultime 24 ore";
+"w_source" = "NOAA SWPC · aggiornato %@";

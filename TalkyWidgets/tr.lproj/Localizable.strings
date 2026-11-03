@@ -1,0 +1,16 @@
+/* Widget di Talky: canale, propagazione, schermata di blocco. */
+"w_channel_name" = "Talky kanalı";
+"w_channel_about" = "Sevdiğin kanal telsiz ekranında, bandın şu an açık mı kapalı mı olduğuyla. Dinlemek için dokun.";
+"w_channel_param" = "Kanal";
+"w_prop_name" = "Yayılım";
+"w_prop_about" = "Bulunduğun yerde şu an hangi CB ve kısa dalga bantlarının açık olduğu, NOAA uzay havası verilerinden. Talky Pro.";
+"w_prop_title" = "YAYILIM";
+"w_lock_name" = "Bant koşulları";
+"w_lock_about" = "Kilit ekranında CB ve kısa dalga koşulları ile Kp indeksi. Talky Pro.";
+"w_open" = "Açık";
+"w_weak" = "Zayıf";
+"w_closed" = "Kapalı";
+"w_day" = "Gündüz";
+"w_night" = "Gece";
+"w_kp_day" = "Kp, son 24 saat";
+"w_source" = "NOAA SWPC · %@ güncellendi";

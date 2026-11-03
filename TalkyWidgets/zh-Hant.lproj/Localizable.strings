@@ -1,0 +1,16 @@
+/* Widget di Talky: canale, propagazione, schermata di blocco. */
+"w_channel_name" = "Talky 頻道";
+"w_channel_about" = "在對講機螢幕上顯示你喜愛的頻道，並顯示該波段現在是否開通。輕點收聽。";
+"w_channel_param" = "頻道";
+"w_prop_name" = "傳播";
+"w_prop_about" = "根據 NOAA 太空天氣資料，顯示你所在地現在哪些 CB 和短波波段開通。Talky Pro。";
+"w_prop_title" = "電波傳播";
+"w_lock_name" = "波段狀況";
+"w_lock_about" = "在鎖定畫面上顯示 CB 和短波狀況及 Kp 指數。Talky Pro。";
+"w_open" = "開通";
+"w_weak" = "較弱";
+"w_closed" = "關閉";
+"w_day" = "白天";
+"w_night" = "夜間";
+"w_kp_day" = "Kp 過去 24 小時";
+"w_source" = "NOAA SWPC · %@ 更新";

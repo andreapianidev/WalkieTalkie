@@ -63,8 +63,6 @@
 "to_talk" = "說話";
 "release" = "放開";
 "to_send" = "發送";
-"radio_mode" = "收音機";
-"radio_fm_caps" = "電台";
 "active" = "啟用";
 "no_connection" = "無連接";
 "devices_connected" = "裝置已連接";
@@ -557,3 +555,16 @@
 "live_info_channel" = "頻道";
 "live_info_listeners" = "聽眾";
 "live_info_talker" = "正在講話";
+"radio_info_country" = "國家";
+"radio_info_genre" = "類型";
+"radio_info_bitrate" = "位元率";
+"radio_info_state" = "狀態";
+"radio_info_volume" = "音量";
+"radio_info_sleep" = "定時";
+"radio_state_on_air" = "播出中";
+"radio_state_buffering" = "載入中";
+"radio_state_paused" = "已暫停";
+"radio_scope_buffering" = "正在調諧串流...";
+"radio_scope_unsupported" = "此電台的串流不允許讀取波形";
+"radio_scope_paused" = "已暫停";
+"radio_scope_pick" = "選擇電台即可看到波形";

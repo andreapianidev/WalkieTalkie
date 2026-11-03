@@ -1,0 +1,16 @@
+/* Widget di Talky: canale, propagazione, schermata di blocco. */
+"w_channel_name" = "Saluran Talky";
+"w_channel_about" = "Saluran kegemaran anda pada paparan walkie, dengan jalur terbuka atau tertutup sekarang. Ketik untuk mendengar.";
+"w_channel_param" = "Saluran";
+"w_prop_name" = "Perambatan";
+"w_prop_about" = "Jalur CB dan gelombang pendek yang terbuka sekarang di tempat anda, daripada data cuaca angkasa NOAA. Talky Pro.";
+"w_prop_title" = "PERAMBATAN";
+"w_lock_name" = "Keadaan jalur";
+"w_lock_about" = "Keadaan CB dan gelombang pendek serta indeks Kp pada skrin kunci. Talky Pro.";
+"w_open" = "Terbuka";
+"w_weak" = "Lemah";
+"w_closed" = "Tertutup";
+"w_day" = "Siang";
+"w_night" = "Malam";
+"w_kp_day" = "Kp, 24 jam lepas";
+"w_source" = "NOAA SWPC · dikemas kini %@";

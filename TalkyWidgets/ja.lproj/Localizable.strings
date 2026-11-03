@@ -1,0 +1,16 @@
+/* Widget di Talky: canale, propagazione, schermata di blocco. */
+"w_channel_name" = "Talkyチャンネル";
+"w_channel_about" = "お気に入りのチャンネルを無線機の画面に表示し、今そのバンドが開いているかを示します。タップで受信。";
+"w_channel_param" = "チャンネル";
+"w_prop_name" = "伝搬";
+"w_prop_about" = "今いる場所でどのCB・短波バンドが開いているかを、NOAAの宇宙天気データから表示。Talky Pro。";
+"w_prop_title" = "伝搬状況";
+"w_lock_name" = "バンド状況";
+"w_lock_about" = "CBと短波の状況とKp指数をロック画面に表示。Talky Pro。";
+"w_open" = "開";
+"w_weak" = "弱";
+"w_closed" = "閉";
+"w_day" = "昼";
+"w_night" = "夜";
+"w_kp_day" = "Kp 過去24時間";
+"w_source" = "NOAA SWPC · %@ 更新";

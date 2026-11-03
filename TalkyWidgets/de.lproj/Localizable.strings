@@ -1,0 +1,16 @@
+/* Widget di Talky: canale, propagazione, schermata di blocco. */
+"w_channel_name" = "Talky-Kanal";
+"w_channel_about" = "Dein Lieblingskanal auf dem Funkgerät-Display, mit der Angabe, ob das Band gerade offen ist. Tippen zum Hören.";
+"w_channel_param" = "Kanal";
+"w_prop_name" = "Ausbreitung";
+"w_prop_about" = "Welche CB- und Kurzwellenbänder gerade bei dir offen sind, aus den Weltraumwetterdaten der NOAA. Talky Pro.";
+"w_prop_title" = "AUSBREITUNG";
+"w_lock_name" = "Bandbedingungen";
+"w_lock_about" = "CB- und Kurzwellenbedingungen und Kp-Index auf dem Sperrbildschirm. Talky Pro.";
+"w_open" = "Offen";
+"w_weak" = "Schwach";
+"w_closed" = "Zu";
+"w_day" = "Tag";
+"w_night" = "Nacht";
+"w_kp_day" = "Kp, letzte 24 Stunden";
+"w_source" = "NOAA SWPC · aktualisiert %@";

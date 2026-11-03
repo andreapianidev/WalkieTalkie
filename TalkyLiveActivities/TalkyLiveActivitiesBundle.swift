@@ -2,7 +2,8 @@
 //  TalkyLiveActivitiesBundle.swift
 //  TalkyLiveActivities
 //
-//  Widget extension entry point — bundles the radio and walkie Live Activities.
+//  Widget extension entry point: the radio and walkie Live Activities, and the
+//  live radio widgets (channel, propagation, lock screen).
 //
 
 import WidgetKit
@@ -17,5 +18,12 @@ struct TalkyLiveActivitiesBundle: WidgetBundle {
     var body: some Widget {
         RadioActivityWidget()
         WalkieActivityWidget()
+        // I widget della radio vera (cartella TalkyWidgets) vogliono iOS 17:
+        // configurazione con AppIntent e containerBackground.
+        if #available(iOS 17.0, *) {
+            ChannelWidget()
+            PropagationWidget()
+            BandLockWidget()
+        }
     }
 }

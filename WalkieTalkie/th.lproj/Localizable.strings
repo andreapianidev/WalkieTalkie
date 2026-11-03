@@ -63,8 +63,6 @@
 "to_talk" = "เพื่อพูด";
 "release" = "ปล่อย";
 "to_send" = "เพื่อส่ง";
-"radio_mode" = "วิทยุ";
-"radio_fm_caps" = "วิทยุ";
 "active" = "ทำงานอยู่";
 "no_connection" = "ไม่มีการเชื่อมต่อ";
 "devices_connected" = "อุปกรณ์ที่เชื่อมต่อ";
@@ -556,3 +554,16 @@
 "live_info_channel" = "ช่อง";
 "live_info_listeners" = "ผู้ฟัง";
 "live_info_talker" = "กำลังพูด";
+"radio_info_country" = "ประเทศ";
+"radio_info_genre" = "แนวเพลง";
+"radio_info_bitrate" = "บิตเรต";
+"radio_info_state" = "สถานะ";
+"radio_info_volume" = "เสียง";
+"radio_info_sleep" = "ตั้งเวลา";
+"radio_state_on_air" = "กำลังออกอากาศ";
+"radio_state_buffering" = "กำลังโหลด";
+"radio_state_paused" = "หยุดชั่วคราว";
+"radio_scope_buffering" = "กำลังจูนสตรีม...";
+"radio_scope_unsupported" = "สตรีมของสถานีนี้ไม่ให้อ่านคลื่นเสียง";
+"radio_scope_paused" = "หยุดชั่วคราว";
+"radio_scope_pick" = "เลือกสถานีเพื่อดูคลื่นเสียง";

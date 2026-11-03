@@ -63,8 +63,6 @@
 "to_talk" = "讲话";
 "release" = "松开";
 "to_send" = "发送";
-"radio_mode" = "电台";
-"radio_fm_caps" = "电台";
 "active" = "运行中";
 "no_connection" = "未连接";
 "devices_connected" = "台设备已连接";
@@ -556,3 +554,16 @@
 "live_info_channel" = "频道";
 "live_info_listeners" = "听众";
 "live_info_talker" = "正在讲话";
+"radio_info_country" = "国家";
+"radio_info_genre" = "类型";
+"radio_info_bitrate" = "码率";
+"radio_info_state" = "状态";
+"radio_info_volume" = "音量";
+"radio_info_sleep" = "定时";
+"radio_state_on_air" = "播出中";
+"radio_state_buffering" = "加载中";
+"radio_state_paused" = "已暂停";
+"radio_scope_buffering" = "正在调谐流媒体...";
+"radio_scope_unsupported" = "此电台的流不允许读取波形";
+"radio_scope_paused" = "已暂停";
+"radio_scope_pick" = "选择电台即可看到波形";

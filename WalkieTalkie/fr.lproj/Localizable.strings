@@ -63,8 +63,6 @@
 "to_talk" = "POUR PARLER";
 "release" = "RELÂCHER";
 "to_send" = "POUR ENVOYER";
-"radio_mode" = "RADIO";
-"radio_fm_caps" = "RADIO";
 "active" = "ACTIF";
 "no_connection" = "Aucune connexion";
 "devices_connected" = "appareils connectés";
@@ -555,3 +553,16 @@
 "live_info_channel" = "Canal";
 "live_info_listeners" = "Auditeurs";
 "live_info_talker" = "Parle";
+"radio_info_country" = "Pays";
+"radio_info_genre" = "Genre";
+"radio_info_bitrate" = "Débit";
+"radio_info_state" = "État";
+"radio_info_volume" = "Volume";
+"radio_info_sleep" = "Minuterie";
+"radio_state_on_air" = "À l'antenne";
+"radio_state_buffering" = "Chargement";
+"radio_state_paused" = "En pause";
+"radio_scope_buffering" = "Accord sur le flux...";
+"radio_scope_unsupported" = "Le flux de cette station ne permet pas de lire ses ondes";
+"radio_scope_paused" = "En pause";
+"radio_scope_pick" = "Choisissez une station pour voir ses ondes";

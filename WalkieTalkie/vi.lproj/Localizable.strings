@@ -63,8 +63,6 @@
 "to_talk" = "ĐỂ NÓI";
 "release" = "THẢ";
 "to_send" = "ĐỂ GỬI";
-"radio_mode" = "RADIO";
-"radio_fm_caps" = "RADIO";
 "active" = "ĐANG BẬT";
 "no_connection" = "Không có kết nối";
 "devices_connected" = "thiết bị đã kết nối";
@@ -555,3 +553,16 @@
 "live_info_channel" = "Kênh";
 "live_info_listeners" = "Người nghe";
 "live_info_talker" = "Đang nói";
+"radio_info_country" = "Quốc gia";
+"radio_info_genre" = "Thể loại";
+"radio_info_bitrate" = "Bitrate";
+"radio_info_state" = "Trạng thái";
+"radio_info_volume" = "Âm lượng";
+"radio_info_sleep" = "Hẹn giờ";
+"radio_state_on_air" = "Đang phát";
+"radio_state_buffering" = "Đang tải";
+"radio_state_paused" = "Tạm dừng";
+"radio_scope_buffering" = "Đang dò luồng phát...";
+"radio_scope_unsupported" = "Luồng của đài này không cho đọc sóng âm";
+"radio_scope_paused" = "Tạm dừng";
+"radio_scope_pick" = "Chọn một đài để xem sóng âm";

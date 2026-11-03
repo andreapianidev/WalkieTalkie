@@ -262,6 +262,16 @@ own waterfall, a second WebSocket to the same KiwiSDR (`W/F`, about nine rows
 a second); a receiver that refuses it keeps playing audio with an empty
 screen. See [`Panorama.swift`](Shared/RealRadio/Panorama.swift).
 
+### Widgets (iOS 3.2)
+
+Three WidgetKit widgets in [`TalkyWidgets/`](TalkyWidgets/), all on real
+data: *Talky channel* (free) puts a chosen CB or HF channel on the walkie
+display with whether its band is open, and opens Talky tuned to it;
+*Propagation* and the lock screen *Band conditions* (Talky Pro) read solar
+flux, Kp and the R scale from NOAA SWPC and estimate 11 m, 20, 40 and 80 m
+from the sun's height where you are, worked out from the time zone. Talky
+Pro is checked in the extension with StoreKit 2, no App Group needed.
+
 ### Free minutes and Talky Pro
 
 Live listening is free for 5 minutes a day. After that the audio stops and

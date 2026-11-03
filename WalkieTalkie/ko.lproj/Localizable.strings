@@ -63,8 +63,6 @@
 "to_talk" = "말하려면";
 "release" = "놓기";
 "to_send" = "보내려면";
-"radio_mode" = "라디오";
-"radio_fm_caps" = "라디오";
 "active" = "작동 중";
 "no_connection" = "연결 없음";
 "devices_connected" = "대 연결됨";
@@ -556,3 +554,16 @@
 "live_info_channel" = "채널";
 "live_info_listeners" = "청취자";
 "live_info_talker" = "말하는 중";
+"radio_info_country" = "국가";
+"radio_info_genre" = "장르";
+"radio_info_bitrate" = "비트레이트";
+"radio_info_state" = "상태";
+"radio_info_volume" = "볼륨";
+"radio_info_sleep" = "타이머";
+"radio_state_on_air" = "방송 중";
+"radio_state_buffering" = "불러오는 중";
+"radio_state_paused" = "일시정지";
+"radio_scope_buffering" = "스트림에 맞추는 중...";
+"radio_scope_unsupported" = "이 방송국의 스트림은 파형을 읽을 수 없습니다";
+"radio_scope_paused" = "일시정지";
+"radio_scope_pick" = "방송국을 고르면 파형이 보입니다";

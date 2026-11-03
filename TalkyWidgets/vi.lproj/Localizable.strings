@@ -1,0 +1,16 @@
+/* Widget di Talky: canale, propagazione, schermata di blocco. */
+"w_channel_name" = "Kênh Talky";
+"w_channel_about" = "Kênh yêu thích trên màn hình bộ đàm, kèm cho biết băng tần đang mở hay đóng. Chạm để nghe.";
+"w_channel_param" = "Kênh";
+"w_prop_name" = "Truyền sóng";
+"w_prop_about" = "Những băng CB và sóng ngắn nào đang mở ở nơi bạn, theo dữ liệu thời tiết không gian của NOAA. Talky Pro.";
+"w_prop_title" = "TRUYỀN SÓNG";
+"w_lock_name" = "Tình trạng băng";
+"w_lock_about" = "Tình trạng CB, sóng ngắn và chỉ số Kp trên màn hình khóa. Talky Pro.";
+"w_open" = "Mở";
+"w_weak" = "Yếu";
+"w_closed" = "Đóng";
+"w_day" = "Ngày";
+"w_night" = "Đêm";
+"w_kp_day" = "Kp, 24 giờ qua";
+"w_source" = "NOAA SWPC · cập nhật %@";

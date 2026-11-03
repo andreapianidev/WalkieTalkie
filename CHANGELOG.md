@@ -91,7 +91,7 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
-### [2.1] (109), not submitted yet
+### [2.1] (110), not submitted yet
 
 #### New in (106)
 - **Spectrum and waterfall** of the receiver on HF and CB, with the CB
@@ -150,9 +150,21 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [3.2] (109), not submitted yet
+### [3.2] (110), not submitted yet
 
 #### New
+- **Widgets.** Free: *Talky channel*, your favourite channel (CB 19, CB 9,
+  DX 27.555, VOLMET, 40 m, 20 m, WWV) on the walkie display with whether its
+  band is open now; a tap opens Talky already tuned. Talky Pro:
+  *Propagation* (medium and large) with solar flux, Kp and radio blackouts
+  from NOAA SWPC, an open/weak/closed estimate for 11 m CB, 20, 40 and 80 m
+  where you are, day or night, and the Kp of the last 24 hours; *Band
+  conditions* on the lock screen (Kp gauge, 11 m line, inline).
+- **The radio has its own screen**: no disabled talk button and no dot grid,
+  but the waveform of the station that is playing (read from the stream, on
+  317 of the 344 stations; HLS streams do not give access to the samples)
+  and the level of the last seconds, with country, genre, bitrate, status,
+  volume and sleep timer.
 - **No talk button on HF, CB and POC**, which are listen only: the
   receiver's screen takes its place, wider, with a panel of readings
   (receiver, distance, signal in S units and dBm, mode and bandwidth, squelch

@@ -527,6 +527,47 @@ struct LiveSpeakerGrid: View {
     }
 }
 
+/// Una lettura del pannello: etichetta piccola, valore grande, acceso in ambra
+/// quando conta adesso.
+struct DialReading {
+    let label: String
+    let value: String
+    var lit = false
+}
+
+/// Il pannello nero delle letture, tre colonne, sotto lo schermo della radio.
+struct DialReadings: View {
+    let cells: [DialReading]
+    let compact: Bool
+
+    private let amber = Color(red: 1.0, green: 0.8, blue: 0.0)
+
+    var body: some View {
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 3), spacing: compact ? 6 : 8) {
+            ForEach(cells, id: \.label) { cell in
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(cell.label)
+                        .font(.system(size: 9, weight: .semibold, design: .monospaced))
+                        .foregroundColor(.white.opacity(0.55))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                    Text(cell.value)
+                        .font(.system(size: compact ? 12 : 13, weight: .bold, design: .monospaced))
+                        .foregroundColor(cell.lit ? amber : .white)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.6)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, compact ? 7 : 9)
+        .background(RoundedRectangle(cornerRadius: 12).fill(Color.black))
+        .padding(.horizontal, 12)
+        .accessibilityElement(children: .combine)
+    }
+}
+
 /// HF, CB e POC si ascoltano soltanto: al posto del tasto per parlare, lo
 /// schermo del ricevitore a tutta larghezza e le letture che servono.
 @available(iOS 16.0, *)
@@ -555,40 +596,13 @@ struct LiveReadings: View {
     let band: WalkieBand
     let compact: Bool
 
-    private let amber = Color(red: 1.0, green: 0.8, blue: 0.0)
-
     var body: some View {
         TimelineView(.periodic(from: .now, by: 30)) { context in
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 3), spacing: compact ? 6 : 8) {
-                ForEach(cells(at: context.date), id: \.label) { cell in
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(cell.label)
-                            .font(.system(size: 9, weight: .semibold, design: .monospaced))
-                            .foregroundColor(.white.opacity(0.55))
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.7)
-                        Text(cell.value)
-                            .font(.system(size: compact ? 12 : 13, weight: .bold, design: .monospaced))
-                            .foregroundColor(cell.lit ? amber : .white)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.6)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                }
-            }
-            .padding(.horizontal, 10)
-            .padding(.vertical, compact ? 7 : 9)
-            .background(RoundedRectangle(cornerRadius: 12).fill(Color.black))
+            DialReadings(cells: cells(at: context.date), compact: compact)
         }
-        .padding(.horizontal, 12)
-        .accessibilityElement(children: .combine)
     }
 
-    private struct Cell {
-        let label: String
-        let value: String
-        var lit = false
-    }
+    private typealias Cell = DialReading
 
     private func cells(at date: Date) -> [Cell] {
         let none = "--"

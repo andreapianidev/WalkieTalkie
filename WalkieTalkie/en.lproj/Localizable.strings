@@ -63,8 +63,6 @@
 "to_talk" = "TO TALK";
 "release" = "RELEASE";
 "to_send" = "TO SEND";
-"radio_mode" = "RADIO";
-"radio_fm_caps" = "RADIO";
 "active" = "ACTIVE";
 "no_connection" = "No connection";
 "devices_connected" = "devices connected";
@@ -555,3 +553,16 @@
 "live_info_channel" = "Channel";
 "live_info_listeners" = "Listeners";
 "live_info_talker" = "Talking";
+"radio_info_country" = "Country";
+"radio_info_genre" = "Genre";
+"radio_info_bitrate" = "Bitrate";
+"radio_info_state" = "Status";
+"radio_info_volume" = "Volume";
+"radio_info_sleep" = "Sleep";
+"radio_state_on_air" = "On air";
+"radio_state_buffering" = "Loading";
+"radio_state_paused" = "Paused";
+"radio_scope_buffering" = "Tuning in to the stream...";
+"radio_scope_unsupported" = "This station's stream does not let Talky read its waves";
+"radio_scope_paused" = "Paused";
+"radio_scope_pick" = "Pick a station to see its waves";

@@ -63,8 +63,6 @@
 "to_talk" = "UNTUK BERCAKAP";
 "release" = "LEPASKAN";
 "to_send" = "UNTUK HANTAR";
-"radio_mode" = "RADIO";
-"radio_fm_caps" = "RADIO";
 "active" = "AKTIF";
 "no_connection" = "Tiada sambungan";
 "devices_connected" = "peranti disambung";
@@ -557,3 +555,16 @@
 "live_info_channel" = "Saluran";
 "live_info_listeners" = "Pendengar";
 "live_info_talker" = "Bercakap";
+"radio_info_country" = "Negara";
+"radio_info_genre" = "Genre";
+"radio_info_bitrate" = "Kadar bit";
+"radio_info_state" = "Status";
+"radio_info_volume" = "Kelantangan";
+"radio_info_sleep" = "Pemasa";
+"radio_state_on_air" = "Ke udara";
+"radio_state_buffering" = "Memuatkan";
+"radio_state_paused" = "Dijeda";
+"radio_scope_buffering" = "Menala strim...";
+"radio_scope_unsupported" = "Strim stesen ini tidak membenarkan gelombangnya dibaca";
+"radio_scope_paused" = "Dijeda";
+"radio_scope_pick" = "Pilih stesen untuk melihat gelombangnya";

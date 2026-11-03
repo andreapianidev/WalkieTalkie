@@ -63,8 +63,6 @@
 "to_talk" = "して話す";
 "release" = "離す";
 "to_send" = "と送信";
-"radio_mode" = "ラジオ";
-"radio_fm_caps" = "ラジオ";
 "active" = "動作中";
 "no_connection" = "接続なし";
 "devices_connected" = "台接続中";
@@ -556,3 +554,16 @@
 "live_info_channel" = "チャンネル";
 "live_info_listeners" = "聴取者";
 "live_info_talker" = "発言中";
+"radio_info_country" = "国";
+"radio_info_genre" = "ジャンル";
+"radio_info_bitrate" = "ビットレート";
+"radio_info_state" = "状態";
+"radio_info_volume" = "音量";
+"radio_info_sleep" = "スリープ";
+"radio_state_on_air" = "放送中";
+"radio_state_buffering" = "読み込み中";
+"radio_state_paused" = "一時停止";
+"radio_scope_buffering" = "ストリームに接続中...";
+"radio_scope_unsupported" = "この局のストリームは波形を読み取れません";
+"radio_scope_paused" = "一時停止";
+"radio_scope_pick" = "局を選ぶと波形が表示されます";

@@ -8,6 +8,7 @@
 //  them in .onOpenURL → here.
 //
 
+import Combine
 import Foundation
 
 enum LiveActivityDeepLink {
@@ -28,6 +29,10 @@ enum LiveActivityDeepLink {
             NotificationCenter.default.post(name: .talkyRadioNextStation, object: nil)
         case ("radio", "/prev"):
             NotificationCenter.default.post(name: .talkyRadioPreviousStation, object: nil)
+        case ("live", _), ("pro", _):
+            // Dai widget: li consuma ContentView appena c'e', anche dopo un
+            // avvio a freddo in cui l'URL arriva prima della schermata.
+            WidgetLinkInbox.shared.pending = url
         case ("radio", _), ("walkie", _):
             // Tapping the activity body (no specific action) — just opens the app.
             break
@@ -35,4 +40,11 @@ enum LiveActivityDeepLink {
             Logger.shared.logWarning("Unrecognised Live Activity deep link: \(url)")
         }
     }
+}
+
+/// L'ultimo collegamento arrivato da un widget, in attesa della schermata
+/// principale che sa cosa farne.
+final class WidgetLinkInbox: ObservableObject {
+    static let shared = WidgetLinkInbox()
+    @Published var pending: URL?
 }
