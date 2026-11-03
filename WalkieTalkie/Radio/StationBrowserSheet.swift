@@ -279,7 +279,7 @@ struct StationBrowserSheet: View {
                             stationRow(station)
                         }
                     } label: {
-                        Text("\(flag(forCountry: entry.country)) \(entry.country) (\(entry.stations.count))")
+                        Text("\(flag(forCountry: entry.country)) \(RadioStation.countryName(for: entry.country)) (\(entry.stations.count))")
                             .font(.subheadline)
                             .foregroundColor(Color("PrimaryTextColor"))
                     }
@@ -379,7 +379,7 @@ struct StationBrowserSheet: View {
                                 .foregroundColor(.secondary)
                         }
                     }
-                    Text("\(station.country) · \(station.genre)")
+                    Text("\(station.countryName) · \(station.genre)")
                         .font(.caption)
                         .foregroundColor(.secondary)
                         .lineLimit(1)
@@ -467,6 +467,7 @@ struct StationBrowserSheet: View {
         return stations.filter {
             $0.name.lowercased().contains(query) ||
             $0.country.lowercased().contains(query) ||
+            $0.countryName.lowercased().contains(query) ||
             $0.genre.lowercased().contains(query)
         }
     }

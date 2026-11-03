@@ -355,7 +355,7 @@ struct ContentView: View {
                         .foregroundColor(Color("PrimaryTextColor").opacity(0.8))
                     
                     HStack(spacing: 6) {
-                        Text("country".localized + ": \(radioManager.currentStation?.country ?? "--")")
+                        Text("country".localized + ": \(radioManager.currentStation?.countryName ?? "--")")
                             .font(.caption2)
                             .foregroundColor(Color("PrimaryTextColor").opacity(0.6))
 
@@ -472,7 +472,7 @@ struct ContentView: View {
                             .font(.system(size: 36, weight: .bold, design: .monospaced))
                             .foregroundColor(.yellow)
                         
-                        Text(radioManager.currentStation?.country ?? "")
+                        Text(radioManager.currentStation?.countryName ?? "")
                             .font(.caption)
                             .foregroundColor(.white.opacity(0.8))
                         

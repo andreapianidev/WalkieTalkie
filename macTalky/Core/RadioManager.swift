@@ -63,6 +63,21 @@ struct RadioStation: Identifiable {
     /// Emoji bandiera del paese, derivata dal nome paese italiano.
     var flagEmoji: String { RadioStation.flagMap[country] ?? "🌍" }
 
+    /// Il paese nella lingua di chi usa l'app. `country` resta il nome
+    /// italiano, che fa da chiave per raggruppare e filtrare; il codice ISO
+    /// si ricava dalla bandiera, cosi' l'elenco dei paesi resta uno solo.
+    var countryName: String { RadioStation.countryName(for: country) }
+
+    static func countryName(for country: String) -> String {
+        guard let flag = flagMap[country] else { return country }
+        let code = String(flag.unicodeScalars.compactMap { scalar -> Character? in
+            guard (0x1F1E6...0x1F1FF).contains(scalar.value),
+                  let letter = UnicodeScalar(scalar.value - 0x1F1E6 + 65) else { return nil }
+            return Character(letter)
+        })
+        return Locale.current.localizedString(forRegionCode: code) ?? country
+    }
+
     private static let flagMap: [String: String] = [
         "Italia": "🇮🇹", "Francia": "🇫🇷", "Germania": "🇩🇪", "UK": "🇬🇧",
         "Spagna": "🇪🇸", "USA": "🇺🇸", "Olanda": "🇳🇱", "Belgio": "🇧🇪",
@@ -951,7 +966,7 @@ class RadioManager: NSObject, ObservableObject {
         // RadioManager di iOS, che e' un file separato: i due target hanno due
         // copie di questa classe e una correzione sola non basta.
         // macTalky non e' localizzata, quindi qui la stringa resta letterale.
-        nowPlayingInfo[MPMediaItemPropertyArtist] = "\(station.country) · \(station.genre)"
+        nowPlayingInfo[MPMediaItemPropertyArtist] = "\(station.countryName) · \(station.genre)"
         nowPlayingInfo[MPMediaItemPropertyAlbumTitle] = "Talky · Internet Radio"
         nowPlayingInfo[MPMediaItemPropertyGenre] = station.genre
         nowPlayingInfo[MPNowPlayingInfoPropertyIsLiveStream] = true

@@ -94,7 +94,11 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
-### [2.1] (118), not submitted yet
+### [2.1] (119), not submitted yet
+
+#### Fixed in (119)
+- Radio list and Now Playing show each station's country in the Mac's
+  language instead of Italian.
 
 #### New in (116)
 - **The Pro panel says what you have.** The paywall lists the same features in
@@ -180,7 +184,12 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [3.2] (118), not submitted yet
+### [3.2] (119), not submitted yet
+
+#### Fixed in (119)
+- Radio: the country of a station is shown in your language ("Germany",
+  "Allemagne", "ドイツ"), not always in Italian ("Germania"). Search finds it
+  both ways.
 
 #### New in (118)
 - The app is called **Talky** under its icon on iPhone and iPad, as on the Mac

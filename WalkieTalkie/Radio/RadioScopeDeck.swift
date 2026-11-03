@@ -35,7 +35,7 @@ struct RadioScopeDeck: View {
             ? String(format: "%d:%02d", Int(sleep.remainingSeconds) / 60, Int(sleep.remainingSeconds) % 60)
             : "OFF"
         return [
-            DialReading(label: "radio_info_country".localized, value: station?.country ?? none),
+            DialReading(label: "radio_info_country".localized, value: station?.countryName ?? none),
             DialReading(label: "radio_info_genre".localized, value: station?.genre ?? none),
             DialReading(label: "radio_info_bitrate".localized, value: radio.streamKbps.map { "\($0) kbps" } ?? none),
             DialReading(label: "radio_info_state".localized, value: state, lit: radio.isPlaying && !radio.isBuffering),

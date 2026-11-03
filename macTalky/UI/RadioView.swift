@@ -121,6 +121,7 @@ struct RadioView: View {
         return base.filter {
             $0.name.lowercased().contains(query)
                 || $0.country.lowercased().contains(query)
+                || $0.countryName.lowercased().contains(query)
                 || $0.genre.lowercased().contains(query)
         }
     }
@@ -160,7 +161,7 @@ struct RadioView: View {
                                     }
                                 } header: {
                                     HStack {
-                                        Text("\(group.stations.first?.flagEmoji ?? "🌍")  \(group.country.uppercased())")
+                                        Text("\(group.stations.first?.flagEmoji ?? "🌍")  \(RadioStation.countryName(for: group.country).uppercased())")
                                             .font(.vfd(10, weight: .bold))
                                             .kerning(1.8)
                                             .foregroundStyle(Talky.dim)
@@ -256,7 +257,7 @@ struct RadioView: View {
                             .lineLimit(1)
                         Text(radio.isBuffering
                              ? "TUNING…"
-                             : "\(station.genre.uppercased()) · \(station.country.uppercased())")
+                             : "\(station.genre.uppercased()) · \(station.countryName.uppercased())")
                             .font(.vfd(9))
                             .kerning(1.4)
                             .foregroundStyle(Talky.dim)
