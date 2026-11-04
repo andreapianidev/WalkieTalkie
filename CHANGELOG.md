@@ -202,7 +202,12 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [3.2.1] (126), unreleased
+### [3.2.2] (127), unreleased
+
+#### Changed in (127)
+- Version number 3.2.2, because 3.2.1 is out: approved on 4 November 2026.
+
+### [3.2.1] (126), approved 4 November 2026 (App Store build 167)
 
 #### Changed in (126)
 - Version number 3.2.1, because 3.2 is out: approved on 4 November 2026.
