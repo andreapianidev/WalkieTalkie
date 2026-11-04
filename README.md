@@ -292,6 +292,8 @@ flux, Kp and the R scale from NOAA SWPC and estimate 11 m, 20, 40 and 80 m
 from the sun's height where you are, worked out from the time zone. Talky
 Pro is checked in the extension with StoreKit 2, no App Group needed.
 
+<img src="docs/screenshots/ios/widgets.jpg" alt="Talky widgets on iPhone: Talky channel CB 19, Sun and bands with sunset 18:15 and 20 m open, Propagation medium and large with solar flux 100, Kp 3.3 and the Kp bars of the last and next 24 hours from NOAA SWPC" width="360">
+
 ### iPad and iPhone Duo (iOS 3.2)
 
 On a wide screen the walkie stops being a phone stretched to fit. When the
