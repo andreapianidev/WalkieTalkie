@@ -158,10 +158,10 @@ struct PaywallView: View {
             VStack(spacing: 4) {
                 HStack(spacing: 6) {
                     Link("Terms of Use (EULA)",
-                         destination: URL(string: "https://walkie-talky.vercel.app/terms")!)
+                         destination: LegalPage.terms.url)
                     Text("·").foregroundStyle(Talky.dim.opacity(0.5))
                     Link("Privacy Policy",
-                         destination: URL(string: "https://walkie-talky.vercel.app/privacy")!)
+                         destination: LegalPage.privacy.url)
                 }
                 Text("Subscriptions renew automatically unless cancelled at least 24 hours before the end of the period. Manage them in your Apple Account settings.")
                     .frame(width: 380)

@@ -881,7 +881,7 @@ extension MultipeerManager: MCSessionDelegate {
                     self.performanceMonitor.updateConnectionCount(self.connectedPeers.count)
 
                     // Traccia connessione in Firebase
-                    self.firebaseManager.trackDeviceConnection(deviceName: peerID.displayName)
+                    self.firebaseManager.trackDeviceConnection()
 
                     // Feedback aptico e notifica per connessione
                     self.hapticManager.connectionEstablished()
@@ -910,7 +910,7 @@ extension MultipeerManager: MCSessionDelegate {
                 // Feedback aptico e notifica per disconnessione solo se era precedentemente connesso
                 if wasConnected {
                     // Traccia disconnessione in Firebase
-                    self.firebaseManager.trackDeviceDisconnection(deviceName: peerID.displayName)
+                    self.firebaseManager.trackDeviceDisconnection()
                     
                     self.hapticManager.connectionLost()
                     self.notificationManager.sendConnectionLostNotification(deviceName: peerID.displayName)

@@ -94,7 +94,13 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
-### [2.1] (124), not submitted yet
+### [2.1.1] (125), unreleased
+
+#### Changed in (125)
+- The Terms of Use and Privacy Policy links in the paywall open the new pages
+  on www.andreapiani.com/talky/, rewritten to describe what the app does today.
+
+### [2.1] (124), in review since 4 November 2026 (App Store build 158)
 
 #### Fixed in (124)
 - Opening CB from the Channel widget showed the HF list and an HF station
@@ -196,7 +202,19 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [3.2] (124), not submitted yet
+### [3.2.1] (125), unreleased
+
+#### Fixed in (125)
+- Connecting to another device no longer sends that device's name to the
+  usage statistics. The name of a phone is usually the name of its owner, who
+  never agreed to anything.
+
+#### Changed in (125)
+- The Terms of Use and Privacy Policy links in the paywall and in the Themes
+  Pack sheet open the new pages on www.andreapiani.com/talky/, in Italian and
+  Spanish when the app is in those languages, English otherwise.
+
+### [3.2] (124), in review since 4 November 2026 (App Store build 157)
 
 #### Fixed in (124)
 - Onboarding titles and notes no longer end in "..." on smaller iPhones: in

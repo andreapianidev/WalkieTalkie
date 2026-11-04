@@ -29,22 +29,18 @@ class FirebaseManager: ObservableObject {
         logger.logInfo("Analytics: App launch tracciato")
     }
     
-    /// Traccia quando un utente si connette a un dispositivo
-    func trackDeviceConnection(deviceName: String) {
+    /// Connessione a un peer. Il nome del peer non parte: e' il nome del telefono
+    /// dell'altro, quasi sempre nome e cognome di una persona che non ha accettato nulla.
+    func trackDeviceConnection() {
         Analytics.logEvent("device_connection", parameters: [
-            "device_name": deviceName,
             "timestamp": Date().timeIntervalSince1970
         ])
-        logger.logInfo("Analytics: Connessione dispositivo tracciata - \(deviceName)")
     }
-    
-    /// Traccia quando un utente si disconnette da un dispositivo
-    func trackDeviceDisconnection(deviceName: String) {
+
+    func trackDeviceDisconnection() {
         Analytics.logEvent("device_disconnection", parameters: [
-            "device_name": deviceName,
             "timestamp": Date().timeIntervalSince1970
         ])
-        logger.logInfo("Analytics: Disconnessione dispositivo tracciata - \(deviceName)")
     }
     
     /// Traccia l'uso del walkie talkie
