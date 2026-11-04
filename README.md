@@ -301,6 +301,8 @@ screen, the inner display of iPhone Duo) the radio splits in two panels in
 on the left (status, bands, display, keys), the screen on the right (spectrum
 and waterfall, level bars, talk button).
 
+![Talky on iPad in landscape: control head on the left, HF 5.505 MHz Shannon VOLMET with live spectrum and waterfall from a receiver in Carlow, Ireland, on the right](docs/screenshots/ios/ipad_two_panels.jpg)
+
 - **iPad, landscape**: the two panels side by side.
 - **iPad, portrait**: one column 720 points wide, and the scope takes the
   height the phone does not have.
