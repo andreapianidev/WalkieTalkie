@@ -99,8 +99,8 @@ Talky is free with ads. Talky Pro removes the ads and adds all stations, recordi
 
 Talky's code is public on GitHub, under the PolyForm Noncommercial 1.0.0 license: https://github.com/andreapianidev/WalkieTalkie
 
-Terms of Use (EULA): https://walkie-talky.vercel.app/terms
-Privacy Policy: https://walkie-talky.vercel.app/privacy
+Terms of Use (EULA): https://www.andreapiani.com/talky/terms/
+Privacy Policy: https://www.andreapiani.com/talky/privacy/
 Cookie Policy: https://walkie-talky.vercel.app/cookies
 
 Talky Pro subscription auto-renews at the end of each period unless cancelled at least 24 hours before the end of the current period. Payment is charged to your Apple ID account at confirmation of purchase. You can manage and cancel your subscription in your Apple ID Settings.
@@ -150,8 +150,8 @@ Talky è gratuita con pubblicità. Talky Pro toglie la pubblicità e aggiunge tu
 
 Il codice di Talky è pubblico su GitHub, con licenza PolyForm Noncommercial 1.0.0: https://github.com/andreapianidev/WalkieTalkie
 
-Terms of Use (EULA): https://walkie-talky.vercel.app/terms
-Privacy Policy: https://walkie-talky.vercel.app/privacy
+Terms of Use (EULA): https://www.andreapiani.com/talky/terms/
+Privacy Policy: https://www.andreapiani.com/talky/privacy/
 Cookie Policy: https://walkie-talky.vercel.app/cookies
 
 Talky Pro subscription auto-renews at the end of each period unless cancelled at least 24 hours before the end of the current period. Payment is charged to your Apple ID account at confirmation of purchase. You can manage and cancel your subscription in your Apple ID Settings.
@@ -201,8 +201,8 @@ Talky ist kostenlos mit Werbung. Talky Pro entfernt die Werbung und bietet alle 
 
 Der Code von Talky ist öffentlich auf GitHub, unter der Lizenz PolyForm Noncommercial 1.0.0: https://github.com/andreapianidev/WalkieTalkie
 
-Terms of Use (EULA): https://walkie-talky.vercel.app/terms
-Privacy Policy: https://walkie-talky.vercel.app/privacy
+Terms of Use (EULA): https://www.andreapiani.com/talky/terms/
+Privacy Policy: https://www.andreapiani.com/talky/privacy/
 Cookie Policy: https://walkie-talky.vercel.app/cookies
 
 Das Talky-Pro-Abonnement verlängert sich am Ende jeder Laufzeit automatisch, sofern es nicht mindestens 24 Stunden vor Ablauf der aktuellen Periode gekündigt wird. Die Zahlung wird bei Kaufbestätigung über dein Apple-ID-Konto abgerechnet. Du kannst dein Abonnement in den Einstellungen deiner Apple-ID verwalten und kündigen.
@@ -252,8 +252,8 @@ Talky es gratis con anuncios. Talky Pro quita los anuncios y añade todas las em
 
 El código de Talky es público en GitHub, con la licencia PolyForm Noncommercial 1.0.0: https://github.com/andreapianidev/WalkieTalkie
 
-Terms of Use (EULA): https://walkie-talky.vercel.app/terms
-Privacy Policy: https://walkie-talky.vercel.app/privacy
+Terms of Use (EULA): https://www.andreapiani.com/talky/terms/
+Privacy Policy: https://www.andreapiani.com/talky/privacy/
 Cookie Policy: https://walkie-talky.vercel.app/cookies
 
 Talky Pro subscription auto-renews at the end of each period unless cancelled at least 24 hours before the end of the current period. Payment is charged to your Apple ID account at confirmation of purchase. You can manage and cancel your subscription in your Apple ID Settings.
@@ -303,8 +303,8 @@ Talky est gratuite avec publicité. Talky Pro retire la publicité et ajoute tou
 
 Le code de Talky est public sur GitHub, sous licence PolyForm Noncommercial 1.0.0 : https://github.com/andreapianidev/WalkieTalkie
 
-Terms of Use (EULA): https://walkie-talky.vercel.app/terms
-Privacy Policy: https://walkie-talky.vercel.app/privacy
+Terms of Use (EULA): https://www.andreapiani.com/talky/terms/
+Privacy Policy: https://www.andreapiani.com/talky/privacy/
 Cookie Policy: https://walkie-talky.vercel.app/cookies
 
 Talky Pro subscription auto-renews at the end of each period unless cancelled at least 24 hours before the end of the current period. Payment is charged to your Apple ID account at confirmation of purchase. You can manage and cancel your subscription in your Apple ID Settings.
@@ -354,8 +354,8 @@ O Talky é grátis com anúncios. O Talky Pro remove os anúncios e acrescenta t
 
 O código do Talky é público no GitHub, sob a licença PolyForm Noncommercial 1.0.0: https://github.com/andreapianidev/WalkieTalkie
 
-Terms of Use (EULA): https://walkie-talky.vercel.app/terms
-Privacy Policy: https://walkie-talky.vercel.app/privacy
+Terms of Use (EULA): https://www.andreapiani.com/talky/terms/
+Privacy Policy: https://www.andreapiani.com/talky/privacy/
 Cookie Policy: https://walkie-talky.vercel.app/cookies
 
 A assinatura Talky Pro é renovada automaticamente ao final de cada período, a menos que seja cancelada com pelo menos 24 horas de antecedência do fim do período atual. O pagamento é cobrado na sua conta Apple ID na confirmação da compra. Você pode gerenciar e cancelar sua assinatura nos Ajustes do seu Apple ID.
@@ -405,8 +405,8 @@ Talkyは広告付きで無料です。Talky Proでは広告がなくなり、す
 
 TalkyのコードはGitHubで公開されています（PolyForm Noncommercial 1.0.0ライセンス）: https://github.com/andreapianidev/WalkieTalkie
 
-Terms of Use (EULA): https://walkie-talky.vercel.app/terms
-Privacy Policy: https://walkie-talky.vercel.app/privacy
+Terms of Use (EULA): https://www.andreapiani.com/talky/terms/
+Privacy Policy: https://www.andreapiani.com/talky/privacy/
 Cookie Policy: https://walkie-talky.vercel.app/cookies
 
 Talky Proのサブスクリプションは、期間終了の24時間前までに解約しない限り、各期間の終了時に自動更新されます。購入確認時にApple IDアカウントに課金されます。サブスクリプションの管理・解約はApple IDの設定から行えます。
@@ -456,8 +456,8 @@ Talky는 광고와 함께 무료입니다. Talky Pro는 광고를 없애고 모�
 
 Talky의 코드는 PolyForm Noncommercial 1.0.0 라이선스로 GitHub에 공개되어 있습니다: https://github.com/andreapianidev/WalkieTalkie
 
-Terms of Use (EULA): https://walkie-talky.vercel.app/terms
-Privacy Policy: https://walkie-talky.vercel.app/privacy
+Terms of Use (EULA): https://www.andreapiani.com/talky/terms/
+Privacy Policy: https://www.andreapiani.com/talky/privacy/
 Cookie Policy: https://walkie-talky.vercel.app/cookies
 
 Talky Pro 구독은 현재 기간 종료 최소 24시간 전에 취소하지 않으면 각 기간이 끝날 때 자동 갱신됩니다. 구매 확인 시 Apple ID 계정으로 요금이 청구됩니다. 구독은 Apple ID 설정에서 관리 및 취소할 수 있습니다.
@@ -507,8 +507,8 @@ Talky 免费使用，含广告。Talky Pro 去除广告，并提供全部电台�
 
 Talky 的代码公开在 GitHub 上，采用 PolyForm Noncommercial 1.0.0 许可证：https://github.com/andreapianidev/WalkieTalkie
 
-使用条款 (EULA)：https://walkie-talky.vercel.app/terms
-隐私政策：https://walkie-talky.vercel.app/privacy
+使用条款 (EULA)：https://www.andreapiani.com/talky/terms/
+隐私政策：https://www.andreapiani.com/talky/privacy/
 Cookie 政策：https://walkie-talky.vercel.app/cookies
 
 Talky Pro 订阅会在每个周期结束时自动续订，除非在当期结束前至少 24 小时取消。款项将在您确认购买时从您的 Apple ID 账户扣除。您可以在 Apple ID 设置中管理或取消订阅。
@@ -558,8 +558,8 @@ Talky 免費使用，含廣告。Talky Pro 移除廣告，並提供全部電台�
 
 Talky 的程式碼公開在 GitHub 上，採用 PolyForm Noncommercial 1.0.0 授權：https://github.com/andreapianidev/WalkieTalkie
 
-使用條款 (EULA)：https://walkie-talky.vercel.app/terms
-隱私政策：https://walkie-talky.vercel.app/privacy
+使用條款 (EULA)：https://www.andreapiani.com/talky/terms/
+隱私政策：https://www.andreapiani.com/talky/privacy/
 Cookie 政策：https://walkie-talky.vercel.app/cookies
 
 Talky Pro 訂閱會於每個週期結束時自動續訂，除非在當期結束前至少 24 小時取消。款項將於您確認購買時從您的 Apple ID 帳戶扣除。您可以在 Apple ID 設定中管理或取消訂閱。
@@ -609,8 +609,8 @@ Talky ใช้ได้ฟรีโดยมีโฆษณา Talky Pro จะ
 
 โค้ดของ Talky เปิดเป็นสาธารณะบน GitHub ภายใต้สัญญาอนุญาต PolyForm Noncommercial 1.0.0: https://github.com/andreapianidev/WalkieTalkie
 
-Terms of Use (EULA): https://walkie-talky.vercel.app/terms
-Privacy Policy: https://walkie-talky.vercel.app/privacy
+Terms of Use (EULA): https://www.andreapiani.com/talky/terms/
+Privacy Policy: https://www.andreapiani.com/talky/privacy/
 Cookie Policy: https://walkie-talky.vercel.app/cookies
 
 Talky Pro subscription auto-renews at the end of each period unless cancelled at least 24 hours before the end of the current period. Payment is charged to your Apple ID account at confirmation of purchase. You can manage and cancel your subscription in your Apple ID Settings.
@@ -660,8 +660,8 @@ Talky reklamlı olarak ücretsizdir. Talky Pro reklamları kaldırır; tüm ista
 
 Talky'nin kodu, PolyForm Noncommercial 1.0.0 lisansıyla GitHub'da herkese açıktır: https://github.com/andreapianidev/WalkieTalkie
 
-Terms of Use (EULA): https://walkie-talky.vercel.app/terms
-Privacy Policy: https://walkie-talky.vercel.app/privacy
+Terms of Use (EULA): https://www.andreapiani.com/talky/terms/
+Privacy Policy: https://www.andreapiani.com/talky/privacy/
 Cookie Policy: https://walkie-talky.vercel.app/cookies
 
 Talky Pro aboneliği, mevcut dönemin bitiminden en az 24 saat önce iptal edilmediği sürece her dönem sonunda otomatik olarak yenilenir. Ödeme, satın alma onayında Apple ID hesabınızdan tahsil edilir. Aboneliğinizi Apple ID Ayarlarınızdan yönetebilir ve iptal edebilirsiniz.
@@ -711,8 +711,8 @@ Talky miễn phí và có quảng cáo. Talky Pro bỏ quảng cáo và thêm t�
 
 Mã nguồn của Talky được công khai trên GitHub, theo giấy phép PolyForm Noncommercial 1.0.0: https://github.com/andreapianidev/WalkieTalkie
 
-Terms of Use (EULA): https://walkie-talky.vercel.app/terms
-Privacy Policy: https://walkie-talky.vercel.app/privacy
+Terms of Use (EULA): https://www.andreapiani.com/talky/terms/
+Privacy Policy: https://www.andreapiani.com/talky/privacy/
 Cookie Policy: https://walkie-talky.vercel.app/cookies
 
 Talky Pro subscription auto-renews at the end of each period unless cancelled at least 24 hours before the end of the current period. Payment is charged to your Apple ID account at confirmation of purchase. You can manage and cancel your subscription in your Apple ID Settings.

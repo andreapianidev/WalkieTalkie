@@ -292,6 +292,30 @@ flux, Kp and the R scale from NOAA SWPC and estimate 11 m, 20, 40 and 80 m
 from the sun's height where you are, worked out from the time zone. Talky
 Pro is checked in the extension with StoreKit 2, no App Group needed.
 
+### iPad and iPhone Duo (iOS 3.2)
+
+On a wide screen the walkie stops being a phone stretched to fit. When the
+window is regular in both directions and at least 700 points wide (iPad full
+screen, the inner display of iPhone Duo) the radio splits in two panels in
+[`Duo/RadioSplit.swift`](WalkieTalkie/Duo/RadioSplit.swift): the control head
+on the left (status, bands, display, keys), the screen on the right (spectrum
+and waterfall, level bars, talk button).
+
+- **iPad, landscape**: the two panels side by side.
+- **iPad, portrait**: one column 720 points wide, and the scope takes the
+  height the phone does not have.
+- **iPad in Split View**: the width goes back to compact and so does the
+  layout, the single column of the phone.
+- **iPhone Duo, open like a book**: the gap between the panels is the hinge,
+  read from `reservedRegions(kind: .division, options: .includeInactive)`, so
+  the hinge is known even with the phone open flat and nothing moves when it
+  folds.
+- **iPhone Duo, standing on a table** (horizontal hinge): the screen goes on
+  top, to be looked at, and the controls below, close to the fingers.
+
+The hinge code is compiled only with the iOS 27.1 SDK and runs only on iOS
+27.1; everywhere else `Hinge.of` answers `.none` and the iPad rules apply.
+
 ### Free minutes and Talky Pro
 
 Live listening is free for 5 minutes a day. After that the audio stops and
@@ -458,14 +482,21 @@ This order is mandatory for both Apple review and AdMob eCPM (Google must see th
 
 - **UMP SDK**: shows the AdMob consent form to EEA/UK users; gates ad requests on `canRequestAds`
 - **ATT (App Tracking Transparency)**: prompted **after** UMP resolution and only once UI is active (Apple requirement for iOS 14.5+)
-- **Privacy policy & terms** hosted at <https://privacypolicyhub.vercel.app>
-- **What we DON'T collect**:
-  - Walkie-talkie audio (stays on-device, peer-to-peer encrypted by Multipeer)
-  - Location (no GPS in this app, radio "nearby" uses Locale country only)
-  - Personally identifiable information
-- **What we DO collect** (only with consent):
-  - Anonymous Firebase Analytics + Crashlytics
-  - AdMob ad-targeting signals (IDFA), only if user consents to ATT
+- **Privacy policy, terms and support** at <https://www.andreapiani.com/talky/privacy/>,
+  [`/terms/`](https://www.andreapiani.com/talky/terms/) and
+  [`/support/`](https://www.andreapiani.com/talky/support/), in English, Italian and Spanish
+- **What we don't collect**:
+  - Walkie-talkie audio: it goes device to device on the local network and is never
+    sent to us. It is not always encrypted (Multipeer runs with `encryptionPreference:
+    .optional`, the cross-platform TALKY1 link is plain TCP), so the policy says so
+  - Location: no GPS. Receivers and the sun's height come from the time zone
+  - The names of the devices you talk with: since build 125 they are no longer
+    attached to the `device_connection` analytics events
+- **What we do collect** (iPhone and iPad only, the Mac app has neither):
+  - Anonymous Firebase Analytics events and Crashlytics crash reports. Collection is
+    on from launch, it is not gated by the consent form
+  - AdMob ads for free users; personalisation only after UMP consent, the IDFA only
+    after ATT
 
 ---
 
