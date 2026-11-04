@@ -202,7 +202,10 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [3.2.1] (125), unreleased
+### [3.2.1] (126), unreleased
+
+#### Changed in (126)
+- Version number 3.2.1, because 3.2 is out: approved on 4 November 2026.
 
 #### Fixed in (125)
 - Connecting to another device no longer sends that device's name to the
@@ -214,7 +217,7 @@ Sandboxed, no ads, no tracking.
   Pack sheet open the new pages on www.andreapiani.com/talky/, in Italian and
   Spanish when the app is in those languages, English otherwise.
 
-### [3.2] (124), in review since 4 November 2026 (App Store build 157)
+### [3.2] (124), approved 4 November 2026 (App Store build 157)
 
 #### Fixed in (124)
 - Onboarding titles and notes no longer end in "..." on smaller iPhones: in
