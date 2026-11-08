@@ -18,6 +18,7 @@ struct ContentView: View {
     @StateObject private var sleepTimerManager = SleepTimerManager.shared
     @StateObject private var crossPlatformManager = TalkyCrossPlatformManager.shared
     @EnvironmentObject private var adManager: AdManager
+    @ObservedObject private var iapManager = IAPManager.shared
     @State private var frequencyChangeCount = 0
     @State private var interstitialDebounceTask: Task<Void, Never>?
     @State private var isTransmitting = false
@@ -1000,7 +1001,11 @@ struct ContentView: View {
             // schermi compatti: ruba altezza alla tab bar su iPhone SE/8)
             // Nelle schermate per lo Store (`-screenshotMode`, solo Debug) la
             // promozione di un'altra app non c'entra.
-            if !isCompactHeight, !UserDefaults.standard.bool(forKey: "screenshotMode") {
+            // La promozione di Peak e' pubblicita' a tutti gli effetti: chi e'
+            // Pro o ha appena guardato il video per l'ora senza annunci non
+            // deve vederla (recensione USA del 5/11/2026).
+            if !isCompactHeight, !UserDefaults.standard.bool(forKey: "screenshotMode"),
+               !iapManager.isProUser, !adManager.adsRemoved {
                 peakAppPromotionBanner
                     .padding(.horizontal, 20)
                     .padding(.bottom, 8)

@@ -944,7 +944,7 @@ struct SettingsView: View {
                 Divider()
 
                 Button(action: {
-                    if let url = URL(string: "https://github.com/andreapianidev/WalkieTalkie/blob/main/WalkieTalkie/LICENSE") {
+                    if let url = URL(string: "https://github.com/andreapianidev/WalkieTalkie/blob/main/LICENSE") {
                         UIApplication.shared.open(url)
                     }
                 }) {
