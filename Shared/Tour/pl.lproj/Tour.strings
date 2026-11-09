@@ -1,0 +1,33 @@
+/* Talky Pro: cosa comprende e dove si trova. Le stesse chiavi in tutte le 16 lingue. */
+
+"tour.perk.live.title" = "HF, CB i POC bez dziennego limitu";
+"tour.perk.live.detail" = "Bez Pro słuchanie na żywo zatrzymuje się po 5 minutach dziennie. Z Pro gra tak długo, jak chcesz, z automatycznym SCAN i przy wyłączonym ekranie.";
+"tour.perk.widgets.title" = "Wszystkie widżety";
+"tour.perk.widgets.detail" = "Propagacja, Słońce i pasma oraz widżety ekranu blokady, z prawdziwymi danymi SFI, Kp i pasm.";
+"tour.perk.widgets.detail.mac" = "Propagacja oraz Słońce i pasma na biurku, z prawdziwymi danymi SFI, Kp i pasm.";
+"tour.perk.widgets.where" = "Dotknij i przytrzymaj ekran początkowy, stuknij +, wyszukaj Talky";
+"tour.perk.widgets.where.mac" = "Kliknij prawym przyciskiem biurko, Edytuj widżety, wyszukaj Talky";
+"tour.perk.noads.title" = "Bez reklam";
+"tour.perk.noads.detail" = "Bez banerów, bez filmów, bez reklam pełnoekranowych.";
+"tour.perk.stations.title" = "Wszystkie stacje radiowe (%d)";
+"tour.perk.stations.detail" = "Także stacje międzynarodowe, nie tylko darmowe, wszystkie na liście radia.";
+"tour.perk.private.title" = "Kanały prywatne";
+"tour.perk.private.detail" = "Kanały krótkofalówki z hasłem: słyszą Cię tylko ci, którzy je znają.";
+"tour.perk.recordings.title" = "Nagrania";
+"tour.perk.recordings.detail" = "Zapisuj to, co nadajesz, i odsłuchuj ponownie.";
+"tour.perk.history.title" = "Historia transmisji";
+"tour.perk.history.detail" = "Twoje poprzednie transmisje, zebrane na liście.";
+"tour.perk.themes.title" = "Wszystkie motywy";
+"tour.perk.themes.detail" = "Wszystkie motywy kolorystyczne krótkofalówki na iPhonie i iPadzie.";
+"tour.perk.sleep.title" = "Wyłącznik czasowy";
+"tour.perk.sleep.detail" = "Radio wyłącza się samo po wybranym czasie.";
+"tour.perk.eq.title" = "Korektor";
+"tour.perk.eq.detail" = "Dopasuj brzmienie radia do swojego gustu.";
+"tour.perk.devices.title" = "iPhone, iPad i Mac";
+"tour.perk.devices.detail" = "Jeden zakup działa na każdym urządzeniu z tym samym kontem Apple. Jeśli Pro nie pojawia się na innym urządzeniu, użyj Przywróć zakupy.";
+"tour.yourpro.title" = "Twoje Talky Pro";
+"tour.yourpro.subtitle" = "Wszystko to jest odblokowane. Oto co robi i gdzie to znaleźć.";
+"tour.yourpro.thanks" = "Dziękuję. Talky tworzy jedna osoba, a jego kod jest publiczny: Twój zakup pozwala mu działać dalej.";
+"tour.yourpro.done" = "Rozumiem";
+"tour.yourpro.open" = "Co obejmuje Twoje Pro";
+"tour.where.settings" = "Ustawienia › Personalizacja";

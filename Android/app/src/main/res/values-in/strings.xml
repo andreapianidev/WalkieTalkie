@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_channel_name">Talky di latar belakang</string>
+    <string name="notification_channel_description">Radio dan walkie talkie berjalan di latar belakang</string>
+    <string name="notification_title">Talky sedang berjalan</string>
+    <string name="notification_transmitting">Sedang mengirim lewat walkie talkie</string>
+    <string name="notification_radio_playing">Radio: %1$s</string>
+    <string name="notification_walkie_ready">Walkie mendengarkan di saluran %1$s</string>
+    <string name="notification_radio_ready">Radio siap</string>
+    <string name="notification_stop">Berhenti</string>
+
+    <string name="ob_p1_title">Walkie talkie di dalam ponselmu</string>
+    <string name="ob_p1_body">Di gunung, di festival, di alun-alun yang ramai: bicara dengan orang di sebelahmu tanpa lewat internet.</string>
+
+    <string name="ob_p2_title">Satu jaringan Wi-Fi, tanpa akun</string>
+    <string name="ob_p2_body">Talky menemukan perangkat Talky lain sendiri: Android, iPhone, iPad, Mac. Tanpa server, tanpa daftar, tanpa nomor telepon.</string>
+    <string name="ob_p2_wifi">Semua perangkat harus ada di jaringan Wi-Fi yang sama: suara berjalan lewat jaringan lokal, tidak pernah lewat internet.</string>
+
+    <string name="ob_p3_title">Tahan untuk bicara</string>
+    <string name="ob_p3_body">Persis seperti HT sungguhan: tahan tombol besar di tengah untuk bicara, lepas untuk mendengar.</string>
+    <string name="ob_p3_rule">Hanya satu suara dalam satu waktu di saluran yang sama.</string>
+
+    <string name="ob_p4_title">Siap? Cukup 3 langkah</string>
+    <string name="ob_p4_step1">Buka Talky di perangkat kedua di dekatmu, di jaringan Wi-Fi yang sama</string>
+    <string name="ob_p4_step2">Tunggu beberapa detik: perangkat terhubung sendiri dan muncul di “Perangkat”. Tidak ada yang perlu diterima</string>
+    <string name="ob_p4_step3">Tahan tombol tengah untuk bicara, lepas untuk mendengar</string>
+    <string name="ob_p4_channel_note">Semua mulai di saluran publik. Agar obrolan hanya untuk grupmu, buka “Privat” dan pakai kata sandi yang sama di setiap perangkat, juga bisa dengan iPhone dan Mac.</string>
+
+    <string name="ob_continue">Lanjut</string>
+    <string name="ob_back">Kembali</string>
+    <string name="ob_start">Ayo mulai</string>
+    <string name="ob_skip">Lewati</string>
+
+    <string name="app_starting">Memulai Talky…</string>
+    <string name="mode_walkie">WALKIE TALKIE</string>
+    <string name="mode_radio">RADIO DUNIA</string>
+    <string name="header_radio_idle">Radio</string>
+    <string name="header_channel">Saluran: %1$s</string>
+    <string name="channel_private">Privat</string>
+    <string name="channel_private_caps">PRIVAT</string>
+    <string name="freq_unit_mhz">MHz</string>
+    <string name="freq_unit_channel">CH.</string>
+
+    <string name="private_dialog_title">Saluran dengan kata sandi</string>
+    <string name="private_dialog_body">Pakai kata sandi yang sama di iPhone, Mac, dan Android untuk bergabung ke saluran yang sama.</string>
+    <string name="private_dialog_password">Kata sandi</string>
+    <string name="private_dialog_password_hint">Minimal %1$d karakter</string>
+    <string name="private_dialog_warning">Saluran ini memisahkan perangkat di jaringan lokal, tetapi lalu lintas TALKY1 tidak dienkripsi.</string>
+    <string name="private_dialog_join">Gabung</string>
+    <string name="private_dialog_cancel">Batal</string>
+
+    <string name="rx_in_progress">MENERIMA</string>
+    <string name="ptt_tx">TX</string>
+    <string name="ptt_idle">PTT</string>
+    <string name="ptt_badge_on_air">MENGUDARA</string>
+    <string name="ptt_badge_rx">RX</string>
+    <string name="ptt_badge_press">TEKAN</string>
+    <string name="ptt_badge_none">---</string>
+    <string name="ptt_hint_transmitting">MENGIRIM… LEPAS UNTUK BERHENTI</string>
+    <string name="ptt_hint_receiving">Menerima…</string>
+    <string name="ptt_hint_ready">Tahan untuk bicara</string>
+    <string name="ptt_hint_waiting">Menunggu koneksi…</string>
+
+    <string name="peers_title">Perangkat</string>
+    <string name="peers_empty">Menunggu iPhone, Mac, atau Android di jaringan Wi-Fi yang sama.</string>
+
+    <string name="log_title">Log</string>
+    <string name="log_restart">Mulai ulang</string>
+
+    <string name="radio_select_station">Pilih stasiun</string>
+    <string name="radio_buffering">Memuat…</string>
+    <string name="radio_prev">Sebelum</string>
+    <string name="radio_stop">Berhenti</string>
+    <string name="radio_next">Berikut</string>
+    <string name="radio_stations_count">Stasiun (%1$d)</string>
+
+    <string name="status_advertising">Terlihat · mencari</string>
+    <string name="status_stopped">Berhenti</string>
+</resources>

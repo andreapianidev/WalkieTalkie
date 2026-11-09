@@ -3,7 +3,7 @@
 //
 //  Onboarding al primo avvio, replicato dallo spirito di quello iOS ma in
 //  forma di sheet desktop: 4 pagine (Walkie, Rete+Microfono, Live, Radio+Pro).
-//  Localizzato in-code in 14 lingue (le 13 dell'App Store + malese, come iOS).
+//  Localizzato in-code in 16 lingue (quelle dell'App Store + malese, indonesiano e polacco, come iOS).
 
 import SwiftUI
 
@@ -26,7 +26,7 @@ private enum OBString {
     }
 
     // La stessa scelta di MacString: onboarding e resto dell'app non devono
-    // finire in due lingue diverse quando la prima preferenza non e' fra le 14.
+    // finire in due lingue diverse quando la prima preferenza non e' fra le 16.
     private static var languageKey: String { MacString.languageKey }
 
     private static let table: [String: [OBString: String]] = [
@@ -295,6 +295,44 @@ private enum OBString {
             .needsTalky: "Talky 只和裝了 Talky 的其他裝置通話：請在你身邊那個人的手機上也安裝它。",
             .invite: "邀請身邊的人",
             .inviteMessage: "一起用 Talky 聊吧，不用網際網路的對講機：",
+        ],
+        "id": [
+            .welcomeTitle: "Mac-mu juga bisa jadi walkie talkie",
+            .welcomeBody: "Tahan tombol besar TALK (atau tombol spasi) untuk bicara. Lepas untuk mendengar. Satu suara dalam satu waktu, seperti HT sungguhan.",
+            .networkTitle: "Tanpa internet. Tanpa akun.",
+            .networkBody: "Talky otomatis menemukan perangkat Talky (iPhone, Android, Mac) di jaringan Wi-Fi-mu. Izinkan mikrofon untuk mengirim suaramu.",
+            .networkTip: "Semua perangkat harus ada di jaringan Wi-Fi yang sama. Tidak ada yang perlu dipasangkan: semua mulai di saluran publik dan saling menemukan sendiri.",
+            .micGranted: "Mikrofon diizinkan",
+            .liveTitle: "CB, gelombang pendek, dan POC sungguhan di Mac-mu",
+            .liveBody: "Penerima dan saluran sungguhan di seluruh dunia, yang paling dekat denganmu, dengan spektrum dan waterfall langsung. Hanya mendengar, gratis 5 menit sehari, tanpa batas dengan Talky Pro.",
+            .radioTitle: "330+ stasiun radio dunia",
+            .radioBody: "Pindah ke modul Radio untuk stasiun dari 80+ negara, dengan favorit, filter, tombol media, dan bar level yang mengikuti musik.",
+            .proNote: "Talky Pro dan Paket Tema berlaku juga di aplikasi iOS: satu pembelian membuka iPhone, iPad, dan Mac.",
+            .widgetsTitle: "Widget di desktop",
+            .widgetsBody: "Saluran Talky, Propagasi, dan Matahari & pita, dengan data SFI, Kp, dan pita langsung. Klik kanan desktop, Edit Widget, cari Talky.",
+            .next: "Lanjut", .back: "Kembali", .start: "Mulai",
+            .needsTalky: "Talky bicara dengan perangkat lain yang juga punya Talky: pasang juga di ponsel orang yang bersamamu.",
+            .invite: "Ajak orang di dekatmu",
+            .inviteMessage: "Ayo ngobrol pakai Talky, walkie talkie yang bisa tanpa internet:",
+        ],
+        "pl": [
+            .welcomeTitle: "Twój Mac to też krótkofalówka",
+            .welcomeBody: "Przytrzymaj duży klawisz TALK (albo spację), aby mówić. Puść, aby słuchać. Jeden głos naraz, jak w prawdziwym radiu.",
+            .networkTitle: "Bez internetu. Bez kont.",
+            .networkBody: "Talky automatycznie znajduje urządzenia Talky (iPhone, Android, Mac) w Twojej sieci Wi-Fi. Zezwól na dostęp do mikrofonu, aby nadawać głos.",
+            .networkTip: "Wszystkie urządzenia muszą być w tej samej sieci Wi-Fi. Nie trzeba niczego parować: wszyscy zaczynają na kanale publicznym i znajdują się sami.",
+            .micGranted: "Mikrofon dozwolony",
+            .liveTitle: "Prawdziwe CB, fale krótkie i POC na Twoim Macu",
+            .liveBody: "Prawdziwe odbiorniki i kanały na całym świecie, ten najbliżej Ciebie, z widmem i wodospadem na żywo. Tylko odsłuch, 5 darmowych minut dziennie, bez ograniczeń z Talky Pro.",
+            .radioTitle: "Ponad 330 stacji radiowych ze świata",
+            .radioBody: "Przełącz na moduł Radio, aby słuchać stacji z ponad 80 krajów, z ulubionymi, filtrami, klawiszami multimedialnymi i wskaźnikami poziomu, które podążają za muzyką.",
+            .proNote: "Talky Pro i Pakiet motywów są wspólne z aplikacją na iOS: jeden zakup odblokowuje iPhone'a, iPada i Maca.",
+            .widgetsTitle: "Widżety na biurku",
+            .widgetsBody: "Kanał Talky, Propagacja oraz Słońce i pasma, z danymi SFI, Kp i pasm na żywo. Kliknij prawym przyciskiem biurko, Edytuj widżety, wyszukaj Talky.",
+            .next: "Dalej", .back: "Wstecz", .start: "Zaczynamy",
+            .needsTalky: "Talky rozmawia z innymi urządzeniami, które mają Talky: zainstaluj je też na telefonie osoby, która jest z Tobą.",
+            .invite: "Zaproś kogoś, kto jest z Tobą",
+            .inviteMessage: "Pogadajmy przez Talky, krótkofalówkę, która działa bez internetu:",
         ],
     ]
 }

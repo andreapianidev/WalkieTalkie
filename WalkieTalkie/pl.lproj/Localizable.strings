@@ -1,0 +1,631 @@
+/* 
+   Localizable.strings (Polish)
+   WalkieTalkie
+   
+   Created by Andrea Piani on 12/07/25.
+*/
+
+// MARK: - General
+"coming_soon" = "Już wkrótce";
+"ok" = "OK";
+"cancel" = "Anuluj";
+"error" = "Błąd";
+"accept" = "Akceptuj";
+"decline" = "Odrzuć";
+"disconnect" = "Rozłącz";
+"settings" = "Ustawienia";
+"retry" = "Ponów";
+"unknown" = "Nieznane";
+"version" = "Wersja";
+"developed_by" = "Autor";
+"website" = "Strona internetowa";
+"open_source" = "Kod źródłowy";
+"view_on_github" = "Zobacz na GitHubie";
+"license" = "Licencja";
+
+// MARK: - Peak App Promotion
+"download_peak" = "Pobierz Peak za darmo";
+"peak_app_subtitle" = "Kompletna aplikacja wysokościomierza z wbudowaną krótkofalówką";
+
+// MARK: - Notifications
+"new_device_detected" = "Wykryto nowe urządzenie";
+"device_detected_message" = "W pobliżu wykryto %@";
+"connection_established" = "Połączono";
+"connected_to_device" = "Połączono z %@";
+"connection_lost" = "Utracono połączenie";
+"disconnected_from_device" = "Rozłączono z %@";
+"incoming_transmission" = "Przychodząca transmisja";
+"receiving_audio_message" = "Odbieranie wiadomości głosowej";
+"background_scan" = "Skanowanie w tle";
+"scanning_for_devices" = "Szukam urządzeń w pobliżu";
+"notifications" = "Powiadomienia";
+"enable_notifications" = "Włącz powiadomienia";
+"disable_notifications" = "Wyłącz powiadomienia";
+"notification_description" = "Otrzymuj powiadomienia, gdy pojawi się nowe urządzenie lub trwa transmisja";
+"notifications_enabled" = "Powiadomienia włączone";
+"notifications_activated_message" = "Od teraz dostaniesz powiadomienia o wykrytych urządzeniach i transmisjach";
+
+// MARK: - Battery Status
+"charging" = "Ładowanie";
+"full" = "Pełna";
+"unplugged" = "Odłączona";
+
+// MARK: - Main Interface
+"radio_fm" = "Radio ze świata";
+"walkie_talkie" = "Krótkofalówka";
+"device" = "Urządzenie";
+"status" = "Stan";
+"no_error" = "brak błędów";
+"channel_1" = "Kanał 1";
+"en" = "PL";
+"hold" = "PRZYTRZYMAJ";
+"pressed" = "WCIŚNIĘTY";
+"to_talk" = "ABY MÓWIĆ";
+"release" = "PUŚĆ";
+"to_send" = "ABY WYSŁAĆ";
+"active" = "AKTYWNY";
+"no_connection" = "Brak połączenia";
+"devices_connected" = "połączone urządzenia";
+"status.connected_crossplatform" = "Połączono · Mac/Android (%d)";
+"status.connected_mixed" = "Połączono (%1$d · %2$d Mac/Android)";
+"status.disconnected" = "Rozłączono";
+"status.connected" = "Połączono";
+"status.connected_count" = "Połączono (%d)";
+"status.advertising" = "Widoczny dla innych";
+"status.searching" = "Szukam…";
+"status.connecting" = "Łączę…";
+"transmission_in_progress" = "TRWA NADAWANIE";
+"reception_in_progress" = "TRWA ODBIÓR";
+"no_transmission" = "brak transmisji";
+
+// MARK: - Tab Bar
+"talk" = "Mów";
+"explore" = "Odkrywaj";
+"connections" = "Połączenia";
+"settings_tab" = "Ustawienia";
+"performance" = "Wydajność";
+
+// MARK: - Performance
+"performance_title" = "Wydajność";
+"high_traffic" = "Duży ruch";
+"normal_performance" = "Normalna wydajność";
+"memory_usage" = "Pamięć";
+"network_latency" = "Śr. opóźnienie";
+"connection_time" = "Czas połączenia";
+"active_connections" = "Połączenia";
+"performance_trends" = "Trendy wydajności";
+"recommendations" = "Zalecenia";
+"connections_active" = "aktywne połączenia";
+"updated_now" = "Zaktualizowano teraz";
+"optimized_mode" = "Tryb zoptymalizowany";
+"audio_cache" = "Pamięć podręczna audio";
+"current_recommendations" = "Bieżące zalecenia";
+"no_recommendations" = "Na razie brak zaleceń. Wydajność jest optymalna!";
+"full_report" = "Pełny raport";
+"close" = "Zamknij";
+"too_many_connections_warning" = "Za dużo połączeń (%d). Dla najlepszej wydajności ogranicz je do 6-8";
+
+// MARK: - Radio
+"station" = "Stacja";
+"no_station" = "Brak stacji";
+"buffering" = "Buforowanie...";
+"genre" = "Gatunek";
+"country" = "Kraj";
+"scanning" = "Skanowanie...";
+
+// MARK: - Connections View
+"connections_title" = "Połączenia";
+"manage_connections" = "Zarządzaj połączeniami krótkofalówki";
+"connected_devices" = "Połączone urządzenia";
+"scanning_in_progress" = "Trwa skanowanie...";
+"offline" = "Offline";
+"online" = "Online";
+"advertising" = "Widoczny";
+"browsing" = "Szukanie";
+"on" = "WŁ.";
+"off" = "WYŁ.";
+"connected_devices_count" = "Połączone urządzenia";
+"no_devices_connected" = "Brak połączonych urządzeń";
+"devices_nearby_hint" = "Upewnij się, że inne urządzenia są w pobliżu, mają otwartą aplikację i są w tej samej sieci Wi-Fi";
+"connected" = "Połączono";
+"disconnect_all" = "Rozłącz wszystkie";
+"restart_discovery" = "Uruchom wyszukiwanie ponownie";
+"disconnect_device" = "Rozłącz urządzenie";
+"disconnect_confirmation" = "Na pewno chcesz rozłączyć wszystkie urządzenia?";
+
+// MARK: - Explore View
+"explore_title" = "Odkrywaj";
+"scan_nearby_devices" = "Skanuj urządzenia w pobliżu";
+"detected_devices" = "Wykryte urządzenia";
+"no_devices_detected" = "Nie wykryto urządzeń";
+"ensure_devices_open" = "Upewnij się, że na innych urządzeniach Talky jest otwarte, a Wi-Fi i Bluetooth są włączone. Mac lub telefon z Androidem musi być w tej samej sieci Wi-Fi.";
+"explore.searching" = "Szukam urządzeń w pobliżu z otwartym Talky. Pojawią się poniżej, gdy tylko będą w zasięgu.";
+"explore.search_stopped" = "Wyszukiwanie zatrzymane. Stuknij strzałkę u góry, aby szukać ponownie.";
+"available" = "Dostępne";
+"tap_plus_to_invite" = "Stuknij +, aby wysłać prośbę do iPhone'a lub iPada; drugie urządzenie musi ją zaakceptować. Mac i Android łączą się automatycznie.";
+"send_connection_request" = "Wyślij prośbę o połączenie";
+"invitation_sent" = "Prośba wysłana";
+
+// MARK: - Settings View
+"settings_title" = "Ustawienia";
+"configure_app" = "Skonfiguruj aplikację";
+"audio" = "Dźwięk";
+"background_audio_description" = "Dźwięk w tle podczas używania";
+"haptic_feedback" = "Wibracje";
+"vibration_on_buttons" = "Wibracja po naciśnięciu przycisków";
+"auto_connect" = "Automatyczne łączenie";
+"auto_connect_description" = "Łącz automatycznie ze znanymi urządzeniami";
+"voice_activation" = "Aktywacja głosem";
+"voice_activation_description" = "Nadawaj automatycznie, gdy mówisz";
+"voice_sensitivity" = "Czułość głosu";
+"voice_sensitivity_description" = "Dostosuj czułość aktywacji głosem";
+"low_power_mode" = "Tryb oszczędzania energii";
+"low_power_mode_description" = "Zmniejsza zużycie baterii";
+"reset_settings" = "Przywróć ustawienia";
+"how_to_use" = "Jak korzystać z aplikacji";
+"instruction_1_title" = "Otwórz aplikację na wszystkich urządzeniach";
+"instruction_1_description" = "Upewnij się, że aplikacja WalkieTalkie jest otwarta i aktywna na wszystkich urządzeniach.";
+"instruction_2_title" = "Przejdź do Odkrywaj";
+"instruction_2_description" = "Stuknij kartę 'Odkrywaj', aby zobaczyć dostępne urządzenia w pobliżu.";
+"instruction_3_title" = "Połącz urządzenia";
+"instruction_3_description" = "Stuknij + obok iPhone'a lub iPada, aby wysłać prośbę o połączenie. Mac i Android łączą się same przez tę samą sieć Wi-Fi.";
+"instruction_4_title" = "Ten sam kanał";
+"instruction_4_description" = "Wszyscy zaczynają na kanale publicznym, więc nie trzeba nic ustawiać. Kanał prywatny łączy tylko urządzenia, na których wpisano to samo hasło.";
+"instruction_5_title" = "Przytrzymaj, aby mówić";
+"instruction_5_description" = "Przytrzymaj środkowy przycisk, aby nadawać. Puść, aby słuchać.";
+"app_info" = "Informacje o aplikacji";
+"support_development" = "Wesprzyj rozwój";
+"buy_me_coffee" = "Postaw mi kawę";
+"support_description" = "Jeśli lubisz tę aplikację, wesprzyj jej autora";
+"view_performance" = "Pokaż statystyki wydajności";
+
+// MARK: - Background Audio
+"background_playback" = "Odtwarzanie w tle";
+"background_playback_description" = "Radio gra dalej, gdy aplikacja jest w tle";
+"now_playing" = "Teraz gra";
+"control_center_info" = "Steruj odtwarzaniem z centrum sterowania i ekranu blokady";
+
+// MARK: - Appearance
+"appearance" = "Wygląd";
+"dark_mode" = "Tryb ciemny";
+"dark_mode_description" = "Używaj ciemnego motywu w aplikacji";
+
+// MARK: - Peak App
+"peak_app_title" = "Peak: wysokościomierz dla turystów";
+"peak_app_description" = "Darmowy wysokościomierz dla turystów z AI i wbudowaną krótkofalówką";
+"download_peak_app" = "Pobierz aplikację Peak";
+"peak_altimeter_free" = "Darmowy wysokościomierz";
+"peak_walkie_ai_description" = "z krótkofalówką i AI";
+
+// MARK: - Alerts
+"connection_request" = "Prośba o połączenie";
+"wants_to_connect" = "chce się połączyć";
+"microphone_permission_required" = "Wymagany dostęp do mikrofonu";
+"microphone_permission_message" = "Aplikacja WalkieTalkie potrzebuje dostępu do mikrofonu, aby działać poprawnie. Bez tego uprawnienia nie możesz nadawać dźwięku.";
+"audio_transmission_error" = "Błąd nadawania dźwięku. Spróbuj ponownie.";
+
+// MARK: - Errors
+"no_connected_peers" = "Brak połączonych urządzeń";
+
+// MARK: - Onboarding
+"onboarding_p1_title" = "Prawdziwe radio i krótkofalówka w Twoim iPhonie";
+"onboarding_p1_subtitle" = "Słuchaj na żywo CB, fal krótkich i POC, włącz ponad 330 stacji ze świata i rozmawiaj ze znajomymi nawet tam, gdzie nie ma zasięgu.";
+
+"onboarding_p2_range_caveat" = "Ściany, wzgórza i różnice wysokości zmniejszają zasięg.";
+"onboarding_p2_same_wifi" = "Aby połączyć się z Makiem lub telefonem z Androidem, podłącz wszystkie urządzenia do tej samej sieci Wi-Fi: to połączenie idzie przez sieć lokalną.";
+
+"onboarding_p3_ptt_title" = "Przytrzymaj, aby mówić";
+"onboarding_p3_ptt_body" = "Jak w prawdziwej krótkofalówce: przytrzymaj środkowy przycisk, aby mówić, puść, aby słuchać.";
+"onboarding_p3_ptt_rule" = "Na jednym kanale mówi tylko jedna osoba naraz.";
+
+"onboarding_p4_frequency_title" = "Jeden kanał, wszyscy Cię słyszą";
+"onboarding_p4_frequency_analogy" = "Nie trzeba niczego dopasowywać: każde Talky zaczyna na kanale publicznym, więc urządzenia w pobliżu znajdują się same.";
+"onboarding_p4_change_freq_hint" = "Przyciski ‹ i › przeszukują wyświetlacz częstotliwości. Nadajesz z częstotliwości domowej. Naciśnij zielony przycisk HOME, aby do niej wrócić.";
+"onboarding_p4_private_channels_teaser" = "Chcesz kanał tylko dla swojej grupy? Utwórz kanał prywatny z hasłem: znajdą Cię tylko ci, którzy wpiszą to samo hasło, na iPhonie, Macu i Androidzie.";
+
+"onboarding_p5_steps_title" = "Gotowy? Tylko 3 kroki";
+"onboarding_p5_step1" = "Otwórz Talky na drugim urządzeniu w pobliżu: iPhonie, iPadzie, Macu lub Androidzie";
+"onboarding_p5_step2" = "Na iPhonie i iPadzie otwórz Odkrywaj i stuknij + obok urządzenia, potem zaakceptuj na drugim. Mac i Android łączą się same, przez tę samą sieć Wi-Fi";
+"onboarding_p5_step3" = "Po połączeniu (zielona kropka) przytrzymaj środkowy przycisk, aby mówić, puść, aby słuchać";
+
+"onboarding_permissions_description" = "Talky potrzebuje tego do działania.";
+"onboarding_microphone_permission" = "Mikrofon";
+"onboarding_permission_mic_why" = "Aby nagrać Twój głos, gdy naciskasz przycisk mówienia.";
+"onboarding_permission_open_settings" = "Otwórz Ustawienia iOS";
+
+"onboarding_continue" = "Dalej";
+"onboarding_get_started" = "Zaczynamy";
+"onboarding_skip" = "Pomiń";
+"onboarding_back" = "Wstecz";
+
+// MARK: - First Run Coach
+"coach_no_peers_title" = "Pierwszy krok";
+"coach_no_peers_body" = "Otwórz Talky na innym urządzeniu w pobliżu, w tej samej sieci Wi-Fi, a potem stuknij \"Odkrywaj\" na dole.";
+"coach_press_ptt_title" = "Teraz przytrzymaj tutaj";
+"coach_press_ptt_body" = "Przytrzymaj środkowy przycisk, aby mówić, puść, aby słuchać.";
+"coach_dismiss" = "Rozumiem";
+"ads_section_title" = "Reklamy i prywatność";
+"watch_ad_remove_ads" = "Obejrzyj film, bez reklam";
+"watch_ad_remove_ads_subtitle" = "Bez reklam przez 1 godzinę";
+"ads_removed_active" = "Reklamy wyłączone";
+"ads_removed_remaining" = "Pozostało: %d min";
+"manage_privacy" = "Zarządzaj ustawieniami prywatności";
+
+/* MARK: - Talky Pro features (added 2026-05) */
+
+// Paywall
+"paywall.title" = "Odblokuj Talky Pro";
+"paywall.subtitle" = "Całe Talky, bez ograniczeń";
+"paywall.plan.weekly" = "Tygodniowo";
+"paywall.plan.weekly_suffix" = "/tydzień";
+"paywall.plan.yearly" = "Rocznie";
+"paywall.plan.yearly_suffix" = "/rok";
+"paywall.badge.save" = "Oszczędzasz %d%%";
+"paywall.compare.weekly_vs_yearly" = "%1$@ rocznie. Płacąc co tydzień, wydałbyś %2$@.";
+"paywall.trial.badge" = "%1$d dni za darmo, potem %2$@ rocznie";
+"paywall.cta.start" = "Włącz Talky Pro";
+"paywall.cta.trial" = "Wypróbuj za darmo przez %d dni";
+"paywall.apple_footer" = "Subskrypcja odnawia się automatycznie. Możesz ją anulować w dowolnej chwili w ustawieniach Apple ID. Płatność zostanie pobrana z Twojego Apple ID po potwierdzeniu zakupu.";
+
+// Transmission history
+"history.title" = "Historia transmisji";
+"history.delete" = "Usuń";
+"history.clear_confirm_title" = "Wyczyścić historię?";
+"history.clear_all" = "Wyczyść wszystko";
+"history.cancel" = "Anuluj";
+"history.paywall_message" = "Odblokuj Talky Pro, aby zobaczyć historię transmisji";
+"history.unlock_pro" = "Odblokuj Pro";
+"history.empty" = "Nie odebrano jeszcze żadnych transmisji";
+
+// Themes
+"theme.title" = "Motywy";
+"theme.subtitle" = "Zmień kolor aplikacji";
+"theme.name.default" = "Domyślny";
+"theme.name.ocean" = "Ocean";
+"theme.name.forest" = "Las";
+"theme.name.sunset" = "Zachód słońca";
+"theme.name.midnight" = "Północ";
+"theme.name.military" = "Wojskowy";
+"theme.name.retro80s" = "Retro lata 80.";
+"theme.name.vintageRadio" = "Stare radio";
+"theme.name.cyberpunk" = "Cyberpunk";
+"theme.name.stealth" = "Stealth";
+"theme.name.aurora" = "Zorza";
+"theme.name.submarine" = "Okręt podwodny";
+"theme.name.hamRadio" = "Radioamator";
+"theme.name.festival" = "Festiwal";
+"theme.name.blackHole" = "Czarna dziura";
+"theme.name.galaxy" = "Galaktyka";
+"theme.name.hacker" = "Haker";
+"theme.name.wildfire" = "Pożar";
+"theme.name.arctic" = "Arktyka";
+
+// Sleep timer
+"sleep_timer.title" = "Wyłącznik czasowy radia";
+"sleep_timer.close" = "Zamknij";
+"sleep_timer.paywall_message" = "Odblokuj Talky Pro, aby włączyć wyłącznik czasowy radia";
+"sleep_timer.unlock_pro" = "Odblokuj Pro";
+"sleep_timer.countdown_label" = "Radio wyłączy się za";
+"sleep_timer.cancel" = "Anuluj wyłącznik";
+"sleep_timer.picker_prompt" = "Jak długo chcesz słuchać?";
+
+// Equalizer
+"equalizer.title" = "Korektor";
+"equalizer.subtitle" = "Wybierz ustawienie dźwięku";
+"equalizer.active_preset" = "Aktywne ustawienie";
+"equalizer.preset.flat" = "Płaski";
+"equalizer.preset.bass" = "Basy";
+"equalizer.preset.vocal" = "Wokal";
+"equalizer.preset.rock" = "Rock";
+"equalizer.preset.pop" = "Pop";
+
+// Recordings
+"recordings.title" = "Nagrania";
+"recordings.delete_all_title" = "Usunąć wszystkie nagrania?";
+"recordings.delete_all" = "Usuń wszystkie";
+"recordings.delete_all_message" = "Tej operacji nie można cofnąć.";
+"recordings.cancel" = "Anuluj";
+"recordings.pro_feature" = "Funkcja Pro";
+"recordings.paywall_message" = "Odblokuj Talky Pro, aby nagrywać i odtwarzać swoje i odebrane transmisje.";
+"recordings.unlock_pro" = "Odblokuj Pro";
+"recordings.empty_title" = "Brak nagrań";
+"recordings.empty_message" = "Tutaj pojawią się Twoje i odebrane transmisje.";
+"recordings.privacy_notice" = "Nagrania są przechowywane tylko na Twoim urządzeniu. Odpowiadasz za korzystanie z nich zgodnie z lokalnymi przepisami o prywatności.";
+"recordings.own_transmission" = "Twoja transmisja";
+
+// Private channels
+"private_channels.title" = "Kanały prywatne";
+"private_channels.close" = "Zamknij";
+"private_channels.channel_fallback" = "Kanał";
+"private_channels.public_state_title" = "Jesteś w trybie publicznym";
+"private_channels.public_state_description" = "Każdy użytkownik Talky w pobliżu może Cię znaleźć. Utwórz kanał prywatny, aby rozmawiać tylko z osobami, które znają hasło.";
+"private_channels.create_or_join" = "Utwórz kanał prywatny lub dołącz do niego";
+"private_channels.private_state_title" = "Kanał prywatny aktywny";
+"private_channels.private_state_description" = "Tylko osoby, które znają hasło, mogą Cię znaleźć i z Tobą rozmawiać.";
+"private_channels.leave" = "Opuść kanał";
+"private_channels.form.title" = "Dołącz do kanału";
+"private_channels.form.name_label" = "Nazwa kanału";
+"private_channels.form.name_placeholder" = "Np. Rodzina Kowalskich";
+"private_channels.form.password_label" = "Hasło";
+"private_channels.form.password_placeholder" = "Co najmniej 4 znaki";
+"private_channels.form.submit" = "Dołącz";
+"private_channels.form.hint" = "Tylko urządzenia z tym samym hasłem znajdą się nawzajem i będą mogły rozmawiać.";
+"private_channels.paywall.pro_feature" = "Funkcja Pro";
+"private_channels.paywall.headline" = "Kanały chronione hasłem";
+"private_channels.paywall.description" = "Twórz kanały krótkofalówki chronione hasłem: tylko osoby, które znają hasło, mogą Cię znaleźć i z Tobą rozmawiać.";
+"private_channels.paywall.cta" = "Odblokuj z Talky Pro";
+"private_channels.error.empty_name" = "Wpisz nazwę kanału.";
+"private_channels.error.password_min" = "Hasło musi mieć min. %d zn.";
+"private_channels.error.join_failed" = "Nie udało się dołączyć do kanału. Sprawdź, czy Talky Pro jest aktywne.";
+
+// Settings - Pro section
+"settings.pro.title" = "Talky Pro";
+"settings.pro.title_active" = "Talky Pro aktywne";
+"settings.pro.manage_subscription" = "Zarządzaj subskrypcją";
+"settings.pro.manage_subscription_subtitle" = "Zmień lub anuluj w swoim Apple ID";
+"settings.pro.unlock" = "Odblokuj Talky Pro";
+"settings.pro.unlock_subtitle" = "Bez reklam, bez limitów";
+"settings.pro.restore_purchases" = "Przywróć zakupy";
+
+// Settings - Personalization section
+"settings.personalization.title" = "Personalizacja";
+"settings.personalization.themes" = "Motywy";
+"settings.personalization.history.title" = "Historia transmisji";
+"settings.personalization.history.subtitle" = "Zobacz, kto się do Ciebie odezwał";
+"settings.personalization.sleep_timer.title" = "Wyłącznik czasowy radia";
+"settings.personalization.sleep_timer.subtitle" = "Wyłącz radio po X minutach";
+"settings.personalization.equalizer.title" = "Korektor";
+"settings.personalization.equalizer.subtitle" = "Ustawienia dźwięku premium";
+"settings.personalization.recordings.title" = "Nagrania";
+"settings.personalization.recordings.subtitle" = "Odtwarzaj swoje transmisje";
+"settings.personalization.private_channels.title" = "Kanały prywatne";
+"settings.personalization.private_channels.subtitle" = "Krótkofalówka chroniona hasłem";
+
+// MARK: - Station Browser & Sleep Timer
+"browse_stations" = "Przeglądaj stacje";
+"search_stations" = "Szukaj stacji…";
+"all_stations" = "Wszystkie";
+"favorites" = "Ulubione";
+"recents" = "Ostatnie";
+"nearby" = "W pobliżu";
+"by_country" = "Według kraju";
+"by_genre" = "Według gatunku";
+"no_favorites_hint" = "Brak ulubionych. Przytrzymaj stację, aby ją dodać.";
+"no_recents" = "Brak ostatnio słuchanych stacji.";
+"no_search_results" = "Nie znaleziono stacji.";
+"now_playing_short" = "TERAZ";
+"pro_badge" = "PRO";
+"sleep_timer" = "Wyłącznik czasowy";
+
+// MARK: - Mode Switch & Onboarding Radio
+"mode_switch_hint" = "Stuknij przycisk w lewym górnym rogu, aby przełączać między krótkofalówką a radiem ze świata";
+"got_it" = "Rozumiem";
+"onboarding.radio_mode.title" = "Krótkofalówka + radio";
+"onboarding.radio_mode.subtitle" = "Zmieniaj tryb jednym stuknięciem";
+"onboarding.radio_mode.body" = "Przełącznik u góry przenosi Cię z krótkofalówki do radia ze świata: ponad 330 stacji internetowych z ponad 80 krajów, ze wskaźnikami poziomu, które podążają za muzyką.";
+"onboarding.radio_mode.streaming_note" = "Radio korzysta z transmisji internetowej, a nie z fizycznej anteny FM. Wymagane jest aktywne połączenie danych (Wi-Fi lub komórkowe).";
+// MARK: - Live Activities
+"live_activities.title" = "Aktywności na żywo";
+"live_activities.toggle" = "Pokazuj w tle";
+"live_activities.description" = "Pokazuj sterowanie radiem i krótkofalówką w Dynamic Island i na ekranie blokady, gdy aplikacja działa w tle.";
+
+// MARK: - Pro upsell banner (added 2026-05-23)
+"paywall.brand_label" = "TALKY PRO";
+"upsell.title" = "Odblokuj Talky Pro";
+"upsell.subtitle" = "Bez reklam · wesprzyj niezależnego twórcę";
+"upsell.dismiss" = "Zamknij";
+
+// MARK: - Themes Pack (one-shot non-consumable, added 2026-05-23)
+"themes_pack.title" = "Odblokuj wszystkie motywy";
+"themes_pack.subtitle" = "Jednorazowy zakup, na zawsze Twój";
+"themes_pack.cta_buy" = "Odblokuj wszystkie motywy";
+"themes_pack.prop.all_themes" = "11 motywów premium (Tożsamość + Animowane)";
+"themes_pack.prop.forever" = "Bez subskrypcji, na zawsze Twój";
+"themes_pack.prop.one_time" = "Jednorazowa płatność";
+"theme_purchase.or" = "Lub";
+"theme_purchase.subscribe_title" = "Wybierz od razu Talky Pro";
+"theme_purchase.subscribe_subtitle" = "Motywy + radio międzynarodowe + bez reklam";
+"theme_purchase.apple_footer" = "Płatność obsługuje Apple. Pakiet motywów nie odnawia się automatycznie.";
+"paywall.close" = "Zamknij";
+"paywall.link.restore" = "Przywróć zakupy";
+"paywall.link.terms" = "Warunki";
+"paywall.link.privacy" = "Prywatność";
+"paywall.error_title" = "Błąd";
+"paywall.error.purchase_failed" = "Zakup nie powiódł się. Spróbuj ponownie.";
+"paywall.error.no_purchases" = "Nie znaleziono zakupów do przywrócenia.";
+"paywall.error.restore_failed" = "Przywracanie nie powiodło się. Spróbuj ponownie.";
+"check_wifi_bluetooth" = "Sprawdź Wi-Fi i Bluetooth";
+
+/* Paywall — supporter note: who is behind Talky and what Pro really pays for */
+"paywall.support.eyebrow" = "SŁOWO OD TWÓRCY";
+"paywall.support.title" = "Talky tworzy jedna osoba";
+"paywall.support.body" = "Jestem niezależnym programistą, a kod Talky jest publiczny na GitHubie. Pro to nie mur wokół aplikacji: to wkład, który pokrywa konto deweloperskie Apple, serwery i godziny spędzone na dodawaniu stacji i funkcji. Jeśli to nie jest dobry moment, korzystaj z Talky za darmo, zostaje darmowe.";
+"paywall.support.github" = "Zobacz kod na GitHubie";
+"paywall.support.compact" = "Stworzone przez jednego niezależnego programistę. Kod Talky jest publiczny na GitHubie.";
+
+/* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
+"paywall.lifetime.owned" = "Na zawsze Twoje. Dziękuję.";
+
+/* Pass stazione a 24 ore (rewarded) e chiarimento sullo streaming */
+"radio.streaming_disclaimer" = "Stacje grają przez internet: iPhone nie ma odbiornika FM.";
+"radio.now_playing_album" = "Talky · Radio internetowe";
+"station_locked.message" = "Ta stacja należy do Talky Pro. Możesz też słuchać jej przez 24 godziny, oglądając krótki film.";
+"station_locked.watch_video" = "Słuchaj 24 godziny, obejrzyj film";
+"station_locked.go_pro" = "Odblokuj wszystko z Pro";
+
+/* Ascolto dal vivo HF e POC (3.0) */
+"live_band_local" = "LOKALNIE";
+"live_scouting" = "Szukam kanałów, na których ktoś jest…";
+"live_connecting" = "Łączę…";
+"live_online" = "Słuchasz na żywo";
+"live_problem_full" = "Teraz żaden odbiornik nie jest wolny, spróbuj za chwilę";
+"live_problem_full_poc" = "Serwer pełny, próbuję innego kanału";
+"live_problem_refused" = "Serwer odmówił dostępu";
+"live_problem_no_channels" = "Teraz nie ma kanałów z ludźmi. Stuknij Odśwież.";
+"live_problem_down" = "Lista odbiorników jest niedostępna, sprawdź połączenie";
+"live_problem_closed" = "Połączenie zostało zamknięte";
+"live_problem_timeout" = "Brak odpowiedzi, sprawdź połączenie";
+"live_hf_kind_aviation" = "Pogoda lotnicza, całą dobę";
+"live_hf_kind_time" = "Sygnał czasu, całą dobę";
+"live_hf_kind_amateur" = "Radioamatorzy, aktywność zmienna";
+"live_hf_kind_citizens" = "Pasmo obywatelskie CB, aktywność zmienna";
+"live_hf_kind_digital" = "Sygnały cyfrowe FT8, najwięcej w dzień";
+"live_receiver" = "Odbiornik";
+"live_server" = "Serwer";
+"live_listen_only_note" = "tylko odsłuch";
+"live_channels" = "Kanały";
+"live_tune_down" = "Dostrój w dół o 1 kHz";
+"live_tune_up" = "Dostrój w górę o 1 kHz";
+"live_scan" = "Automatyczny SCAN";
+"live_refresh" = "Odśwież";
+"live_speaking" = "Mówi: %@";
+"live_listeners" = "Osoby na kanale: %d";
+"live_scan_holding" = "SCAN zatrzymany, ktoś mówi";
+"live_scan_searching" = "Skanowanie";
+"live_silence" = "Teraz nikt nie mówi";
+"live_hf_footer" = "Słuchasz przez publiczne odbiorniki KiwiSDR, udostępniane za darmo przez radioamatorów z całego świata. Talky wybiera odbiornik blisko stacji.";
+"live_poc_footer" = "Publiczne kanały Mumble, na których właśnie są ludzie. Talky dołącza wyciszone i tylko słucha.";
+"live_pro_title" = "Funkcja Talky Pro";
+"live_pro_scan_message" = "Automatyczny SCAN jest częścią Talky Pro. Możesz go wypróbować za darmo przez 24 godziny, oglądając krótki film.";
+"live_pro_background_message" = "Słuchanie HF, CB i POC zatrzymało się, gdy wyszedłeś z Talky. Z Talky Pro gra dalej nawet przy wyłączonym ekranie. Możesz to wypróbować za darmo przez 24 godziny, oglądając krótki film.";
+"live_pro_discover" = "Poznaj Talky Pro";
+"live_pro_video" = "Obejrzyj film: 24 godziny za darmo";
+// CB 27 MHz (3.1)
+"live_cb_section" = "Przełączaj między kanałami a DX";
+"live_cb_mode" = "Tryb odbioru: AM, FM, LSB lub USB";
+"live_cb_squelch" = "Squelch: cisza, gdy nikt nie nadaje";
+"live_cb_prev" = "Poprzedni kanał";
+"live_cb_next" = "Następny kanał";
+"live_cb_quiet" = "Kanał wolny, squelch zamknięty";
+"live_cb_tune" = "Idź";
+"live_cb_enter_frequency" = "Wpisz częstotliwość (26.965 - 27.855 MHz)";
+"live_cb_out_of_band" = "Poza CB: wpisz częstotliwość od 26.965 do 27.855 MHz";
+"live_cb_dx_call" = "Częstotliwość wywoławcza DX SSB";
+"live_cb_channels" = "40 kanałów";
+"live_cb_footer" = "Prawdziwe CB, z publicznych odbiorników KiwiSDR najbliżej Ciebie. Słyszysz każdego, kto nadaje, gdy propagacja otwiera pasmo, zwykle w ciągu dnia. Z włączonym squelchem szum milknie między transmisjami.";
+"live_pan_over_noise" = "%d dB ponad szumem";
+"live_pan_noise_only" = "Tylko szum";
+"live_pan_waiting" = "Czekam na widmo";
+"live_free_time_up" = "Dzisiejsze darmowe minuty się skończyły. Stuknij, aby słuchać dalej.";
+"live_free_left" = "Dziś za darmo %@";
+"live_pro_free_message" = "Wykorzystano dzisiejsze darmowe minuty radia na żywo (%d). Z Talky Pro słuchasz bez ograniczeń, możesz też obejrzeć krótki film i mieć 24 godziny.";
+"onboarding.live.title" = "Prawdziwe radio, na żywo";
+"onboarding.live.subtitle" = "Prawdziwe odbiorniki na całym świecie, ten najbliżej Ciebie, z widmem i wodospadem na żywo na ekranie.";
+"onboarding.live.hf" = "Fale krótkie: pogoda lotnicza, sygnały czasu i radioamatorzy.";
+"onboarding.live.cb" = "Wszystkie 40 kanałów CB i wywołanie DX na 27.555, z automatycznym squelchem i SCAN.";
+"onboarding.live.poc" = "Prawdziwe kanały push-to-talk na publicznych serwerach.";
+"onboarding.live.note" = "Tylko odsłuch. Darmowe minuty dziennie: %d, bez ograniczeń z Talky Pro.";
+"onboarding.widgets.title" = "Widżety z propagacją na żywo";
+"onboarding.widgets.subtitle" = "Na ekranie początkowym i ekranie blokady, aktualizują się same.";
+"onboarding.widgets.channel" = "Kanał Talky: Twój kanał CB i stan pasm. Za darmo.";
+"onboarding.widgets.propagation" = "Propagacja: SFI, Kp, pasma 11, 20, 40 i 80 m oraz prognoza Kp. Talky Pro.";
+"onboarding.widgets.sun" = "Słońce i pasma: wschód, zachód i najlepsze pasmo w tej chwili. Talky Pro.";
+"live_info_distance" = "Odległość";
+"live_info_signal" = "Sygnał";
+"live_info_mode" = "Tryb";
+"live_info_squelch" = "Squelch";
+"live_info_open" = "OTWARTY";
+"live_info_closed" = "ZAMKNIĘTY";
+"live_info_free" = "Dziś za darmo";
+"live_info_listening" = "Słuchasz";
+"live_info_channel" = "Kanał";
+"live_info_listeners" = "Słuchacze";
+"live_info_talker" = "Mówi";
+"radio_info_country" = "Kraj";
+"radio_info_genre" = "Gatunek";
+"radio_info_bitrate" = "Bitrate";
+"radio_info_state" = "Stan";
+"radio_info_volume" = "Głośność";
+"radio_info_sleep" = "Wyłącznik";
+"radio_state_on_air" = "Na antenie";
+"radio_state_buffering" = "Wczytywanie";
+"radio_state_paused" = "Wstrzymane";
+"radio_scope_buffering" = "Łączę się ze strumieniem...";
+"radio_scope_paused" = "Wstrzymane";
+"radio_scope_pick" = "Wybierz stację, aby zobaczyć jej fale";
+"live_pan_searching" = "Szukam odbiornika, który wysyła widmo";
+"live_pan_missing" = "Te odbiorniki nie wysyłają widma: tylko dźwięk";
+"live_audio_spectrum" = "Widmo dźwięku";
+
+/* Esplora: aiuto al collegamento, invito, Scrivimi (9/11/2026) */
+"invite_button" = "Zaproś kogoś, kto jest z Tobą";
+"invite_hint" = "Talky działa, gdy druga osoba też je ma. Pokaż jej kod albo wyślij link.";
+"invite_title" = "Zainstaluj Talky na drugim telefonie";
+"invite_qr_caption" = "Poproś, żeby skierowała aparat na ten kod: otworzy Talky w App Store.";
+"invite_share" = "Wyślij link";
+"invite_then" = "Po instalacji otwórzcie Talky na obu telefonach i zostańcie na karcie Odkrywaj.";
+"invite_message" = "Pogadajmy przez Talky, krótkofalówkę, która działa bez internetu: %@";
+"pairing_help_title" = "Nie widzisz drugiego urządzenia? Sprawdź:";
+"pairing_help_step_open" = "Talky jest otwarte także na drugim urządzeniu, na tym samym ekranie.";
+"pairing_help_step_radios" = "Wi-Fi i Bluetooth są włączone na obu. Nie trzeba być połączonym z żadną siecią.";
+"pairing_help_step_channel" = "Ten sam kanał na obu: publiczny albo to samo hasło prywatne.";
+"pairing_help_step_close" = "Przy pierwszym połączeniu oba urządzenia są blisko, w promieniu około 20 metrów.";
+"pairing_help_step_permission" = "Sieć lokalna jest włączona dla Talky: Ustawienia > Talky > Sieć lokalna.";
+"pairing_search_again" = "Szukaj ponownie";
+"pairing_open_settings" = "Otwórz Ustawienia";
+"pairing_denied_title" = "Talky nie może szukać urządzeń w pobliżu";
+"pairing_denied_body" = "Uprawnienie Sieć lokalna jest wyłączone, więc nie da się znaleźć żadnego urządzenia. Otwórz Ustawienia, stuknij Talky i włącz Sieć lokalna.";
+"contact_title" = "Napisz do mnie";
+"contact_subtitle" = "Jestem Andrea i tworzę Talky. Czytam każdą wiadomość i odpisuję osobiście.";
+"contact_bug" = "Zgłoś problem";
+"contact_idea" = "Zaproponuj funkcję";
+"contact_chat" = "Po prostu się przywitaj";
+"contact_rate" = "Oceń Talky w App Store";
+"contact_subject_bug" = "problem";
+"contact_subject_idea" = "pomysł";
+"contact_subject_chat" = "wiadomość";
+"contact_no_mail_title" = "Brak skonfigurowanej aplikacji Mail";
+"contact_no_mail_body" = "Możesz napisać do mnie na %@ z dowolnej aplikacji pocztowej.";
+"contact_copy_address" = "Kopiuj adres";
+"onboarding_p5_permission_note" = "Talky poprosi o uprawnienie Sieć lokalna: dzięki niemu znajduje urządzenia w pobliżu. Jeśli odmówisz, możesz je włączyć później w Ustawienia > Talky.";
+
+/* Parlare sul POC (Mumble), 4.0 */
+"mumble_hold_to_talk" = "Przytrzymaj, aby mówić";
+"mumble_talking" = "Jesteś na antenie";
+"mumble_listen_only" = "Na tym kanale tylko odsłuch";
+"mumble_mic_denied" = "Mikrofon wyłączony: włącz go w Ustawieniach";
+"mumble_safety" = "Bezpieczeństwo";
+"mumble_mute_user" = "Wycisz: %@";
+"mumble_report" = "Zgłoś ten kanał";
+"mumble_report_reason_abuse" = "Obelgi lub groźby";
+"mumble_report_reason_sexual" = "Treści seksualne";
+"mumble_report_reason_spam" = "Spam lub hałas";
+"mumble_report_done" = "Zgłoszenie wysłane. Ten serwer nie będzie Ci już proponowany.";
+"mumble_rules_title" = "Zanim zaczniesz mówić";
+"mumble_rules_body" = "Na POC rozmawiasz na publicznych kanałach z nieznajomymi, na serwerach prowadzonych przez innych. Obelgi, groźby, treści seksualne, mowa nienawiści i spam są zabronione: kto ich używa, zostaje wyciszony i zgłoszony, a serwer może go zbanować. Wycisz lub zgłoś każdego, kto Ci przeszkadza, w sekcji Bezpieczeństwo pod przyciskiem mówienia.";
+"mumble_rules_name" = "Twoja nazwa na kanałach";
+"mumble_rules_accept" = "Zgadzam się, chcę mówić";
+
+/* Stanze private, 4.0 */
+"room_header" = "Pokoje prywatne";
+"room_create" = "Otwórz pokój";
+"room_join" = "Dołącz";
+"room_rejoin" = "Wróć do %@";
+"room_leave" = "Opuść pokój";
+"room_invite" = "Zaproś";
+"room_code_wrong" = "Kod ma 8 znaków, na przykład K7P2-QX9A";
+"room_footer" = "Pokój słyszysz tylko Ty i osoby z kodem, nawet z daleka: potrzebny jest internet. Otwarcie pokoju to Talky Pro, dołączenie z zaproszenia jest darmowe.";
+"room_invite_text" = "Pogadajmy w Talky! Dołącz do mojego pokoju z kodem %@: %@ . Jeśli nie masz Talky: %@";
+"live_pro_room_message" = "Otwarcie pokoju prywatnego to funkcja Talky Pro. Zaproszone osoby dołączają za darmo.";
+"paywall.plan.lifetime" = "Na zawsze";
+"paywall.plan.lifetime_suffix" = "jednorazowo";
+"paywall.plan.lifetime_detail" = "Płacisz raz, masz na zawsze";
+"paywall.compare.lifetime_vs_yearly" = "%1$@ jednorazowo zamiast %2$@ co roku";
+"paywall.cta.lifetime" = "Odblokuj na zawsze";
+"pairing_listen_cb" = "W międzyczasie posłuchaj CB na żywo";
+"mode_switch_try_radio" = "Posłuchaj radia";
+"onboarding_two_talky_title" = "Krótkofalówka potrzebuje Talky na obu telefonach";
+"onboarding_two_talky_body" = "Talky rozmawia z innymi telefonami, które mają Talky: zainstaluj je też na telefonie osoby, która jest z Tobą.";
+"onboarding_two_talky_range" = "Zasięg od 10 do 30 metrów, z włączonym Wi-Fi i Bluetooth na obu. Bez internetu i bez sieci.";
+"onboarding_mic_title" = "Jedno uprawnienie: mikrofon";
+"onboarding_start_title" = "Od czego chcesz zacząć?";
+"onboarding_start_friend" = "Mam znajomego w pobliżu";
+"onboarding_start_friend_detail" = "Przejdź do krótkofalówki: znajdźcie swoje telefony i rozmawiajcie.";
+"onboarding_start_solo" = "Jestem sam";
+"onboarding_start_solo_detail" = "Posłuchaj CB na żywo albo radia. Wypróbuj krótkofalówkę, gdy ktoś będzie z Tobą.";
+"whats_new_title" = "Nowości w Talky %@";
+"whats_new_poc" = "Na kanałach POC możesz teraz mówić, a nie tylko słuchać.";
+"whats_new_rooms" = "Pokoje prywatne z zaproszeniem, by rozmawiać też ze znajomymi z daleka. Wymagają internetu.";
+"whats_new_widgets" = "Nowe widżety na ekran początkowy i nowe przyciski sterowania.";
+"whats_new_pairing" = "Pomoc w łączeniu: jeśli drugi telefon się nie pojawia, Talky powie Ci, co sprawdzić i jak go zaprosić.";
+"whats_new_try" = "Spróbuj mówić na POC";

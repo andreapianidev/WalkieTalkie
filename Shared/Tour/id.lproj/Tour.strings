@@ -1,0 +1,33 @@
+/* Talky Pro: cosa comprende e dove si trova. Le stesse chiavi in tutte le 16 lingue. */
+
+"tour.perk.live.title" = "HF, CB, dan POC tanpa batas harian";
+"tour.perk.live.detail" = "Tanpa Pro, siaran langsung berhenti setelah 5 menit sehari. Dengan Pro siaran jalan selama yang kamu mau, dengan SCAN otomatis dan saat layar mati.";
+"tour.perk.widgets.title" = "Semua widget";
+"tour.perk.widgets.detail" = "Propagasi, Matahari & pita, dan widget Layar Terkunci, dengan data SFI, Kp, dan pita yang nyata.";
+"tour.perk.widgets.detail.mac" = "Propagasi dan Matahari & pita di desktop, dengan data SFI, Kp, dan pita yang nyata.";
+"tour.perk.widgets.where" = "Sentuh dan tahan Layar Utama, ketuk +, cari Talky";
+"tour.perk.widgets.where.mac" = "Klik kanan desktop, Edit Widget, cari Talky";
+"tour.perk.noads.title" = "Tanpa iklan";
+"tour.perk.noads.detail" = "Tanpa banner, tanpa video, tanpa iklan layar penuh.";
+"tour.perk.stations.title" = "Semua %d stasiun radio";
+"tour.perk.stations.detail" = "Termasuk stasiun internasional, bukan hanya yang gratis, semuanya di daftar radio.";
+"tour.perk.private.title" = "Saluran privat";
+"tour.perk.private.detail" = "Saluran walkie dengan kata sandi: hanya yang tahu kata sandinya yang bisa mendengarmu.";
+"tour.perk.recordings.title" = "Rekaman";
+"tour.perk.recordings.detail" = "Simpan yang kamu kirim dan dengarkan lagi.";
+"tour.perk.history.title" = "Riwayat transmisi";
+"tour.perk.history.detail" = "Transmisimu sebelumnya, tersimpan dalam daftar.";
+"tour.perk.themes.title" = "Semua tema";
+"tour.perk.themes.detail" = "Semua tema warna untuk walkie di iPhone dan iPad.";
+"tour.perk.sleep.title" = "Timer tidur";
+"tour.perk.sleep.detail" = "Radio mati sendiri setelah waktu yang kamu pilih.";
+"tour.perk.eq.title" = "Equalizer";
+"tour.perk.eq.detail" = "Atur suara radio sesuai seleramu.";
+"tour.perk.devices.title" = "iPhone, iPad, dan Mac";
+"tour.perk.devices.detail" = "Satu pembelian berlaku di semua perangkat dengan Akun Apple yang sama. Kalau Pro tidak muncul di perangkat lain, pakai Pulihkan pembelian.";
+"tour.yourpro.title" = "Talky Pro-mu";
+"tour.yourpro.subtitle" = "Semua ini sudah terbuka. Ini fungsinya dan tempat menemukannya.";
+"tour.yourpro.thanks" = "Terima kasih. Talky dibuat oleh satu orang dan kodenya terbuka untuk umum: pembelianmu membuatnya terus berjalan.";
+"tour.yourpro.done" = "Mengerti";
+"tour.yourpro.open" = "Isi Pro-mu";
+"tour.where.settings" = "Pengaturan › Personalisasi";

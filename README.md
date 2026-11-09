@@ -39,7 +39,7 @@
 - **POC**: public Mumble voice channels where people are talking right now, with live level bars of what you hear.
 - **World radio**: 330+ stations from 80+ countries, now with their own screen and level bars that follow the audio, HLS streams included.
 - **Widgets** on the Home Screen and the Lock Screen (iOS 17+), and on the Mac desktop: your CB channel for free; with Talky Pro, band propagation with SFI, Kp, the 11/20/40/80 m bands and the Kp forecast, plus sunrise, sunset and the best band right now.
-- **"Your Talky Pro"**: after buying, a page lists everything Pro unlocks and where to find it, in 14 languages.
+- **"Your Talky Pro"**: after buying, a page lists everything Pro unlocks and where to find it, in 16 languages.
 - 5 minutes of live listening are free every day; Talky Pro removes the limit and adds auto SCAN and listening with the screen off.
 
 Screenshots taken on an iPhone 15 Plus on 3 November 2026, real receivers, real signals.
@@ -123,7 +123,7 @@ If you run a KiwiSDR and would rather Talky did not use it, open an issue and it
 - 🔊 **5-band EQ**, **sleep timer**, **session recording** and **transmission history**
 - 💎 **Talky Pro** subscription (weekly/yearly) with paywall, restore purchases and StoreKit 2
 - 📣 **Full AdMob stack** (App Open, Interstitial, Rewarded, **Native Advanced**) with UMP + ATT consent flow
-- 🌍 **14 localizations**: Italian, English, Spanish, French, German, Portuguese (Brazil), Japanese, Korean, Malay, Thai, Turkish, Vietnamese, Simplified and Traditional Chinese
+- 🌍 **16 localizations**: Italian, English, Spanish, French, German, Portuguese (Brazil), Japanese, Korean, Malay, Indonesian, Polish, Thai, Turkish, Vietnamese, Simplified and Traditional Chinese
 - 🔒 **Privacy-first**: walkie-talkie audio never leaves the device, no accounts, no cloud
 - 🧱 **Clean MVVM + SwiftUI + Combine**, singleton managers, Swift 6 strict concurrency-ready
 - ⚖️ **Source-available** under PolyForm Noncommercial 1.0.0: fork it, study it, learn from it; commercial reuse requires a separate license

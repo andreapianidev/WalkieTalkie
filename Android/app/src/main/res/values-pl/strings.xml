@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notification_channel_name">Talky w tle</string>
+    <string name="notification_channel_description">Radio i krótkofalówka działają w tle</string>
+    <string name="notification_title">Talky działa</string>
+    <string name="notification_transmitting">Trwa nadawanie przez krótkofalówkę</string>
+    <string name="notification_radio_playing">Radio: %1$s</string>
+    <string name="notification_walkie_ready">Krótkofalówka nasłuchuje na kanale %1$s</string>
+    <string name="notification_radio_ready">Radio gotowe</string>
+    <string name="notification_stop">Stop</string>
+
+    <string name="ob_p1_title">Krótkofalówka w Twoim telefonie</string>
+    <string name="ob_p1_body">W górach, na festiwalu, na zatłoczonym placu: rozmawiaj z osobami obok bez pośrednictwa internetu.</string>
+
+    <string name="ob_p2_title">Jedna sieć Wi-Fi, bez kont</string>
+    <string name="ob_p2_body">Talky samo znajduje inne urządzenia z Talky: Androida, iPhone\'a, iPada, Maca. Bez serwera, bez rejestracji, bez numeru telefonu.</string>
+    <string name="ob_p2_wifi">Wszystkie urządzenia muszą być w tej samej sieci Wi-Fi: głos idzie przez sieć lokalną, nigdy przez internet.</string>
+
+    <string name="ob_p3_title">Przytrzymaj, aby mówić</string>
+    <string name="ob_p3_body">Jak w prawdziwej krótkofalówce: przytrzymaj duży środkowy przycisk, aby mówić, puść, aby słuchać.</string>
+    <string name="ob_p3_rule">Na jednym kanale mówi tylko jedna osoba naraz.</string>
+
+    <string name="ob_p4_title">Gotowy? Tylko 3 kroki</string>
+    <string name="ob_p4_step1">Otwórz Talky na drugim urządzeniu w pobliżu, w tej samej sieci Wi-Fi</string>
+    <string name="ob_p4_step2">Poczekaj kilka sekund: urządzenia połączą się same i pojawią w sekcji „Urządzenia”. Nie trzeba niczego akceptować</string>
+    <string name="ob_p4_step3">Przytrzymaj środkowy przycisk, aby mówić, puść, aby słuchać</string>
+    <string name="ob_p4_channel_note">Wszyscy zaczynają na kanale publicznym. Aby rozmowa została w Twojej grupie, otwórz „Prywatny” i użyj tego samego hasła na każdym urządzeniu, działa też z iPhone\'em i Makiem.</string>
+
+    <string name="ob_continue">Dalej</string>
+    <string name="ob_back">Wstecz</string>
+    <string name="ob_start">Zaczynamy</string>
+    <string name="ob_skip">Pomiń</string>
+
+    <string name="app_starting">Uruchamiam Talky…</string>
+    <string name="mode_walkie">KRÓTKOFALÓWKA</string>
+    <string name="mode_radio">RADIO ZE ŚWIATA</string>
+    <string name="header_radio_idle">Radio</string>
+    <string name="header_channel">Kanał: %1$s</string>
+    <string name="channel_private">Prywatny</string>
+    <string name="channel_private_caps">PRYWATNY</string>
+    <string name="freq_unit_mhz">MHz</string>
+    <string name="freq_unit_channel">KAN.</string>
+
+    <string name="private_dialog_title">Kanał z hasłem</string>
+    <string name="private_dialog_body">Użyj tego samego hasła na iPhonie, Macu i Androidzie, aby dołączyć do tego samego kanału.</string>
+    <string name="private_dialog_password">Hasło</string>
+    <string name="private_dialog_password_hint">Min. %1$d zn.</string>
+    <string name="private_dialog_warning">Kanał oddziela urządzenia w sieci lokalnej, ale ruch TALKY1 nie jest szyfrowany.</string>
+    <string name="private_dialog_join">Dołącz</string>
+    <string name="private_dialog_cancel">Anuluj</string>
+
+    <string name="rx_in_progress">ODBIÓR</string>
+    <string name="ptt_tx">TX</string>
+    <string name="ptt_idle">PTT</string>
+    <string name="ptt_badge_on_air">NA ANTENIE</string>
+    <string name="ptt_badge_rx">RX</string>
+    <string name="ptt_badge_press">NACIŚNIJ</string>
+    <string name="ptt_badge_none">---</string>
+    <string name="ptt_hint_transmitting">NADAWANIE… PUŚĆ, ABY ZAKOŃCZYĆ</string>
+    <string name="ptt_hint_receiving">Odbiór…</string>
+    <string name="ptt_hint_ready">Przytrzymaj, aby mówić</string>
+    <string name="ptt_hint_waiting">Czekam na połączenie…</string>
+
+    <string name="peers_title">Urządzenia</string>
+    <string name="peers_empty">Czekam na iPhone\'a, Maca lub Androida w tej samej sieci Wi-Fi.</string>
+
+    <string name="log_title">Dziennik</string>
+    <string name="log_restart">Uruchom ponownie</string>
+
+    <string name="radio_select_station">Wybierz stację</string>
+    <string name="radio_buffering">Buforowanie…</string>
+    <string name="radio_prev">Poprz.</string>
+    <string name="radio_stop">Stop</string>
+    <string name="radio_next">Nast.</string>
+    <string name="radio_stations_count">Stacje (%1$d)</string>
+
+    <string name="status_advertising">Widoczny · szukam</string>
+    <string name="status_stopped">Zatrzymano</string>
+</resources>

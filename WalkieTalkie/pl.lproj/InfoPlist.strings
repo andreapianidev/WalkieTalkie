@@ -1,0 +1,14 @@
+/* 
+   InfoPlist.strings (Polish)
+   WalkieTalkie
+   
+   Created by Andrea Piani on 12/07/25.
+*/
+
+// MARK: - Permission Descriptions
+"NSMicrophoneUsageDescription" = "Talky potrzebuje dostępu do mikrofonu, aby przesyłać Twój głos przez krótkofalówkę, gdy trzymasz przycisk mówienia.";
+"NSLocalNetworkUsageDescription" = "Talky korzysta z sieci lokalnej, aby łączyć się z urządzeniami w pobliżu i rozmawiać przez krótkofalówkę.";
+"NSBluetoothAlwaysUsageDescription" = "Talky korzysta z Bluetooth, aby wykrywać krótkofalówki w pobliżu i łączyć się z nimi.";
+"NSBluetoothPeripheralUsageDescription" = "Talky korzysta z Bluetooth, aby inne krótkofalówki mogły wykryć to urządzenie.";
+"NSNetworkVolumesUsageDescription" = "Talky korzysta z sieci do komunikacji krótkofalówki między urządzeniami.";
+"NSUserTrackingUsageDescription" = "Identyfikator posłuży do wyświetlania trafniejszych reklam i wspierania darmowego rozwoju aplikacji.";

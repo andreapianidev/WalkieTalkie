@@ -269,25 +269,41 @@ private struct ControlButtonLabel: View {
 
 /// Mini helper di localizzazione duplicato dal widget walkie per gli accessibility
 /// label dei controlli radio. Bersagliamo le stesse lingue del bundle app
-/// (it/en/es/ms/zh-Hant); l'estensione non ha accesso ai Localizable.strings.
+/// (it/en/es/ms/zh-Hant/id/pl); l'estensione non ha accesso ai Localizable.strings.
 private enum RadioWidgetL10n {
-    static let accPrev  = pick(it: "Stazione precedente", en: "Previous station", es: "Estación anterior", ms: "Stesen sebelumnya", zh: "上一頻道")
-    static let accNext  = pick(it: "Stazione successiva", en: "Next station", es: "Siguiente estación", ms: "Stesen seterusnya", zh: "下一頻道")
-    static let accPlay  = pick(it: "Riproduci", en: "Play", es: "Reproducir", ms: "Main", zh: "播放")
-    static let accPause = pick(it: "Pausa", en: "Pause", es: "Pausa", ms: "Jeda", zh: "暫停")
+    static let accPrev  = pick(it: "Stazione precedente", en: "Previous station", es: "Estación anterior", ms: "Stesen sebelumnya", zh: "上一頻道", id: "Stasiun sebelumnya", pl: "Poprzednia stacja", de: "Vorheriger Sender", fr: "Station précédente", ja: "前の局", ko: "이전 방송국", pt: "Estação anterior", th: "สถานีก่อนหน้า", tr: "Önceki istasyon", vi: "Đài trước", zhHans: "上一个电台")
+    static let accNext  = pick(it: "Stazione successiva", en: "Next station", es: "Siguiente estación", ms: "Stesen seterusnya", zh: "下一頻道", id: "Stasiun berikutnya", pl: "Następna stacja", de: "Nächster Sender", fr: "Station suivante", ja: "次の局", ko: "다음 방송국", pt: "Próxima estação", th: "สถานีถัดไป", tr: "Sonraki istasyon", vi: "Đài tiếp theo", zhHans: "下一个电台")
+    static let accPlay  = pick(it: "Riproduci", en: "Play", es: "Reproducir", ms: "Main", zh: "播放", id: "Putar", pl: "Odtwórz", de: "Abspielen", fr: "Lire", ja: "再生", ko: "재생", pt: "Reproduzir", th: "เล่น", tr: "Oynat", vi: "Phát", zhHans: "播放")
+    static let accPause = pick(it: "Pausa", en: "Pause", es: "Pausa", ms: "Jeda", zh: "暫停", id: "Jeda", pl: "Pauza", de: "Pause", fr: "Pause", ja: "一時停止", ko: "일시정지", pt: "Pausar", th: "หยุดชั่วคราว", tr: "Duraklat", vi: "Tạm dừng", zhHans: "暂停")
 
-    private static func pick(it: String, en: String, es: String, ms: String, zh: String) -> String {
+    private static func pick(it: String, en: String, es: String, ms: String, zh: String, id: String, pl: String,
+                             de: String, fr: String, ja: String, ko: String, pt: String, th: String, tr: String,
+                             vi: String, zhHans: String) -> String {
         let code: String
+        let script: String
         if #available(iOS 16, *) {
             code = Locale.current.language.languageCode?.identifier ?? "en"
+            script = Locale.current.language.script?.identifier ?? ""
         } else {
             code = Locale.current.languageCode ?? "en"
+            script = Locale.current.scriptCode ?? ""
         }
         switch code.lowercased() {
         case "it": return it
         case "es": return es
         case "ms": return ms
-        case "zh": return zh
+        // Il cinese semplificato prima cadeva sul tradizionale.
+        case "zh": return script == "Hans" ? zhHans : zh
+        case "id": return id
+        case "pl": return pl
+        case "de": return de
+        case "fr": return fr
+        case "ja": return ja
+        case "ko": return ko
+        case "pt": return pt
+        case "th": return th
+        case "tr": return tr
+        case "vi": return vi
         default:   return en
         }
     }

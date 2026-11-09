@@ -13,39 +13,55 @@ import SwiftUI
 /// Tiny inline localization for the widget extension. Il target widget non
 /// include i Localizable.strings dell'app, quindi mappiamo qui le poche stringhe
 /// utente-facing in base al Locale corrente del sistema. Italiano, inglese,
-/// spagnolo, malese, cinese tradizionale — stessi lingue del bundle app.
+/// spagnolo, malese, cinese tradizionale, indonesiano e polacco.
 enum WalkieWidgetL10n {
-    static let listening    = pick(it: "In ascolto", en: "Listening", es: "Escuchando", ms: "Mendengar", zh: "正在收聽")
-    static let allListening = pick(it: "Tutti in ascolto", en: "All listening", es: "Todos escuchando", ms: "Semua mendengar", zh: "全員收聽")
+    static let listening    = pick(it: "In ascolto", en: "Listening", es: "Escuchando", ms: "Mendengar", zh: "正在收聽", id: "Mendengarkan", pl: "Słuchasz", de: "Hört zu", fr: "À l'écoute", ja: "受信中", ko: "수신 중", pt: "Ouvindo", th: "กำลังฟัง", tr: "Dinleniyor", vi: "Đang nghe", zhHans: "正在收听")
+    static let allListening = pick(it: "Tutti in ascolto", en: "All listening", es: "Todos escuchando", ms: "Semua mendengar", zh: "全員收聽", id: "Semua mendengarkan", pl: "Wszyscy słuchają", de: "Alle hören zu", fr: "Tous à l'écoute", ja: "全員が受信中", ko: "모두 수신 중", pt: "Todos ouvindo", th: "ทุกคนกำลังฟัง", tr: "Herkes dinliyor", vi: "Mọi người đang nghe", zhHans: "全员收听")
     static func talking(_ name: String) -> String {
-        let tpl = pick(it: "%@ sta parlando", en: "%@ is talking", es: "%@ está hablando", ms: "%@ sedang bercakap", zh: "%@ 正在說話")
+        let tpl = pick(it: "%@ sta parlando", en: "%@ is talking", es: "%@ está hablando", ms: "%@ sedang bercakap", zh: "%@ 正在說話", id: "%@ sedang bicara", pl: "%@ mówi", de: "%@ spricht", fr: "%@ parle", ja: "%@ が話しています", ko: "%@ 님이 말하는 중", pt: "%@ está falando", th: "%@ กำลังพูด", tr: "%@ konuşuyor", vi: "%@ đang nói", zhHans: "%@ 正在说话")
         return String(format: tpl, name)
     }
     static func plusOthers(_ n: Int) -> String {
-        let tpl = pick(it: "+%d altri", en: "+%d more", es: "+%d más", ms: "+%d lagi", zh: "+%d 人")
+        let tpl = pick(it: "+%d altri", en: "+%d more", es: "+%d más", ms: "+%d lagi", zh: "+%d 人", id: "+%d lainnya", pl: "+%d więcej", de: "+%d weitere", fr: "+%d autres", ja: "ほか%d人", ko: "외 %d명", pt: "+%d outros", th: "+%d คน", tr: "+%d kişi daha", vi: "+%d người khác", zhHans: "+%d 人")
         return String(format: tpl, n)
     }
     static func peerCount(_ n: Int) -> String {
-        let tpl = pick(it: "%d peer", en: "%d peer", es: "%d conexiones", ms: "%d peranti", zh: "%d 個設備")
+        let tpl = pick(it: "%d peer", en: "%d peer", es: "%d conexiones", ms: "%d peranti", zh: "%d 個設備", id: "%d perangkat", pl: "Urządzenia: %d", de: "%d Geräte", fr: "%d appareils", ja: "%d台", ko: "%d대", pt: "%d aparelhos", th: "%d เครื่อง", tr: "%d cihaz", vi: "%d thiết bị", zhHans: "%d 台设备")
         return String(format: tpl, n)
     }
-    static let accPrev  = pick(it: "Stazione precedente", en: "Previous station", es: "Estación anterior", ms: "Stesen sebelumnya", zh: "上一頻道")
-    static let accNext  = pick(it: "Stazione successiva", en: "Next station", es: "Siguiente estación", ms: "Stesen seterusnya", zh: "下一頻道")
-    static let accPlay  = pick(it: "Riproduci", en: "Play", es: "Reproducir", ms: "Main", zh: "播放")
-    static let accPause = pick(it: "Pausa", en: "Pause", es: "Pausa", ms: "Jeda", zh: "暫停")
+    static let accPrev  = pick(it: "Stazione precedente", en: "Previous station", es: "Estación anterior", ms: "Stesen sebelumnya", zh: "上一頻道", id: "Stasiun sebelumnya", pl: "Poprzednia stacja", de: "Vorheriger Sender", fr: "Station précédente", ja: "前の局", ko: "이전 방송국", pt: "Estação anterior", th: "สถานีก่อนหน้า", tr: "Önceki istasyon", vi: "Đài trước", zhHans: "上一个电台")
+    static let accNext  = pick(it: "Stazione successiva", en: "Next station", es: "Siguiente estación", ms: "Stesen seterusnya", zh: "下一頻道", id: "Stasiun berikutnya", pl: "Następna stacja", de: "Nächster Sender", fr: "Station suivante", ja: "次の局", ko: "다음 방송국", pt: "Próxima estação", th: "สถานีถัดไป", tr: "Sonraki istasyon", vi: "Đài tiếp theo", zhHans: "下一个电台")
+    static let accPlay  = pick(it: "Riproduci", en: "Play", es: "Reproducir", ms: "Main", zh: "播放", id: "Putar", pl: "Odtwórz", de: "Abspielen", fr: "Lire", ja: "再生", ko: "재생", pt: "Reproduzir", th: "เล่น", tr: "Oynat", vi: "Phát", zhHans: "播放")
+    static let accPause = pick(it: "Pausa", en: "Pause", es: "Pausa", ms: "Jeda", zh: "暫停", id: "Jeda", pl: "Pauza", de: "Pause", fr: "Pause", ja: "一時停止", ko: "일시정지", pt: "Pausar", th: "หยุดชั่วคราว", tr: "Duraklat", vi: "Tạm dừng", zhHans: "暂停")
 
-    private static func pick(it: String, en: String, es: String, ms: String, zh: String) -> String {
+    private static func pick(it: String, en: String, es: String, ms: String, zh: String, id: String, pl: String,
+                             de: String, fr: String, ja: String, ko: String, pt: String, th: String, tr: String,
+                             vi: String, zhHans: String) -> String {
         let code: String
+        let script: String
         if #available(iOS 16, *) {
             code = Locale.current.language.languageCode?.identifier ?? "en"
+            script = Locale.current.language.script?.identifier ?? ""
         } else {
             code = Locale.current.languageCode ?? "en"
+            script = Locale.current.scriptCode ?? ""
         }
         switch code.lowercased() {
         case "it": return it
         case "es": return es
         case "ms": return ms
-        case "zh": return zh
+        // Il cinese semplificato prima cadeva sul tradizionale.
+        case "zh": return script == "Hans" ? zhHans : zh
+        case "id": return id
+        case "pl": return pl
+        case "de": return de
+        case "fr": return fr
+        case "ja": return ja
+        case "ko": return ko
+        case "pt": return pt
+        case "th": return th
+        case "tr": return tr
+        case "vi": return vi
         default:   return en
         }
     }

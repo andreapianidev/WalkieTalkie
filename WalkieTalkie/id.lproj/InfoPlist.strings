@@ -1,0 +1,14 @@
+/* 
+   InfoPlist.strings (Indonesian)
+   WalkieTalkie
+   
+   Created by Andrea Piani on 12/07/25.
+*/
+
+// MARK: - Permission Descriptions
+"NSMicrophoneUsageDescription" = "Talky butuh akses mikrofon untuk mengirim suaramu lewat walkie talkie saat kamu menahan tombol bicara.";
+"NSLocalNetworkUsageDescription" = "Talky memakai jaringan lokal untuk terhubung dengan perangkat di sekitar dan berkomunikasi lewat walkie talkie.";
+"NSBluetoothAlwaysUsageDescription" = "Talky memakai Bluetooth untuk menemukan dan terhubung dengan perangkat walkie talkie di sekitar.";
+"NSBluetoothPeripheralUsageDescription" = "Talky memakai Bluetooth agar perangkat walkie talkie lain bisa menemukan perangkat ini.";
+"NSNetworkVolumesUsageDescription" = "Talky mengakses jaringan untuk komunikasi walkie talkie antarperangkat.";
+"NSUserTrackingUsageDescription" = "Pengenal ini dipakai untuk menampilkan iklan yang lebih relevan dan mendukung pengembangan gratis aplikasi ini.";

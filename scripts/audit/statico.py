@@ -107,6 +107,64 @@ def controlla_traduzioni():
         if k not in en_app:
             err(f"{f}: usa la chiave {k!r} che non esiste in en.lproj/Localizable.strings")
 
+    controlla_tabelle_mac(set(d.stem for d in (ROOT / "WalkieTalkie").glob("*.lproj")))
+    controlla_android()
+
+
+SWIFT_VOCE_RE = re.compile(r'\.(\w+):\s*"((?:[^"\\]|\\.)*)"')
+
+
+# Senza il flag "spazio": nelle tabelle in codice "20% a" e' testo, non un %a.
+FMT_CODICE_RE = re.compile(r'%(?:\d+\$)?[-+#0]*\d*(?:\.\d+)?(?:ll|l|h)?[@dDiuUxXoOfeEgGcCsSpaA]')
+
+
+def _confronta(nome, en, tab):
+    fmt = lambda v: sorted(FMT_CODICE_RE.findall(v.replace("%%", "")))
+    mancanti = sorted(set(en) - set(tab))
+    if mancanti:
+        err(f"{nome}: {len(mancanti)} voci mancanti, es. {mancanti[:5]}")
+    for k in set(en) & set(tab):
+        if fmt(en[k]) != fmt(tab[k]):
+            err(f"{nome}: {k!r} segnaposto {fmt(tab[k])} contro {fmt(en[k])} in inglese")
+
+
+def controlla_tabelle_mac(lingue_ios):
+    """MacString e OBString sono tabelle in codice: una lingua che manca
+    ricade in silenzio sull'inglese, quindi l'audit .strings non la vede."""
+    # Sul Mac il portoghese e' "pt", su iOS la cartella e' pt-BR.
+    attese = {"pt" if l == "pt-BR" else l for l in lingue_ios} - {"Base"}
+    src = (ROOT / "macTalky/UI/MacStrings.swift").read_text(encoding="utf-8")
+    supported = set(re.findall(r'"([\w-]+)"', re.search(r"static let supported = \[(.*?)\]", src).group(1)))
+    blocchi = {nome: dict(SWIFT_VOCE_RE.findall(corpo)) for nome, corpo in
+               re.findall(r"private static let (\w+): \[MacString: String\] = \[(.*?)\n    \]", src, re.S)}
+    righe = dict(re.findall(r'^\s*"([\w-]+)": (\w+),$', re.search(r"static let table:.*?\n    \]", src, re.S).group(0), re.M))
+    if supported != attese:
+        err(f"MacString.supported {sorted(supported)} contro le lingue iOS {sorted(attese)}")
+    for lingua in sorted(supported):
+        if lingua not in righe or righe[lingua] not in blocchi:
+            err(f"MacString: {lingua!r} in supported ma senza tabella")
+        else:
+            _confronta(f"MacString[{lingua}]", blocchi["en"], blocchi[righe[lingua]])
+
+    ob = (ROOT / "macTalky/UI/OnboardingView.swift").read_text(encoding="utf-8")
+    ob = re.search(r"private static let table: \[String: \[OBString: String\]\] = \[(.*?)\n    \]", ob, re.S).group(1)
+    tab_ob = {l: dict(SWIFT_VOCE_RE.findall(c)) for l, c in re.findall(r'^\s{8}"([\w-]+)": \[(.*?)^\s{8}\],', ob, re.S | re.M)}
+    for lingua in sorted(supported):
+        if lingua not in tab_ob:
+            err(f"OBString: manca la lingua {lingua!r}")
+        else:
+            _confronta(f"OBString[{lingua}]", tab_ob["en"], tab_ob[lingua])
+
+
+def controlla_android():
+    res = ROOT / "Android/app/src/main/res"
+    voce = re.compile(r'<string name="(\w+)"(?![^>]*translatable="false")[^>]*>(.*?)</string>', re.S)
+    en = dict(voce.findall((res / "values/strings.xml").read_text(encoding="utf-8")))
+    for d in sorted(res.glob("values-*")):
+        f = d / "strings.xml"
+        if f.exists():
+            _confronta(str(f.relative_to(ROOT)), en, dict(voce.findall(f.read_text(encoding="utf-8"))))
+
 
 # ---------------------------------------------------------------- testi visibili
 

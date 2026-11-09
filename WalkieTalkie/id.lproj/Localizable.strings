@@ -1,0 +1,631 @@
+/* 
+   Localizable.strings (Indonesian)
+   WalkieTalkie
+   
+   Created by Andrea Piani on 12/07/25.
+*/
+
+// MARK: - General
+"coming_soon" = "Segera Hadir";
+"ok" = "OK";
+"cancel" = "Batal";
+"error" = "Kesalahan";
+"accept" = "Terima";
+"decline" = "Tolak";
+"disconnect" = "Putuskan";
+"settings" = "Pengaturan";
+"retry" = "Coba lagi";
+"unknown" = "Tidak diketahui";
+"version" = "Versi";
+"developed_by" = "Dikembangkan oleh";
+"website" = "Situs web";
+"open_source" = "Kode sumber";
+"view_on_github" = "Lihat di GitHub";
+"license" = "Lisensi";
+
+// MARK: - Peak App Promotion
+"download_peak" = "Unduh Peak Gratis";
+"peak_app_subtitle" = "Aplikasi altimeter lengkap dengan fitur walkie talkie bawaan";
+
+// MARK: - Notifications
+"new_device_detected" = "Perangkat Baru Terdeteksi";
+"device_detected_message" = "%@ terdeteksi di dekatmu";
+"connection_established" = "Terhubung";
+"connected_to_device" = "Terhubung ke %@";
+"connection_lost" = "Koneksi Terputus";
+"disconnected_from_device" = "Terputus dari %@";
+"incoming_transmission" = "Transmisi Masuk";
+"receiving_audio_message" = "Menerima pesan suara";
+"background_scan" = "Pemindaian Latar Belakang";
+"scanning_for_devices" = "Mencari perangkat di sekitar";
+"notifications" = "Notifikasi";
+"enable_notifications" = "Aktifkan Notifikasi";
+"disable_notifications" = "Nonaktifkan Notifikasi";
+"notification_description" = "Terima notifikasi saat perangkat baru terdeteksi atau saat ada transmisi";
+"notifications_enabled" = "Notifikasi Aktif";
+"notifications_activated_message" = "Sekarang kamu akan menerima notifikasi untuk perangkat yang terdeteksi dan transmisi";
+
+// MARK: - Battery Status
+"charging" = "Mengisi daya";
+"full" = "Penuh";
+"unplugged" = "Tidak dicas";
+
+// MARK: - Main Interface
+"radio_fm" = "Radio Dunia";
+"walkie_talkie" = "Walkie Talkie";
+"device" = "Perangkat";
+"status" = "Status";
+"no_error" = "tidak ada kesalahan";
+"channel_1" = "Saluran 1";
+"en" = "ID";
+"hold" = "TAHAN";
+"pressed" = "DITEKAN";
+"to_talk" = "UNTUK BICARA";
+"release" = "LEPAS";
+"to_send" = "UNTUK KIRIM";
+"active" = "AKTIF";
+"no_connection" = "Tidak ada koneksi";
+"devices_connected" = "perangkat terhubung";
+"status.connected_crossplatform" = "Terhubung · Mac/Android (%d)";
+"status.connected_mixed" = "Terhubung (%1$d · %2$d Mac/Android)";
+"status.disconnected" = "Terputus";
+"status.connected" = "Terhubung";
+"status.connected_count" = "Terhubung (%d)";
+"status.advertising" = "Terlihat oleh orang lain";
+"status.searching" = "Mencari…";
+"status.connecting" = "Menghubungkan…";
+"transmission_in_progress" = "SEDANG MENGIRIM";
+"reception_in_progress" = "SEDANG MENERIMA";
+"no_transmission" = "tidak ada transmisi";
+
+// MARK: - Tab Bar
+"talk" = "Bicara";
+"explore" = "Jelajahi";
+"connections" = "Koneksi";
+"settings_tab" = "Pengaturan";
+"performance" = "Performa";
+
+// MARK: - Performance
+"performance_title" = "Performa";
+"high_traffic" = "Lalu Lintas Tinggi";
+"normal_performance" = "Performa Normal";
+"memory_usage" = "Memori";
+"network_latency" = "Latensi Rata-rata";
+"connection_time" = "Waktu Koneksi";
+"active_connections" = "Koneksi";
+"performance_trends" = "Tren Performa";
+"recommendations" = "Rekomendasi";
+"connections_active" = "koneksi aktif";
+"updated_now" = "Baru diperbarui";
+"optimized_mode" = "Mode Optimal";
+"audio_cache" = "Cache Audio";
+"current_recommendations" = "Rekomendasi Saat Ini";
+"no_recommendations" = "Belum ada rekomendasi. Performanya sudah optimal!";
+"full_report" = "Laporan Lengkap";
+"close" = "Tutup";
+"too_many_connections_warning" = "Terlalu banyak koneksi (%d). Sebaiknya batasi 6-8 agar performa tetap optimal";
+
+// MARK: - Radio
+"station" = "Stasiun";
+"no_station" = "Tidak ada stasiun";
+"buffering" = "Memuat...";
+"genre" = "Genre";
+"country" = "Negara";
+"scanning" = "Memindai...";
+
+// MARK: - Connections View
+"connections_title" = "Koneksi";
+"manage_connections" = "Kelola koneksi walkie talkie";
+"connected_devices" = "Perangkat terhubung";
+"scanning_in_progress" = "Sedang memindai...";
+"offline" = "Offline";
+"online" = "Online";
+"advertising" = "Terlihat";
+"browsing" = "Mencari";
+"on" = "NYALA";
+"off" = "MATI";
+"connected_devices_count" = "Perangkat Terhubung";
+"no_devices_connected" = "Tidak ada perangkat terhubung";
+"devices_nearby_hint" = "Pastikan perangkat lain ada di dekatmu dengan aplikasi terbuka, dan di jaringan Wi-Fi yang sama";
+"connected" = "Terhubung";
+"disconnect_all" = "Putuskan Semua";
+"restart_discovery" = "Mulai Ulang Pencarian";
+"disconnect_device" = "Putuskan Perangkat";
+"disconnect_confirmation" = "Yakin ingin memutuskan semua perangkat?";
+
+// MARK: - Explore View
+"explore_title" = "Jelajahi";
+"scan_nearby_devices" = "Pindai perangkat di sekitar";
+"detected_devices" = "Perangkat Terdeteksi";
+"no_devices_detected" = "Tidak ada perangkat terdeteksi";
+"ensure_devices_open" = "Pastikan perangkat lain sudah membuka Talky, dengan Wi-Fi dan Bluetooth menyala. Mac atau ponsel Android harus ada di jaringan Wi-Fi yang sama.";
+"explore.searching" = "Mencari perangkat di sekitar yang sedang membuka Talky. Perangkat akan muncul di bawah begitu ada dalam jangkauan.";
+"explore.search_stopped" = "Pencarian berhenti. Ketuk panah di atas untuk mencari lagi.";
+"available" = "Tersedia";
+"tap_plus_to_invite" = "Ketuk + untuk mengirim permintaan ke iPhone atau iPad; perangkat lain harus menerimanya. Mac dan Android terhubung otomatis.";
+"send_connection_request" = "Kirim permintaan koneksi";
+"invitation_sent" = "Permintaan terkirim";
+
+// MARK: - Settings View
+"settings_title" = "Pengaturan";
+"configure_app" = "Atur aplikasimu";
+"audio" = "Audio";
+"background_audio_description" = "Audio latar belakang saat digunakan";
+"haptic_feedback" = "Umpan Balik Haptik";
+"vibration_on_buttons" = "Getar saat menekan tombol";
+"auto_connect" = "Hubungkan Otomatis";
+"auto_connect_description" = "Otomatis terhubung ke perangkat yang dikenal";
+"voice_activation" = "Aktivasi Suara";
+"voice_activation_description" = "Kirim otomatis saat kamu bicara";
+"voice_sensitivity" = "Sensitivitas Suara";
+"voice_sensitivity_description" = "Atur sensitivitas untuk aktivasi suara";
+"low_power_mode" = "Mode Daya Rendah";
+"low_power_mode_description" = "Mengurangi pemakaian baterai";
+"reset_settings" = "Atur Ulang Pengaturan";
+"how_to_use" = "Cara Memakai Aplikasi";
+"instruction_1_title" = "Buka Aplikasi di Semua Perangkat";
+"instruction_1_description" = "Pastikan aplikasi WalkieTalkie terbuka dan aktif di semua perangkat.";
+"instruction_2_title" = "Buka Jelajahi";
+"instruction_2_description" = "Ketuk tab 'Jelajahi' untuk melihat perangkat yang tersedia di sekitar.";
+"instruction_3_title" = "Hubungkan Perangkat";
+"instruction_3_description" = "Ketuk + di samping iPhone atau iPad untuk mengirim permintaan koneksi. Mac dan Android terhubung sendiri lewat jaringan Wi-Fi yang sama.";
+"instruction_4_title" = "Saluran yang Sama";
+"instruction_4_description" = "Semua mulai di saluran publik, jadi tidak ada yang perlu diatur. Saluran privat hanya menghubungkan perangkat yang memasukkan kata sandi yang sama.";
+"instruction_5_title" = "Tahan untuk Bicara";
+"instruction_5_description" = "Tahan tombol tengah untuk mengirim. Lepas untuk mendengar.";
+"app_info" = "Info Aplikasi";
+"support_development" = "Dukung Pengembangan";
+"buy_me_coffee" = "Traktir aku kopi";
+"support_description" = "Kalau kamu suka aplikasi ini, dukung pengembangnya";
+"view_performance" = "Lihat Statistik Performa";
+
+// MARK: - Background Audio
+"background_playback" = "Putar di Latar Belakang";
+"background_playback_description" = "Radio tetap diputar saat aplikasi di latar belakang";
+"now_playing" = "Sedang Diputar";
+"control_center_info" = "Kontrol pemutaran dari Pusat Kontrol dan Layar Terkunci";
+
+// MARK: - Appearance
+"appearance" = "Tampilan";
+"dark_mode" = "Mode Gelap";
+"dark_mode_description" = "Pakai tema gelap untuk tampilan aplikasi";
+
+// MARK: - Peak App
+"peak_app_title" = "Peak: Altimeter untuk Pendaki";
+"peak_app_description" = "Altimeter gratis untuk pendaki dengan AI dan walkie talkie bawaan";
+"download_peak_app" = "Unduh Aplikasi Peak";
+"peak_altimeter_free" = "Altimeter Gratis";
+"peak_walkie_ai_description" = "dengan Walkie Talkie & AI";
+
+// MARK: - Alerts
+"connection_request" = "Permintaan Koneksi";
+"wants_to_connect" = "ingin terhubung";
+"microphone_permission_required" = "Izin Mikrofon Diperlukan";
+"microphone_permission_message" = "Aplikasi WalkieTalkie perlu akses mikrofon agar berfungsi dengan baik. Tanpa izin ini, kamu tidak bisa mengirim suara.";
+"audio_transmission_error" = "Gagal mengirim suara. Coba lagi.";
+
+// MARK: - Errors
+"no_connected_peers" = "Tidak ada perangkat terhubung";
+
+// MARK: - Onboarding
+"onboarding_p1_title" = "Radio sungguhan dan walkie talkie di iPhone-mu";
+"onboarding_p1_subtitle" = "Dengarkan CB, gelombang pendek, dan POC secara langsung, putar 330+ stasiun dunia, dan bicara dengan temanmu bahkan di tempat tanpa sinyal.";
+
+"onboarding_p2_range_caveat" = "Dinding, bukit, dan ketinggian mengurangi jangkauan.";
+"onboarding_p2_same_wifi" = "Untuk terhubung ke Mac atau ponsel Android, sambungkan semua perangkat ke jaringan Wi-Fi yang sama: koneksi itu berjalan lewat jaringan lokal.";
+
+"onboarding_p3_ptt_title" = "Tahan untuk bicara";
+"onboarding_p3_ptt_body" = "Persis seperti HT sungguhan: tahan tombol tengah untuk bicara, lepas untuk mendengar.";
+"onboarding_p3_ptt_rule" = "Hanya satu suara dalam satu waktu di saluran yang sama.";
+
+"onboarding_p4_frequency_title" = "Satu saluran, semua mendengarmu";
+"onboarding_p4_frequency_analogy" = "Tidak ada yang perlu dicocokkan: setiap Talky mulai di saluran publik, jadi perangkat di sekitar saling menemukan sendiri.";
+"onboarding_p4_change_freq_hint" = "Tombol ‹ dan › memindai layar frekuensi. Kamu mengirim dari frekuensi utama. Tekan tombol HOME hijau untuk kembali ke sana.";
+"onboarding_p4_private_channels_teaser" = "Mau saluran khusus untuk grupmu? Buat Saluran Privat dengan kata sandi: hanya yang mengetik kata sandi yang sama yang bisa menemukanmu, di iPhone, Mac, maupun Android.";
+
+"onboarding_p5_steps_title" = "Siap? Cukup 3 langkah";
+"onboarding_p5_step1" = "Buka Talky di perangkat kedua di dekatmu: iPhone, iPad, Mac, atau Android";
+"onboarding_p5_step2" = "Di iPhone dan iPad, buka Jelajahi dan ketuk + di samping perangkat, lalu terima di perangkat satunya. Mac dan Android terhubung sendiri, lewat Wi-Fi yang sama";
+"onboarding_p5_step3" = "Setelah terhubung (titik hijau), tahan tombol tengah untuk bicara, lepas untuk mendengar";
+
+"onboarding_permissions_description" = "Talky butuh ini agar bisa berfungsi.";
+"onboarding_microphone_permission" = "Mikrofon";
+"onboarding_permission_mic_why" = "Untuk merekam suaramu saat kamu menekan untuk bicara.";
+"onboarding_permission_open_settings" = "Buka Pengaturan iOS";
+
+"onboarding_continue" = "Lanjut";
+"onboarding_get_started" = "Ayo mulai";
+"onboarding_skip" = "Lewati";
+"onboarding_back" = "Kembali";
+
+// MARK: - First Run Coach
+"coach_no_peers_title" = "Langkah pertama";
+"coach_no_peers_body" = "Buka Talky di perangkat lain di dekatmu dengan Wi-Fi yang sama, lalu ketuk \"Jelajahi\" di bawah.";
+"coach_press_ptt_title" = "Sekarang tahan di sini";
+"coach_press_ptt_body" = "Tahan tombol tengah untuk bicara, lepas untuk mendengar.";
+"coach_dismiss" = "Mengerti";
+"ads_section_title" = "Iklan & Privasi";
+"watch_ad_remove_ads" = "Tonton video, bebas iklan";
+"watch_ad_remove_ads_subtitle" = "Tanpa iklan selama 1 jam";
+"ads_removed_active" = "Iklan dinonaktifkan";
+"ads_removed_remaining" = "Sisa: %d mnt";
+"manage_privacy" = "Kelola preferensi privasi";
+
+/* MARK: - Talky Pro features (added 2026-05) */
+
+// Paywall
+"paywall.title" = "Buka Talky Pro";
+"paywall.subtitle" = "Semua fitur Talky, tanpa batas";
+"paywall.plan.weekly" = "Mingguan";
+"paywall.plan.weekly_suffix" = "/minggu";
+"paywall.plan.yearly" = "Tahunan";
+"paywall.plan.yearly_suffix" = "/tahun";
+"paywall.badge.save" = "Hemat %d%%";
+"paywall.compare.weekly_vs_yearly" = "%1$@ per tahun. Kalau bayar mingguan, kamu akan keluar %2$@.";
+"paywall.trial.badge" = "Gratis %1$d hari, lalu %2$@ per tahun";
+"paywall.cta.start" = "Mulai Talky Pro";
+"paywall.cta.trial" = "Coba gratis %d hari";
+"paywall.apple_footer" = "Langganan diperpanjang otomatis. Kamu bisa membatalkannya kapan saja dari Pengaturan Apple ID. Pembayaran ditagihkan ke Apple ID-mu saat pembelian dikonfirmasi.";
+
+// Transmission history
+"history.title" = "Riwayat transmisi";
+"history.delete" = "Hapus";
+"history.clear_confirm_title" = "Hapus riwayat?";
+"history.clear_all" = "Hapus semua";
+"history.cancel" = "Batal";
+"history.paywall_message" = "Buka Talky Pro untuk melihat riwayat transmisimu";
+"history.unlock_pro" = "Buka Pro";
+"history.empty" = "Belum ada transmisi yang diterima";
+
+// Themes
+"theme.title" = "Tema";
+"theme.subtitle" = "Ganti warna aplikasi";
+"theme.name.default" = "Bawaan";
+"theme.name.ocean" = "Samudra";
+"theme.name.forest" = "Hutan";
+"theme.name.sunset" = "Senja";
+"theme.name.midnight" = "Tengah Malam";
+"theme.name.military" = "Militer";
+"theme.name.retro80s" = "Retro 80-an";
+"theme.name.vintageRadio" = "Radio Antik";
+"theme.name.cyberpunk" = "Cyberpunk";
+"theme.name.stealth" = "Siluman";
+"theme.name.aurora" = "Aurora";
+"theme.name.submarine" = "Kapal Selam";
+"theme.name.hamRadio" = "Radio Amatir";
+"theme.name.festival" = "Festival";
+"theme.name.blackHole" = "Lubang Hitam";
+"theme.name.galaxy" = "Galaksi";
+"theme.name.hacker" = "Hacker";
+"theme.name.wildfire" = "Kebakaran Hutan";
+"theme.name.arctic" = "Arktik";
+
+// Sleep timer
+"sleep_timer.title" = "Timer tidur radio";
+"sleep_timer.close" = "Tutup";
+"sleep_timer.paywall_message" = "Buka Talky Pro untuk mengaktifkan timer tidur radio";
+"sleep_timer.unlock_pro" = "Buka Pro";
+"sleep_timer.countdown_label" = "Radio berhenti dalam";
+"sleep_timer.cancel" = "Batalkan timer";
+"sleep_timer.picker_prompt" = "Mau dengar berapa lama?";
+
+// Equalizer
+"equalizer.title" = "Equalizer";
+"equalizer.subtitle" = "Pilih preset audio";
+"equalizer.active_preset" = "Preset aktif";
+"equalizer.preset.flat" = "Datar";
+"equalizer.preset.bass" = "Bass";
+"equalizer.preset.vocal" = "Vokal";
+"equalizer.preset.rock" = "Rock";
+"equalizer.preset.pop" = "Pop";
+
+// Recordings
+"recordings.title" = "Rekaman";
+"recordings.delete_all_title" = "Hapus semua rekaman?";
+"recordings.delete_all" = "Hapus semua";
+"recordings.delete_all_message" = "Tindakan ini tidak bisa dibatalkan.";
+"recordings.cancel" = "Batal";
+"recordings.pro_feature" = "Fitur Pro";
+"recordings.paywall_message" = "Buka Talky Pro untuk merekam dan memutar ulang transmisimu dan yang kamu terima.";
+"recordings.unlock_pro" = "Buka Pro";
+"recordings.empty_title" = "Belum ada rekaman";
+"recordings.empty_message" = "Transmisimu dan yang kamu terima akan muncul di sini.";
+"recordings.privacy_notice" = "Rekaman hanya disimpan di perangkatmu. Kamu bertanggung jawab memakainya sesuai hukum privasi setempat.";
+"recordings.own_transmission" = "Transmisimu";
+
+// Private channels
+"private_channels.title" = "Saluran privat";
+"private_channels.close" = "Tutup";
+"private_channels.channel_fallback" = "Saluran";
+"private_channels.public_state_title" = "Kamu dalam mode publik";
+"private_channels.public_state_description" = "Pengguna Talky mana pun di sekitar bisa menemukanmu. Buat saluran privat untuk bicara hanya dengan orang yang tahu kata sandinya.";
+"private_channels.create_or_join" = "Buat atau gabung saluran privat";
+"private_channels.private_state_title" = "Saluran privat aktif";
+"private_channels.private_state_description" = "Hanya orang yang tahu kata sandinya yang bisa menemukanmu dan bicara denganmu.";
+"private_channels.leave" = "Keluar dari saluran";
+"private_channels.form.title" = "Gabung saluran";
+"private_channels.form.name_label" = "Nama saluran";
+"private_channels.form.name_placeholder" = "Mis. Keluarga Budi";
+"private_channels.form.password_label" = "Kata sandi";
+"private_channels.form.password_placeholder" = "Minimal 4 karakter";
+"private_channels.form.submit" = "Gabung";
+"private_channels.form.hint" = "Hanya perangkat yang memasukkan kata sandi yang sama yang akan saling menemukan dan bicara.";
+"private_channels.paywall.pro_feature" = "Fitur Pro";
+"private_channels.paywall.headline" = "Saluran dengan kata sandi";
+"private_channels.paywall.description" = "Buat saluran walkie dengan kata sandi: hanya orang yang tahu kata sandinya yang bisa menemukanmu dan bicara denganmu.";
+"private_channels.paywall.cta" = "Buka dengan Talky Pro";
+"private_channels.error.empty_name" = "Masukkan nama saluran.";
+"private_channels.error.password_min" = "Kata sandi minimal %d karakter.";
+"private_channels.error.join_failed" = "Gagal bergabung ke saluran. Pastikan Talky Pro aktif.";
+
+// Settings - Pro section
+"settings.pro.title" = "Talky Pro";
+"settings.pro.title_active" = "Talky Pro aktif";
+"settings.pro.manage_subscription" = "Kelola langganan";
+"settings.pro.manage_subscription_subtitle" = "Ubah atau batalkan dari Apple ID-mu";
+"settings.pro.unlock" = "Buka Talky Pro";
+"settings.pro.unlock_subtitle" = "Tanpa iklan, tanpa batas";
+"settings.pro.restore_purchases" = "Pulihkan pembelian";
+
+// Settings - Personalization section
+"settings.personalization.title" = "Personalisasi";
+"settings.personalization.themes" = "Tema";
+"settings.personalization.history.title" = "Riwayat transmisi";
+"settings.personalization.history.subtitle" = "Lihat siapa yang menghubungimu";
+"settings.personalization.sleep_timer.title" = "Timer tidur radio";
+"settings.personalization.sleep_timer.subtitle" = "Matikan radio setelah X menit";
+"settings.personalization.equalizer.title" = "Equalizer";
+"settings.personalization.equalizer.subtitle" = "Preset audio premium";
+"settings.personalization.recordings.title" = "Rekaman";
+"settings.personalization.recordings.subtitle" = "Putar ulang transmisimu";
+"settings.personalization.private_channels.title" = "Saluran privat";
+"settings.personalization.private_channels.subtitle" = "Walkie talkie dengan kata sandi";
+
+// MARK: - Station Browser & Sleep Timer
+"browse_stations" = "Jelajahi Stasiun";
+"search_stations" = "Cari stasiun…";
+"all_stations" = "Semua";
+"favorites" = "Favorit";
+"recents" = "Terbaru";
+"nearby" = "Terdekat";
+"by_country" = "Per Negara";
+"by_genre" = "Per Genre";
+"no_favorites_hint" = "Belum ada favorit. Tekan lama sebuah stasiun untuk menambahkannya.";
+"no_recents" = "Belum ada stasiun yang baru diputar.";
+"no_search_results" = "Stasiun tidak ditemukan.";
+"now_playing_short" = "KINI";
+"pro_badge" = "PRO";
+"sleep_timer" = "Timer Tidur";
+
+// MARK: - Mode Switch & Onboarding Radio
+"mode_switch_hint" = "Ketuk tombol kiri atas untuk beralih antara Walkie Talkie dan Radio Dunia";
+"got_it" = "Mengerti";
+"onboarding.radio_mode.title" = "Walkie Talkie + Radio";
+"onboarding.radio_mode.subtitle" = "Ganti mode dengan satu ketukan";
+"onboarding.radio_mode.body" = "Tombol di atas memindahkanmu dari walkie talkie ke radio dunia: 330+ stasiun internet dari 80+ negara, dengan bar level yang mengikuti musik.";
+"onboarding.radio_mode.streaming_note" = "Radio memakai streaming internet, bukan antena FM fisik. Koneksi data aktif (Wi-Fi atau seluler) diperlukan.";
+// MARK: - Live Activities
+"live_activities.title" = "Aktivitas Langsung";
+"live_activities.toggle" = "Tampilkan di latar belakang";
+"live_activities.description" = "Tampilkan kontrol radio dan walkie di Dynamic Island dan layar terkunci saat aplikasi ada di latar belakang.";
+
+// MARK: - Pro upsell banner (added 2026-05-23)
+"paywall.brand_label" = "TALKY PRO";
+"upsell.title" = "Buka Talky Pro";
+"upsell.subtitle" = "Tanpa iklan · dukung satu developer indie";
+"upsell.dismiss" = "Tutup";
+
+// MARK: - Themes Pack (one-shot non-consumable, added 2026-05-23)
+"themes_pack.title" = "Buka semua tema";
+"themes_pack.subtitle" = "Sekali beli, milikmu selamanya";
+"themes_pack.cta_buy" = "Buka semua tema";
+"themes_pack.prop.all_themes" = "11 tema premium (Identitas + Animasi)";
+"themes_pack.prop.forever" = "Tanpa langganan, milikmu selamanya";
+"themes_pack.prop.one_time" = "Sekali bayar";
+"theme_purchase.or" = "Atau";
+"theme_purchase.subscribe_title" = "Pilih Talky Pro saja";
+"theme_purchase.subscribe_subtitle" = "Tema + radio internasional + tanpa iklan";
+"theme_purchase.apple_footer" = "Pembayaran diproses oleh Apple. Paket tema tidak diperpanjang otomatis.";
+"paywall.close" = "Tutup";
+"paywall.link.restore" = "Pulihkan pembelian";
+"paywall.link.terms" = "Ketentuan";
+"paywall.link.privacy" = "Privasi";
+"paywall.error_title" = "Kesalahan";
+"paywall.error.purchase_failed" = "Pembelian gagal. Coba lagi.";
+"paywall.error.no_purchases" = "Tidak ada pembelian yang bisa dipulihkan.";
+"paywall.error.restore_failed" = "Pemulihan gagal. Coba lagi.";
+"check_wifi_bluetooth" = "Periksa Wi-Fi & Bluetooth";
+
+/* Paywall — supporter note: who is behind Talky and what Pro really pays for */
+"paywall.support.eyebrow" = "CATATAN DARI DEVELOPER";
+"paywall.support.title" = "Talky dibuat oleh satu orang";
+"paywall.support.body" = "Aku developer independen dan kode Talky terbuka untuk umum di GitHub. Pro bukan tembok di sekitar aplikasi: ini kontribusi yang menutup biaya akun developer Apple, server, dan jam kerja untuk menambah stasiun dan fitur. Kalau sekarang belum waktunya, tetap pakai Talky gratis, Talky tetap gratis.";
+"paywall.support.github" = "Lihat kodenya di GitHub";
+"paywall.support.compact" = "Dibuat oleh satu developer independen. Kode Talky terbuka untuk umum di GitHub.";
+
+/* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
+"paywall.lifetime.owned" = "Milikmu selamanya. Terima kasih.";
+
+/* Pass stazione a 24 ore (rewarded) e chiarimento sullo streaming */
+"radio.streaming_disclaimer" = "Stasiun diputar lewat internet: iPhone tidak punya penerima FM.";
+"radio.now_playing_album" = "Talky · Radio Internet";
+"station_locked.message" = "Stasiun ini bagian dari Talky Pro. Kamu juga bisa mendengarkannya selama 24 jam dengan menonton video singkat.";
+"station_locked.watch_video" = "Dengar 24 jam, tonton video";
+"station_locked.go_pro" = "Buka semuanya dengan Pro";
+
+/* Ascolto dal vivo HF e POC (3.0) */
+"live_band_local" = "LOKAL";
+"live_scouting" = "Mencari saluran yang ada orangnya…";
+"live_connecting" = "Menghubungkan…";
+"live_online" = "Mendengarkan langsung";
+"live_problem_full" = "Belum ada penerima yang kosong, coba lagi sebentar lagi";
+"live_problem_full_poc" = "Server penuh, mencoba saluran lain";
+"live_problem_refused" = "Akses ditolak oleh server";
+"live_problem_no_channels" = "Belum ada saluran yang ada orangnya. Ketuk Segarkan.";
+"live_problem_down" = "Daftar penerima tidak bisa dijangkau, periksa koneksimu";
+"live_problem_closed" = "Sambungan ditutup";
+"live_problem_timeout" = "Tidak ada respons, periksa koneksimu";
+"live_hf_kind_aviation" = "Cuaca penerbangan, 24 jam";
+"live_hf_kind_time" = "Sinyal waktu, 24 jam";
+"live_hf_kind_amateur" = "Amatir radio, aktivitas berubah-ubah";
+"live_hf_kind_citizens" = "Pita warga CB, aktivitas berubah-ubah";
+"live_hf_kind_digital" = "Sinyal digital FT8, paling ramai di siang hari";
+"live_receiver" = "Penerima";
+"live_server" = "Server";
+"live_listen_only_note" = "hanya mendengar";
+"live_channels" = "Saluran";
+"live_tune_down" = "Turunkan 1 kHz";
+"live_tune_up" = "Naikkan 1 kHz";
+"live_scan" = "Pindai otomatis";
+"live_refresh" = "Segarkan";
+"live_speaking" = "Bicara: %@";
+"live_listeners" = "%d orang di saluran";
+"live_scan_holding" = "Pemindaian berhenti, ada yang bicara";
+"live_scan_searching" = "Memindai";
+"live_silence" = "Tidak ada yang bicara sekarang";
+"live_hf_footer" = "Kamu mendengar lewat penerima KiwiSDR publik, yang dibagikan gratis oleh amatir radio di seluruh dunia. Talky memilih penerima yang dekat dengan stasiun.";
+"live_poc_footer" = "Saluran Mumble publik yang sedang ada orangnya. Talky bergabung dalam mode bisu dan hanya mendengar.";
+"live_pro_title" = "Fitur Talky Pro";
+"live_pro_scan_message" = "Pindai otomatis adalah bagian dari Talky Pro. Kamu bisa mencobanya gratis selama 24 jam dengan menonton video singkat.";
+"live_pro_background_message" = "Siaran HF, CB, dan POC berhenti saat kamu keluar dari Talky. Dengan Talky Pro, siaran tetap jalan meski layar mati. Kamu bisa mencobanya gratis selama 24 jam dengan menonton video singkat.";
+"live_pro_discover" = "Kenali Talky Pro";
+"live_pro_video" = "Tonton video: gratis 24 jam";
+// CB 27 MHz (3.1)
+"live_cb_section" = "Beralih antara saluran dan DX";
+"live_cb_mode" = "Mode terima: AM, FM, LSB, atau USB";
+"live_cb_squelch" = "Squelch: hening saat tidak ada yang mengirim";
+"live_cb_prev" = "Saluran sebelumnya";
+"live_cb_next" = "Saluran berikutnya";
+"live_cb_quiet" = "Saluran sepi, squelch tertutup";
+"live_cb_tune" = "Ayo";
+"live_cb_enter_frequency" = "Ketik frekuensi (26.965 - 27.855 MHz)";
+"live_cb_out_of_band" = "Di luar CB: ketik frekuensi antara 26.965 dan 27.855 MHz";
+"live_cb_dx_call" = "Frekuensi panggil DX SSB";
+"live_cb_channels" = "40 saluran";
+"live_cb_footer" = "CB sungguhan, dari penerima KiwiSDR publik yang paling dekat denganmu. Kamu mendengar siapa pun yang mengirim saat propagasi membuka pita, biasanya di siang hari. Dengan squelch aktif, desisnya tetap senyap di antara transmisi.";
+"live_pan_over_noise" = "%d dB di atas derau";
+"live_pan_noise_only" = "Hanya derau";
+"live_pan_waiting" = "Menunggu spektrum";
+"live_free_time_up" = "Menit gratis hari ini sudah habis. Ketuk untuk terus mendengar.";
+"live_free_left" = "Gratis hari ini %@";
+"live_pro_free_message" = "Kamu sudah memakai %d menit gratis radio langsung hari ini. Dengan Talky Pro kamu bisa mendengar tanpa batas, atau tonton video singkat untuk 24 jam.";
+"onboarding.live.title" = "Radio sungguhan, langsung";
+"onboarding.live.subtitle" = "Penerima sungguhan di seluruh dunia, yang paling dekat denganmu, dengan spektrum dan waterfall langsung di layar.";
+"onboarding.live.hf" = "Gelombang pendek: cuaca penerbangan, sinyal waktu, dan amatir radio.";
+"onboarding.live.cb" = "Semua 40 saluran CB dan panggilan DX di 27.555, dengan squelch otomatis dan SCAN.";
+"onboarding.live.poc" = "Saluran push-to-talk sungguhan di server publik.";
+"onboarding.live.note" = "Hanya mendengar. %d menit gratis sehari, tanpa batas dengan Talky Pro.";
+"onboarding.widgets.title" = "Widget dengan propagasi langsung";
+"onboarding.widgets.subtitle" = "Di Layar Utama dan Layar Terkunci, diperbarui sendiri.";
+"onboarding.widgets.channel" = "Saluran Talky: saluran CB-mu dan kondisi pita. Gratis.";
+"onboarding.widgets.propagation" = "Propagasi: SFI, Kp, pita 11, 20, 40, dan 80 m, serta prakiraan Kp. Talky Pro.";
+"onboarding.widgets.sun" = "Matahari & pita: matahari terbit, terbenam, dan pita terbaik saat ini. Talky Pro.";
+"live_info_distance" = "Jarak";
+"live_info_signal" = "Sinyal";
+"live_info_mode" = "Mode";
+"live_info_squelch" = "Squelch";
+"live_info_open" = "TERBUKA";
+"live_info_closed" = "TERTUTUP";
+"live_info_free" = "Gratis hari ini";
+"live_info_listening" = "Mendengar";
+"live_info_channel" = "Saluran";
+"live_info_listeners" = "Pendengar";
+"live_info_talker" = "Bicara";
+"radio_info_country" = "Negara";
+"radio_info_genre" = "Genre";
+"radio_info_bitrate" = "Bitrate";
+"radio_info_state" = "Status";
+"radio_info_volume" = "Volume";
+"radio_info_sleep" = "Tidur";
+"radio_state_on_air" = "Mengudara";
+"radio_state_buffering" = "Memuat";
+"radio_state_paused" = "Dijeda";
+"radio_scope_buffering" = "Menyetel ke stream...";
+"radio_scope_paused" = "Dijeda";
+"radio_scope_pick" = "Pilih stasiun untuk melihat gelombangnya";
+"live_pan_searching" = "Mencari penerima yang mengirim spektrum";
+"live_pan_missing" = "Penerima ini tidak mengirim spektrum: hanya audio";
+"live_audio_spectrum" = "Spektrum audio";
+
+/* Esplora: aiuto al collegamento, invito, Scrivimi (9/11/2026) */
+"invite_button" = "Ajak orang di dekatmu";
+"invite_hint" = "Talky berfungsi kalau orang lain juga punya. Tunjukkan kodenya atau kirim tautannya.";
+"invite_title" = "Pasang Talky di ponsel satunya";
+"invite_qr_caption" = "Minta dia mengarahkan kameranya ke kode ini: kode ini membuka Talky di App Store.";
+"invite_share" = "Kirim tautan";
+"invite_then" = "Setelah terpasang, buka Talky di kedua ponsel dan tetap di Jelajahi.";
+"invite_message" = "Ayo ngobrol pakai Talky, walkie talkie yang bisa tanpa internet: %@";
+"pairing_help_title" = "Perangkat satunya tidak ketemu? Periksa ini:";
+"pairing_help_step_open" = "Talky juga terbuka di perangkat satunya, di layar yang sama.";
+"pairing_help_step_radios" = "Wi-Fi dan Bluetooth menyala di keduanya. Tidak perlu tersambung ke jaringan.";
+"pairing_help_step_channel" = "Saluran sama di keduanya: publik, atau kata sandi privat yang sama.";
+"pairing_help_step_close" = "Kedua perangkat berdekatan, dalam jarak sekitar 20 meter, untuk koneksi pertama.";
+"pairing_help_step_permission" = "Jaringan Lokal aktif untuk Talky: Pengaturan > Talky > Jaringan Lokal.";
+"pairing_search_again" = "Cari lagi";
+"pairing_open_settings" = "Buka Pengaturan";
+"pairing_denied_title" = "Talky tidak bisa mencari perangkat di sekitar";
+"pairing_denied_body" = "Izin Jaringan Lokal mati, jadi tidak ada perangkat yang bisa ditemukan. Buka Pengaturan, ketuk Talky, lalu nyalakan Jaringan Lokal.";
+"contact_title" = "Kirim pesan ke aku";
+"contact_subtitle" = "Aku Andrea, pembuat Talky. Aku baca setiap pesan dan membalasnya sendiri.";
+"contact_bug" = "Laporkan masalah";
+"contact_idea" = "Usulkan fitur";
+"contact_chat" = "Sekadar menyapa";
+"contact_rate" = "Beri nilai Talky di App Store";
+"contact_subject_bug" = "masalah";
+"contact_subject_idea" = "ide";
+"contact_subject_chat" = "pesan";
+"contact_no_mail_title" = "Belum ada aplikasi email";
+"contact_no_mail_body" = "Kamu bisa menulis ke %@ dari aplikasi email apa pun.";
+"contact_copy_address" = "Salin alamat";
+"onboarding_p5_permission_note" = "Talky akan meminta izin Jaringan Lokal: dengan itu Talky menemukan perangkat di sekitar. Kalau kamu menolaknya, kamu bisa menyalakannya nanti di Pengaturan > Talky.";
+
+/* Parlare sul POC (Mumble), 4.0 */
+"mumble_hold_to_talk" = "Tahan untuk bicara";
+"mumble_talking" = "Kamu sedang mengudara";
+"mumble_listen_only" = "Hanya mendengar di saluran ini";
+"mumble_mic_denied" = "Mikrofon mati: nyalakan di Pengaturan";
+"mumble_safety" = "Keamanan";
+"mumble_mute_user" = "Bisukan %@";
+"mumble_report" = "Laporkan saluran ini";
+"mumble_report_reason_abuse" = "Hinaan atau ancaman";
+"mumble_report_reason_sexual" = "Konten seksual";
+"mumble_report_reason_spam" = "Spam atau bising";
+"mumble_report_done" = "Laporan terkirim. Server ini tidak akan disarankan lagi untukmu.";
+"mumble_rules_title" = "Sebelum kamu bicara";
+"mumble_rules_body" = "Di POC kamu bicara di saluran publik dengan orang yang tidak kamu kenal, di server yang dikelola orang lain. Hinaan, ancaman, konten seksual, ujaran kebencian, dan spam dilarang: yang melakukannya akan dibisukan dan dilaporkan, dan server bisa memblokirnya. Bisukan atau laporkan siapa pun yang mengganggumu dari Keamanan, di bawah tombol bicara.";
+"mumble_rules_name" = "Namamu di saluran";
+"mumble_rules_accept" = "Aku setuju, biarkan aku bicara";
+
+/* Stanze private, 4.0 */
+"room_header" = "Ruang privat";
+"room_create" = "Buka ruang";
+"room_join" = "Gabung";
+"room_rejoin" = "Kembali ke %@";
+"room_leave" = "Keluar dari ruang";
+"room_invite" = "Undang";
+"room_code_wrong" = "Kodenya 8 karakter, misalnya K7P2-QX9A";
+"room_footer" = "Hanya kamu dan yang punya kodenya yang bisa mendengar ruang ini, bahkan dari jauh: butuh internet. Membuka ruang adalah fitur Talky Pro, bergabung lewat undangan gratis.";
+"room_invite_text" = "Ayo ngobrol di Talky! Gabung ke ruanganku dengan kode %@: %@ . Kalau belum punya Talky: %@";
+"live_pro_room_message" = "Membuka ruang privat adalah fitur Talky Pro. Orang yang kamu undang bergabung gratis.";
+"paywall.plan.lifetime" = "Selamanya";
+"paywall.plan.lifetime_suffix" = "sekali";
+"paywall.plan.lifetime_detail" = "Sekali bayar, milikmu selamanya";
+"paywall.compare.lifetime_vs_yearly" = "%1$@ sekali, bukan %2$@ setiap tahun";
+"paywall.cta.lifetime" = "Buka selamanya";
+"pairing_listen_cb" = "Sambil menunggu, dengarkan CB langsung";
+"mode_switch_try_radio" = "Dengarkan radio";
+"onboarding_two_talky_title" = "Walkie butuh Talky di kedua ponsel";
+"onboarding_two_talky_body" = "Talky bicara dengan ponsel lain yang juga punya Talky: pasang juga di ponsel orang yang bersamamu.";
+"onboarding_two_talky_range" = "Jangkauan 10 sampai 30 meter, dengan Wi-Fi dan Bluetooth menyala di keduanya. Tidak perlu internet atau jaringan.";
+"onboarding_mic_title" = "Satu izin: mikrofon";
+"onboarding_start_title" = "Mau mulai dari mana?";
+"onboarding_start_friend" = "Ada teman di dekatku";
+"onboarding_start_friend_detail" = "Ke walkie: temukan ponsel satu sama lain dan mulai bicara.";
+"onboarding_start_solo" = "Aku sendirian";
+"onboarding_start_solo_detail" = "Dengarkan CB langsung atau radio. Coba walkie saat ada orang bersamamu.";
+"whats_new_title" = "Yang baru di Talky %@";
+"whats_new_poc" = "Di saluran POC sekarang kamu bisa bicara, bukan cuma mendengar.";
+"whats_new_rooms" = "Ruang privat dengan undangan, untuk bicara dengan teman yang jauh juga. Butuh internet.";
+"whats_new_widgets" = "Widget baru untuk Layar Utama dan kontrol baru.";
+"whats_new_pairing" = "Bantuan koneksi: kalau ponsel satunya tidak muncul, Talky memberi tahu apa yang perlu diperiksa dan cara mengundangnya.";
+"whats_new_try" = "Coba bicara di POC";
