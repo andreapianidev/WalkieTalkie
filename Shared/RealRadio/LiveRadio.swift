@@ -102,6 +102,14 @@ final class LiveRadio: ObservableObject {
     @Published private(set) var signalDBm: Double?
     @Published private(set) var level: Float = 0
     @Published var proPrompt: ProPrompt?
+    /// Nel canale POC si puo' parlare: il server lo permette a chi entra senza registrarsi.
+    @Published private(set) var canTalk = false
+    @Published private(set) var isTalking = false
+    /// Il microfono e' negato nelle impostazioni del sistema.
+    @Published private(set) var micDenied = false
+    /// Una segnalazione su un canale POC: server e motivo, per chi gestisce Talky.
+    /// Ogni app la manda dove legge le sue statistiche.
+    var onReport: (_ server: String, _ reason: String) -> Void = { _, _ in }
     /// Secondi gratis rimasti oggi, nil con Pro o con il pass.
     @Published private(set) var freeSecondsLeft: Int?
     /// I minuti gratis di oggi sono finiti: la banda resta scelta, muta.
@@ -152,7 +160,11 @@ final class LiveRadio: ObservableObject {
     private var scoutedAt: Date?
     /// Server POC che non hanno risposto: non tornano in lista finche' non si aggiorna.
     private var badServers: Set<String> = []
-    private let username = "Talky-\(Int.random(in: 1000 ... 9999))"
+    /// Il nome scelto da chi usa Talky, lo stesso a ogni collegamento.
+    private var username: String { MumbleManners.nickname }
+    private let mic = MumbleMic()
+    private var micPump: Task<Void, Never>?
+    private var micFeed: AsyncStream<Data>.Continuation?
 
     private var scanTask: Task<Void, Never>?
     private var lastVoice = Date.distantPast
@@ -666,6 +678,72 @@ final class LiveRadio: ObservableObject {
         }
     }
 
+    // MARK: parlare sul POC
+
+    /// Premuto il tasto: microfono acceso, voce nel canale finche' non si rilascia.
+    func startTalking() {
+        guard band == .poc, canTalk, !isTalking, let listener = mumble else { return }
+        isTalking = true
+        Task { [weak self] in
+            guard await MumbleMic.requestAccess() else {
+                self?.micDenied = true
+                self?.isTalking = false
+                return
+            }
+            guard let self, self.isTalking, self.mumble === listener else { return }
+            self.micDenied = false
+            guard await listener.beginTalking() else {
+                self.isTalking = false
+                return
+            }
+            let (feed, sink) = AsyncStream.makeStream(of: Data.self, bufferingPolicy: .bufferingNewest(50))
+            self.micFeed = sink
+            // Un solo consumatore, cosi' i pacchetti partono nell'ordine in cui arrivano.
+            self.micPump = Task.detached(priority: .userInitiated) {
+                for await opus in feed { await listener.send(opus) }
+                await listener.endTalking()
+            }
+            self.player.setVolume(0)
+            if !self.mic.start({ sink.yield($0) }) {
+                self.stopTalking()
+            }
+        }
+    }
+
+    func stopTalking() {
+        guard isTalking else { return }
+        isTalking = false
+        mic.stop()
+        micFeed?.finish()
+        micFeed = nil
+        micPump = nil
+        player.setVolume(volume)
+    }
+
+    /// Chi parla adesso non si sente piu' su questo server.
+    func muteTalker() {
+        guard let listener = mumble else { return }
+        Task { _ = await listener.blockTalker() }
+        talker = nil
+    }
+
+    /// Silenzia chi parla, avvisa chi gestisce Talky, e il server non
+    /// compare piu' fra i canali di chi l'ha segnalato.
+    func reportCurrent(reason: String) {
+        guard let channel = currentPOC else { return }
+        muteTalker()
+        onReport(channel.server.id, reason)
+        MumbleManners.hide(server: channel.server.id)
+        pocChannels.removeAll { $0.server == channel.server }
+        pocIndex = min(pocIndex, max(0, pocChannels.count - 1))
+        if pocChannels.isEmpty {
+            disconnect()
+            state = .refused(.down)
+        } else {
+            connectPOC()
+        }
+    }
+
     // MARK: POC
 
     private func scoutPOC() {
@@ -676,7 +754,8 @@ final class LiveRadio: ObservableObject {
         scoutTask = Task { [weak self] in
             var servers = MumbleDirectory.cached()
             if let fresh = try? await MumbleDirectory.fetch() { servers = fresh }
-            let ordered = Self.order(servers)
+            let hidden = MumbleManners.hiddenServers
+            let ordered = Self.order(servers.filter { !hidden.contains($0.id) })
             var found: [MumbleLiveChannel] = []
             var offset = 0
             let batch = 6, maxServers = 48, enough = 16
@@ -828,6 +907,9 @@ final class LiveRadio: ObservableObject {
             panorama.add(sweep, dialHz: tuning.hz, passband: KiwiFrame.passband(tuning))
         case .spectrum(let ok):
             spectrumArrived(ok)
+        case .mayTalk(let ok):
+            canTalk = ok
+            if !ok, isTalking { stopTalking() }
         }
     }
 
@@ -855,6 +937,8 @@ final class LiveRadio: ObservableObject {
     }
 
     private func disconnect() {
+        if isTalking { stopTalking() }
+        canTalk = false
         listenTask?.cancel()
         listenTask = nil
         generation += 1

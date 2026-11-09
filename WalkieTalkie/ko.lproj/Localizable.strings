@@ -588,3 +588,20 @@
 "contact_no_mail_body" = "어떤 메일 앱에서든 %@ 로 보내실 수 있습니다.";
 "contact_copy_address" = "주소 복사";
 "onboarding_p5_permission_note" = "Talky는 로컬 네트워크 권한을 요청합니다. 주변 기기를 찾는 데 쓰입니다. 거부하더라도 나중에 설정 > Talky에서 켤 수 있습니다.";
+
+/* Parlare sul POC (Mumble), 4.0 */
+"mumble_hold_to_talk" = "길게 눌러 말하기";
+"mumble_talking" = "송신 중";
+"mumble_listen_only" = "이 채널은 듣기만 가능합니다";
+"mumble_mic_denied" = "마이크가 꺼져 있습니다. 설정에서 켜 주세요";
+"mumble_safety" = "안전";
+"mumble_mute_user" = "%@ 음소거";
+"mumble_report" = "이 채널 신고";
+"mumble_report_reason_abuse" = "모욕 또는 협박";
+"mumble_report_reason_sexual" = "성적인 콘텐츠";
+"mumble_report_reason_spam" = "스팸 또는 소음";
+"mumble_report_done" = "신고가 전송되었습니다. 이 서버는 더 이상 추천되지 않습니다.";
+"mumble_rules_title" = "말하기 전에";
+"mumble_rules_body" = "POC에서는 다른 사람이 운영하는 서버의 공개 채널에서 모르는 사람과 이야기합니다. 모욕, 협박, 성적인 콘텐츠, 혐오, 스팸은 허용되지 않습니다. 이를 사용하는 사람은 음소거되고 신고되며 서버에서 추방될 수 있습니다. 불편한 사람은 말하기 버튼 아래 안전에서 음소거하거나 신고하세요.";
+"mumble_rules_name" = "채널에서 쓸 이름";
+"mumble_rules_accept" = "동의하고 말하기";

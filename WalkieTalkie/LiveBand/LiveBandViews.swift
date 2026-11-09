@@ -617,6 +617,9 @@ struct LiveListeningDeck: View {
             }
             LiveReadings(band: band, compact: compact)
             LiveSpeakerStatus()
+            if band == .poc {
+                POCTalkControls(compact: compact)
+            }
         }
     }
 }

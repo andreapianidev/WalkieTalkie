@@ -589,3 +589,20 @@
 "contact_no_mail_body" = "Anda boleh menulis kepada saya di %@ dari mana-mana aplikasi e-mel.";
 "contact_copy_address" = "Salin alamat";
 "onboarding_p5_permission_note" = "Talky akan meminta kebenaran Rangkaian Setempat: itulah cara ia mencari peranti berdekatan. Jika anda menolak, anda boleh menghidupkannya kemudian di Seting > Talky.";
+
+/* Parlare sul POC (Mumble), 4.0 */
+"mumble_hold_to_talk" = "Tekan lama untuk bercakap";
+"mumble_talking" = "Anda sedang bersiaran";
+"mumble_listen_only" = "Saluran ini untuk mendengar sahaja";
+"mumble_mic_denied" = "Mikrofon dimatikan: hidupkan dalam Tetapan";
+"mumble_safety" = "Keselamatan";
+"mumble_mute_user" = "Senyapkan %@";
+"mumble_report" = "Laporkan saluran ini";
+"mumble_report_reason_abuse" = "Hinaan atau ugutan";
+"mumble_report_reason_sexual" = "Kandungan seksual";
+"mumble_report_reason_spam" = "Spam atau bunyi bising";
+"mumble_report_done" = "Laporan dihantar. Pelayan ini tidak akan dicadangkan lagi.";
+"mumble_rules_title" = "Sebelum bercakap";
+"mumble_rules_body" = "Di POC anda bercakap dalam saluran awam dengan orang yang anda tidak kenal, di pelayan yang diurus oleh orang lain. Hinaan, ugutan, kandungan seksual, kebencian dan spam tidak dibenarkan: sesiapa yang menggunakannya akan disenyapkan dan dilaporkan, dan pelayan boleh menyekatnya. Senyapkan atau laporkan sesiapa yang mengganggu anda dari Keselamatan, di bawah butang bercakap.";
+"mumble_rules_name" = "Nama anda dalam saluran";
+"mumble_rules_accept" = "Saya setuju, saya mahu bercakap";

@@ -589,3 +589,20 @@
 "contact_no_mail_body" = "你可以用任何郵件 App 寫信到 %@。";
 "contact_copy_address" = "複製地址";
 "onboarding_p5_permission_note" = "Talky 會要求區域網路權限，用來尋找附近的裝置。如果你拒絕了，之後也可以在 設定 > Talky 中開啟。";
+
+/* Parlare sul POC (Mumble), 4.0 */
+"mumble_hold_to_talk" = "按住說話";
+"mumble_talking" = "正在發射";
+"mumble_listen_only" = "此頻道只能收聽";
+"mumble_mic_denied" = "麥克風已關閉：請在設定中開啟";
+"mumble_safety" = "安全";
+"mumble_mute_user" = "封鎖 %@";
+"mumble_report" = "檢舉此頻道";
+"mumble_report_reason_abuse" = "辱罵或威脅";
+"mumble_report_reason_sexual" = "色情內容";
+"mumble_report_reason_spam" = "垃圾訊息或雜音";
+"mumble_report_done" = "檢舉已送出。之後不會再向你推薦此伺服器。";
+"mumble_rules_title" = "說話之前";
+"mumble_rules_body" = "在 POC 中，你會在他人管理的伺服器上的公開頻道裡與陌生人交談。禁止辱罵、威脅、色情內容、仇恨言論和垃圾訊息：違者會被封鎖和檢舉，伺服器也可以將其停權。可在說話按鈕下方的「安全」中封鎖或檢舉打擾你的人。";
+"mumble_rules_name" = "你在頻道中的名字";
+"mumble_rules_accept" = "同意，我要說話";

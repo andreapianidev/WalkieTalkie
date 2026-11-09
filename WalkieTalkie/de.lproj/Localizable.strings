@@ -587,3 +587,20 @@
 "contact_no_mail_body" = "Du kannst mir mit jeder Mail-App an %@ schreiben.";
 "contact_copy_address" = "Adresse kopieren";
 "onboarding_p5_permission_note" = "Talky fragt nach der Berechtigung Lokales Netzwerk: Damit findet es Geräte in der Nähe. Lehnst du ab, kannst du sie später unter Einstellungen > Talky einschalten.";
+
+/* Parlare sul POC (Mumble), 4.0 */
+"mumble_hold_to_talk" = "Zum Sprechen gedrückt halten";
+"mumble_talking" = "Du bist auf Sendung";
+"mumble_listen_only" = "In diesem Kanal nur zuhören";
+"mumble_mic_denied" = "Mikrofon aus: in den Einstellungen aktivieren";
+"mumble_safety" = "Sicherheit";
+"mumble_mute_user" = "%@ stummschalten";
+"mumble_report" = "Diesen Kanal melden";
+"mumble_report_reason_abuse" = "Beleidigungen oder Drohungen";
+"mumble_report_reason_sexual" = "Sexuelle Inhalte";
+"mumble_report_reason_spam" = "Spam oder Lärm";
+"mumble_report_done" = "Meldung gesendet. Dieser Server wird dir nicht mehr vorgeschlagen.";
+"mumble_rules_title" = "Bevor du sprichst";
+"mumble_rules_body" = "Bei POC sprichst du in öffentlichen Kanälen mit Menschen, die du nicht kennst, auf Servern, die andere betreiben. Beleidigungen, Drohungen, sexuelle Inhalte, Hass und Spam sind nicht erlaubt: Wer sie nutzt, wird stummgeschaltet und gemeldet, und der Server kann ihn sperren. Wer dich stört, schaltest du unter Sicherheit stumm oder meldest ihn, unter der Sprechtaste.";
+"mumble_rules_name" = "Dein Name in den Kanälen";
+"mumble_rules_accept" = "Einverstanden, ich will sprechen";

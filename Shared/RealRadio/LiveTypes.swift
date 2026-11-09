@@ -61,6 +61,8 @@ nonisolated enum LiveEvent: Sendable {
     case sweep(SpectrumSweep)
     /// Il ricevitore manda lo spettro (true) oppure no (false): una volta sola.
     case spectrum(Bool)
+    /// Nel canale POC in cui siamo si puo' parlare (permesso Speak, nessun muto dal server).
+    case mayTalk(Bool)
 }
 
 /// Una riga della cascata di un KiwiSDR: potenza per fetta di frequenza,

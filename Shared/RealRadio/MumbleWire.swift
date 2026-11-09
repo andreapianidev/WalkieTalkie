@@ -24,6 +24,7 @@ nonisolated enum MumbleMessage: UInt16 {
     case textMessage = 11
     case permissionDenied = 12
     case cryptSetup = 15
+    case permissionQuery = 20
     case codecVersion = 21
     case serverConfig = 24
 }
@@ -221,15 +222,6 @@ nonisolated enum MumbleControl {
         var w = ProtoWriter()
         w.varint(1, UInt64(session))
         w.varint(5, UInt64(channel))
-        return MumbleFramer.frame(.userState, w.data)
-    }
-
-    /// Mette noi stessi in muto: Talky su Mumble ascolta soltanto, e gli
-    /// altri lo vedono dall'icona accanto al nome.
-    static func selfMute(session: UInt32) -> Data {
-        var w = ProtoWriter()
-        w.varint(1, UInt64(session))
-        w.bool(9, true)       // self_mute
         return MumbleFramer.frame(.userState, w.data)
     }
 

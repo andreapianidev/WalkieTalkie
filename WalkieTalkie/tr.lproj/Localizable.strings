@@ -587,3 +587,20 @@
 "contact_no_mail_body" = "Herhangi bir e-posta uygulamasından %@ adresine yazabilirsin.";
 "contact_copy_address" = "Adresi kopyala";
 "onboarding_p5_permission_note" = "Talky, Yerel Ağ iznini isteyecek: yakındaki cihazları bu sayede bulur. Reddedersen daha sonra Ayarlar > Talky bölümünden açabilirsin.";
+
+/* Parlare sul POC (Mumble), 4.0 */
+"mumble_hold_to_talk" = "Konuşmak için basılı tut";
+"mumble_talking" = "Yayındasın";
+"mumble_listen_only" = "Bu kanalda yalnızca dinlenir";
+"mumble_mic_denied" = "Mikrofon kapalı: Ayarlar'dan aç";
+"mumble_safety" = "Güvenlik";
+"mumble_mute_user" = "%@ sesini kapat";
+"mumble_report" = "Bu kanalı bildir";
+"mumble_report_reason_abuse" = "Hakaret veya tehdit";
+"mumble_report_reason_sexual" = "Cinsel içerik";
+"mumble_report_reason_spam" = "Spam veya gürültü";
+"mumble_report_done" = "Bildirim gönderildi. Bu sunucu sana bir daha önerilmeyecek.";
+"mumble_rules_title" = "Konuşmadan önce";
+"mumble_rules_body" = "POC'ta, başkalarının yönettiği sunuculardaki herkese açık kanallarda tanımadığın kişilerle konuşursun. Hakaret, tehdit, cinsel içerik, nefret ve spam yasaktır: bunları kullananın sesi kapatılır ve bildirilir, sunucu da onu engelleyebilir. Seni rahatsız edeni konuşma tuşunun altındaki Güvenlik bölümünden sustur veya bildir.";
+"mumble_rules_name" = "Kanallardaki adın";
+"mumble_rules_accept" = "Kabul ediyorum, konuşmak istiyorum";

@@ -145,7 +145,9 @@ nonisolated enum MumbleScout {
 
 /// Mumble sul canale di controllo TLS, voce nei messaggi UDPTunnel.
 /// Come su un canale PTT, parla uno alla volta: la voce di altri viene
-/// scartata finche' il passaggio in corso non finisce.
+/// scartata finche' il passaggio in corso non finisce. Si parla solo dove
+/// il server da' il permesso Speak a chi entra senza registrarsi, e
+/// mentre parliamo noi la voce degli altri non si suona.
 @available(iOS 16.0, macOS 13.0, *)
 actor MumbleListener {
     nonisolated let audio: AsyncStream<PCMChunk>
@@ -173,6 +175,15 @@ actor MumbleListener {
     private var floor: UInt32?
     private var floorHeard = ContinuousClock.now
     private var decoders: [Int: OpusDecoder] = [:]
+
+    /// Permessi per canale, dalle risposte PermissionQuery.
+    private var permissions: [UInt32: UInt32] = [:]
+    /// Muto o soppresso da un amministratore: non si parla.
+    private var silencedByServer = false
+    private var mayTalk = false
+    private var talking = false
+    /// In unita' da 10 ms, come il contatore dei client Mumble.
+    private var sequence: UInt64 = 0
 
     init(target: MumbleLiveChannel, username: String) {
         self.target = target
@@ -246,6 +257,10 @@ actor MumbleListener {
         serverVersion = 0
         floor = nil
         decoders = [:]
+        permissions = [:]
+        silencedByServer = false
+        talking = false
+        reportMayTalk()
     }
 
     private func closed(link: StreamLink) {
@@ -293,9 +308,14 @@ actor MumbleListener {
         case .serverSync:
             session = f.uint32(1)
             synced = true
-            if let session { link?.send(MumbleControl.selfMute(session: session)) }
+            if let root = f.uint32(4) { permissions[0] = root }
+            if let session { link?.send(MumbleControl.selfMute(session: session, on: true)) }
             eventSink.yield(.link(.online))
             enterChannel()
+        case .permissionQuery:
+            if f.bool(3) == true { permissions = [:] }
+            if let c = f.uint32(1), let p = f.uint32(2) { permissions[c] = p }
+            reportMayTalk()
         case .channelState:
             guard let id = f.uint32(1) else { return }
             var c = channels[id] ?? MumbleChannel(id: id, parent: nil, name: "")
@@ -341,7 +361,14 @@ actor MumbleListener {
         if let n = f.string(3) { u.name = n }
         if let c = f.uint32(5) { u.channel = c }
         users[s] = u
-        if s == session, f.has(5) { reportChannel() }
+        if s == session {
+            if f.has(6) || f.has(8) { silencedByServer = (f.bool(6) ?? false) || (f.bool(8) ?? false) }
+            if f.has(5) {
+                reportChannel()
+                link?.send(MumbleControl.permissionQuery(channel: u.channel))
+            }
+            reportMayTalk()
+        }
         reportAudience()
     }
 
@@ -352,6 +379,8 @@ actor MumbleListener {
         let target = channels.values.first { $0.name.lowercased() == wanted } ?? busiest()
         if let target, users[session]?.channel != target.id {
             link.send(MumbleControl.join(session: session, channel: target.id))
+        } else if let here = users[session]?.channel {
+            link.send(MumbleControl.permissionQuery(channel: here))
         }
         reportChannel()
         reportAudience()
@@ -379,8 +408,9 @@ actor MumbleListener {
     // MARK: voce
 
     private func voice(_ packet: Data) {
-        guard let v = MumbleVoicePacket.parse(packet, protobuf: usesProtobuf) else { return }
+        guard !talking, let v = MumbleVoicePacket.parse(packet, protobuf: usesProtobuf) else { return }
         if let floor, floor != v.session { return }
+        if let name = users[v.session]?.name, MumbleManners.isBlocked(name, on: target.server.id) { return }
         if floor == nil {
             floor = v.session
             decoders = [:]
@@ -398,6 +428,57 @@ actor MumbleListener {
             }
         }
         if v.last { endOfOver() }
+    }
+
+    // MARK: parlare
+
+    /// Il permesso Speak vale nel canale dove siamo; se il server non ha
+    /// ancora risposto per quel canale vale quello della radice.
+    private func reportMayTalk() {
+        var ok = false
+        if synced, let session, let here = users[session]?.channel, !silencedByServer {
+            let p = permissions[here] ?? permissions[0] ?? 0
+            ok = p & MumbleControl.speakPermission != 0
+        }
+        guard ok != mayTalk else { return }
+        mayTalk = ok
+        eventSink.yield(.mayTalk(ok))
+    }
+
+    /// Inizio di un passaggio: si toglie il muto. Falso se qui non si puo'.
+    func beginTalking() -> Bool {
+        guard mayTalk, let link, let session else { return false }
+        if floor != nil { endOfOver() }
+        talking = true
+        link.send(MumbleControl.selfMute(session: session, on: false))
+        return true
+    }
+
+    /// Un pacchetto Opus da 20 ms.
+    func send(_ opus: Data) {
+        guard talking, let link else { return }
+        sequence += 2
+        link.send(MumbleOutgoingVoice.tunnel(
+            MumbleOutgoingVoice.packet(opus: opus, sequence: sequence, last: false, protobuf: usesProtobuf)))
+    }
+
+    /// Fine del passaggio: pacchetto di chiusura e di nuovo in muto.
+    func endTalking() {
+        guard talking else { return }
+        talking = false
+        guard let link, let session else { return }
+        sequence += 2
+        link.send(MumbleOutgoingVoice.tunnel(
+            MumbleOutgoingVoice.packet(opus: Data(), sequence: sequence, last: true, protobuf: usesProtobuf)))
+        link.send(MumbleControl.selfMute(session: session, on: true))
+    }
+
+    /// Chi parla adesso non si sente piu', qui e nei collegamenti futuri.
+    func blockTalker() -> String? {
+        guard let floor, let name = users[floor]?.name else { return nil }
+        MumbleManners.block(name, on: target.server.id)
+        endOfOver()
+        return name
     }
 
     private func endOfOver() {

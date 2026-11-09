@@ -587,3 +587,20 @@
 "contact_no_mail_body" = "Bạn có thể viết cho tôi tại %@ từ bất kỳ ứng dụng mail nào.";
 "contact_copy_address" = "Sao chép địa chỉ";
 "onboarding_p5_permission_note" = "Talky sẽ xin quyền Mạng cục bộ: đó là cách ứng dụng tìm các thiết bị ở gần. Nếu bạn từ chối, có thể bật lại sau trong Cài đặt > Talky.";
+
+/* Parlare sul POC (Mumble), 4.0 */
+"mumble_hold_to_talk" = "Giữ để nói";
+"mumble_talking" = "Bạn đang phát sóng";
+"mumble_listen_only" = "Kênh này chỉ để nghe";
+"mumble_mic_denied" = "Micrô đang tắt: bật trong Cài đặt";
+"mumble_safety" = "An toàn";
+"mumble_mute_user" = "Tắt tiếng %@";
+"mumble_report" = "Báo cáo kênh này";
+"mumble_report_reason_abuse" = "Lăng mạ hoặc đe dọa";
+"mumble_report_reason_sexual" = "Nội dung tình dục";
+"mumble_report_reason_spam" = "Spam hoặc tiếng ồn";
+"mumble_report_done" = "Đã gửi báo cáo. Máy chủ này sẽ không được gợi ý cho bạn nữa.";
+"mumble_rules_title" = "Trước khi nói";
+"mumble_rules_body" = "Trên POC bạn nói chuyện trong các kênh công khai với người lạ, trên máy chủ do người khác quản lý. Không được lăng mạ, đe dọa, nội dung tình dục, thù ghét và spam: ai vi phạm sẽ bị tắt tiếng và báo cáo, và máy chủ có thể cấm người đó. Tắt tiếng hoặc báo cáo người làm phiền bạn trong mục An toàn, bên dưới nút nói.";
+"mumble_rules_name" = "Tên của bạn trong kênh";
+"mumble_rules_accept" = "Tôi đồng ý, tôi muốn nói";
