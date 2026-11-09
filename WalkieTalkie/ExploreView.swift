@@ -10,6 +10,9 @@ struct ExploreView: View {
     @State private var detectedDevices: [DetectedDevice] = []
     @State private var showPaywall: Bool = false
     @State private var pendingInvitePeerIDs: Set<String> = []
+    /// Da quando si cerca: dopo `PairingHelpCard.helpDelay` senza nessuno
+    /// compare la lista dei controlli. Riparte con "Cerca di nuovo".
+    @State private var searchStarted = Date()
 
     /// iPhone 8/SE (667 pt) e simili: pannello di ricerca piu' basso, cosi' la
     /// lista dei dispositivi, con i "+" per invitare, resta sopra la tab bar.
@@ -60,6 +63,7 @@ struct ExploreView: View {
         }
         .onAppear {
             searchWave = true
+            searchStarted = Date()
             updateDetectedDevices()
         }
         .onReceive(multipeerManager.$connectedPeers) { _ in
@@ -79,6 +83,14 @@ struct ExploreView: View {
         }
     }
     
+    private func searchAgain() {
+        multipeerManager.stopBrowsing()
+        multipeerManager.startBrowsing()
+        crossPlatformManager.start()
+        LocalNetworkGuard.shared.recheck()
+        searchStarted = Date()
+    }
+
     private var headerView: some View {
         HStack {
             Image(systemName: "magnifyingglass")
@@ -99,11 +111,7 @@ struct ExploreView: View {
             
             Spacer()
             
-            Button(action: {
-                multipeerManager.stopBrowsing()
-                multipeerManager.startBrowsing()
-                crossPlatformManager.start()
-            }) {
+            Button(action: searchAgain) {
                 Image(systemName: "arrow.clockwise")
                     .foregroundColor(Color("PrimaryTextColor"))
                     .font(.title2)
@@ -200,20 +208,7 @@ struct ExploreView: View {
             }
             
             if detectedDevices.isEmpty {
-                VStack(spacing: 8) {
-                    Image(systemName: "antenna.radiowaves.left.and.right.slash")
-                        .font(.title2)
-                        .foregroundColor(Color("PrimaryTextColor").opacity(0.5))
-                    Text("no_devices_detected".localized)
-                        .font(.body)
-                        .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
-                    Text("ensure_devices_open".localized)
-                        .font(.caption)
-                        .foregroundColor(Color("PrimaryTextColor").opacity(0.5))
-                        .multilineTextAlignment(.center)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 20)
+                PairingHelpCard(searchStarted: searchStarted, onSearchAgain: searchAgain)
             } else {
                 LazyVStack(spacing: 8) {
                     ForEach(detectedDevices) { device in

@@ -556,3 +556,35 @@
 "live_pan_searching" = "กำลังหาเครื่องรับที่ส่งสเปกตรัม";
 "live_pan_missing" = "เครื่องรับเหล่านี้ไม่ส่งสเปกตรัม: มีแต่เสียง";
 "live_audio_spectrum" = "สเปกตรัมเสียง";
+
+/* Esplora: aiuto al collegamento, invito, Scrivimi (9/11/2026) */
+"invite_button" = "ชวนคนที่อยู่กับคุณ";
+"invite_hint" = "Talky ใช้ได้เมื่ออีกฝ่ายมีแอปด้วย ให้เขาดูโค้ดหรือส่งลิงก์ไป";
+"invite_title" = "ติดตั้ง Talky บนอีกเครื่อง";
+"invite_qr_caption" = "ให้เขาส่องกล้องไปที่โค้ดนี้ จะเปิด Talky ใน App Store";
+"invite_share" = "ส่งลิงก์";
+"invite_then" = "ติดตั้งเสร็จแล้ว เปิด Talky ทั้งสองเครื่องและอยู่ที่หน้าสำรวจ";
+"invite_message" = "มาคุยกันด้วย Talky วิทยุสื่อสารที่ใช้ได้โดยไม่ต้องมีอินเทอร์เน็ต: %@";
+"pairing_help_title" = "หาอีกเครื่องไม่เจอใช่ไหม ลองตรวจสอบ:";
+"pairing_help_step_open" = "เปิด Talky บนอีกเครื่องด้วย และอยู่ที่หน้าจอเดียวกันนี้";
+"pairing_help_step_radios" = "เปิด Wi-Fi และบลูทูธทั้งสองเครื่อง ไม่จำเป็นต้องเชื่อมต่อเครือข่าย";
+"pairing_help_step_channel" = "ใช้ช่องเดียวกันทั้งสองเครื่อง: ช่องสาธารณะ หรือรหัสผ่านส่วนตัวเดียวกัน";
+"pairing_help_step_close" = "สองเครื่องอยู่ใกล้กัน ไม่เกินประมาณ 20 เมตร สำหรับการเชื่อมต่อครั้งแรก";
+"pairing_help_step_permission" = "เปิดเครือข่ายเฉพาะที่ให้ Talky แล้ว: การตั้งค่า > Talky > เครือข่ายเฉพาะที่";
+"pairing_search_again" = "ค้นหาอีกครั้ง";
+"pairing_open_settings" = "เปิดการตั้งค่า";
+"pairing_denied_title" = "Talky ค้นหาอุปกรณ์ใกล้เคียงไม่ได้";
+"pairing_denied_body" = "สิทธิ์เครือข่ายเฉพาะที่ปิดอยู่ จึงไม่พบอุปกรณ์ใดเลย เปิดการตั้งค่า แตะ Talky แล้วเปิดเครือข่ายเฉพาะที่";
+"contact_title" = "เขียนถึงฉัน";
+"contact_subtitle" = "ผม Andrea ผู้สร้าง Talky ผมอ่านทุกข้อความและตอบเอง";
+"contact_bug" = "แจ้งปัญหา";
+"contact_idea" = "เสนอฟีเจอร์";
+"contact_chat" = "ทักทายกันสั้นๆ";
+"contact_rate" = "ให้คะแนน Talky ใน App Store";
+"contact_subject_bug" = "ปัญหา";
+"contact_subject_idea" = "ไอเดีย";
+"contact_subject_chat" = "ข้อความ";
+"contact_no_mail_title" = "ยังไม่ได้ตั้งค่าแอปอีเมล";
+"contact_no_mail_body" = "คุณเขียนถึงผมได้ที่ %@ จากแอปอีเมลใดก็ได้";
+"contact_copy_address" = "คัดลอกที่อยู่";
+"onboarding_p5_permission_note" = "Talky จะขอสิทธิ์เครือข่ายเฉพาะที่ เพื่อใช้ค้นหาอุปกรณ์ใกล้เคียง ถ้าคุณปฏิเสธ ก็เปิดได้ภายหลังที่ การตั้งค่า > Talky";

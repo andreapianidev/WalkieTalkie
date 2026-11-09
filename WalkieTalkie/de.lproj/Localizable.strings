@@ -555,3 +555,35 @@
 "live_pan_searching" = "Suche einen Empfänger, der das Spektrum sendet";
 "live_pan_missing" = "Diese Empfänger senden kein Spektrum: nur Ton";
 "live_audio_spectrum" = "Audiospektrum";
+
+/* Esplora: aiuto al collegamento, invito, Scrivimi (9/11/2026) */
+"invite_button" = "Jemanden in deiner Nähe einladen";
+"invite_hint" = "Talky funktioniert, wenn die andere Person es auch hat. Zeig ihr den Code oder schick ihr den Link.";
+"invite_title" = "Talky auf das andere Handy";
+"invite_qr_caption" = "Die andere Person richtet die Kamera auf diesen Code: Talky öffnet sich im App Store.";
+"invite_share" = "Link senden";
+"invite_then" = "Nach der Installation öffnet ihr Talky auf beiden Handys und bleibt auf Entdecken.";
+"invite_message" = "Lass uns mit Talky reden, dem Funkgerät, das ohne Internet funktioniert: %@";
+"pairing_help_title" = "Anderes Gerät nicht gefunden? Prüfe:";
+"pairing_help_step_open" = "Talky ist auch auf dem anderen Gerät geöffnet, auf diesem Bildschirm.";
+"pairing_help_step_radios" = "WLAN und Bluetooth sind auf beiden eingeschaltet. Eine Verbindung zu einem Netzwerk ist nicht nötig.";
+"pairing_help_step_channel" = "Auf beiden derselbe Kanal: der öffentliche oder dasselbe private Passwort.";
+"pairing_help_step_close" = "Die beiden Geräte sind für die erste Verbindung nah beieinander, höchstens etwa 20 Meter.";
+"pairing_help_step_permission" = "Lokales Netzwerk ist für Talky aktiv: Einstellungen > Talky > Lokales Netzwerk.";
+"pairing_search_again" = "Erneut suchen";
+"pairing_open_settings" = "Einstellungen öffnen";
+"pairing_denied_title" = "Talky kann keine Geräte in der Nähe suchen";
+"pairing_denied_body" = "Die Berechtigung Lokales Netzwerk ist aus, deshalb wird kein Gerät gefunden. Öffne die Einstellungen, tippe auf Talky und schalte Lokales Netzwerk ein.";
+"contact_title" = "Schreib mir";
+"contact_subtitle" = "Ich bin Andrea und entwickle Talky. Ich lese jede Nachricht und antworte selbst.";
+"contact_bug" = "Problem melden";
+"contact_idea" = "Funktion vorschlagen";
+"contact_chat" = "Einfach Hallo sagen";
+"contact_rate" = "Talky im App Store bewerten";
+"contact_subject_bug" = "Problem";
+"contact_subject_idea" = "Idee";
+"contact_subject_chat" = "Nachricht";
+"contact_no_mail_title" = "Keine Mail-App eingerichtet";
+"contact_no_mail_body" = "Du kannst mir mit jeder Mail-App an %@ schreiben.";
+"contact_copy_address" = "Adresse kopieren";
+"onboarding_p5_permission_note" = "Talky fragt nach der Berechtigung Lokales Netzwerk: Damit findet es Geräte in der Nähe. Lehnst du ab, kannst du sie später unter Einstellungen > Talky einschalten.";

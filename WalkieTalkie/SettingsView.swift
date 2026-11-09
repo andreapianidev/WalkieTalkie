@@ -45,6 +45,10 @@ struct SettingsView: View {
                     // non veniva mai servito. Qui è visibile subito dopo il Pro.
                     adsSection
 
+                    // Scrivimi: in alto, perche' chi ha un problema lo trovi
+                    // prima di arrivare allo Store a lasciare una stella.
+                    ContactSection()
+
                     // Personalization Section (themes + history)
                     personalizationSection
 

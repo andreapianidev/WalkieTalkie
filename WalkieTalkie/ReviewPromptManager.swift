@@ -48,7 +48,17 @@ final class ReviewPromptManager {
         static let successfulTransmissions = "review_successful_transmissions"
         static let lastPromptDate = "review_last_prompt_date"
         static let lastPromptVersion = "review_last_prompt_version"
+        static let radioListens = "review_radio_listens"
+        static let radioListenDays = "review_radio_listen_days"
     }
+
+    /// La radio la usa la maggior parte di chi installa, e il walkie solo chi
+    /// ha un secondo Talky vicino: contando solo le trasmissioni la richiesta
+    /// non arrivava quasi a nessuno. Anche qui solo dopo che ha funzionato:
+    /// tre ascolti veri (`radioListenSeconds` di fila) in almeno due giorni.
+    private let minimumRadioListens = 3
+    private let minimumRadioDays = 2
+    static let radioListenSeconds: TimeInterval = 90
 
     private let defaults = UserDefaults.standard
 
@@ -71,12 +81,36 @@ final class ReviewPromptManager {
         requestReviewIfAppropriate()
     }
 
+    /// Da chiamare quando una stazione ha suonato `radioListenSeconds` di fila.
+    func recordRadioListening() {
+        let count = defaults.integer(forKey: Keys.radioListens) + 1
+        defaults.set(count, forKey: Keys.radioListens)
+        var days = Set(defaults.stringArray(forKey: Keys.radioListenDays) ?? [])
+        days.insert(Self.dayStamp.string(from: Date()))
+        defaults.set(Array(days), forKey: Keys.radioListenDays)
+        requestReviewIfAppropriate()
+    }
+
+    private static let dayStamp: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US_POSIX")
+        f.dateFormat = "yyyy-MM-dd"
+        return f
+    }()
+
+    private var walkieWorked: Bool {
+        defaults.integer(forKey: Keys.successfulTransmissions) >= minimumSuccessfulTransmissions
+    }
+
+    private var radioWorked: Bool {
+        defaults.integer(forKey: Keys.radioListens) >= minimumRadioListens
+            && (defaults.stringArray(forKey: Keys.radioListenDays)?.count ?? 0) >= minimumRadioDays
+    }
+
     // MARK: - Decisione
 
     private var isAppropriate: Bool {
-        guard defaults.integer(forKey: Keys.successfulTransmissions) >= minimumSuccessfulTransmissions else {
-            return false
-        }
+        guard walkieWorked || radioWorked else { return false }
         // Mai due volte sulla stessa versione: se l'utente ha già visto il
         // prompt e non ha recensito, riproporglielo sulla stessa build è solo
         // fastidio.
@@ -109,7 +143,8 @@ final class ReviewPromptManager {
                 SKStoreReviewController.requestReview(in: scene)
             }
             Analytics.logEvent("review_prompt_shown", parameters: [
-                "successful_transmissions": self.defaults.integer(forKey: Keys.successfulTransmissions)
+                "successful_transmissions": self.defaults.integer(forKey: Keys.successfulTransmissions),
+                "radio_listens": self.defaults.integer(forKey: Keys.radioListens)
             ])
         }
     }

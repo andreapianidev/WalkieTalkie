@@ -556,3 +556,35 @@
 "live_pan_searching" = "スペクトラムを送る受信機を探しています";
 "live_pan_missing" = "これらの受信機はスペクトラムを送りません：音声のみ";
 "live_audio_spectrum" = "オーディオスペクトラム";
+
+/* Esplora: aiuto al collegamento, invito, Scrivimi (9/11/2026) */
+"invite_button" = "一緒にいる人を招待";
+"invite_hint" = "Talkyは相手も持っていると使えます。コードを見せるか、リンクを送ってください。";
+"invite_title" = "相手の電話にもTalkyを";
+"invite_qr_caption" = "このコードをカメラで読み取ってもらうと、App StoreのTalkyが開きます。";
+"invite_share" = "リンクを送る";
+"invite_then" = "インストールしたら、両方でTalkyを開いて「探索」の画面にしてください。";
+"invite_message" = "Talkyで話そう。インターネットなしで使えるトランシーバーです：%@";
+"pairing_help_title" = "相手のデバイスが見つかりませんか？確認してください：";
+"pairing_help_step_open" = "相手のデバイスでもTalkyが開いていて、同じこの画面になっている。";
+"pairing_help_step_radios" = "両方でWi-FiとBluetoothがオンになっている。ネットワークに接続している必要はありません。";
+"pairing_help_step_channel" = "両方とも同じチャンネル：公開チャンネル、または同じプライベートパスワード。";
+"pairing_help_step_close" = "最初の接続のときは、2台が近く、20メートルほど以内にある。";
+"pairing_help_step_permission" = "Talkyのローカルネットワークがオン：設定 > Talky > ローカルネットワーク。";
+"pairing_search_again" = "もう一度探す";
+"pairing_open_settings" = "設定を開く";
+"pairing_denied_title" = "Talkyは近くのデバイスを探せません";
+"pairing_denied_body" = "ローカルネットワークの許可がオフなので、デバイスが見つかりません。設定を開き、Talkyをタップしてローカルネットワークをオンにしてください。";
+"contact_title" = "メッセージを送る";
+"contact_subtitle" = "Talkyを作っているAndreaです。すべてのメッセージを読み、自分で返信しています。";
+"contact_bug" = "問題を報告";
+"contact_idea" = "機能を提案";
+"contact_chat" = "ひとこと送る";
+"contact_rate" = "App StoreでTalkyを評価";
+"contact_subject_bug" = "問題";
+"contact_subject_idea" = "アイデア";
+"contact_subject_chat" = "メッセージ";
+"contact_no_mail_title" = "メールアプリが設定されていません";
+"contact_no_mail_body" = "どのメールアプリからでも %@ に送れます。";
+"contact_copy_address" = "アドレスをコピー";
+"onboarding_p5_permission_note" = "Talkyはローカルネットワークの許可を求めます。近くのデバイスを見つけるために使います。許可しなかった場合も、あとで設定 > Talkyでオンにできます。";

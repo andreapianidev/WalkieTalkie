@@ -555,3 +555,35 @@
 "live_pan_searching" = "Looking for a receiver that sends the spectrum";
 "live_pan_missing" = "These receivers send no spectrum: audio only";
 "live_audio_spectrum" = "Audio spectrum";
+
+/* Esplora: aiuto al collegamento, invito, Scrivimi (9/11/2026) */
+"invite_button" = "Invite someone with you";
+"invite_hint" = "Talky works when the other person has it too. Show them the code or send them the link.";
+"invite_title" = "Get Talky on the other phone";
+"invite_qr_caption" = "Ask them to point their camera at this code: it opens Talky on the App Store.";
+"invite_share" = "Send the link";
+"invite_then" = "Once it's installed, open Talky on both phones and stay on Explore.";
+"invite_message" = "Let's talk with Talky, the walkie-talkie that works without internet: %@";
+"pairing_help_title" = "Can't find the other device? Check these:";
+"pairing_help_step_open" = "Talky is open on the other device too, on this same screen.";
+"pairing_help_step_radios" = "Wi-Fi and Bluetooth are on on both. You don't need to be connected to a network.";
+"pairing_help_step_channel" = "Same channel on both: public, or the same private password.";
+"pairing_help_step_close" = "The two devices are close, within about 20 metres, for the first connection.";
+"pairing_help_step_permission" = "Local Network is on for Talky: Settings > Talky > Local Network.";
+"pairing_search_again" = "Search again";
+"pairing_open_settings" = "Open Settings";
+"pairing_denied_title" = "Talky can't look for devices nearby";
+"pairing_denied_body" = "The Local Network permission is off, so no device can be found. Open Settings, tap Talky and turn on Local Network.";
+"contact_title" = "Write to me";
+"contact_subtitle" = "I'm Andrea and I make Talky. I read every message and reply myself.";
+"contact_bug" = "Report a problem";
+"contact_idea" = "Suggest a feature";
+"contact_chat" = "Just say hello";
+"contact_rate" = "Rate Talky on the App Store";
+"contact_subject_bug" = "problem";
+"contact_subject_idea" = "idea";
+"contact_subject_chat" = "message";
+"contact_no_mail_title" = "No mail app set up";
+"contact_no_mail_body" = "You can write to me at %@ from any mail app.";
+"contact_copy_address" = "Copy address";
+"onboarding_p5_permission_note" = "Talky will ask for the Local Network permission: it's how it finds devices nearby. If you turn it down, you can switch it on later in Settings > Talky.";

@@ -557,3 +557,35 @@
 "live_pan_searching" = "正在尋找能傳送頻譜的接收機";
 "live_pan_missing" = "這些接收機不傳送頻譜：僅有音訊";
 "live_audio_spectrum" = "音訊頻譜";
+
+/* Esplora: aiuto al collegamento, invito, Scrivimi (9/11/2026) */
+"invite_button" = "邀請身邊的人";
+"invite_hint" = "對方也裝了 Talky 才能用。給他看這個碼，或把連結傳給他。";
+"invite_title" = "在另一支手機上裝 Talky";
+"invite_qr_caption" = "請對方用相機掃描這個碼，會在 App Store 打開 Talky。";
+"invite_share" = "傳送連結";
+"invite_then" = "裝好後，兩支手機都打開 Talky，停在「探索」畫面。";
+"invite_message" = "我們用 Talky 聊吧，不用網路也能用的對講機：%@";
+"pairing_help_title" = "找不到另一台裝置？請檢查：";
+"pairing_help_step_open" = "另一台裝置上也打開了 Talky，並停在這個畫面。";
+"pairing_help_step_radios" = "兩台裝置都打開了 Wi-Fi 和藍牙。不需要連上任何網路。";
+"pairing_help_step_channel" = "兩台裝置在同一個頻道：公開頻道，或相同的私人密碼。";
+"pairing_help_step_close" = "第一次連線時，兩台裝置靠近一點，大約 20 公尺以內。";
+"pairing_help_step_permission" = "Talky 的區域網路已開啟：設定 > Talky > 區域網路。";
+"pairing_search_again" = "重新搜尋";
+"pairing_open_settings" = "打開設定";
+"pairing_denied_title" = "Talky 無法搜尋附近的裝置";
+"pairing_denied_body" = "區域網路權限已關閉，所以找不到任何裝置。打開設定，點一下 Talky，然後開啟區域網路。";
+"contact_title" = "寫信給我";
+"contact_subtitle" = "我是 Andrea，Talky 是我做的。每則訊息我都會看，並親自回覆。";
+"contact_bug" = "回報問題";
+"contact_idea" = "建議新功能";
+"contact_chat" = "隨便聊兩句";
+"contact_rate" = "在 App Store 為 Talky 評分";
+"contact_subject_bug" = "問題";
+"contact_subject_idea" = "建議";
+"contact_subject_chat" = "留言";
+"contact_no_mail_title" = "沒有設定郵件 App";
+"contact_no_mail_body" = "你可以用任何郵件 App 寫信到 %@。";
+"contact_copy_address" = "複製地址";
+"onboarding_p5_permission_note" = "Talky 會要求區域網路權限，用來尋找附近的裝置。如果你拒絕了，之後也可以在 設定 > Talky 中開啟。";

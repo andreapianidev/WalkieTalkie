@@ -56,6 +56,7 @@ struct OnboardingStrings {
     static let p5Step1 = NSLocalizedString("onboarding_p5_step1", comment: "Page 5 step 1")
     static let p5Step2 = NSLocalizedString("onboarding_p5_step2", comment: "Page 5 step 2")
     static let p5Step3 = NSLocalizedString("onboarding_p5_step3", comment: "Page 5 step 3")
+    static let p5PermissionNote = NSLocalizedString("onboarding_p5_permission_note", comment: "Page 5: neutral explanation of the Local Network permission")
 
     // MARK: - Permissions sheet
     static let permissionsTitle = NSLocalizedString("onboarding_permissions_title", comment: "Permissions title")

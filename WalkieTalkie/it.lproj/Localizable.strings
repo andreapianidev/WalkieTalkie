@@ -555,3 +555,35 @@
 "live_pan_searching" = "Cerco un ricevitore che mandi lo spettro";
 "live_pan_missing" = "Questi ricevitori non mandano lo spettro: solo audio";
 "live_audio_spectrum" = "Spettro audio";
+
+/* Esplora: aiuto al collegamento, invito, Scrivimi (9/11/2026) */
+"invite_button" = "Invita chi è con te";
+"invite_hint" = "Talky funziona se ce l'ha anche l'altro. Fagli vedere il codice o mandagli il link.";
+"invite_title" = "Talky anche sull'altro telefono";
+"invite_qr_caption" = "Chiedigli di inquadrare questo codice con la fotocamera: apre Talky sull'App Store.";
+"invite_share" = "Manda il link";
+"invite_then" = "Quando l'ha installata, aprite Talky su tutti e due e restate su Esplora.";
+"invite_message" = "Parliamo con Talky, il walkie-talkie che funziona senza internet: %@";
+"pairing_help_title" = "Non trovi l'altro dispositivo? Controlla:";
+"pairing_help_step_open" = "Talky è aperta anche sull'altro dispositivo, su questa stessa schermata.";
+"pairing_help_step_radios" = "Wi-Fi e Bluetooth sono accesi su tutti e due. Non serve essere collegati a una rete.";
+"pairing_help_step_channel" = "Stesso canale su tutti e due: il pubblico, oppure la stessa password privata.";
+"pairing_help_step_close" = "I due dispositivi sono vicini, entro una ventina di metri, per il primo collegamento.";
+"pairing_help_step_permission" = "Rete locale è attiva per Talky: Impostazioni > Talky > Rete locale.";
+"pairing_search_again" = "Cerca di nuovo";
+"pairing_open_settings" = "Apri Impostazioni";
+"pairing_denied_title" = "Talky non può cercare i dispositivi vicini";
+"pairing_denied_body" = "Il permesso Rete locale è spento, quindi non si trova nessun dispositivo. Apri Impostazioni, tocca Talky e accendi Rete locale.";
+"contact_title" = "Scrivimi";
+"contact_subtitle" = "Sono Andrea, faccio io Talky. Leggo ogni messaggio e rispondo di persona.";
+"contact_bug" = "Segnala un problema";
+"contact_idea" = "Proponi una funzione";
+"contact_chat" = "Scrivimi due righe";
+"contact_rate" = "Valuta Talky sull'App Store";
+"contact_subject_bug" = "problema";
+"contact_subject_idea" = "idea";
+"contact_subject_chat" = "messaggio";
+"contact_no_mail_title" = "Nessuna app di posta impostata";
+"contact_no_mail_body" = "Puoi scrivermi a %@ da qualsiasi app di posta.";
+"contact_copy_address" = "Copia indirizzo";
+"onboarding_p5_permission_note" = "Talky ti chiederà il permesso Rete locale: serve per trovare i dispositivi vicini. Se lo neghi, puoi attivarlo più tardi in Impostazioni > Talky.";

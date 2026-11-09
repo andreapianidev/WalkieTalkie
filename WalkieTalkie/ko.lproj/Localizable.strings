@@ -556,3 +556,35 @@
 "live_pan_searching" = "스펙트럼을 보내는 수신기를 찾는 중";
 "live_pan_missing" = "이 수신기들은 스펙트럼을 보내지 않습니다: 오디오만";
 "live_audio_spectrum" = "오디오 스펙트럼";
+
+/* Esplora: aiuto al collegamento, invito, Scrivimi (9/11/2026) */
+"invite_button" = "함께 있는 사람 초대";
+"invite_hint" = "Talky는 상대방도 있어야 작동합니다. 코드를 보여주거나 링크를 보내세요.";
+"invite_title" = "다른 휴대폰에도 Talky를";
+"invite_qr_caption" = "이 코드를 카메라로 비추게 하면 App Store의 Talky가 열립니다.";
+"invite_share" = "링크 보내기";
+"invite_then" = "설치가 끝나면 두 휴대폰 모두에서 Talky를 열고 탐색 화면에 두세요.";
+"invite_message" = "인터넷 없이 되는 무전기 Talky로 이야기해요: %@";
+"pairing_help_title" = "다른 기기를 찾을 수 없나요? 확인하세요:";
+"pairing_help_step_open" = "다른 기기에서도 Talky가 열려 있고 같은 이 화면에 있습니다.";
+"pairing_help_step_radios" = "두 기기 모두 Wi-Fi와 Bluetooth가 켜져 있습니다. 네트워크에 연결되어 있을 필요는 없습니다.";
+"pairing_help_step_channel" = "두 기기 모두 같은 채널: 공개 채널 또는 같은 비공개 비밀번호.";
+"pairing_help_step_close" = "처음 연결할 때는 두 기기가 20미터 정도 이내로 가까이 있습니다.";
+"pairing_help_step_permission" = "Talky의 로컬 네트워크가 켜져 있습니다: 설정 > Talky > 로컬 네트워크.";
+"pairing_search_again" = "다시 찾기";
+"pairing_open_settings" = "설정 열기";
+"pairing_denied_title" = "Talky가 주변 기기를 찾을 수 없습니다";
+"pairing_denied_body" = "로컬 네트워크 권한이 꺼져 있어 기기를 찾을 수 없습니다. 설정을 열고 Talky를 탭한 다음 로컬 네트워크를 켜세요.";
+"contact_title" = "저에게 연락하기";
+"contact_subtitle" = "Talky를 만드는 Andrea입니다. 모든 메시지를 읽고 직접 답장합니다.";
+"contact_bug" = "문제 신고";
+"contact_idea" = "기능 제안";
+"contact_chat" = "한마디 보내기";
+"contact_rate" = "App Store에서 Talky 평가";
+"contact_subject_bug" = "문제";
+"contact_subject_idea" = "아이디어";
+"contact_subject_chat" = "메시지";
+"contact_no_mail_title" = "설정된 메일 앱이 없습니다";
+"contact_no_mail_body" = "어떤 메일 앱에서든 %@ 로 보내실 수 있습니다.";
+"contact_copy_address" = "주소 복사";
+"onboarding_p5_permission_note" = "Talky는 로컬 네트워크 권한을 요청합니다. 주변 기기를 찾는 데 쓰입니다. 거부하더라도 나중에 설정 > Talky에서 켤 수 있습니다.";

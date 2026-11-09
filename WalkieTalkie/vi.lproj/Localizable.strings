@@ -555,3 +555,35 @@
 "live_pan_searching" = "Đang tìm máy thu gửi được phổ tần";
 "live_pan_missing" = "Các máy thu này không gửi phổ tần: chỉ có âm thanh";
 "live_audio_spectrum" = "Phổ âm thanh";
+
+/* Esplora: aiuto al collegamento, invito, Scrivimi (9/11/2026) */
+"invite_button" = "Mời người đang ở cùng bạn";
+"invite_hint" = "Talky hoạt động khi người kia cũng có ứng dụng. Cho họ xem mã hoặc gửi liên kết.";
+"invite_title" = "Cài Talky trên điện thoại kia";
+"invite_qr_caption" = "Nhờ họ hướng camera vào mã này: Talky sẽ mở trên App Store.";
+"invite_share" = "Gửi liên kết";
+"invite_then" = "Cài xong, hãy mở Talky trên cả hai máy và ở lại màn hình Khám phá.";
+"invite_message" = "Mình nói chuyện bằng Talky nhé, bộ đàm dùng được không cần internet: %@";
+"pairing_help_title" = "Không tìm thấy thiết bị kia? Hãy kiểm tra:";
+"pairing_help_step_open" = "Talky cũng đang mở trên thiết bị kia, ở chính màn hình này.";
+"pairing_help_step_radios" = "Wi-Fi và Bluetooth đều bật trên cả hai. Không cần kết nối vào mạng nào.";
+"pairing_help_step_channel" = "Cùng một kênh trên cả hai: kênh công khai hoặc cùng mật khẩu riêng.";
+"pairing_help_step_close" = "Hai thiết bị ở gần nhau, trong khoảng 20 mét, cho lần kết nối đầu tiên.";
+"pairing_help_step_permission" = "Mạng cục bộ đã bật cho Talky: Cài đặt > Talky > Mạng cục bộ.";
+"pairing_search_again" = "Tìm lại";
+"pairing_open_settings" = "Mở Cài đặt";
+"pairing_denied_title" = "Talky không thể tìm thiết bị ở gần";
+"pairing_denied_body" = "Quyền Mạng cục bộ đang tắt nên không tìm thấy thiết bị nào. Mở Cài đặt, chạm vào Talky và bật Mạng cục bộ.";
+"contact_title" = "Viết cho tôi";
+"contact_subtitle" = "Tôi là Andrea, người làm Talky. Tôi đọc mọi tin nhắn và tự trả lời.";
+"contact_bug" = "Báo lỗi";
+"contact_idea" = "Đề xuất tính năng";
+"contact_chat" = "Gửi đôi lời";
+"contact_rate" = "Đánh giá Talky trên App Store";
+"contact_subject_bug" = "lỗi";
+"contact_subject_idea" = "ý tưởng";
+"contact_subject_chat" = "tin nhắn";
+"contact_no_mail_title" = "Chưa thiết lập ứng dụng mail";
+"contact_no_mail_body" = "Bạn có thể viết cho tôi tại %@ từ bất kỳ ứng dụng mail nào.";
+"contact_copy_address" = "Sao chép địa chỉ";
+"onboarding_p5_permission_note" = "Talky sẽ xin quyền Mạng cục bộ: đó là cách ứng dụng tìm các thiết bị ở gần. Nếu bạn từ chối, có thể bật lại sau trong Cài đặt > Talky.";

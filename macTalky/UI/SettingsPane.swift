@@ -222,6 +222,27 @@ struct SettingsPane: View {
 
     // MARK: - About
 
+    /// Mail verso Andrea con versione, sistema e modello in fondo: chi segnala
+    /// un problema non deve sapere quali dati servono, e non si chiedono dopo.
+    private static func mailURL(topic: String) -> URL {
+        let info = Bundle.main.infoDictionary
+        let version = "\(info?["CFBundleShortVersionString"] as? String ?? "?") (\(info?["CFBundleVersion"] as? String ?? "?"))"
+        var size = 0
+        sysctlbyname("hw.model", nil, &size, nil, 0)
+        var model = [CChar](repeating: 0, count: max(size, 1))
+        sysctlbyname("hw.model", &model, &size, nil, 0)
+        let os = ProcessInfo.processInfo.operatingSystemVersionString
+        let lang = Locale.preferredLanguages.first ?? "?"
+        var c = URLComponents()
+        c.scheme = "mailto"
+        c.path = "andreapiani.dev@gmail.com"
+        c.queryItems = [
+            URLQueryItem(name: "subject", value: "Talky Mac \(version): \(topic)"),
+            URLQueryItem(name: "body", value: "\n\n\n---\nTalky Mac \(version) · macOS \(os) · \(String(cString: model)) · \(lang)")
+        ]
+        return c.url ?? URL(string: "mailto:andreapiani.dev@gmail.com")!
+    }
+
     private var aboutTab: some View {
         Form {
             Section("macTalky") {
@@ -229,6 +250,15 @@ struct SettingsPane: View {
                     Text("\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0") (\(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"))")
                 }
                 LabeledContent("Protocol") { Text("TALKY1 · Bonjour + TCP · PCM 48 kHz") }
+            }
+            Section("Write to me") {
+                Text("I'm Andrea and I make Talky. I read every message and reply myself.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Link("Report a problem", destination: Self.mailURL(topic: "problem"))
+                Link("Suggest a feature", destination: Self.mailURL(topic: "idea"))
+                Link("Just say hello", destination: Self.mailURL(topic: "message"))
+                Link("Rate Talky on the App Store", destination: URL(string: "macappstore://apps.apple.com/app/id6748584483?action=write-review")!)
             }
             Section("Links") {
                 Link("Talky for iPhone & iPad", destination: URL(string: "https://apps.apple.com/app/id6748584483")!)

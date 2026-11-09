@@ -579,6 +579,19 @@ private struct OnboardingStepsPage: View {
                 StepRow(index: 3, text: OnboardingStrings.p5Step3)
             }
             .padding(.horizontal, 32)
+
+            // Spiega il permesso Rete locale senza spingere verso il si'
+            // (5.1.1(iv)): chi lo nega per sfiducia deve sapere dove riaccenderlo,
+            // altrimenti non trova nessuno e pensa che l'app non funzioni.
+            HStack(alignment: .top, spacing: 10) {
+                Image(systemName: "network")
+                    .font(.footnote)
+                Text(OnboardingStrings.p5PermissionNote)
+                    .font(.footnote)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
+            .padding(.horizontal, 32)
         }
         .padding()
     }

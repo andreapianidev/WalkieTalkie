@@ -106,6 +106,8 @@ class RadioManager: NSObject, ObservableObject {
     static let shared = RadioManager()
     
     private var radioPlayer: AVPlayer?
+    /// Controllo "ascolto vero" in sospeso, vedi `scheduleListenCheck`.
+    private var listenCheck: DispatchWorkItem?
     private let logger = Logger.shared
     private let firebaseManager = FirebaseManager.shared
     
@@ -1203,6 +1205,19 @@ class RadioManager: NSObject, ObservableObject {
         }
     }
     
+    /// Un ascolto conta per la richiesta di recensione solo se la stessa
+    /// stazione suona ancora dopo `radioListenSeconds`: chi cambia stazione
+    /// o trova un flusso che non parte non ha visto la radio funzionare.
+    private func scheduleListenCheck(stationID: Int) {
+        listenCheck?.cancel()
+        let check = DispatchWorkItem { [weak self] in
+            guard let self, self.isPlaying, self.currentStation?.id == stationID else { return }
+            ReviewPromptManager.shared.recordRadioListening()
+        }
+        listenCheck = check
+        DispatchQueue.main.asyncAfter(deadline: .now() + ReviewPromptManager.radioListenSeconds, execute: check)
+    }
+
     // MARK: - KVO Observer
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -1217,7 +1232,10 @@ class RadioManager: NSObject, ObservableObject {
                 case .playing:
                     self.isBuffering = false
                     self.isPlaying = true
-                    if let id = self.currentStation?.id { StationHealth.shared.played(id) }
+                    if let id = self.currentStation?.id {
+                        StationHealth.shared.played(id)
+                        self.scheduleListenCheck(stationID: id)
+                    }
                     self.lastError = nil
                     if let station = self.currentStation {
                         self.startOrUpdateLiveActivity(for: station)

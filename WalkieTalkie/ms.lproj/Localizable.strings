@@ -557,3 +557,35 @@
 "live_pan_searching" = "Mencari penerima yang menghantar spektrum";
 "live_pan_missing" = "Penerima ini tidak menghantar spektrum: audio sahaja";
 "live_audio_spectrum" = "Spektrum audio";
+
+/* Esplora: aiuto al collegamento, invito, Scrivimi (9/11/2026) */
+"invite_button" = "Jemput orang bersama anda";
+"invite_hint" = "Talky berfungsi apabila orang lain juga memilikinya. Tunjukkan kod atau hantar pautan.";
+"invite_title" = "Talky pada telefon yang lain";
+"invite_qr_caption" = "Minta dia halakan kamera ke kod ini: ia membuka Talky di App Store.";
+"invite_share" = "Hantar pautan";
+"invite_then" = "Selepas dipasang, buka Talky pada kedua-dua telefon dan kekal di Teroka.";
+"invite_message" = "Jom bercakap dengan Talky, walkie-talkie yang berfungsi tanpa internet: %@";
+"pairing_help_title" = "Tidak jumpa peranti yang lain? Semak:";
+"pairing_help_step_open" = "Talky juga dibuka pada peranti yang lain, pada skrin yang sama ini.";
+"pairing_help_step_radios" = "Wi-Fi dan Bluetooth dihidupkan pada kedua-duanya. Tidak perlu bersambung ke rangkaian.";
+"pairing_help_step_channel" = "Saluran yang sama pada kedua-duanya: awam, atau kata laluan peribadi yang sama.";
+"pairing_help_step_close" = "Kedua-dua peranti berdekatan, dalam lingkungan 20 meter, untuk sambungan pertama.";
+"pairing_help_step_permission" = "Rangkaian Setempat dihidupkan untuk Talky: Seting > Talky > Rangkaian Setempat.";
+"pairing_search_again" = "Cari semula";
+"pairing_open_settings" = "Buka Seting";
+"pairing_denied_title" = "Talky tidak dapat mencari peranti berdekatan";
+"pairing_denied_body" = "Kebenaran Rangkaian Setempat dimatikan, jadi tiada peranti ditemui. Buka Seting, ketik Talky dan hidupkan Rangkaian Setempat.";
+"contact_title" = "Tulis kepada saya";
+"contact_subtitle" = "Saya Andrea, pembuat Talky. Saya membaca setiap mesej dan membalas sendiri.";
+"contact_bug" = "Laporkan masalah";
+"contact_idea" = "Cadangkan ciri";
+"contact_chat" = "Sekadar bertegur sapa";
+"contact_rate" = "Nilai Talky di App Store";
+"contact_subject_bug" = "masalah";
+"contact_subject_idea" = "idea";
+"contact_subject_chat" = "mesej";
+"contact_no_mail_title" = "Tiada aplikasi e-mel disediakan";
+"contact_no_mail_body" = "Anda boleh menulis kepada saya di %@ dari mana-mana aplikasi e-mel.";
+"contact_copy_address" = "Salin alamat";
+"onboarding_p5_permission_note" = "Talky akan meminta kebenaran Rangkaian Setempat: itulah cara ia mencari peranti berdekatan. Jika anda menolak, anda boleh menghidupkannya kemudian di Seting > Talky.";

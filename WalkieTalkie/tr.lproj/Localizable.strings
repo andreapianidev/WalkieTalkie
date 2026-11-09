@@ -555,3 +555,35 @@
 "live_pan_searching" = "Spektrum gönderen bir alıcı aranıyor";
 "live_pan_missing" = "Bu alıcılar spektrum göndermiyor: yalnızca ses";
 "live_audio_spectrum" = "Ses spektrumu";
+
+/* Esplora: aiuto al collegamento, invito, Scrivimi (9/11/2026) */
+"invite_button" = "Yanındaki kişiyi davet et";
+"invite_hint" = "Talky, karşı tarafta da yüklüyse çalışır. Kodu göster ya da bağlantıyı gönder.";
+"invite_title" = "Diğer telefona da Talky";
+"invite_qr_caption" = "Kameranı bu koda tutmasını iste: App Store'da Talky açılır.";
+"invite_share" = "Bağlantıyı gönder";
+"invite_then" = "Yüklendikten sonra Talky'yi iki telefonda da açın ve Keşfet ekranında kalın.";
+"invite_message" = "Talky ile konuşalım, internetsiz çalışan telsiz: %@";
+"pairing_help_title" = "Diğer cihazı bulamıyor musun? Kontrol et:";
+"pairing_help_step_open" = "Talky diğer cihazda da açık ve aynı bu ekranda.";
+"pairing_help_step_radios" = "İkisinde de Wi-Fi ve Bluetooth açık. Bir ağa bağlı olmak gerekmez.";
+"pairing_help_step_channel" = "İkisinde de aynı kanal: genel kanal ya da aynı özel şifre.";
+"pairing_help_step_close" = "İlk bağlantı için iki cihaz yakın, en fazla 20 metre kadar.";
+"pairing_help_step_permission" = "Talky için Yerel Ağ açık: Ayarlar > Talky > Yerel Ağ.";
+"pairing_search_again" = "Yeniden ara";
+"pairing_open_settings" = "Ayarlar'ı aç";
+"pairing_denied_title" = "Talky yakındaki cihazları arayamıyor";
+"pairing_denied_body" = "Yerel Ağ izni kapalı, bu yüzden hiçbir cihaz bulunamıyor. Ayarlar'ı aç, Talky'ye dokun ve Yerel Ağ'ı aç.";
+"contact_title" = "Bana yaz";
+"contact_subtitle" = "Ben Andrea, Talky'yi ben yapıyorum. Her mesajı okur ve kendim yanıtlarım.";
+"contact_bug" = "Sorun bildir";
+"contact_idea" = "Özellik öner";
+"contact_chat" = "Birkaç satır yaz";
+"contact_rate" = "App Store'da Talky'yi değerlendir";
+"contact_subject_bug" = "sorun";
+"contact_subject_idea" = "fikir";
+"contact_subject_chat" = "mesaj";
+"contact_no_mail_title" = "Ayarlanmış e-posta uygulaması yok";
+"contact_no_mail_body" = "Herhangi bir e-posta uygulamasından %@ adresine yazabilirsin.";
+"contact_copy_address" = "Adresi kopyala";
+"onboarding_p5_permission_note" = "Talky, Yerel Ağ iznini isteyecek: yakındaki cihazları bu sayede bulur. Reddedersen daha sonra Ayarlar > Talky bölümünden açabilirsin.";
