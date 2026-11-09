@@ -497,7 +497,7 @@ class RadioManager: NSObject, ObservableObject {
         // Reggae
         RadioStation(id: 247, name: "Reggae Chill Cafe", country: "Canada", frequency: "—", streamURL: "https://maggie.torontocast.com:2020/stream/reggaechillcafe", genre: "Reggae", isPro: false),
         // Sport
-        RadioStation(id: 248, name: "RMC Sport", country: "Francia", frequency: "—", streamURL: "https://audio.bfmtv.com/rmcradio_128.mp3", genre: "Sport", isPro: false),
+        RadioStation(id: 248, name: "Nostalgie", country: "Francia", frequency: "—", streamURL: "https://streaming.nrjaudio.fm/oug7girb92oc", genre: "Pop", isPro: false),
         // Latin
         RadioStation(id: 249, name: "Rumba 98.1", country: "Venezuela", frequency: "98.1", streamURL: "https://cast20.plugstreaming.com:2020/stream/r981/", genre: "Latin", isPro: false),
 
@@ -599,15 +599,15 @@ class RadioManager: NSObject, ObservableObject {
         RadioStation(id: 331, name: "Gold", country: "UK", frequency: "—", streamURL: "https://media-ssl.musicradio.com/GoldMP3", genre: "Oldies", isPro: false),
         RadioStation(id: 332, name: "SomaFM Groove Salad", country: "USA", frequency: "—", streamURL: "https://ice5.somafm.com/groovesalad-128-mp3", genre: "Electronic", isPro: false),
         RadioStation(id: 333, name: "SomaFM Secret Agent", country: "USA", frequency: "—", streamURL: "https://ice6.somafm.com/secretagent-128-mp3", genre: "Easy", isPro: false),
-        RadioStation(id: 334, name: "Kiss FM Romania", country: "Romania", frequency: "—", streamURL: "https://live.kissfm.ro/kissfm.aacp", genre: "Dance", isPro: false),
+        RadioStation(id: 334, name: "Virgin Radio Romania", country: "Romania", frequency: "—", streamURL: "https://astreaming.edi.ro:8443/VirginRadio_aac", genre: "Dance", isPro: false),
 
         // MARK: - Pro aggiuntive (maggio 2026) — nicchia / specializzate verificate via radio-browser + curl
         RadioStation(id: 335, name: "SomaFM Space Station", country: "USA", frequency: "—", streamURL: "https://ice5.somafm.com/spacestation-128-aac", genre: "Electronic", isPro: true),
         RadioStation(id: 336, name: "SomaFM Underground 80s", country: "USA", frequency: "—", streamURL: "https://ice6.somafm.com/u80s-128-mp3", genre: "80s", isPro: true),
         RadioStation(id: 337, name: "SomaFM Indie Pop Rocks", country: "USA", frequency: "—", streamURL: "https://ice6.somafm.com/indiepop-128-aac", genre: "Alternative", isPro: true),
         RadioStation(id: 338, name: "SomaFM PopTron", country: "USA", frequency: "—", streamURL: "https://ice2.somafm.com/poptron-128-mp3", genre: "Electronic", isPro: true),
-        RadioStation(id: 339, name: "REYFM Original", country: "Germania", frequency: "—", streamURL: "https://listen.reyfm.de/original_192kbps.mp3", genre: "Dance", isPro: true),
-        RadioStation(id: 340, name: "EuroDance 90", country: "Francia", frequency: "—", streamURL: "https://stream-eurodance90.fr/radio/8000/128.mp3", genre: "Dance", isPro: true),
+        RadioStation(id: 339, name: "REYFM Houseparty", country: "Germania", frequency: "—", streamURL: "https://listen.reyfm.de/houseparty_192kbps.mp3", genre: "Dance", isPro: true),
+        RadioStation(id: 340, name: "Nostalgie Dance 90", country: "Francia", frequency: "—", streamURL: "https://stream.rcs.revma.com/54xm7543ehuvv", genre: "Dance", isPro: true),
         RadioStation(id: 341, name: "Radio Mirchi", country: "India", frequency: "—", streamURL: "https://eu8.fastcast4u.com/proxy/clyedupq/stream", genre: "Bollywood", isPro: true),
         RadioStation(id: 342, name: "Funky Radio", country: "USA", frequency: "—", streamURL: "https://funkyradio.streamingmedia.it/play.mp3", genre: "Urban", isPro: true),
         RadioStation(id: 343, name: "ABC Lounge Radio", country: "Francia", frequency: "—", streamURL: "https://str1.openstream.co/589", genre: "Jazz", isPro: true)
