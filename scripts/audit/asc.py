@@ -27,13 +27,18 @@ def _config():
 
 
 def _get(path):
+    return _send("GET", path)
+
+
+def _send(metodo, path, corpo=None):
     cfg = _config()
     key = Path(cfg["ASC_PRIVATE_KEY_PATH"]).expanduser().read_text()
     now = int(time.time())
     tok = jwt.encode({"iss": cfg["ASC_ISSUER_ID"], "iat": now, "exp": now + 600, "aud": "appstoreconnect-v1"},
                      key, algorithm="ES256", headers={"kid": cfg["ASC_KEY_ID"], "typ": "JWT"})
-    req = urllib.request.Request("https://api.appstoreconnect.apple.com" + path,
-                                 headers={"Authorization": "Bearer " + tok})
+    dati = json.dumps(corpo).encode() if corpo is not None else None
+    req = urllib.request.Request("https://api.appstoreconnect.apple.com" + path, data=dati, method=metodo,
+                                 headers={"Authorization": "Bearer " + tok, "Content-Type": "application/json"})
     return json.load(urllib.request.urlopen(req, timeout=30))
 
 

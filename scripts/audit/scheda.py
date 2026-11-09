@@ -90,7 +90,9 @@ def controlla(piattaforma):
             # sono almeno quelle: si segnala solo un numero piu' alto del vero.
             if int(n) > n_vere:
                 err(f"{etichetta}: promette {n} stazioni, nell'app sono {n_vere}")
-        if "—" in testo or "–" in testo:
+        if not loc.startswith("en") and ("auto-renews" in desc or "Payment is charged" in desc):
+            err(f"{etichetta}: il paragrafo sul rinnovo dell'abbonamento e' rimasto in inglese")
+        if "\u2014" in testo or "\u2013" in testo:
             err(f"{etichetta}: lineetta lunga o media nel testo")
         if "immaginet s" in testo:
             err(f"{etichetta}: 'Immaginet Srl' nel testo")

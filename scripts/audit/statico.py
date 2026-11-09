@@ -120,7 +120,7 @@ def controlla_testi_visibili():
         for n, riga in enumerate(testo.splitlines(), 1):
             if riga.lstrip().startswith(("//", "/*", "<!--")):
                 continue
-            if "—" in riga or "–" in riga:
+            if "\u2014" in riga or "\u2013" in riga:
                 err(f"{p.relative_to(ROOT)}:{n}: lineetta lunga o media in un testo visibile")
             if re.search(r"immaginet\s*s\.?r\.?l", riga, re.I):
                 err(f"{p.relative_to(ROOT)}:{n}: 'Immaginet Srl' in un testo visibile")
