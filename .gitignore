@@ -22,3 +22,4 @@ xcuserdata/
 problemi giugno 2026
 *.private
 notes-private/
+__pycache__/
