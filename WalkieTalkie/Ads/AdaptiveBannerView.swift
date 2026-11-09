@@ -3,9 +3,12 @@ import GoogleMobileAds
 
 struct AdaptiveBannerView: View {
     @EnvironmentObject private var adManager: AdManager
+    // Osservato, non letto dal singleton: letto e basta, dopo l'acquisto del
+    // Pro il banner restava finche' la schermata non si ridisegnava per altro.
+    @ObservedObject private var iapManager = IAPManager.shared
 
     var body: some View {
-        if AdConfig.isBannerConfigured, !IAPManager.shared.isProUser, !adManager.adsRemoved, adManager.isInitialized {
+        if AdConfig.isBannerConfigured, !iapManager.isProUser, !adManager.adsRemoved, adManager.isInitialized {
             // La larghezza e' quella del contenitore, non dello schermo: sul Duo
             // cambia aprendo e chiudendo, su iPad la colonna e' piu' stretta.
             // Cambiata la larghezza, il banner si ricrea con la misura giusta.

@@ -30,9 +30,9 @@ struct RewardAdCTAView: View {
 
     @State private var didLogImpression = false
 
-    private var isProUser: Bool {
-        UserDefaults.standard.bool(forKey: "fastboot_isProUser")
-    }
+    // @AppStorage e non una lettura secca: cosi' l'invito al video sparisce
+    // appena il Pro viene registrato, senza aspettare un ridisegno.
+    @AppStorage("fastboot_isProUser") private var isProUser = false
 
     /// Visibile solo a chi può davvero approfittarne: utente Free senza un reward
     /// già in corso.

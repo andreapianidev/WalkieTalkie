@@ -36,10 +36,10 @@ struct StationBrowserSheet: View {
         }
     }
 
-    // Pro flag letto da UserDefaults: stesso meccanismo usato in RadioManager.playStation.
-    private var isProUser: Bool {
-        UserDefaults.standard.bool(forKey: "fastboot_isProUser")
-    }
+    // Pro flag da UserDefaults, come in RadioManager.playStation, ma osservato:
+    // chi compra dal paywall aperto qui sopra deve vedere i lucchetti sparire
+    // subito, non alla prossima apertura dell'elenco.
+    @AppStorage("fastboot_isProUser") private var isProUser = false
 
     var body: some View {
         TalkyNavigation {

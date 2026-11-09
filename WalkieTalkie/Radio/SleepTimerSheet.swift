@@ -18,9 +18,7 @@ struct SleepTimerSheet: View {
     // TODO: usare ThemeManager.shared.currentTheme.accentColor quando disponibile
     private let accent: Color = .yellow
 
-    private var isPro: Bool {
-        UserDefaults.standard.bool(forKey: "fastboot_isProUser")
-    }
+    @AppStorage("fastboot_isProUser") private var isPro = false
 
     init(onUnlockTap: @escaping () -> Void = {}) {
         self.onUnlockTap = onUnlockTap
