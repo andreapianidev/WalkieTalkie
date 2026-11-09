@@ -66,6 +66,13 @@ struct ContentView: View {
     /// arrivano dai widget e accendono la banda gia' sintonizzata.
     private func openFromWidget(_ url: URL) {
         guard url.scheme == "talky" else { return }
+        // talky://room/K7P2QX9A, dal link d'invito a una stanza privata.
+        if url.host?.lowercased() == "room" {
+            guard let room = TalkyRoom(code: url.lastPathComponent) else { return }
+            section = .live
+            LiveRadio.shared.joinRoom(room)
+            return
+        }
         guard url.host?.lowercased() == "live" else {
             showPaywall = !iap.isProUser
             return

@@ -604,3 +604,15 @@
 "mumble_rules_body" = "No POC você fala em canais públicos com pessoas que não conhece, em servidores administrados por outros. Insultos, ameaças, conteúdo sexual, ódio e spam não são permitidos: quem usa é silenciado e denunciado, e o servidor pode bani-lo. Silencie ou denuncie quem incomodar em Segurança, abaixo do botão de falar.";
 "mumble_rules_name" = "Seu nome nos canais";
 "mumble_rules_accept" = "Aceito, quero falar";
+
+/* Stanze private, 4.0 */
+"room_header" = "Salas privadas";
+"room_create" = "Abrir uma sala";
+"room_join" = "Entrar";
+"room_rejoin" = "Voltar para %@";
+"room_leave" = "Sair da sala";
+"room_invite" = "Convidar";
+"room_code_wrong" = "O código tem 8 caracteres, por exemplo K7P2-QX9A";
+"room_footer" = "Uma sala só você e quem tem o código ouvem, mesmo de longe: precisa de internet. Abrir é do Talky Pro, entrar com um convite é grátis.";
+"room_invite_text" = "Vamos conversar no Talky! Entre na minha sala com o código %@: %@ . Se você não tem o Talky: %@";
+"live_pro_room_message" = "Abrir uma sala privada é um recurso do Talky Pro. Quem você convidar entra de graça.";

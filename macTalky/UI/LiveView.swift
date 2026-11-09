@@ -24,6 +24,7 @@ struct LiveView: View {
                 VStack(spacing: 16) {
                     display
                     controls
+                    if band == .poc { LiveTalkPanel() }
                     Spacer(minLength: 0)
                     footnote
                 }
@@ -96,6 +97,7 @@ struct LiveView: View {
                             }
                         }
                     } else {
+                        LiveRoomsList(showPaywall: $showPaywall)
                         if live.pocChannels.isEmpty {
                             HStack(spacing: 8) {
                                 if live.isScouting { ProgressView().controlSize(.small) }

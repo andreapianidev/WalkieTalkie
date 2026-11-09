@@ -34,7 +34,11 @@ struct POCTalkControls: View {
                     }
                     .foregroundColor(.orange)
                 }
-                moderationMenu
+                if let room = live.room {
+                    POCRoomBadge(room: room)
+                } else {
+                    moderationMenu
+                }
             }
         }
         .sheet(isPresented: $showRules) { POCRulesSheet() }
@@ -153,5 +157,96 @@ struct POCRulesSheet: View {
             }
         }
         .presentationDetents([.medium, .large])
+    }
+}
+
+/// Le stanze private nella lista del POC: aprirne una, entrare con un
+/// codice, rientrare nell'ultima, invitare.
+@available(iOS 16.0, *)
+struct POCRoomsSection: View {
+    @ObservedObject var live = LiveRadio.shared
+    let done: () -> Void
+    @State private var typed = ""
+    @State private var wrong = false
+
+    var body: some View {
+        Section {
+            if let room = live.room {
+                HStack {
+                    Label(room.display, systemImage: "lock.fill")
+                        .font(.body.monospaced())
+                    Spacer()
+                    ShareLink(item: POCRoomInvite.text(room)) {
+                        Label("room_invite".localized, systemImage: "square.and.arrow.up")
+                    }
+                }
+                Button("room_leave".localized, role: .destructive) { live.leaveRoom() }
+            } else {
+                Button {
+                    // Senza Pro chiude la lista: la proposta compare sulla schermata.
+                    live.createRoom()
+                    done()
+                } label: {
+                    Label("room_create".localized, systemImage: "plus.circle")
+                }
+                HStack {
+                    TextField("K7P2-QX9A", text: $typed)
+                        .textInputAutocapitalization(.characters)
+                        .autocorrectionDisabled()
+                        .font(.body.monospaced())
+                        .onSubmit(join)
+                    Button("room_join".localized, action: join)
+                        .disabled(typed.isEmpty)
+                }
+                if let last = live.lastRoom {
+                    Button(String(format: "room_rejoin".localized, last.display)) {
+                        live.joinRoom(last)
+                        done()
+                    }
+                }
+            }
+        } header: {
+            Text("room_header".localized)
+        } footer: {
+            Text((wrong ? "room_code_wrong" : "room_footer").localized)
+                .foregroundColor(wrong ? .red : .secondary)
+        }
+    }
+
+    private func join() {
+        guard let room = TalkyRoom(code: typed) else {
+            wrong = true
+            return
+        }
+        wrong = false
+        live.joinRoom(room)
+        done()
+    }
+}
+
+/// La riga della stanza sotto il tasto per parlare: codice e invito a portata.
+@available(iOS 16.0, *)
+struct POCRoomBadge: View {
+    let room: TalkyRoom
+
+    var body: some View {
+        HStack(spacing: 10) {
+            Label(room.display, systemImage: "lock.fill")
+                .font(.caption.monospaced())
+            ShareLink(item: POCRoomInvite.text(room)) {
+                Label("room_invite".localized, systemImage: "square.and.arrow.up")
+                    .font(.caption)
+            }
+        }
+        .foregroundColor(.secondary)
+    }
+}
+
+enum POCRoomInvite {
+    static let store = "https://apps.apple.com/app/id6748584483"
+
+    @available(iOS 16.0, *)
+    static func text(_ room: TalkyRoom) -> String {
+        String(format: "room_invite_text".localized, room.display, room.link.absoluteString, store)
     }
 }

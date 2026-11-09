@@ -605,3 +605,15 @@
 "mumble_rules_body" = "POCでは、他の人が運営するサーバーの公開チャンネルで、知らない人と話します。侮辱、脅迫、性的なコンテンツ、ヘイト、スパムは禁止です。使った人はミュートされて報告され、サーバーから追放されることがあります。迷惑な相手は、話すボタンの下の「安全」からミュートまたは報告できます。";
 "mumble_rules_name" = "チャンネルでの名前";
 "mumble_rules_accept" = "同意して話す";
+
+/* Stanze private, 4.0 */
+"room_header" = "プライベートルーム";
+"room_create" = "ルームを開く";
+"room_join" = "入る";
+"room_rejoin" = "%@ に戻る";
+"room_leave" = "ルームを出る";
+"room_invite" = "招待";
+"room_code_wrong" = "コードは8文字です。例：K7P2-QX9A";
+"room_footer" = "ルームの声は、あなたとコードを持つ人だけに聞こえます。離れていても使えますが、インターネットが必要です。ルームを開くのはTalky Pro、招待で入るのは無料です。";
+"room_invite_text" = "Talkyで話そう！コード %@ で私のルームに入って：%@ 。Talkyがない場合：%@";
+"live_pro_room_message" = "プライベートルームを開くのはTalky Proの機能です。招待された人は無料で入れます。";

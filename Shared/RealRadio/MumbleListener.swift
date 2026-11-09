@@ -153,6 +153,8 @@ actor MumbleListener {
     nonisolated let audio: AsyncStream<PCMChunk>
     nonisolated let events: AsyncStream<LiveEvent>
     nonisolated let target: MumbleLiveChannel
+    /// Stanza privata: si entra con il suo token e solo nel suo canale.
+    nonisolated let room: TalkyRoom?
 
     static let rate = 48_000.0
 
@@ -185,8 +187,12 @@ actor MumbleListener {
     /// In unita' da 10 ms, come il contatore dei client Mumble.
     private var sequence: UInt64 = 0
 
-    init(target: MumbleLiveChannel, username: String) {
-        self.target = target
+    /// Quando e' partita la richiesta della stanza al custode.
+    private var roomAsked: ContinuousClock.Instant?
+
+    init(target: MumbleLiveChannel, username: String, room: TalkyRoom? = nil) {
+        self.target = room?.target ?? target
+        self.room = room
         self.username = username
         (audio, audioSink) = AsyncStream.makeStream(of: PCMChunk.self, bufferingPolicy: .bufferingNewest(64))
         (events, eventSink) = AsyncStream.makeStream(of: LiveEvent.self, bufferingPolicy: .bufferingNewest(128))
@@ -236,7 +242,7 @@ actor MumbleListener {
         lastHeard = .now
         lastPing = .now
         link.send(MumbleControl.version())
-        link.send(MumbleControl.authenticate(user: username, password: ""))
+        link.send(MumbleControl.authenticate(user: username, tokens: room.map { [$0.token] } ?? []))
         tasks.append(Task { [weak self] in
             do {
                 for try await bytes in link.bytes { await self?.receive(bytes, from: link) }
@@ -260,6 +266,7 @@ actor MumbleListener {
         permissions = [:]
         silencedByServer = false
         talking = false
+        roomAsked = nil
         reportMayTalk()
     }
 
@@ -282,6 +289,11 @@ actor MumbleListener {
             }
         }
         if floor != nil, now - floorHeard > .milliseconds(500) { endOfOver() }
+        if let asked = roomAsked, now - asked > .seconds(8) {
+            roomAsked = nil
+            hangUp()
+            eventSink.yield(.link(.refused(.down)))
+        }
     }
 
     private func receive(_ bytes: Data, from link: StreamLink) async {
@@ -322,6 +334,7 @@ actor MumbleListener {
             if let p = f.uint32(2) { c.parent = p }
             if let n = f.string(3) { c.name = n }
             channels[id] = c
+            if let room, synced, c.name == room.channelName { enterChannel() }
         case .channelRemove:
             if let id = f.uint32(1) { channels[id] = nil }
         case .userState:
@@ -373,8 +386,13 @@ actor MumbleListener {
     }
 
     /// Entra nel canale scelto; se non c'e' piu', in quello con piu' persone.
+    /// Per una stanza privata invece si chiede al custode di aprirla.
     private func enterChannel() {
         guard synced, let link, let session else { return }
+        if let room {
+            enterRoom(room, link: link, session: session)
+            return
+        }
         let wanted = target.channel.lowercased()
         let target = channels.values.first { $0.name.lowercased() == wanted } ?? busiest()
         if let target, users[session]?.channel != target.id {
@@ -384,6 +402,26 @@ actor MumbleListener {
         }
         reportChannel()
         reportAudience()
+    }
+
+    private func enterRoom(_ room: TalkyRoom, link: StreamLink, session: UInt32) {
+        if let here = channels.values.first(where: { $0.name == room.channelName }) {
+            if users[session]?.channel != here.id {
+                link.send(MumbleControl.join(session: session, channel: here.id))
+            }
+            roomAsked = nil
+            reportChannel()
+            reportAudience()
+            return
+        }
+        guard roomAsked == nil else { return }
+        guard let keeper = users.values.first(where: { $0.name == "SuperUser" }) else {
+            hangUp()
+            eventSink.yield(.link(.refused(.down)))
+            return
+        }
+        roomAsked = .now
+        link.send(MumbleControl.text(to: keeper.session, "room \(room.channelName) \(room.token)"))
     }
 
     private func busiest() -> MumbleChannel? {

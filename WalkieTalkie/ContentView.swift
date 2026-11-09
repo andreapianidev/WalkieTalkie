@@ -1282,6 +1282,16 @@ struct ContentView: View {
     /// talky://pro apre Talky Pro; talky://live/cb?hz=... e talky://live/hf?id=...
     /// accendono la banda e sintonizzano.
     private func openFromWidget(_ url: URL) {
+        // talky://room/K7P2QX9A, dal link d'invito a una stanza privata.
+        if url.host?.lowercased() == "room" {
+            guard #available(iOS 16.0, *), let room = TalkyRoom(code: url.lastPathComponent) else { return }
+            selectedTab = 0
+            if isRadioMode { switchMode(toRadio: false) }
+            if !isPoweredOn { togglePower() }
+            selectBand(.poc)
+            LiveRadio.shared.joinRoom(room)
+            return
+        }
         guard url.host?.lowercased() == "live" else {
             PaywallTriggerManager.shared.requestForLiveFeature()
             return

@@ -604,3 +604,15 @@
 "mumble_rules_body" = "Trên POC bạn nói chuyện trong các kênh công khai với người lạ, trên máy chủ do người khác quản lý. Không được lăng mạ, đe dọa, nội dung tình dục, thù ghét và spam: ai vi phạm sẽ bị tắt tiếng và báo cáo, và máy chủ có thể cấm người đó. Tắt tiếng hoặc báo cáo người làm phiền bạn trong mục An toàn, bên dưới nút nói.";
 "mumble_rules_name" = "Tên của bạn trong kênh";
 "mumble_rules_accept" = "Tôi đồng ý, tôi muốn nói";
+
+/* Stanze private, 4.0 */
+"room_header" = "Phòng riêng";
+"room_create" = "Mở phòng";
+"room_join" = "Vào";
+"room_rejoin" = "Quay lại %@";
+"room_leave" = "Rời phòng";
+"room_invite" = "Mời";
+"room_code_wrong" = "Mã có 8 ký tự, ví dụ K7P2-QX9A";
+"room_footer" = "Chỉ bạn và người có mã mới nghe được phòng, kể cả khi ở xa: cần có internet. Mở phòng là của Talky Pro, vào bằng lời mời thì miễn phí.";
+"room_invite_text" = "Nói chuyện trên Talky nhé! Vào phòng của mình bằng mã %@: %@ . Nếu chưa có Talky: %@";
+"live_pro_room_message" = "Mở phòng riêng là tính năng của Talky Pro. Người bạn mời vào miễn phí.";

@@ -606,3 +606,15 @@
 "mumble_rules_body" = "在 POC 中，你會在他人管理的伺服器上的公開頻道裡與陌生人交談。禁止辱罵、威脅、色情內容、仇恨言論和垃圾訊息：違者會被封鎖和檢舉，伺服器也可以將其停權。可在說話按鈕下方的「安全」中封鎖或檢舉打擾你的人。";
 "mumble_rules_name" = "你在頻道中的名字";
 "mumble_rules_accept" = "同意，我要說話";
+
+/* Stanze private, 4.0 */
+"room_header" = "私人房間";
+"room_create" = "開一個房間";
+"room_join" = "進入";
+"room_rejoin" = "回到 %@";
+"room_leave" = "離開房間";
+"room_invite" = "邀請";
+"room_code_wrong" = "代碼有 8 個字元，例如 K7P2-QX9A";
+"room_footer" = "房間只有你和擁有代碼的人能聽到，即使相隔很遠：需要網路。開房間屬於 Talky Pro，憑邀請進入免費。";
+"room_invite_text" = "來 Talky 聊天吧！用代碼 %@ 進入我的房間：%@ 。如果你還沒有 Talky：%@";
+"live_pro_room_message" = "開私人房間是 Talky Pro 的功能。你邀請的人可以免費進入。";

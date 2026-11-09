@@ -363,6 +363,7 @@ struct LiveSecondaryRow: View {
                 AdManager.shared.presentRewardedLivePass(source: "live_\(prompt.rawValue)", onGranted: {
                     live.entitlementsChanged()
                     if prompt == .scan { live.startScan() }
+                    if prompt == .room { live.createRoom() }
                 }, onUnavailable: {
                     HapticManager.shared.warning()
                 })
@@ -381,6 +382,7 @@ struct LiveSecondaryRow: View {
         case .scan: return "live_pro_scan_message".localized
         case .background: return "live_pro_background_message".localized
         case .freeTime: return String(format: "live_pro_free_message".localized, FreeListening.secondsPerDay / 60)
+        case .room: return "live_pro_room_message".localized
         }
     }
 
@@ -788,6 +790,7 @@ struct LiveChannelsSheet: View {
                         Text("live_hf_footer".localized)
                     }
                 } else {
+                    POCRoomsSection { dismiss() }
                     Section {
                         if live.pocChannels.isEmpty {
                             HStack {

@@ -67,7 +67,7 @@ final class LiveRadio: ObservableObject {
     /// Funzione Pro chiesta da chi non ce l'ha: l'interfaccia propone
     /// Talky Pro o, su iPhone, un video per 24 ore.
     enum ProPrompt: String, Identifiable {
-        case scan, background, freeTime
+        case scan, background, freeTime, room
         var id: String { rawValue }
     }
 
@@ -104,6 +104,8 @@ final class LiveRadio: ObservableObject {
     @Published var proPrompt: ProPrompt?
     /// Nel canale POC si puo' parlare: il server lo permette a chi entra senza registrarsi.
     @Published private(set) var canTalk = false
+    /// Stanza privata in cui si e' entrati, nil sui canali pubblici.
+    @Published private(set) var room: TalkyRoom?
     @Published private(set) var isTalking = false
     /// Il microfono e' negato nelle impostazioni del sistema.
     @Published private(set) var micDenied = false
@@ -208,7 +210,7 @@ final class LiveRadio: ObservableObject {
         self.band = band
         panorama.clear()
         refreshFreeTime()
-        guard !isOutOfFreeTime else {
+        guard !isOutOfFreeTime || (band == .poc && room != nil) else {
             state = .idle
             proPrompt = .freeTime
             return
@@ -227,7 +229,9 @@ final class LiveRadio: ObservableObject {
             sourceName = ""
             sourcePlace = ""
             receiverKm = nil
-            if pocChannels.isEmpty || (scoutedAt.map { Date().timeIntervalSince($0) > 600 } ?? true) {
+            if room != nil {
+                connectPOC()
+            } else if pocChannels.isEmpty || (scoutedAt.map { Date().timeIntervalSince($0) > 600 } ?? true) {
                 scoutPOC()
             } else {
                 connectPOC()
@@ -387,6 +391,7 @@ final class LiveRadio: ObservableObject {
 
     func selectPOC(_ index: Int) {
         guard pocChannels.indices.contains(index) else { return }
+        room = nil
         pocIndex = index
         guard band == .poc else { return }
         connectPOC()
@@ -395,6 +400,7 @@ final class LiveRadio: ObservableObject {
     /// Rilegge i server pubblici per trovare canali con persone dentro adesso.
     func rescanPOC() {
         guard band == .poc else { return }
+        room = nil
         disconnect()
         pocChannels = []
         pocIndex = 0
@@ -525,7 +531,9 @@ final class LiveRadio: ObservableObject {
     }
 
     private func spendFreeTime(_ seconds: Int) {
-        guard !proGate() else {
+        // Nelle stanze private non si conta: chi e' stato invitato parla
+        // con chi l'ha invitato finche' vuole, la stanza l'ha aperta un Pro.
+        guard !proGate(), room == nil else {
             freeSecondsLeft = nil
             return
         }
@@ -744,6 +752,46 @@ final class LiveRadio: ObservableObject {
         }
     }
 
+    // MARK: stanze private
+
+    private static let lastRoomKey = "mumble_last_room"
+
+    /// L'ultima stanza aperta o in cui si e' entrati, per rientrarci.
+    var lastRoom: TalkyRoom? { defaults.string(forKey: Self.lastRoomKey).flatMap(TalkyRoom.init(code:)) }
+
+    /// Apre una stanza nuova. Aprirla e' di Talky Pro; entrarci con un invito no.
+    func createRoom() {
+        guard proGate() else {
+            proPrompt = .room
+            return
+        }
+        joinRoom(TalkyRoom.make())
+    }
+
+    func joinRoom(_ r: TalkyRoom) {
+        stopScan()
+        scoutTask?.cancel()
+        scoutTask = nil
+        isScouting = false
+        room = r
+        defaults.set(r.code, forKey: Self.lastRoomKey)
+        if band == .poc {
+            retried = false
+            connectPOC()
+        } else {
+            start(.poc)
+        }
+    }
+
+    /// Fuori dalla stanza, di nuovo sui canali pubblici.
+    func leaveRoom() {
+        guard room != nil else { return }
+        room = nil
+        guard band == .poc else { return }
+        disconnect()
+        if pocChannels.isEmpty { scoutPOC() } else { connectPOC() }
+    }
+
     // MARK: POC
 
     private func scoutPOC() {
@@ -805,19 +853,37 @@ final class LiveRadio: ObservableObject {
 
     private func connectPOC() {
         disconnect()
-        guard band == .poc, !isSuspended, let target = currentPOC else { return }
+        guard band == .poc, !isSuspended, let target = room?.target ?? currentPOC else { return }
         sourceName = target.server.name
         sourcePlace = target.server.country
-        channelName = target.channel
-        audience = target.users
+        channelName = room?.display ?? target.channel
+        audience = room == nil ? target.users : nil
         wasOnline = false
-        let listener = MumbleListener(target: target, username: username)
+        let listener = MumbleListener(target: target, username: username, room: room)
         mumble = listener
         attach(audio: listener.audio, events: listener.events)
         Task { await listener.connect() }
     }
 
     private func pocFailed(refused: Bool) {
+        if room != nil {
+            // La stanza non si sostituisce con un canale pubblico: si riprova
+            // una volta, poi si dice che il server non risponde.
+            if !refused, !retried {
+                retried = true
+                let gen = generation
+                Task { [weak self] in
+                    try? await Task.sleep(for: .seconds(2))
+                    guard let self, self.generation == gen else { return }
+                    self.connectPOC()
+                }
+                return
+            }
+            retried = false
+            disconnect()
+            state = .refused(.down)
+            return
+        }
         if !refused, wasOnline, !retried {
             retried = true
             let gen = generation
@@ -889,7 +955,7 @@ final class LiveRadio: ObservableObject {
         case .audience(let n):
             audience = n
         case .channel(let name):
-            channelName = name
+            channelName = room?.display ?? name
         case .signal(let dBm):
             let now = Date()
             guard now.timeIntervalSince(lastSignalPush) > 0.25 else { return }

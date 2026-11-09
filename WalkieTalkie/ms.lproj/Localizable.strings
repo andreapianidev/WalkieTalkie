@@ -606,3 +606,15 @@
 "mumble_rules_body" = "Di POC anda bercakap dalam saluran awam dengan orang yang anda tidak kenal, di pelayan yang diurus oleh orang lain. Hinaan, ugutan, kandungan seksual, kebencian dan spam tidak dibenarkan: sesiapa yang menggunakannya akan disenyapkan dan dilaporkan, dan pelayan boleh menyekatnya. Senyapkan atau laporkan sesiapa yang mengganggu anda dari Keselamatan, di bawah butang bercakap.";
 "mumble_rules_name" = "Nama anda dalam saluran";
 "mumble_rules_accept" = "Saya setuju, saya mahu bercakap";
+
+/* Stanze private, 4.0 */
+"room_header" = "Bilik peribadi";
+"room_create" = "Buka bilik";
+"room_join" = "Masuk";
+"room_rejoin" = "Kembali ke %@";
+"room_leave" = "Keluar dari bilik";
+"room_invite" = "Jemput";
+"room_code_wrong" = "Kod ada 8 aksara, contohnya K7P2-QX9A";
+"room_footer" = "Bilik hanya didengar oleh anda dan sesiapa yang ada kod, walaupun berjauhan: perlu internet. Membuka bilik ialah Talky Pro, masuk dengan jemputan adalah percuma.";
+"room_invite_text" = "Jom bercakap di Talky! Masuk ke bilik saya dengan kod %@: %@ . Jika tiada Talky: %@";
+"live_pro_room_message" = "Membuka bilik peribadi ialah ciri Talky Pro. Orang yang anda jemput masuk secara percuma.";

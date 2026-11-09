@@ -604,3 +604,15 @@
 "mumble_rules_body" = "On POC you talk in public channels with people you don't know, on servers run by others. Insults, threats, sexual content, hate and spam are not allowed: whoever uses them gets muted and reported, and the server can ban them. Mute or report anyone who bothers you from Safety, under the talk button.";
 "mumble_rules_name" = "Your name in the channels";
 "mumble_rules_accept" = "I agree, let me talk";
+
+/* Stanze private, 4.0 */
+"room_header" = "Private rooms";
+"room_create" = "Open a room";
+"room_join" = "Join";
+"room_rejoin" = "Back to %@";
+"room_leave" = "Leave the room";
+"room_invite" = "Invite";
+"room_code_wrong" = "The code has 8 characters, for example K7P2-QX9A";
+"room_footer" = "Only you and whoever has the code can hear a room, even far apart: it needs internet. Opening one is Talky Pro, joining with an invite is free.";
+"room_invite_text" = "Let's talk on Talky! Join my room with the code %@: %@ . If you don't have Talky: %@";
+"live_pro_room_message" = "Opening a private room is a Talky Pro feature. The people you invite join for free.";

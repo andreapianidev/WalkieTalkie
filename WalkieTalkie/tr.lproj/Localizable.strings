@@ -604,3 +604,15 @@
 "mumble_rules_body" = "POC'ta, başkalarının yönettiği sunuculardaki herkese açık kanallarda tanımadığın kişilerle konuşursun. Hakaret, tehdit, cinsel içerik, nefret ve spam yasaktır: bunları kullananın sesi kapatılır ve bildirilir, sunucu da onu engelleyebilir. Seni rahatsız edeni konuşma tuşunun altındaki Güvenlik bölümünden sustur veya bildir.";
 "mumble_rules_name" = "Kanallardaki adın";
 "mumble_rules_accept" = "Kabul ediyorum, konuşmak istiyorum";
+
+/* Stanze private, 4.0 */
+"room_header" = "Özel odalar";
+"room_create" = "Oda aç";
+"room_join" = "Gir";
+"room_rejoin" = "%@ odasına dön";
+"room_leave" = "Odadan çık";
+"room_invite" = "Davet et";
+"room_code_wrong" = "Kod 8 karakterdir, örneğin K7P2-QX9A";
+"room_footer" = "Bir odayı yalnızca sen ve kodu olanlar duyar, uzakta olsanız bile: internet gerekir. Oda açmak Talky Pro'dadır, davetle girmek ücretsizdir.";
+"room_invite_text" = "Talky'de konuşalım! %@ koduyla odama gir: %@ . Talky'n yoksa: %@";
+"live_pro_room_message" = "Özel oda açmak bir Talky Pro özelliğidir. Davet ettiğin kişiler ücretsiz girer.";

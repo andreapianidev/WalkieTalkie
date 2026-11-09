@@ -8,6 +8,7 @@
 //  mano, e la voce attraversa anche le reti che lasciano passare solo TCP.
 
 import AVFoundation
+import CryptoKit
 import Foundation
 
 // MARK: pacchetti in uscita
@@ -292,4 +293,66 @@ nonisolated enum MumbleManners {
 
     private static var blocked: Set<String> { Set(defaults.stringArray(forKey: blockedKey) ?? []) }
     private static func key(_ name: String, _ server: String) -> String { "\(server)|\(name.lowercased())" }
+}
+
+// MARK: stanze private
+
+/// Una stanza privata sul server Mumble di Talky (VM2, scripts/server/).
+/// Dal codice che ci si scambia si ricavano due cose diverse: il nome del
+/// canale, che vedono tutti quelli collegati al server, e il token che
+/// apre la porta, che arriva solo al custode in un messaggio privato. Le
+/// stesse derivazioni stanno in scripts/server/talky_rooms.py (prova).
+nonisolated struct TalkyRoom: Sendable, Hashable {
+    /// Otto caratteri senza 0, 1, I, L, O: si dettano al telefono senza errori.
+    let code: String
+
+    static let alphabet = Array("23456789ABCDEFGHJKMNPQRSTUVWXYZ")
+    /// Il server delle stanze. La 22 perche' e' l'unica porta che la rete
+    /// Oracle lascia passare; sulla VM e' girata sulla 64738 di mumble-server.
+    static let server = MumbleServer(name: "Talky", host: "92.5.15.244", port: 22, country: "", countryCode: "")
+
+    init?(code raw: String) {
+        let clean = raw.uppercased().filter { Self.alphabet.contains($0) }
+        guard clean.count == 8 else { return nil }
+        code = clean
+    }
+
+    static func make() -> TalkyRoom {
+        var g = SystemRandomNumberGenerator()
+        return TalkyRoom(code: String((0 ..< 8).map { _ in alphabet.randomElement(using: &g)! }))!
+    }
+
+    /// "K7P2-QX9A", come si mostra e si condivide.
+    var display: String { "\(code.prefix(4))-\(code.suffix(4))" }
+
+    var channelName: String { "room-" + Self.hex("talky-room-name:" + code).prefix(16) }
+    var token: String { String(Self.hex("talky-room-token:" + code).prefix(32)) }
+
+    var target: MumbleLiveChannel { MumbleLiveChannel(server: Self.server, channel: channelName, users: 0) }
+
+    /// Link d'invito: apre Talky nella stanza; chi non ce l'ha usa il codice.
+    var link: URL { URL(string: "talky://room/\(code)")! }
+
+    private static func hex(_ s: String) -> String {
+        SHA256.hash(data: Data(s.utf8)).map { String(format: "%02x", $0) }.joined()
+    }
+}
+
+nonisolated extension MumbleControl {
+    /// Authenticate con i token d'accesso (campo 3, ripetuto).
+    static func authenticate(user: String, tokens: [String]) -> Data {
+        var w = ProtoWriter()
+        w.string(1, user)
+        for t in tokens { w.string(3, t) }
+        w.bool(5, true)
+        return MumbleFramer.frame(.authenticate, w.data)
+    }
+
+    /// Messaggio privato a una sessione (TextMessage, campi session 2 e message 5).
+    static func text(to session: UInt32, _ message: String) -> Data {
+        var w = ProtoWriter()
+        w.varint(2, UInt64(session))
+        w.string(5, message)
+        return MumbleFramer.frame(.textMessage, w.data)
+    }
 }
