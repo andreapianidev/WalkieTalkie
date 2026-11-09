@@ -194,10 +194,7 @@
 "onboarding_p1_title" = "iPhone 裡的真無線電和對講機";
 "onboarding_p1_subtitle" = "即時收聽 CB、短波和 POC，播放全球 330 多個電台，沒有訊號的地方也能和朋友通話。";
 
-"onboarding_p2_no_internet_title" = "無需網路，無需 SIM 卡";
-"onboarding_p2_no_internet_body" = "在 iPhone 與 iPad 之間，聲音透過 Wi-Fi 和藍牙直接在裝置間傳遞：不需路由器、不需伺服器、不需帳號。";
 "onboarding_p2_range_caveat" = "牆壁、山丘與高低差會降低傳輸距離。";
-"onboarding_p2_multi_platform" = "Talky 也能在 iPad、Mac 和 Android 上執行，同一個 App，你所有的裝置都在同一場對話裡。";
 "onboarding_p3_ptt_title" = "按住即可說話";
 "onboarding_p3_ptt_body" = "就像真正的對講機：按住中央按鈕說話，放開後聆聽。";
 "onboarding_p3_ptt_rule" = "同一頻道上同一時間只能有一個人說話。";
@@ -211,12 +208,9 @@
 "onboarding_p5_step2" = "在 iPhone 和 iPad 上開啟「探索」，點裝置旁的 +，再到另一台上接受。Mac 和 Android 會自己連上，只要在同一個 Wi-Fi";
 "onboarding_p5_step3" = "連線成功（綠點）後，按住中央按鈕說話，放開即可聆聽";
 
-"onboarding_permissions_title" = "兩個權限，馬上就好";
 "onboarding_permissions_description" = "Talky 需要這些權限才能運作。";
 "onboarding_microphone_permission" = "麥克風";
 "onboarding_permission_mic_why" = "用於在你按下說話時錄製語音。";
-"onboarding_notification_permission" = "通知";
-"onboarding_permission_notif_why" = "在 App 關閉時提醒你有人呼叫。";
 "onboarding_permission_open_settings" = "開啟 iOS 設定";
 
 "onboarding_continue" = "繼續";
@@ -246,7 +240,6 @@
 "paywall.plan.weekly_suffix" = "/週";
 "paywall.plan.yearly" = "每年";
 "paywall.plan.yearly_suffix" = "/年";
-"paywall.badge.most_popular" = "最受歡迎";
 "paywall.badge.save" = "省 %d%%";
 "paywall.compare.weekly_vs_yearly" = "每年 %1$@。改用每週付費一年要花 %2$@。";
 "paywall.trial.badge" = "免費 %1$d 天，之後每年 %2$@";
@@ -442,8 +435,6 @@
 "paywall.support.compact" = "由一位獨立開發者製作，Talky 的程式碼公開在 GitHub 上。";
 
 /* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
-"paywall.lifetime.cta" = "一次買斷 ·";
-"paywall.lifetime.subtitle" = "付一次，永久擁有全部 Pro 功能，主題也包含在內。無需訂閱。";
 "paywall.lifetime.owned" = "已永久擁有，謝謝你。";
 
 // MARK: - Connection status & cross-platform (2026-08)
@@ -618,3 +609,25 @@
 "room_footer" = "房間只有你和擁有代碼的人能聽到，即使相隔很遠：需要網路。開房間屬於 Talky Pro，憑邀請進入免費。";
 "room_invite_text" = "來 Talky 聊天吧！用代碼 %@ 進入我的房間：%@ 。如果你還沒有 Talky：%@";
 "live_pro_room_message" = "開私人房間是 Talky Pro 的功能。你邀請的人可以免費進入。";
+"paywall.plan.lifetime" = "永久";
+"paywall.plan.lifetime_suffix" = "一次";
+"paywall.plan.lifetime_detail" = "付一次，永久屬於你";
+"paywall.compare.lifetime_vs_yearly" = "一次 %1$@，而不是每年 %2$@";
+"paywall.cta.lifetime" = "永久解鎖";
+"pairing_listen_cb" = "先收聽 CB 直播吧";
+"mode_switch_try_radio" = "收聽電台";
+"onboarding_two_talky_title" = "對講機需要兩支手機都裝 Talky";
+"onboarding_two_talky_body" = "Talky 只和裝了 Talky 的其他手機通話：請在你身邊那個人的手機上也安裝它。";
+"onboarding_two_talky_range" = "通話距離 10 到 30 公尺，兩支手機都要開啟 Wi-Fi 和藍牙。不需要網際網路或網路。";
+"onboarding_mic_title" = "只需一項權限：麥克風";
+"onboarding_start_title" = "你想從哪裡開始？";
+"onboarding_start_friend" = "身邊有朋友";
+"onboarding_start_friend_detail" = "進入對講機：找到彼此的手機開始通話。";
+"onboarding_start_solo" = "我一個人";
+"onboarding_start_solo_detail" = "收聽 CB 直播或電台。有人在身邊時再試試對講機。";
+"whats_new_title" = "Talky %@ 新功能";
+"whats_new_poc" = "現在在 POC 頻道裡不只能聽，還能說話。";
+"whats_new_rooms" = "憑邀請進入的私人房間，遠方的朋友也能一起說話。需要網際網路。";
+"whats_new_widgets" = "適用於主畫面的新小工具和新控制項目。";
+"whats_new_pairing" = "連線協助：如果找不到另一支手機，Talky 會告訴你要檢查什麼以及如何邀請對方。";
+"whats_new_try" = "試試在 POC 上說話";

@@ -46,6 +46,33 @@ class NotificationManager: ObservableObject {
         }
     }
     
+    /// Il permesso si chiede dopo che Talky ha funzionato una volta (una
+    /// trasmissione arrivata a qualcuno, una ricevuta, un ascolto dal vivo), non
+    /// all'avvio: chiesto a freddo, a chi non ha ancora sentito niente, e' un no
+    /// quasi sicuro, e iOS non lo ripropone piu'. Parte una volta sola e solo se
+    /// l'utente non ha mai deciso; chi dice si' trova le notifiche gia' accese,
+    /// perche' ha appena risposto alla domanda che le riguarda.
+    func requestAfterFirstSuccess(_ reason: String) {
+        guard !UserDefaults.standard.bool(forKey: Self.askedAfterSuccessKey) else { return }
+        UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
+            guard settings.authorizationStatus == .notDetermined else { return }
+            DispatchQueue.main.async {
+                guard let self, !UserDefaults.standard.bool(forKey: Self.askedAfterSuccessKey) else { return }
+                UserDefaults.standard.set(true, forKey: Self.askedAfterSuccessKey)
+                UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in
+                    DispatchQueue.main.async {
+                        self.hasPermission = granted
+                        self.notificationsEnabled = granted
+                        self.saveNotificationPreference()
+                        Funnel.log(granted ? "permission_notif_granted" : "permission_notif_denied", ["after": reason])
+                    }
+                }
+            }
+        }
+    }
+
+    private static let askedAfterSuccessKey = "notif_asked_after_success"
+
     private func checkNotificationSettings() {
         UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
             DispatchQueue.main.async {
@@ -207,32 +234,6 @@ class NotificationManager: ObservableObject {
         )
         
         UNUserNotificationCenter.current().add(request)
-    }
-    
-    // MARK: - Background Notifications
-    
-    func scheduleBackgroundScanNotification() {
-        guard notificationsEnabled && hasPermission else { return }
-        
-        let content = UNMutableNotificationContent()
-        content.title = "background_scan".localized
-        content.body = "scanning_for_devices".localized
-        content.sound = nil
-        
-        // Schedule notification after 30 seconds when app goes to background
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 30, repeats: false)
-        
-        let request = UNNotificationRequest(
-            identifier: "background_scan",
-            content: content,
-            trigger: trigger
-        )
-        
-        UNUserNotificationCenter.current().add(request)
-    }
-    
-    func cancelBackgroundNotifications() {
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ["background_scan"])
     }
     
     private func clearAllPendingNotifications() {

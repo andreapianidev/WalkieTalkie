@@ -173,10 +173,7 @@
 "onboarding_p1_title" = "Radio de verdad y un walkie talkie en tu iPhone";
 "onboarding_p1_subtitle" = "Escucha en directo la CB, la onda corta y POC, pon más de 330 radios del mundo y habla con tus amigos incluso donde no hay cobertura.";
 
-"onboarding_p2_no_internet_title" = "Sin internet, sin SIM";
-"onboarding_p2_no_internet_body" = "Entre iPhone y iPad la voz va directa de un dispositivo a otro por Wi-Fi y Bluetooth: sin router, sin servidor, sin cuenta.";
 "onboarding_p2_range_caveat" = "Muros, colinas y desniveles reducen el alcance.";
-"onboarding_p2_multi_platform" = "Talky también funciona en iPad, Mac y Android: la misma app, todos tus dispositivos en la misma conversación.";
 "onboarding_p3_ptt_title" = "Mantén pulsado para hablar";
 "onboarding_p3_ptt_body" = "Como un walkie-talkie de verdad: mantén pulsado el botón central para hablar, suéltalo para escuchar.";
 "onboarding_p3_ptt_rule" = "Una sola voz a la vez en el mismo canal.";
@@ -190,12 +187,9 @@
 "onboarding_p5_step2" = "En iPhone y iPad abre Explorar y toca + junto al dispositivo, luego acepta en el otro. Mac y Android se conectan solos, en la misma Wi-Fi";
 "onboarding_p5_step3" = "Cuando esté conectado (punto verde), mantén pulsado el botón central para hablar y suéltalo para escuchar";
 
-"onboarding_permissions_title" = "Dos permisos y listo";
 "onboarding_permissions_description" = "Talky los necesita para funcionar.";
 "onboarding_microphone_permission" = "Micrófono";
 "onboarding_permission_mic_why" = "Para captar tu voz cuando pulses para hablar.";
-"onboarding_notification_permission" = "Notificaciones";
-"onboarding_permission_notif_why" = "Para avisarte si alguien te llama mientras la app está cerrada.";
 "onboarding_permission_open_settings" = "Abrir los Ajustes de iOS";
 
 "onboarding_continue" = "Continuar";
@@ -252,7 +246,6 @@
 "paywall.plan.weekly_suffix" = "/semana";
 "paywall.plan.yearly" = "Anual";
 "paywall.plan.yearly_suffix" = "/año";
-"paywall.badge.most_popular" = "MÁS POPULAR";
 "paywall.badge.save" = "Ahorra %d%%";
 "paywall.compare.weekly_vs_yearly" = "%1$@ al año. Pagando por semana gastarías %2$@.";
 "paywall.trial.badge" = "%1$d días gratis, luego %2$@ al año";
@@ -446,8 +439,6 @@
 "paywall.support.compact" = "Hecha por un desarrollador independiente. El código de Talky es público en GitHub.";
 
 /* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
-"paywall.lifetime.cta" = "Pagas una vez ·";
-"paywall.lifetime.subtitle" = "Un pago. Todo Pro para siempre, temas incluidos. Sin suscripción.";
 "paywall.lifetime.owned" = "Tuyo para siempre. Gracias.";
 
 // MARK: - Connection status & cross-platform (2026-08)
@@ -622,3 +613,25 @@
 "room_footer" = "Una sala solo la oyes tú y quien tiene el código, aunque estéis lejos: hace falta internet. Abrirla es de Talky Pro, entrar con una invitación es gratis.";
 "room_invite_text" = "¡Hablemos en Talky! Entra en mi sala con el código %@: %@ . Si no tienes Talky: %@";
 "live_pro_room_message" = "Abrir una sala privada es una función de Talky Pro. Quien invites entra gratis.";
+"paywall.plan.lifetime" = "Para siempre";
+"paywall.plan.lifetime_suffix" = "una vez";
+"paywall.plan.lifetime_detail" = "Pagas una vez, tuyo para siempre";
+"paywall.compare.lifetime_vs_yearly" = "%1$@ una vez, en lugar de %2$@ cada año";
+"paywall.cta.lifetime" = "Desbloquear para siempre";
+"pairing_listen_cb" = "Mientras tanto, escucha la CB en directo";
+"mode_switch_try_radio" = "Escuchar la radio";
+"onboarding_two_talky_title" = "El walkie necesita Talky en los dos teléfonos";
+"onboarding_two_talky_body" = "Talky habla con otros teléfonos que tienen Talky: instálala también en el de quien está contigo.";
+"onboarding_two_talky_range" = "Alcance de 10 a 30 metros, con Wi-Fi y Bluetooth encendidos en los dos. No hace falta internet ni una red.";
+"onboarding_mic_title" = "Un permiso: el micrófono";
+"onboarding_start_title" = "¿Por dónde quieres empezar?";
+"onboarding_start_friend" = "Tengo un amigo cerca";
+"onboarding_start_friend_detail" = "Ve al walkie: buscad vuestros teléfonos y hablad.";
+"onboarding_start_solo" = "Estoy solo";
+"onboarding_start_solo_detail" = "Escucha la CB en directo o la radio. El walkie lo pruebas cuando haya alguien contigo.";
+"whats_new_title" = "Novedades de Talky %@";
+"whats_new_poc" = "En los canales POC ahora se habla, no solo se escucha.";
+"whats_new_rooms" = "Salas privadas con invitación, para hablar también con amigos lejanos. Necesitan internet.";
+"whats_new_widgets" = "Widgets nuevos para la pantalla de inicio y controles nuevos.";
+"whats_new_pairing" = "Ayuda para conectar: si el otro teléfono no aparece, Talky te dice qué revisar y cómo invitarlo.";
+"whats_new_try" = "Prueba a hablar en POC";

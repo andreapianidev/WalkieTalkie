@@ -14,7 +14,6 @@ import FirebaseCrashlytics
 struct WalkieTalkieApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var settingsManager = SettingsManager.shared
-    @StateObject private var notificationManager = NotificationManager()
     @StateObject private var adManager = AdManager.shared
     @StateObject private var iapManager = IAPManager.shared
     @StateObject private var themeManager = ThemeManager.shared
@@ -28,8 +27,12 @@ struct WalkieTalkieApp: App {
     /// a meta' sessione. Si mostra solo al rientro vero da background.
     @State private var returningFromBackground = false
 
-    #if DEBUG && targetEnvironment(simulator)
+    #if DEBUG
+    // Build Debug (simulatore e iPhone di Andrea): all'avvio si sceglie se
+    // provare Talky gratis o Pro. La Release di Xcode Cloud non lo vede.
     @State private var showDebugTierAlert = !UserDefaults.standard.bool(forKey: "screenshotMode")
+    /// La scelta fatta, da riapplicare se il bootstrap degli acquisti arriva dopo.
+    @State private var debugTierIsPro: Bool?
     #endif
 
     var body: some Scene {
@@ -38,10 +41,7 @@ struct WalkieTalkieApp: App {
                 if isOnboardingComplete {
                     ContentView()
                 } else {
-                    OnboardingView(
-                        isOnboardingComplete: $isOnboardingComplete,
-                        notificationManager: notificationManager
-                    )
+                    OnboardingView(isOnboardingComplete: $isOnboardingComplete)
                 }
             }
             // I temi Pro hanno tutti lo sfondo scuro: in chiaro i testi
@@ -51,16 +51,18 @@ struct WalkieTalkieApp: App {
             .environmentObject(adManager)
             .environmentObject(iapManager)
             .environmentObject(themeManager)
-            #if DEBUG && targetEnvironment(simulator)
+            #if DEBUG
             .alert("DEBUG · Simula tier", isPresented: $showDebugTierAlert) {
                 Button("Free") {
+                    debugTierIsPro = false
                     iapManager.applyDebugSimulatedTier(isPro: false)
                 }
                 Button("Pro") {
+                    debugTierIsPro = true
                     iapManager.applyDebugSimulatedTier(isPro: true)
                 }
             } message: {
-                Text("Solo simulator/DEBUG: scegli quale versione vuoi simulare per questa sessione.")
+                Text("Solo build Debug: scegli se provare Talky gratis o Pro in questa sessione.")
             }
             #endif
             .task {
@@ -78,11 +80,10 @@ struct WalkieTalkieApp: App {
                 }
                 // IAP bootstrap deve precedere AdManager: i guard !isProUser dipendono dallo stato Pro.
                 await iapManager.bootstrap()
-                #if DEBUG && !targetEnvironment(simulator)
-                // Build Debug sull'iPhone di Andrea: tutto sbloccato, cosi' il
-                // collaudo non si ferma ai 5 minuti gratis ne' alla paywall.
-                // La Release di Xcode Cloud, quella dello Store, non lo vede.
-                iapManager.applyDebugSimulatedTier(isPro: true)
+                #if DEBUG
+                // Se la scelta Free/Pro e' arrivata prima che gli acquisti
+                // fossero letti, la si rimette: il bootstrap non deve annullarla.
+                if let isPro = debugTierIsPro { iapManager.applyDebugSimulatedTier(isPro: isPro) }
                 #endif
                 #if DEBUG && targetEnvironment(simulator)
                 // `-screenshotMode YES`: schermate per lo Store e il README,

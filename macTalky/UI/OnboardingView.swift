@@ -18,6 +18,7 @@ private enum OBString {
     case widgetsTitle, widgetsBody
     case proNote
     case next, back, start
+    case needsTalky, invite, inviteMessage
 
     var text: String {
         let lang = Self.languageKey
@@ -44,6 +45,9 @@ private enum OBString {
             .widgetsTitle: "Widgets on your desktop",
             .widgetsBody: "Talky channel, Propagation and Sun & bands, with live SFI, Kp and band data. Right-click the desktop, Edit Widgets, search for Talky.",
             .next: "Continue", .back: "Back", .start: "Start",
+            .needsTalky: "Talky talks to other devices that have Talky: install it on the phone of whoever is with you too.",
+            .invite: "Invite someone with you",
+            .inviteMessage: "Let's talk with Talky, the walkie-talkie that works without internet:",
         ],
         "it": [
             .welcomeTitle: "Il tuo Mac è anche un walkie-talkie",
@@ -60,6 +64,9 @@ private enum OBString {
             .widgetsTitle: "Widget sulla scrivania",
             .widgetsBody: "Canale Talky, Propagazione e Sole e bande, con SFI, Kp e bande dal vivo. Clic destro sulla scrivania, Modifica widget, cerca Talky.",
             .next: "Continua", .back: "Indietro", .start: "Inizia",
+            .needsTalky: "Talky parla con altri dispositivi che hanno Talky: installala anche sul telefono di chi è con te.",
+            .invite: "Invita chi è con te",
+            .inviteMessage: "Parliamo con Talky, il walkie-talkie che funziona senza internet:",
         ],
         "de": [
             .welcomeTitle: "Dein Mac ist auch ein Walkie-Talkie",
@@ -76,6 +83,9 @@ private enum OBString {
             .widgetsTitle: "Widgets auf dem Schreibtisch",
             .widgetsBody: "Talky-Kanal, Ausbreitung und Sonne & Bänder, mit aktuellen SFI-, Kp- und Banddaten. Rechtsklick auf den Schreibtisch, Widgets bearbeiten, nach Talky suchen.",
             .next: "Weiter", .back: "Zurück", .start: "Los geht's",
+            .needsTalky: "Talky spricht mit anderen Geräten, die Talky haben: Installiere es auch auf dem Handy der Person bei dir.",
+            .invite: "Jemanden in deiner Nähe einladen",
+            .inviteMessage: "Lass uns mit Talky sprechen, dem Walkie-Talkie, das ohne Internet funktioniert:",
         ],
         "es": [
             .welcomeTitle: "Tu Mac también es un walkie-talkie",
@@ -92,6 +102,9 @@ private enum OBString {
             .widgetsTitle: "Widgets en el escritorio",
             .widgetsBody: "Canal Talky, Propagación y Sol y bandas, con SFI, Kp y bandas en directo. Clic derecho en el escritorio, Editar widgets, busca Talky.",
             .next: "Continuar", .back: "Atrás", .start: "Empezar",
+            .needsTalky: "Talky habla con otros dispositivos que tienen Talky: instálala también en el teléfono de quien está contigo.",
+            .invite: "Invita a quien está contigo",
+            .inviteMessage: "Hablemos con Talky, el walkie-talkie que funciona sin internet:",
         ],
         "fr": [
             .welcomeTitle: "Votre Mac est aussi un talkie-walkie",
@@ -108,6 +121,9 @@ private enum OBString {
             .widgetsTitle: "Des widgets sur le bureau",
             .widgetsBody: "Canal Talky, Propagation et Soleil et bandes, avec SFI, Kp et bandes en direct. Clic droit sur le bureau, Modifier les widgets, cherchez Talky.",
             .next: "Continuer", .back: "Retour", .start: "Commencer",
+            .needsTalky: "Talky parle avec les autres appareils qui ont Talky : installez-la aussi sur le téléphone de la personne avec vous.",
+            .invite: "Inviter la personne avec vous",
+            .inviteMessage: "Parlons avec Talky, le talkie-walkie qui marche sans internet :",
         ],
         "ja": [
             .welcomeTitle: "Macはトランシーバーにもなります",
@@ -124,6 +140,9 @@ private enum OBString {
             .widgetsTitle: "デスクトップにウィジェット",
             .widgetsBody: "Talkyチャンネル、伝搬、太陽とバンド。SFI・Kp・バンドをライブ表示。デスクトップを右クリック、ウィジェットを編集、Talkyを検索。",
             .next: "続ける", .back: "戻る", .start: "開始",
+            .needsTalky: "TalkyはTalkyが入っている他の端末と話します。一緒にいる人の端末にもインストールしてください。",
+            .invite: "一緒にいる人を招待",
+            .inviteMessage: "インターネットなしで使えるトランシーバー、Talkyで話そう：",
         ],
         "ko": [
             .welcomeTitle: "Mac은 무전기도 됩니다",
@@ -140,6 +159,9 @@ private enum OBString {
             .widgetsTitle: "데스크탑 위젯",
             .widgetsBody: "Talky 채널, 전파 상태, 태양과 밴드, 실시간 SFI, Kp, 밴드 데이터. 데스크탑에서 오른쪽 클릭, 위젯 편집, Talky 검색.",
             .next: "계속", .back: "뒤로", .start: "시작",
+            .needsTalky: "Talky는 Talky가 있는 다른 기기와 대화합니다. 함께 있는 사람의 휴대폰에도 설치하세요.",
+            .invite: "함께 있는 사람 초대",
+            .inviteMessage: "인터넷 없이 되는 무전기 Talky로 이야기해요:",
         ],
         "pt": [
             .welcomeTitle: "Seu Mac também é um walkie-talkie",
@@ -156,6 +178,9 @@ private enum OBString {
             .widgetsTitle: "Widgets na mesa",
             .widgetsBody: "Canal Talky, Propagação e Sol e faixas, com SFI, Kp e bandas ao vivo. Clique com o botão direito na mesa, Editar widgets, procure Talky.",
             .next: "Continuar", .back: "Voltar", .start: "Começar",
+            .needsTalky: "O Talky fala com outros dispositivos que têm o Talky: instale também no celular de quem está com você.",
+            .invite: "Convide quem está com você",
+            .inviteMessage: "Vamos conversar pelo Talky, o walkie-talkie que funciona sem internet:",
         ],
         "th": [
             .welcomeTitle: "Mac ของคุณเป็นวิทยุสื่อสารได้ด้วย",
@@ -172,6 +197,9 @@ private enum OBString {
             .widgetsTitle: "วิดเจ็ตบนเดสก์ท็อป",
             .widgetsBody: "ช่อง Talky, การแพร่กระจายคลื่น และ ดวงอาทิตย์และย่าน พร้อมข้อมูล SFI, Kp และย่านความถี่สด คลิกขวาที่เดสก์ท็อป แก้ไขวิดเจ็ต แล้วค้นหา Talky",
             .next: "ต่อไป", .back: "ย้อนกลับ", .start: "เริ่ม",
+            .needsTalky: "Talky คุยกับอุปกรณ์อื่นที่มี Talky: ติดตั้งในโทรศัพท์ของคนที่อยู่กับคุณด้วย",
+            .invite: "เชิญคนที่อยู่กับคุณ",
+            .inviteMessage: "มาคุยกันด้วย Talky วอล์กกี้ทอล์กกี้ที่ใช้ได้โดยไม่ต้องมีอินเทอร์เน็ต:",
         ],
         "tr": [
             .welcomeTitle: "Mac'in aynı zamanda bir telsiz",
@@ -188,6 +216,9 @@ private enum OBString {
             .widgetsTitle: "Masaüstünde widget'lar",
             .widgetsBody: "Talky kanalı, Yayılım ve Güneş ve bantlar, canlı SFI, Kp ve bant verileriyle. Masaüstüne sağ tıkla, Widget'ları Düzenle, Talky'yi ara.",
             .next: "Devam", .back: "Geri", .start: "Başla",
+            .needsTalky: "Talky, Talky yüklü diğer cihazlarla konuşur: yanındaki kişinin telefonuna da yükle.",
+            .invite: "Yanındakini davet et",
+            .inviteMessage: "İnternetsiz çalışan telsiz Talky ile konuşalım:",
         ],
         "vi": [
             .welcomeTitle: "Mac của bạn cũng là bộ đàm",
@@ -204,6 +235,9 @@ private enum OBString {
             .widgetsTitle: "Widget trên màn hình nền",
             .widgetsBody: "Kênh Talky, Truyền sóng và Mặt trời và băng tần, với dữ liệu SFI, Kp và băng tần trực tiếp. Bấm chuột phải vào màn hình nền, Sửa tiện ích, tìm Talky.",
             .next: "Tiếp tục", .back: "Quay lại", .start: "Bắt đầu",
+            .needsTalky: "Talky nói chuyện với thiết bị khác có Talky: hãy cài cả trên điện thoại của người đang ở cùng bạn.",
+            .invite: "Mời người đang ở cùng bạn",
+            .inviteMessage: "Mình nói chuyện bằng Talky nhé, bộ đàm chạy không cần internet:",
         ],
         "ms": [
             .welcomeTitle: "Mac anda juga sebuah walkie-talkie",
@@ -220,6 +254,9 @@ private enum OBString {
             .widgetsTitle: "Widget di desktop",
             .widgetsBody: "Saluran Talky, Perambatan dan Matahari & jalur, dengan data SFI, Kp dan jalur secara langsung. Klik kanan pada desktop, Edit Widget, cari Talky.",
             .next: "Teruskan", .back: "Kembali", .start: "Mula",
+            .needsTalky: "Talky bercakap dengan peranti lain yang ada Talky: pasangkannya juga pada telefon orang yang bersama anda.",
+            .invite: "Jemput orang yang bersama anda",
+            .inviteMessage: "Jom bercakap dengan Talky, walkie-talkie yang berfungsi tanpa internet:",
         ],
         "zh-Hans": [
             .welcomeTitle: "你的 Mac 也是对讲机",
@@ -236,6 +273,9 @@ private enum OBString {
             .widgetsTitle: "桌面小组件",
             .widgetsBody: "Talky 频道、传播和太阳与波段，实时显示 SFI、Kp 和波段数据。在桌面上点按右键，编辑小组件，搜索 Talky。",
             .next: "继续", .back: "返回", .start: "开始",
+            .needsTalky: "Talky 只和装了 Talky 的其他设备通话：请在你身边那个人的手机上也安装它。",
+            .invite: "邀请身边的人",
+            .inviteMessage: "一起用 Talky 聊吧，不用互联网的对讲机：",
         ],
         "zh-Hant": [
             .welcomeTitle: "你的 Mac 也是對講機",
@@ -252,6 +292,9 @@ private enum OBString {
             .widgetsTitle: "桌面小工具",
             .widgetsBody: "Talky 頻道、傳播和太陽與波段，即時顯示 SFI、Kp 和波段資料。在桌面上按右鍵，編輯小工具，搜尋 Talky。",
             .next: "繼續", .back: "返回", .start: "開始",
+            .needsTalky: "Talky 只和裝了 Talky 的其他裝置通話：請在你身邊那個人的手機上也安裝它。",
+            .invite: "邀請身邊的人",
+            .inviteMessage: "一起用 Talky 聊吧，不用網際網路的對講機：",
         ],
     ]
 }
@@ -284,10 +327,7 @@ struct OnboardingView: View {
                                      tint: Talky.amber,
                                      title: OBString.liveTitle.text,
                                      body: OBString.liveBody.text)
-                    case 1: pageView(icon: "mic.circle.fill",
-                                     tint: Talky.signal,
-                                     title: OBString.welcomeTitle.text,
-                                     body: OBString.welcomeBody.text)
+                    case 1: walkiePage
                     case 2: networkPage
                     case 3: pageView(icon: "antenna.radiowaves.left.and.right.circle.fill",
                                      tint: Talky.amber,
@@ -423,6 +463,30 @@ struct OnboardingView: View {
             }
         }
     }
+
+    /// Il walkie parla solo con chi ha Talky: detto qui, con l'invito sotto
+    /// mano, e non scoperto davanti a un elenco di dispositivi vuoto.
+    private var walkiePage: some View {
+        VStack(spacing: 16) {
+            pageView(icon: "mic.circle.fill",
+                     tint: Talky.signal,
+                     title: OBString.welcomeTitle.text,
+                     body: OBString.welcomeBody.text)
+            Text(OBString.needsTalky.text)
+                .font(.system(size: 12, weight: .semibold, design: .rounded))
+                .foregroundStyle(Talky.text)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 46)
+                .fixedSize(horizontal: false, vertical: true)
+            ShareLink(item: Self.storeURL, message: Text(OBString.inviteMessage.text)) {
+                Label(OBString.invite.text, systemImage: "square.and.arrow.up")
+            }
+            .buttonStyle(ChipButtonStyle(accent: Talky.teal))
+        }
+    }
+
+    /// Lo stesso link universale dell'invito iOS: dal Mac si manda a un telefono.
+    private static let storeURL = URL(string: "https://apps.apple.com/app/id6748584483")!
 
     private var widgetsPage: some View {
         VStack(spacing: 16) {

@@ -10,6 +10,10 @@ import SwiftUI
 
 struct ModeSwitchHintOverlay: View {
     @Binding var isShown: Bool
+    /// Passa alla radio. C'e' solo quando non c'e' nessun telefono collegato:
+    /// a chi installa da solo il suggerimento compariva su un walkie muto e
+    /// "Capito" lo lasciava li'. Cosi' con un tocco sente qualcosa.
+    var onTryRadio: (() -> Void)? = nil
 
     @State private var arrowPulse: Bool = false
     @State private var cardOpacity: Double = 0
@@ -53,19 +57,44 @@ struct ModeSwitchHintOverlay: View {
                         .multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true)
 
-                    Button {
-                        dismiss()
-                    } label: {
-                        Text("got_it".localized)
-                            .font(.body.weight(.semibold))
-                            .foregroundColor(Color("BackgroundColor"))
-                            .padding(.horizontal, 28)
-                            .padding(.vertical, 12)
-                            .background(
-                                Capsule().fill(Color("PrimaryTextColor"))
-                            )
+                    if let onTryRadio {
+                        Button {
+                            dismiss()
+                            onTryRadio()
+                        } label: {
+                            Label("mode_switch_try_radio".localized, systemImage: "radio")
+                                .font(.body.weight(.semibold))
+                                .foregroundColor(Color("BackgroundColor"))
+                                .padding(.horizontal, 24)
+                                .padding(.vertical, 12)
+                                .background(
+                                    Capsule().fill(Color("PrimaryTextColor"))
+                                )
+                        }
+
+                        Button {
+                            dismiss()
+                        } label: {
+                            Text("got_it".localized)
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
+                                .padding(.vertical, 6)
+                        }
+                    } else {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Text("got_it".localized)
+                                .font(.body.weight(.semibold))
+                                .foregroundColor(Color("BackgroundColor"))
+                                .padding(.horizontal, 28)
+                                .padding(.vertical, 12)
+                                .background(
+                                    Capsule().fill(Color("PrimaryTextColor"))
+                                )
+                        }
+                        .accessibilityLabel("got_it".localized)
                     }
-                    .accessibilityLabel("got_it".localized)
                 }
                 .padding(20)
                 .frame(maxWidth: 320)

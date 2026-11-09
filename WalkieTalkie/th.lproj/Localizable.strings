@@ -211,11 +211,8 @@
 "onboarding_p1_title" = "วิทยุจริงและวิทยุสื่อสารใน iPhone ของคุณ";
 "onboarding_p1_subtitle" = "ฟัง CB คลื่นสั้น และ POC สด เปิดสถานีวิทยุทั่วโลกกว่า 330 สถานี และคุยกับเพื่อนได้แม้ไม่มีสัญญาณ";
 
-"onboarding_p2_no_internet_title" = "ไม่ต้องมีอินเทอร์เน็ต ไม่ต้องมีซิม";
-"onboarding_p2_no_internet_body" = "ระหว่าง iPhone กับ iPad เสียงจะวิ่งตรงจากเครื่องหนึ่งไปอีกเครื่องผ่าน Wi-Fi และบลูทูธ ไม่ต้องมีเราเตอร์ ไม่ต้องมีเซิร์ฟเวอร์ ไม่ต้องมีบัญชี";
 "onboarding_p2_range_caveat" = "กำแพง เนินเขา และความต่างระดับทำให้ระยะสั้นลง";
 "onboarding_p2_same_wifi" = "หากต้องการเชื่อมกับ Mac หรือโทรศัพท์ Android ให้ทุกเครื่องอยู่บนเครือข่าย Wi-Fi เดียวกัน เพราะการเชื่อมต่อนั้นวิ่งผ่านเครือข่ายท้องถิ่น";
-"onboarding_p2_multi_platform" = "Talky ใช้ได้บน iPad, Mac และ Android ด้วย แอปเดียวกัน ทุกอุปกรณ์ของคุณอยู่ในบทสนทนาเดียวกัน";
 
 "onboarding_p3_ptt_title" = "กดค้างเพื่อพูด";
 "onboarding_p3_ptt_body" = "เหมือนวิทยุสื่อสารของจริง: กดปุ่มตรงกลางค้างไว้เพื่อพูด ปล่อยเพื่อฟัง";
@@ -231,12 +228,9 @@
 "onboarding_p5_step2" = "บน iPhone และ iPad ให้เปิด สำรวจ แล้วแตะ + ข้างอุปกรณ์ จากนั้นกดยอมรับบนอีกเครื่อง ส่วน Mac และ Android จะเชื่อมต่อเองบน Wi-Fi เดียวกัน";
 "onboarding_p5_step3" = "เมื่อเชื่อมต่อแล้ว (จุดสีเขียว) ให้กดปุ่มตรงกลางค้างไว้เพื่อพูด ปล่อยเพื่อฟัง";
 
-"onboarding_permissions_title" = "ขออนุญาตสองอย่าง แล้วเริ่มได้เลย";
 "onboarding_permissions_description" = "Talky ต้องใช้สิ่งเหล่านี้จึงจะทำงานได้";
 "onboarding_microphone_permission" = "ไมโครโฟน";
 "onboarding_permission_mic_why" = "เพื่อรับเสียงของคุณเมื่อคุณกดพูด";
-"onboarding_notification_permission" = "การแจ้งเตือน";
-"onboarding_permission_notif_why" = "เพื่อแจ้งคุณเมื่อมีคนเรียกขณะที่แอปปิดอยู่";
 "onboarding_permission_open_settings" = "เปิดการตั้งค่า iOS";
 
 "onboarding_continue" = "ต่อไป";
@@ -266,7 +260,6 @@
 "paywall.plan.weekly_suffix" = "/สัปดาห์";
 "paywall.plan.yearly" = "รายปี";
 "paywall.plan.yearly_suffix" = "/ปี";
-"paywall.badge.most_popular" = "ยอดนิยมที่สุด";
 "paywall.badge.save" = "ประหยัด %d%%";
 "paywall.compare.weekly_vs_yearly" = "%1$@ ต่อปี ถ้าจ่ายรายสัปดาห์คุณจะเสีย %2$@";
 "paywall.trial.badge" = "ฟรี %1$d วัน จากนั้น %2$@ ต่อปี";
@@ -452,8 +445,6 @@
 "paywall.support.compact" = "สร้างโดยนักพัฒนาอิสระคนเดียว โค้ดของ Talky เปิดเป็นสาธารณะบน GitHub";
 
 /* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
-"paywall.lifetime.cta" = "จ่ายครั้งเดียว ·";
-"paywall.lifetime.subtitle" = "จ่ายครั้งเดียว ได้ทุกอย่างของ Pro ตลอดไป รวมธีมด้วย ไม่ต้องสมัครสมาชิก";
 "paywall.lifetime.owned" = "เป็นของคุณตลอดไป ขอบคุณครับ";
 
 /* Pass stazione a 24 ore (rewarded) e chiarimento sullo streaming */
@@ -617,3 +608,25 @@
 "room_footer" = "ห้องจะได้ยินเฉพาะคุณและผู้ที่มีรหัส แม้อยู่ไกลกัน ต้องใช้อินเทอร์เน็ต การเปิดห้องเป็นของ Talky Pro การเข้าด้วยคำเชิญฟรี";
 "room_invite_text" = "มาคุยกันบน Talky! เข้าห้องของฉันด้วยรหัส %@: %@ . ถ้ายังไม่มี Talky: %@";
 "live_pro_room_message" = "การเปิดห้องส่วนตัวเป็นฟีเจอร์ของ Talky Pro ผู้ที่คุณเชิญเข้าได้ฟรี";
+"paywall.plan.lifetime" = "ตลอดไป";
+"paywall.plan.lifetime_suffix" = "ครั้งเดียว";
+"paywall.plan.lifetime_detail" = "จ่ายครั้งเดียว เป็นของคุณตลอดไป";
+"paywall.compare.lifetime_vs_yearly" = "%1$@ ครั้งเดียว แทนที่จะจ่าย %2$@ ทุกปี";
+"paywall.cta.lifetime" = "ปลดล็อกตลอดไป";
+"pairing_listen_cb" = "ระหว่างนี้ ฟัง CB สด";
+"mode_switch_try_radio" = "ฟังวิทยุ";
+"onboarding_two_talky_title" = "วอล์กกี้ต้องมี Talky ทั้งสองเครื่อง";
+"onboarding_two_talky_body" = "Talky คุยกับโทรศัพท์เครื่องอื่นที่มี Talky: ติดตั้งในเครื่องของคนที่อยู่กับคุณด้วย";
+"onboarding_two_talky_range" = "ระยะ 10 ถึง 30 เมตร โดยเปิด Wi-Fi และ Bluetooth ทั้งสองเครื่อง ไม่ต้องใช้อินเทอร์เน็ตหรือเครือข่าย";
+"onboarding_mic_title" = "สิทธิ์เดียว: ไมโครโฟน";
+"onboarding_start_title" = "อยากเริ่มจากตรงไหน?";
+"onboarding_start_friend" = "มีเพื่อนอยู่ใกล้ๆ";
+"onboarding_start_friend_detail" = "ไปที่วอล์กกี้: หาโทรศัพท์ของกันและกันแล้วคุยกัน";
+"onboarding_start_solo" = "อยู่คนเดียว";
+"onboarding_start_solo_detail" = "ฟัง CB สดหรือวิทยุ แล้วลองวอล์กกี้เมื่อมีคนอยู่กับคุณ";
+"whats_new_title" = "มีอะไรใหม่ใน Talky %@";
+"whats_new_poc" = "ในช่อง POC ตอนนี้พูดได้แล้ว ไม่ใช่แค่ฟัง";
+"whats_new_rooms" = "ห้องส่วนตัวแบบเชิญ เพื่อคุยกับเพื่อนที่อยู่ไกลได้ด้วย ต้องใช้อินเทอร์เน็ต";
+"whats_new_widgets" = "วิดเจ็ตใหม่สำหรับหน้าจอโฮมและตัวควบคุมใหม่";
+"whats_new_pairing" = "ช่วยเชื่อมต่อ: ถ้าไม่เห็นโทรศัพท์อีกเครื่อง Talky จะบอกว่าต้องตรวจอะไรและเชิญอย่างไร";
+"whats_new_try" = "ลองพูดใน POC";

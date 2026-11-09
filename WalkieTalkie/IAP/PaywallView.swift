@@ -193,28 +193,34 @@ struct PaywallView: View {
         ZStack {
             backgroundLayer
 
-            ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 24) {
-                    topBar
-                    heroSection
-                    hairlineDivider
-                    featuresList
-                    hairlineDivider
-                    supporterNote
-                    priceCards
-                    yearlyComparisonLine
-                    freeTrialBadge
-                    ctaButton
-                    lifetimeOption
-                    rewardedSecondaryCTA
-                    appleLegalFooter
-                    footerLinks
-                    Spacer(minLength: 24)
+            // I tre piani subito sotto il titolo: prima stavano dopo vantaggi e
+            // nota dello sviluppatore, e il "per sempre" (quello che vende appena
+            // lo si vede) restava sotto la piega anche su un telefono grande.
+            // Vantaggi e nota restano, dopo il bottone, per chi vuole leggere.
+            GeometryReader { geo in
+                ScrollView(showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 20) {
+                        topBar
+                        heroSection(showIcon: geo.size.height >= 700)
+                        planRows
+                        yearlyComparisonLine
+                        freeTrialBadge
+                        ctaButton
+                        lifetimeOwned
+                        hairlineDivider
+                        featuresList
+                        hairlineDivider
+                        supporterNote
+                        rewardedSecondaryCTA
+                        appleLegalFooter
+                        footerLinks
+                        Spacer(minLength: 24)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 8)
+                    .padding(.bottom, 24)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 8)
-                .padding(.bottom, 24)
-                .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
         .overlay {
@@ -318,11 +324,15 @@ struct PaywallView: View {
 
     // MARK: - Hero
 
-    private var heroSection: some View {
+    /// Sugli schermi bassi (iPhone SE, 8) senza l'icona: sono 110 punti che
+    /// servono ai tre piani per stare tutti sopra la piega.
+    private func heroSection(showIcon: Bool) -> some View {
         VStack(alignment: .leading, spacing: 14) {
-            heroIcon
-                .scaleEffect(heroAppeared ? 1.0 : 0.85)
-                .opacity(heroAppeared ? 1.0 : 0.0)
+            if showIcon {
+                heroIcon
+                    .scaleEffect(heroAppeared ? 1.0 : 0.85)
+                    .opacity(heroAppeared ? 1.0 : 0.0)
+            }
 
             VStack(alignment: .leading, spacing: 6) {
                 Text("paywall.title".localized)
@@ -468,27 +478,65 @@ struct PaywallView: View {
             .padding(.horizontal, -20) // estendi edge-to-edge
     }
 
-    // MARK: - Price cards
+    // MARK: - Piani
 
-    private var priceCards: some View {
-        HStack(alignment: .top, spacing: 12) {
-            priceCard(
+    /// Settimanale, annuale e per sempre, uno sotto l'altro e disegnati allo
+    /// stesso modo: il per sempre e' un piano come gli altri, non una riga in
+    /// piccolo sotto il bottone. Preselezionato resta l'annuale.
+    private var planRows: some View {
+        VStack(spacing: 10) {
+            planRow(
                 title: "paywall.plan.weekly".localized,
                 product: weeklyProduct,
                 periodSuffix: "paywall.plan.weekly_suffix".localized,
-                productID: ProductID.weekly.rawValue,
-                isYearly: false
-            )
+                productID: ProductID.weekly.rawValue
+            ) { EmptyView() }
 
-            priceCard(
+            planRow(
                 title: "paywall.plan.yearly".localized,
                 product: yearlyProduct,
                 periodSuffix: "paywall.plan.yearly_suffix".localized,
-                productID: ProductID.yearly.rawValue,
-                isYearly: true
-            )
+                productID: ProductID.yearly.rawValue
+            ) {
+                if let percent = yearlySavingsPercent {
+                    Text(String(format: "paywall.badge.save".localized, percent))
+                        .font(.system(size: 10, weight: .heavy, design: .rounded))
+                        .tracking(0.8)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 3)
+                        .background(Capsule().fill(successColor))
+                }
+            }
+
+            if !iap.hasLifetime {
+                planRow(
+                    title: "paywall.plan.lifetime".localized,
+                    product: lifetimeProduct,
+                    periodSuffix: "paywall.plan.lifetime_suffix".localized,
+                    productID: ProductID.lifetimeID
+                ) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("paywall.plan.lifetime_detail".localized)
+                            .font(.system(size: 12, weight: .semibold))
+                        if let compare = lifetimeComparisonText {
+                            Text(compare)
+                                .font(.system(size: 11))
+                                .opacity(0.75)
+                        }
+                    }
+                    .fixedSize(horizontal: false, vertical: true)
+                }
+            }
         }
-        .padding(.top, 8)
+        .padding(.top, 4)
+    }
+
+    /// "€39,99 una volta, invece di €19,99 ogni anno", dai prezzi di StoreKit.
+    private var lifetimeComparisonText: String? {
+        guard let lifetime = lifetimeProduct?.displayPrice,
+              let yearly = yearlyProduct?.displayPrice else { return nil }
+        return String(format: "paywall.compare.lifetime_vs_yearly".localized, lifetime, yearly)
     }
 
     /// Ancoraggio del prezzo: da solo "€19,99 all'anno" non dice niente, accanto
@@ -497,7 +545,8 @@ struct PaywallView: View {
     /// offline non mostra una frase monca.
     @ViewBuilder
     private var yearlyComparisonLine: some View {
-        if let equivalent = weeklyYearlyEquivalentText,
+        if selectedProductID != ProductID.lifetimeID,
+           let equivalent = weeklyYearlyEquivalentText,
            let yearly = yearlyProduct?.displayPrice {
             HStack(spacing: 5) {
                 Image(systemName: "equal.circle")
@@ -534,66 +583,60 @@ struct PaywallView: View {
         }
     }
 
-    private func priceCard(title: String,
-                           product: Product?,
-                           periodSuffix: String,
-                           productID: String,
-                           isYearly: Bool) -> some View {
+    private func planRow<Detail: View>(title: String,
+                                       product: Product?,
+                                       periodSuffix: String,
+                                       productID: String,
+                                       @ViewBuilder detail: () -> Detail) -> some View {
         let isSelected = selectedProductID == productID
-        let priceText = product?.displayPrice ?? "…"
+        let fg = isSelected ? selectedFG : ink
+        let fgSecondary = isSelected ? selectedFG.opacity(0.7) : inkSecondary
 
-        return VStack(alignment: .leading, spacing: 8) {
-            // Mini "PIÙ POPOLARE" tag flush-top per yearly
-            if isYearly {
-                Text("paywall.badge.most_popular".localized)
-                    .font(.system(size: 10, weight: .black, design: .rounded))
-                    .tracking(1.5)
-                    .foregroundColor(.black)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 3)
-                    .background(Capsule().fill(brand))
-            } else {
-                // Placeholder per allineare l'altezza con la card yearly
-                Color.clear.frame(height: 18)
+        return HStack(alignment: .center, spacing: 12) {
+            Image(systemName: isSelected ? "largecircle.fill.circle" : "circle")
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundColor(isSelected ? (isAppDark ? .black : brand) : inkSecondary.opacity(0.6))
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundColor(fg)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                detail()
+                    .foregroundColor(fgSecondary)
             }
 
-            Text(title)
-                .font(.system(size: 13, weight: .semibold, design: .rounded))
-                .foregroundColor(isSelected ? selectedFG(isYearly: isYearly) : inkSecondary)
-                .padding(.top, 4)
+            Spacer(minLength: 8)
 
-            Text(priceText)
-                .font(.system(size: 26, weight: .heavy, design: .rounded))
-                .monospacedDigit()
-                .foregroundColor(isSelected ? selectedFG(isYearly: isYearly) : ink)
-
-            Text(periodSuffix)
-                .font(.system(size: 12, weight: .medium))
-                .foregroundColor(isSelected
-                                 ? selectedFG(isYearly: isYearly).opacity(0.65)
-                                 : inkSecondary)
-
-            if isYearly, let percent = yearlySavingsPercent {
-                Text(String(format: "paywall.badge.save".localized, percent))
-                    .font(.system(size: 10, weight: .heavy, design: .rounded))
-                    .tracking(0.8)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 3)
-                    .background(Capsule().fill(successColor))
-                    .padding(.top, 2)
-            } else {
-                Color.clear.frame(height: 16)
+            VStack(alignment: .trailing, spacing: 2) {
+                Text(product?.displayPrice ?? "…")
+                    .font(.system(size: 20, weight: .heavy, design: .rounded))
+                    .monospacedDigit()
+                    .foregroundColor(fg)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                Text(periodSuffix)
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundColor(fgSecondary)
+                    .lineLimit(1)
             }
+            .layoutPriority(1)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 14)
-        .padding(.vertical, 16)
-        .background(cardBackground(isYearly: isYearly, isSelected: isSelected))
-        .overlay(cardBorder(isYearly: isYearly, isSelected: isSelected))
-        .scaleEffect(isYearly && isSelected ? 1.04 : 1.0)
-        .shadow(color: isSelected ? selectedShadow(isYearly: isYearly) : .clear,
-                radius: isAppDark ? 18 : 12, x: 0, y: 4)
+        .padding(.vertical, 12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                // "TX attivo": il piano scelto si accende, qualunque sia.
+                .fill(isSelected ? (isAppDark ? brand : ink) : bgSubtle)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(isSelected ? brand : hairline, lineWidth: isSelected ? 2 : 1)
+        )
+        .shadow(color: isSelected ? brand.opacity(isAppDark ? 0.25 : 0.12) : .clear,
+                radius: isAppDark ? 14 : 10, x: 0, y: 3)
         .contentShape(Rectangle())
         .onTapGesture {
             withAnimation(.spring(response: 0.35, dampingFraction: 0.78)) {
@@ -605,42 +648,10 @@ struct PaywallView: View {
         .accessibilityAddTraits(isSelected ? [.isSelected, .isButton] : .isButton)
     }
 
-    /// Foreground color quando la card è "active". La card yearly selezionata
-    /// inverte la superficie ("TX active LED"): in dark il fondo diventa brand
-    /// (giallo) → testo nero; in light il fondo diventa ink (off-black) → testo
-    /// crema. Le altre card mantengono il foreground neutro.
-    private func selectedFG(isYearly: Bool) -> Color {
-        guard isYearly else { return ink }
-        return isAppDark ? .black : bgPrimary
-    }
-
-    @ViewBuilder
-    private func cardBackground(isYearly: Bool, isSelected: Bool) -> some View {
-        let shape = RoundedRectangle(cornerRadius: 20, style: .continuous)
-        if isYearly && isSelected {
-            // "TX active": invert
-            shape.fill(isAppDark ? brand : ink)
-        } else {
-            shape.fill(bgSubtle)
-        }
-    }
-
-    @ViewBuilder
-    private func cardBorder(isYearly: Bool, isSelected: Bool) -> some View {
-        let shape = RoundedRectangle(cornerRadius: 20, style: .continuous)
-        if isSelected {
-            shape.stroke(brand, lineWidth: 2)
-        } else {
-            shape.stroke(hairline, lineWidth: 1)
-        }
-    }
-
-    private func selectedShadow(isYearly: Bool) -> Color {
-        if isYearly {
-            return brand.opacity(isAppDark ? 0.30 : 0.15)
-        } else {
-            return brand.opacity(isAppDark ? 0.18 : 0.08)
-        }
+    /// Testo sul piano acceso: nero sul giallo in modalita' scura, crema
+    /// sull'inchiostro in chiara.
+    private var selectedFG: Color {
+        isAppDark ? .black : bgPrimary
     }
 
     // MARK: - CTA
@@ -687,23 +698,20 @@ struct PaywallView: View {
         if isYearlySelected, let offer = yearlyIntroOffer {
             return String(format: "paywall.cta.trial".localized, Self.days(in: offer.period))
         }
+        if selectedProductID == ProductID.lifetimeID {
+            return "paywall.cta.lifetime".localized
+        }
         return "paywall.cta.start".localized
     }
 
     // MARK: - Acquisto a vita
 
-    /// L'alternativa "paga una volta e basta". Sta SOTTO il CTA principale, non
-    /// fra le card prezzo: è una scelta diversa in natura, non un terzo piano da
-    /// confrontare a colpo d'occhio con settimanale e annuale. Chi arriva qui
-    /// cercando l'abbonamento lo trova sopra; chi non vuole abbonarsi affatto
-    /// trova questo, e per lui è l'unica riga che conta.
-    ///
-    /// Esiste perché l'hanno chiesto gli utenti, testualmente: "a pay once model
-    /// would be appreciated", "the addition of ads and subscription ruined it".
+    /// Chi ha gia' il per sempre non trova il piano da comprare, solo la
+    /// conferma. Il per sempre esiste perche' l'hanno chiesto gli utenti,
+    /// testualmente: "a pay once model would be appreciated".
     @ViewBuilder
-    private var lifetimeOption: some View {
+    private var lifetimeOwned: some View {
         if iap.hasLifetime {
-            // Già comprato: niente da vendere, solo conferma.
             HStack(spacing: 8) {
                 Image(systemName: "checkmark.seal.fill")
                     .font(.system(size: 14, weight: .semibold))
@@ -718,38 +726,6 @@ struct PaywallView: View {
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
                     .fill(successColor.opacity(isAppDark ? 0.14 : 0.10))
             )
-            .padding(.top, 4)
-        } else if let lifetime = lifetimeProduct {
-            Button {
-                Task { await performLifetimePurchase(lifetime) }
-            } label: {
-                VStack(spacing: 3) {
-                    HStack(spacing: 6) {
-                        Image(systemName: "infinity")
-                            .font(.system(size: 13, weight: .bold))
-                        Text("paywall.lifetime.cta".localized)
-                            .font(.system(size: 15, weight: .bold, design: .rounded))
-                        Text(lifetime.displayPrice)
-                            .font(.system(size: 15, weight: .heavy, design: .rounded))
-                            .monospacedDigit()
-                    }
-                    .foregroundColor(ink)
-
-                    Text("paywall.lifetime.subtitle".localized)
-                        .font(.system(size: 11))
-                        .foregroundColor(inkSecondary)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 13)
-                .background(
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .stroke(ink.opacity(isAppDark ? 0.22 : 0.18), lineWidth: 1.5)
-                )
-            }
-            .buttonStyle(.plain)
-            .disabled(isPurchasing)
-            .opacity(isPurchasing ? 0.5 : 1.0)
-            .padding(.top, 4)
         }
     }
 
@@ -861,21 +837,9 @@ struct PaywallView: View {
         isPurchasing = true
         defer { isPurchasing = false }
 
-        do {
-            if try await iap.purchase(product) {
-                withAnimation(.spring(response: 0.45, dampingFraction: 0.9)) { showYourPro = true }
-            }
-        } catch {
-            errorMessage = "paywall.error.purchase_failed".localized
-            showErrorAlert = true
+        if ProductID.isLifetime(product.id) {
+            Analytics.logEvent("lifetime_purchase_initiated", parameters: ["trigger": trigger])
         }
-    }
-
-    private func performLifetimePurchase(_ product: Product) async {
-        isPurchasing = true
-        defer { isPurchasing = false }
-
-        Analytics.logEvent("lifetime_purchase_initiated", parameters: ["trigger": trigger])
         do {
             if try await iap.purchase(product) {
                 withAnimation(.spring(response: 0.45, dampingFraction: 0.9)) { showYourPro = true }

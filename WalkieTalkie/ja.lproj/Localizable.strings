@@ -211,11 +211,8 @@
 "onboarding_p1_title" = "本物の無線とトランシーバーをiPhoneに";
 "onboarding_p1_subtitle" = "CB、短波、POCをライブで受信、世界330局以上のラジオ、そして電波のない場所でも友だちと話せます。";
 
-"onboarding_p2_no_internet_title" = "インターネットもSIMも不要";
-"onboarding_p2_no_internet_body" = "iPhoneとiPadの間では、声はWi-FiとBluetoothで端末から端末へ直接届きます。ルーターもサーバーもアカウントも要りません。";
 "onboarding_p2_range_caveat" = "壁や丘、高低差があると届く距離が短くなります。";
 "onboarding_p2_same_wifi" = "MacやAndroid端末とつなぐときは、すべての端末を同じWi-Fiネットワークに接続してください。この経路はローカルネットワークを通ります。";
-"onboarding_p2_multi_platform" = "TalkyはiPad、Mac、Androidでも動きます。同じアプリで、あなたのすべての端末が同じ会話に入れます。";
 
 "onboarding_p3_ptt_title" = "長押しして話す";
 "onboarding_p3_ptt_body" = "本物のトランシーバーと同じです。中央のボタンを押し続けて話し、離すと受信します。";
@@ -231,12 +228,9 @@
 "onboarding_p5_step2" = "iPhoneとiPadでは「さがす」を開いて端末の横の+をタップし、相手側で承認します。MacとAndroidは同じWi-Fi上で自動的につながります";
 "onboarding_p5_step3" = "接続できたら（緑の点）、中央のボタンを押し続けて話し、離すと受信します";
 
-"onboarding_permissions_title" = "許可はふたつだけ";
 "onboarding_permissions_description" = "Talkyが動くために必要です。";
 "onboarding_microphone_permission" = "マイク";
 "onboarding_permission_mic_why" = "押して話すときにあなたの声を拾うために使います。";
-"onboarding_notification_permission" = "通知";
-"onboarding_permission_notif_why" = "アプリを閉じているときに呼びかけられたらお知らせします。";
 "onboarding_permission_open_settings" = "iOSの設定を開く";
 
 "onboarding_continue" = "続ける";
@@ -266,7 +260,6 @@
 "paywall.plan.weekly_suffix" = "/週";
 "paywall.plan.yearly" = "年額";
 "paywall.plan.yearly_suffix" = "/年";
-"paywall.badge.most_popular" = "いちばん人気";
 "paywall.badge.save" = "%d%%お得";
 "paywall.compare.weekly_vs_yearly" = "年%1$@。週払いなら%2$@かかります。";
 "paywall.trial.badge" = "%1$d日間無料、その後は年%2$@";
@@ -452,8 +445,6 @@
 "paywall.support.compact" = "個人開発者が作っています。TalkyのコードはGitHubで公開中。";
 
 /* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
-"paywall.lifetime.cta" = "一度だけ支払う ·";
-"paywall.lifetime.subtitle" = "一度のお支払いで、Proのすべてを永久に。テーマも込み。サブスクなし。";
 "paywall.lifetime.owned" = "ずっとあなたのものです。ありがとう。";
 
 /* Pass stazione a 24 ore (rewarded) e chiarimento sullo streaming */
@@ -617,3 +608,25 @@
 "room_footer" = "ルームの声は、あなたとコードを持つ人だけに聞こえます。離れていても使えますが、インターネットが必要です。ルームを開くのはTalky Pro、招待で入るのは無料です。";
 "room_invite_text" = "Talkyで話そう！コード %@ で私のルームに入って：%@ 。Talkyがない場合：%@";
 "live_pro_room_message" = "プライベートルームを開くのはTalky Proの機能です。招待された人は無料で入れます。";
+"paywall.plan.lifetime" = "買い切り";
+"paywall.plan.lifetime_suffix" = "1回のみ";
+"paywall.plan.lifetime_detail" = "一度の支払いで、ずっとあなたのもの";
+"paywall.compare.lifetime_vs_yearly" = "%1$@を1回だけ。毎年%2$@ではなく";
+"paywall.cta.lifetime" = "買い切りで解除";
+"pairing_listen_cb" = "その間にCBをライブで聴く";
+"mode_switch_try_radio" = "ラジオを聴く";
+"onboarding_two_talky_title" = "トランシーバーは両方の端末にTalkyが必要です";
+"onboarding_two_talky_body" = "TalkyはTalkyが入っている他の端末と話します。一緒にいる人の端末にもインストールしてください。";
+"onboarding_two_talky_range" = "届く距離は10〜30メートル。両方でWi-FiとBluetoothをオンに。インターネットやネットワークは不要です。";
+"onboarding_mic_title" = "許可はひとつ：マイク";
+"onboarding_start_title" = "どこから始めますか？";
+"onboarding_start_friend" = "近くに友だちがいる";
+"onboarding_start_friend_detail" = "トランシーバーへ。お互いの端末を見つけて話しましょう。";
+"onboarding_start_solo" = "ひとりです";
+"onboarding_start_solo_detail" = "CBのライブ受信かラジオを聴きましょう。トランシーバーは誰かと一緒のときに。";
+"whats_new_title" = "Talky %@ の新機能";
+"whats_new_poc" = "POCチャンネルで、聴くだけでなく話せるようになりました。";
+"whats_new_rooms" = "招待制のプライベートルームで、離れた友だちとも話せます。インターネットが必要です。";
+"whats_new_widgets" = "ホーム画面用の新しいウィジェットと新しいコントロール。";
+"whats_new_pairing" = "接続のサポート：相手の端末が見つからないとき、確認することと招待の方法をTalkyが案内します。";
+"whats_new_try" = "POCで話してみる";

@@ -7,7 +7,6 @@
 
 import SwiftUI
 import AVFoundation
-import UserNotifications
 import FirebaseAnalytics
 
 struct OnboardingView: View {
@@ -15,7 +14,6 @@ struct OnboardingView: View {
     @State private var showingPermissions = false
     @State private var lastTrackedPage = -1
     @Binding var isOnboardingComplete: Bool
-    @ObservedObject var notificationManager: NotificationManager
 
     private let totalPages = 8
 
@@ -55,11 +53,15 @@ struct OnboardingView: View {
                     // La radio dal vivo prima del walkie: e' quello che Talky ha
                     // e le altre app no, e chi installa per la CB deve vederlo
                     // subito, non alla sesta pagina.
+                    // Subito dopo, la verita' sul walkie: parla solo con chi ha
+                    // Talky. Quasi ogni installazione finiva in una
+                    // disinstallazione perche' chi installa da solo lo scopriva
+                    // in Esplora, davanti a una ricerca che non trovava nessuno.
                     ScrollableOnboardingPage { OnboardingHookPage() }.tag(0)
-                    ScrollableOnboardingPage { OnboardingLiveRadioPage() }.tag(1)
-                    ScrollableOnboardingPage { OnboardingRadioModePage() }.tag(2)
-                    ScrollableOnboardingPage { OnboardingWidgetsPage() }.tag(3)
-                    ScrollableOnboardingPage { OnboardingNoInternetPage() }.tag(4)
+                    ScrollableOnboardingPage { OnboardingTwoTalkyPage() }.tag(1)
+                    ScrollableOnboardingPage { OnboardingLiveRadioPage() }.tag(2)
+                    ScrollableOnboardingPage { OnboardingRadioModePage() }.tag(3)
+                    ScrollableOnboardingPage { OnboardingWidgetsPage() }.tag(4)
                     ScrollableOnboardingPage { OnboardingPTTPage() }.tag(5)
                     ScrollableOnboardingPage { OnboardingFrequencyPage() }.tag(6)
                     ScrollableOnboardingPage { OnboardingStepsPage() }.tag(7)
@@ -118,7 +120,7 @@ struct OnboardingView: View {
             trackPageView(newValue)
         }
         .sheet(isPresented: $showingPermissions) {
-            PermissionsView(isOnboardingComplete: $isOnboardingComplete, notificationManager: notificationManager)
+            PermissionsView(isOnboardingComplete: $isOnboardingComplete)
         }
     }
 
@@ -180,73 +182,77 @@ private struct ScrollableOnboardingPage<Content: View>: View {
     }
 }
 
-// MARK: - No internet
+// MARK: - Due Talky
 
-private struct OnboardingNoInternetPage: View {
+/// Il walkie parla solo con un altro dispositivo che ha Talky, e solo vicino.
+/// Detto alla seconda pagina, con l'invito a portata di mano: chi e' con un
+/// amico gliela fa installare adesso, chi e' da solo sa che per lui ci sono la
+/// radio e l'ascolto dal vivo.
+private struct OnboardingTwoTalkyPage: View {
+    @State private var showInvite = false
+
     var body: some View {
-        VStack(spacing: 28) {
-            ZStack {
-                HStack(spacing: 28) {
-                    Image(systemName: "iphone")
-                        .font(.system(size: 56, weight: .light))
-                    Image(systemName: "dot.radiowaves.left.and.right")
-                        .font(.system(size: 36, weight: .light))
-                        .foregroundColor(Color("PrimaryTextColor").opacity(0.6))
-                    Image(systemName: "iphone")
-                        .font(.system(size: 56, weight: .light))
-                }
-                .foregroundColor(Color("PrimaryTextColor"))
+        VStack(spacing: 26) {
+            HStack(spacing: 28) {
+                Image(systemName: "iphone")
+                    .font(.system(size: 56, weight: .light))
+                Image(systemName: "dot.radiowaves.left.and.right")
+                    .font(.system(size: 36, weight: .light))
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.6))
+                Image(systemName: "iphone")
+                    .font(.system(size: 56, weight: .light))
             }
+            .foregroundColor(Color("PrimaryTextColor"))
 
             VStack(spacing: 14) {
-                Text(OnboardingStrings.p2Title)
+                Text(OnboardingStrings.twoTalkyTitle)
                     .font(.title.bold())
                     .foregroundColor(Color("PrimaryTextColor"))
                     .multilineTextAlignment(.center)
 
-                Text(OnboardingStrings.p2Body)
+                Text(OnboardingStrings.twoTalkyBody)
                     .font(.body)
                     .foregroundColor(Color("PrimaryTextColor").opacity(0.8))
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 24)
 
-                HStack(spacing: 8) {
-                    Image(systemName: "exclamationmark.triangle")
-                        .font(.footnote)
-                    Text(OnboardingStrings.p2RangeCaveat)
-                        .font(.footnote)
+                VStack(alignment: .leading, spacing: 10) {
+                    note("wave.3.right", OnboardingStrings.twoTalkyRange)
+                    note("exclamationmark.triangle", OnboardingStrings.p2RangeCaveat)
+                    // Mac e Android parlano solo via TALKY1 su Bonjour/TCP: serve la
+                    // stessa rete Wi-Fi, a differenza del link Apple-to-Apple.
+                    note("wifi", OnboardingStrings.p2SameWiFi)
                 }
-                .foregroundColor(Color("PrimaryTextColor").opacity(0.6))
-                .padding(.top, 6)
-
-                // Mac e Android parlano solo via TALKY1 su Bonjour/TCP: serve la
-                // stessa rete Wi-Fi, a differenza del link Apple-to-Apple.
-                HStack(alignment: .top, spacing: 8) {
-                    Image(systemName: "wifi")
-                        .font(.footnote)
-                    Text(OnboardingStrings.p2SameWiFi)
-                        .font(.footnote)
-                        .multilineTextAlignment(.leading)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                .foregroundColor(Color("PrimaryTextColor").opacity(0.6))
-                .padding(.horizontal, 24)
+                .padding(.horizontal, 28)
                 .padding(.top, 4)
+            }
 
-                HStack(alignment: .top, spacing: 8) {
-                    Image(systemName: "ipad.and.iphone")
-                        .font(.footnote)
-                    Text(OnboardingStrings.p2MultiPlatform)
-                        .font(.footnote)
-                        .multilineTextAlignment(.leading)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                .foregroundColor(Color("PrimaryTextColor").opacity(0.6))
-                .padding(.horizontal, 24)
-                .padding(.top, 4)
+            Button {
+                showInvite = true
+            } label: {
+                Label("invite_button".localized, systemImage: "qrcode")
+                    .font(.body.weight(.semibold))
+                    .foregroundColor(Color("PrimaryTextColor"))
+                    .padding(.horizontal, 22)
+                    .padding(.vertical, 12)
+                    .background(Capsule().stroke(Color("PrimaryTextColor").opacity(0.5), lineWidth: 1.5))
             }
         }
         .padding()
+        .sheet(isPresented: $showInvite) { InviteSheet(source: "onboarding") }
+    }
+
+    private func note(_ symbol: String, _ text: String) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: symbol)
+                .font(.footnote)
+                .frame(width: 18)
+            Text(text)
+                .font(.footnote)
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
     }
 }
 
@@ -619,15 +625,31 @@ private struct StepRow: View {
 
 // MARK: - Permissions Sheet
 
+/// Dove porta l'ultima scelta dell'onboarding. ContentView la legge una volta
+/// alla prima comparsa e la cancella.
+enum OnboardingStartPath: String {
+    case friend, solo
+
+    static let key = "talky_onboarding_start_path"
+
+    static func consume() -> OnboardingStartPath? {
+        let defaults = UserDefaults.standard
+        guard let raw = defaults.string(forKey: key) else { return nil }
+        defaults.removeObject(forKey: key)
+        return OnboardingStartPath(rawValue: raw)
+    }
+}
+
 struct PermissionsView: View {
     @Binding var isOnboardingComplete: Bool
-    @ObservedObject var notificationManager: NotificationManager
     @Environment(\.dismiss) private var dismiss
 
     @State private var microphonePermissionGranted = false
-    @State private var notificationPermissionGranted = false
     @State private var isRequestingPermissions = false
     @State private var hasRequestedOnce = false
+    /// Il prompt del microfono ha avuto risposta: al posto del foglio permessi
+    /// compaiono le due strade.
+    @State private var showStartChoice = false
 
     var body: some View {
         TalkyNavigation {
@@ -635,102 +657,160 @@ struct PermissionsView: View {
                 Color("BackgroundColor")
                     .ignoresSafeArea()
 
-                VStack(spacing: 28) {
-                    Image(systemName: "lock.shield")
-                        .font(.system(size: 72, weight: .light))
-                        .foregroundColor(Color("PrimaryTextColor"))
-                        .padding(.top, 20)
-
-                    VStack(spacing: 12) {
-                        Text(OnboardingStrings.permissionsTitle)
-                            .font(.title.bold())
-                            .foregroundColor(Color("PrimaryTextColor"))
-                            .multilineTextAlignment(.center)
-
-                        Text(OnboardingStrings.permissionsDescription)
-                            .font(.body)
-                            .foregroundColor(Color("PrimaryTextColor").opacity(0.75))
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 20)
-                    }
-
-                    VStack(spacing: 12) {
-                        PermissionRow(
-                            icon: "mic.fill",
-                            title: OnboardingStrings.microphonePermission,
-                            subtitle: OnboardingStrings.microphonePermissionWhy,
-                            isGranted: microphonePermissionGranted
-                        )
-
-                        PermissionRow(
-                            icon: "bell.fill",
-                            title: OnboardingStrings.notificationPermission,
-                            subtitle: OnboardingStrings.notificationPermissionWhy,
-                            isGranted: notificationPermissionGranted
-                        )
-                    }
-                    .padding(.horizontal, 20)
-
-                    Spacer()
-
-                    // Linea guida 5.1.1(iv): il bottone che precede il prompt di
-                    // sistema non deve spingere verso il si', quindi "Continua" e
-                    // mai "Consenti" (rifiuto iOS 2.44, 9 ago 2026 — stesso
-                    // rilievo gia' preso su macOS il 6 agosto). Il testo
-                    // esplicativo sopra invece e' consentito e va tenuto.
-                    VStack(spacing: 12) {
-                        Button(action: requestPermissions) {
-                            HStack {
-                                if isRequestingPermissions {
-                                    ProgressView()
-                                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                        .scaleEffect(0.8)
-                                } else {
-                                    Text(OnboardingStrings.continueButton)
-                                        .fontWeight(.semibold)
-                                }
-                            }
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 15)
-                            .background(Color("PrimaryTextColor"))
-                            .cornerRadius(25)
-                        }
-                        .disabled(isRequestingPermissions)
-
-                        if hasRequestedOnce && (!microphonePermissionGranted || !notificationPermissionGranted) {
-                            Button {
-                                if let url = URL(string: UIApplication.openSettingsURLString) {
-                                    UIApplication.shared.open(url)
-                                }
-                            } label: {
-                                Text(OnboardingStrings.openSettingsLink)
-                                    .font(.footnote)
-                                    .underline()
-                                    .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
-                                    .padding(.vertical, 6)
-                            }
-                        }
-
-                        // Niente "Salta" qui: la 5.1.1(iv) vuole che dopo il
-                        // messaggio esplicativo si arrivi SEMPRE al prompt di
-                        // sistema, e questo bottone permetteva di rimandarlo.
-                        // Nessuno resta bloccato: requestPermissions() chiude
-                        // comunque il foglio, anche se l'utente rifiuta o se il
-                        // permesso era gia' stato deciso e il prompt non riappare.
-                    }
-                    .padding(.horizontal, 24)
-                    .padding(.bottom, 24)
+                if showStartChoice {
+                    startChoice
+                        .transition(.opacity)
+                } else {
+                    permissionStep
                 }
             }
             .navigationBarHidden(true)
         }
+        .interactiveDismissDisabled(showStartChoice)
         .onAppear { checkPermissions() }
+    }
+
+    private var permissionStep: some View {
+        VStack(spacing: 28) {
+            Image(systemName: "lock.shield")
+                .font(.system(size: 72, weight: .light))
+                .foregroundColor(Color("PrimaryTextColor"))
+                .padding(.top, 20)
+
+            VStack(spacing: 12) {
+                Text(OnboardingStrings.micTitle)
+                    .font(.title.bold())
+                    .foregroundColor(Color("PrimaryTextColor"))
+                    .multilineTextAlignment(.center)
+
+                Text(OnboardingStrings.permissionsDescription)
+                    .font(.body)
+                    .foregroundColor(Color("PrimaryTextColor").opacity(0.75))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 20)
+            }
+
+            // Le notifiche non si chiedono qui: le chiede NotificationManager
+            // dopo il primo uso riuscito, quando si capisce a cosa servono.
+            PermissionRow(
+                icon: "mic.fill",
+                title: OnboardingStrings.microphonePermission,
+                subtitle: OnboardingStrings.microphonePermissionWhy,
+                isGranted: microphonePermissionGranted
+            )
+            .padding(.horizontal, 20)
+
+            Spacer()
+
+            // Linea guida 5.1.1(iv): il bottone che precede il prompt di
+            // sistema non deve spingere verso il si', quindi "Continua" e
+            // mai "Consenti" (rifiuto iOS 2.44, 9 ago 2026, stesso
+            // rilievo gia' preso su macOS il 6 agosto). Il testo
+            // esplicativo sopra invece e' consentito e va tenuto.
+            VStack(spacing: 12) {
+                Button(action: requestPermissions) {
+                    HStack {
+                        if isRequestingPermissions {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .scaleEffect(0.8)
+                        } else {
+                            Text(OnboardingStrings.continueButton)
+                                .fontWeight(.semibold)
+                        }
+                    }
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 15)
+                    .background(Color("PrimaryTextColor"))
+                    .cornerRadius(25)
+                }
+                .disabled(isRequestingPermissions)
+
+                if hasRequestedOnce && !microphonePermissionGranted {
+                    Button {
+                        if let url = URL(string: UIApplication.openSettingsURLString) {
+                            UIApplication.shared.open(url)
+                        }
+                    } label: {
+                        Text(OnboardingStrings.openSettingsLink)
+                            .font(.footnote)
+                            .underline()
+                            .foregroundColor(Color("PrimaryTextColor").opacity(0.7))
+                            .padding(.vertical, 6)
+                    }
+                }
+
+                // Niente "Salta" qui: la 5.1.1(iv) vuole che dopo il
+                // messaggio esplicativo si arrivi SEMPRE al prompt di
+                // sistema, e questo bottone permetteva di rimandarlo.
+                // Nessuno resta bloccato: requestPermissions() va avanti
+                // comunque, anche se l'utente rifiuta o se il permesso era
+                // gia' stato deciso e il prompt non riappare.
+            }
+            .padding(.horizontal, 24)
+            .padding(.bottom, 24)
+        }
+    }
+
+    /// Le due strade stanno DOPO il prompt di sistema, non prima: davanti al
+    /// prompt c'e' solo "Continua" (5.1.1(iv)). Qui il permesso e' gia' deciso
+    /// e la scelta riguarda solo da dove si comincia.
+    private var startChoice: some View {
+        VStack(spacing: 22) {
+            Spacer(minLength: 20)
+
+            Text(OnboardingStrings.startTitle)
+                .font(.title.bold())
+                .foregroundColor(Color("PrimaryTextColor"))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 24)
+
+            VStack(spacing: 14) {
+                pathButton(.friend, icon: "person.2.wave.2",
+                           title: OnboardingStrings.startFriend,
+                           detail: OnboardingStrings.startFriendDetail)
+                pathButton(.solo, icon: "radio",
+                           title: OnboardingStrings.startSolo,
+                           detail: OnboardingStrings.startSoloDetail)
+            }
+            .padding(.horizontal, 20)
+
+            Spacer()
+        }
+    }
+
+    private func pathButton(_ path: OnboardingStartPath, icon: String, title: String, detail: String) -> some View {
+        Button { finish(path) } label: {
+            HStack(alignment: .top, spacing: 14) {
+                Image(systemName: icon)
+                    .font(.title2)
+                    .frame(width: 34)
+                    .padding(.top, 2)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(title)
+                        .font(.headline)
+                    Text(detail)
+                        .font(.subheadline)
+                        .opacity(0.75)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.right")
+                    .font(.subheadline.weight(.semibold))
+                    .padding(.top, 4)
+            }
+            .foregroundColor(Color("PrimaryTextColor"))
+            .padding(16)
+            .background(RoundedRectangle(cornerRadius: 16).fill(Color("SurfaceColor")))
+            .overlay(RoundedRectangle(cornerRadius: 16).stroke(Color("PrimaryTextColor").opacity(0.15), lineWidth: 1))
+        }
+        .buttonStyle(.plain)
     }
 
     private func checkPermissions() {
         microphonePermissionGranted = AVAudioSession.sharedInstance().recordPermission == .granted
-        notificationPermissionGranted = notificationManager.hasPermission
     }
 
     private func requestPermissions() {
@@ -740,24 +820,25 @@ struct PermissionsView: View {
         AVAudioSession.sharedInstance().requestRecordPermission { granted in
             DispatchQueue.main.async {
                 microphonePermissionGranted = granted
+                isRequestingPermissions = false
                 Analytics.logEvent(
                     granted ? "permission_mic_granted" : "permission_mic_denied",
                     parameters: nil
                 )
+                withAnimation(.easeInOut(duration: 0.25)) { showStartChoice = true }
             }
         }
+    }
 
-        notificationManager.requestNotificationPermission()
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            isRequestingPermissions = false
-            checkPermissions()
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                isOnboardingComplete = true
-                dismiss()
-            }
-        }
+    private func finish(_ path: OnboardingStartPath) {
+        UserDefaults.standard.set(path.rawValue, forKey: OnboardingStartPath.key)
+        // Chi installa adesso ha appena visto tutto: le novita' della versione
+        // sono per chi aggiorna.
+        WhatsNew.markSeen()
+        Funnel.log(Funnel.onboardingPath, ["path": path.rawValue])
+        Funnel.once(Funnel.onboardingCompleted, ["path": path.rawValue])
+        isOnboardingComplete = true
+        dismiss()
     }
 }
 
@@ -800,8 +881,5 @@ private struct PermissionRow: View {
 }
 
 #Preview {
-    OnboardingView(
-        isOnboardingComplete: .constant(false),
-        notificationManager: NotificationManager()
-    )
+    OnboardingView(isOnboardingComplete: .constant(false))
 }

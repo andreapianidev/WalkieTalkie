@@ -211,11 +211,8 @@
 "onboarding_p1_title" = "iPhone'unda gerçek telsiz ve walkie-talkie";
 "onboarding_p1_subtitle" = "CB, kısa dalga ve POC'yi canlı dinle, dünyadan 330'dan fazla radyo aç ve çekmeyen yerlerde bile arkadaşlarınla konuş.";
 
-"onboarding_p2_no_internet_title" = "İnternet yok, SIM yok";
-"onboarding_p2_no_internet_body" = "iPhone ile iPad arasında ses, Wi-Fi ve Bluetooth üzerinden doğrudan cihazdan cihaza gider: yönlendirici yok, sunucu yok, hesap yok.";
 "onboarding_p2_range_caveat" = "Duvarlar, tepeler ve yükseklik farkı menzili kısaltır.";
 "onboarding_p2_same_wifi" = "Bir Mac'e ya da Android telefona ulaşmak için tüm cihazları aynı Wi-Fi ağına bağla: bu bağlantı yerel ağ üzerinden gider.";
-"onboarding_p2_multi_platform" = "Talky iPad, Mac ve Android'de de çalışır: aynı uygulama, tüm cihazların aynı sohbette.";
 
 "onboarding_p3_ptt_title" = "Konuşmak için basılı tut";
 "onboarding_p3_ptt_body" = "Tıpkı gerçek bir telsiz gibi: konuşmak için ortadaki düğmeyi basılı tut, dinlemek için bırak.";
@@ -231,12 +228,9 @@
 "onboarding_p5_step2" = "iPhone ve iPad'de Keşfet'i aç, cihazın yanındaki + simgesine dokun, sonra diğerinde kabul et. Mac ve Android aynı Wi-Fi'de kendiliğinden bağlanır";
 "onboarding_p5_step3" = "Bağlandıktan sonra (yeşil nokta), konuşmak için ortadaki düğmeyi basılı tut, dinlemek için bırak";
 
-"onboarding_permissions_title" = "İki izin ve hazırız";
 "onboarding_permissions_description" = "Talky'nin çalışması için bunlar gerekli.";
 "onboarding_microphone_permission" = "Mikrofon";
 "onboarding_permission_mic_why" = "Konuşmak için bastığında sesini almak için.";
-"onboarding_notification_permission" = "Bildirimler";
-"onboarding_permission_notif_why" = "Uygulama kapalıyken biri seni çağırdığında haber vermek için.";
 "onboarding_permission_open_settings" = "iOS Ayarları'nı aç";
 
 "onboarding_continue" = "Devam";
@@ -266,7 +260,6 @@
 "paywall.plan.weekly_suffix" = "/hafta";
 "paywall.plan.yearly" = "Yıllık";
 "paywall.plan.yearly_suffix" = "/yıl";
-"paywall.badge.most_popular" = "EN POPÜLER";
 "paywall.badge.save" = "%%%d tasarruf";
 "paywall.compare.weekly_vs_yearly" = "Yılda %1$@. Haftalık ödeseydin %2$@ harcardın.";
 "paywall.trial.badge" = "%1$d gün ücretsiz, sonra yılda %2$@";
@@ -451,8 +444,6 @@
 "paywall.support.compact" = "Bağımsız tek bir geliştirici tarafından yapıldı. Talky'nin kodu GitHub'da herkese açık.";
 
 /* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
-"paywall.lifetime.cta" = "Bir kez öde ·";
-"paywall.lifetime.subtitle" = "Tek ödeme. Pro'nun tamamı, sonsuza dek, temalar dahil. Abonelik yok.";
 "paywall.lifetime.owned" = "Sonsuza dek senin. Teşekkürler.";
 
 /* Pass stazione a 24 ore (rewarded) e chiarimento sullo streaming */
@@ -616,3 +607,25 @@
 "room_footer" = "Bir odayı yalnızca sen ve kodu olanlar duyar, uzakta olsanız bile: internet gerekir. Oda açmak Talky Pro'dadır, davetle girmek ücretsizdir.";
 "room_invite_text" = "Talky'de konuşalım! %@ koduyla odama gir: %@ . Talky'n yoksa: %@";
 "live_pro_room_message" = "Özel oda açmak bir Talky Pro özelliğidir. Davet ettiğin kişiler ücretsiz girer.";
+"paywall.plan.lifetime" = "Ömür boyu";
+"paywall.plan.lifetime_suffix" = "bir kez";
+"paywall.plan.lifetime_detail" = "Bir kez öde, sonsuza dek senin";
+"paywall.compare.lifetime_vs_yearly" = "%1$@ bir kez, her yıl %2$@ yerine";
+"paywall.cta.lifetime" = "Ömür boyu aç";
+"pairing_listen_cb" = "Bu arada CB'yi canlı dinle";
+"mode_switch_try_radio" = "Radyo dinle";
+"onboarding_two_talky_title" = "Telsiz için iki telefonda da Talky gerekir";
+"onboarding_two_talky_body" = "Talky, Talky yüklü diğer telefonlarla konuşur: yanındaki kişinin telefonuna da yükle.";
+"onboarding_two_talky_range" = "Menzil 10 ile 30 metre, ikisinde de Wi-Fi ve Bluetooth açık. İnternet ya da ağ gerekmez.";
+"onboarding_mic_title" = "Tek izin: mikrofon";
+"onboarding_start_title" = "Nereden başlamak istersin?";
+"onboarding_start_friend" = "Yakınımda bir arkadaşım var";
+"onboarding_start_friend_detail" = "Telsize git: birbirinizin telefonunu bulun ve konuşun.";
+"onboarding_start_solo" = "Yalnızım";
+"onboarding_start_solo_detail" = "CB'yi canlı ya da radyoyu dinle. Telsizi yanında biri olduğunda dene.";
+"whats_new_title" = "Talky %@ yenilikleri";
+"whats_new_poc" = "POC kanallarında artık sadece dinlemiyor, konuşuyorsun da.";
+"whats_new_rooms" = "Davetle girilen özel odalar, uzaktaki arkadaşlarla da konuşmak için. İnternet gerekir.";
+"whats_new_widgets" = "Ana Ekran için yeni widget'lar ve yeni denetimler.";
+"whats_new_pairing" = "Bağlantı yardımı: diğer telefon görünmüyorsa Talky neyi kontrol edeceğini ve onu nasıl davet edeceğini söyler.";
+"whats_new_try" = "POC'de konuşmayı dene";

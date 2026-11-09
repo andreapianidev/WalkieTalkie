@@ -12,14 +12,21 @@ import SwiftUI
 /// - permesso Rete locale negato: senza quello non si trovera' mai nessuno,
 ///   quindi lo si dice in rosso con il tasto per le Impostazioni;
 /// - appena aperto: si sta cercando, e intanto si puo' invitare chi e' accanto;
-/// - dopo `helpDelay` secondi senza nessuno: la lista dei controlli da fare.
+/// - dopo `helpDelay` secondi senza nessuno: la lista dei controlli da fare,
+///   e per chi e' da solo l'ascolto dal vivo della CB, cosi' l'app gli da'
+///   qualcosa da sentire invece di una ricerca che non trovera' nessuno.
 struct PairingHelpCard: View {
     @ObservedObject private var network = LocalNetworkGuard.shared
     let searchStarted: Date
     let onSearchAgain: () -> Void
+    /// Porta alla banda CB. Nil dove l'ascolto dal vivo non c'e' (iOS 15).
+    var onListenCB: (() -> Void)? = nil
 
     @State private var now = Date()
     @State private var showInvite = false
+    /// La ricerca per cui la scheda d'aiuto e' gia' stata contata: una volta
+    /// per ricerca, non a ogni battito del timer.
+    @State private var loggedSearch: Date?
 
     static let helpDelay: TimeInterval = 20
 
@@ -49,6 +56,19 @@ struct PairingHelpCard: View {
                         smallButton("pairing_search_again".localized, icon: "arrow.clockwise", action: onSearchAgain)
                         smallButton("pairing_open_settings".localized, icon: "gearshape", action: LocalNetworkGuard.openAppSettings)
                     }
+                    if let onListenCB {
+                        Button {
+                            Funnel.log(Funnel.pairingListenCB)
+                            onListenCB()
+                        } label: {
+                            Label("pairing_listen_cb".localized, systemImage: "radio")
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundColor(.yellow)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 11)
+                                .background(RoundedRectangle(cornerRadius: 10).fill(Color.black))
+                        }
+                    }
                 } else {
                     Text("ensure_devices_open".localized)
                         .font(.caption)
@@ -74,9 +94,22 @@ struct PairingHelpCard: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.vertical, 6)
-        .onAppear { network.check() }
-        .onReceive(Timer.publish(every: 2, on: .main, in: .common).autoconnect()) { now = $0 }
-        .sheet(isPresented: $showInvite) { InviteSheet() }
+        .onAppear {
+            network.check()
+            logHelpIfShown()
+        }
+        .onReceive(Timer.publish(every: 2, on: .main, in: .common).autoconnect()) {
+            now = $0
+            logHelpIfShown()
+        }
+        .onChange(of: network.isDenied) { _ in logHelpIfShown() }
+        .sheet(isPresented: $showInvite) { InviteSheet(source: "explore") }
+    }
+
+    private func logHelpIfShown() {
+        guard network.isDenied || showChecklist, loggedSearch != searchStarted else { return }
+        loggedSearch = searchStarted
+        Funnel.log(Funnel.pairingHelpShown, ["state": network.isDenied ? "denied" : "checklist"])
     }
 
     private var deniedBlock: some View {

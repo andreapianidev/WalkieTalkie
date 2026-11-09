@@ -7,6 +7,7 @@
 import SwiftUI
 import MultipeerConnectivity
 import AudioToolbox
+import Combine
 
 struct ContentView: View {
     @StateObject private var multipeerManager = MultipeerManager()
@@ -58,6 +59,15 @@ struct ContentView: View {
     @State private var showingConnectionAlert = false
     @State private var showingErrorAlert = false
     @State private var isPoweredOn = true
+    /// Altezza vera della barra in basso, promozione di Peak e testo grande
+    /// compresi. Prima lo spazio riservato era fisso (80 o 100 pt) e con la
+    /// promozione sopra la barra ne servivano circa 145: l'ultima parte della
+    /// schermata finiva coperta ("setting option is cropped", iPhone 15 Pro).
+    @State private var tabBarHeight: CGFloat = 0
+    @State private var showWhatsNew = false
+    /// Chi arriva dall'onboarding con "Sono da solo" e' gia' sulla CB: il
+    /// suggerimento del selettore in alto gli toglierebbe la parola alla radio.
+    @State private var skipModeHintThisSession = false
 
     private var connectedWalkiePeerCount: Int {
         multipeerManager.connectedPeers.count + crossPlatformManager.connectedPeerCount
@@ -91,7 +101,7 @@ struct ContentView: View {
                         // Main walkie talkie view. Sugli schermi bassi la
                         // colonna scorre se non ci sta (radio + testo grande),
                         // invece di spingere l'header sotto la barra di stato.
-                        if isCompactHeight {
+                        if isCompactHeight || (Self.scrollsOnlyWhenNeeded && !isWide) {
                             FitOrScroll(scrollDisabled: isTransmitting) {
                                 walkieMainColumn
                             }
@@ -100,7 +110,7 @@ struct ContentView: View {
                         }
                     } else if selectedTab == 1 {
                         // Explore view
-                        ExploreView(multipeerManager: multipeerManager)
+                        ExploreView(multipeerManager: multipeerManager, onListenCB: listenCBAction)
                     } else if selectedTab == 2 {
                         // Friends/Connections view
                         ConnectionsView(multipeerManager: multipeerManager)
@@ -121,9 +131,10 @@ struct ContentView: View {
                         }
                     }
 
-                    // Spazio per la tab bar (compatta: 10+48+10 di barra e 12 di margine)
+                    // Spazio per la tab bar: la sua altezza misurata, oppure
+                    // la stima di prima finche' non e' stata misurata.
                     Spacer()
-                        .frame(height: isCompactHeight ? 80 : 100)
+                        .frame(height: tabBarHeight > 0 ? tabBarHeight : (isCompactHeight ? 80 : 100))
                 }
                 .frame(maxWidth: isWide && selectedTab == 0 ? Self.wideWidth : Self.columnWidth)
                 .frame(maxWidth: .infinity)
@@ -133,12 +144,16 @@ struct ContentView: View {
                 VStack {
                     Spacer()
                     tabBarView
+                        .background(GeometryReader { proxy in
+                            Color.clear.preference(key: TabBarHeightKey.self, value: proxy.size.height)
+                        })
                 }
+                .onPreferenceChange(TabBarHeightKey.self) { tabBarHeight = $0 }
                 .frame(maxWidth: Self.columnWidth)
                 .frame(maxWidth: .infinity)
 
                 // First-run coach overlay (non-blocking)
-                if !settingsManager.hasSeenFirstRunCoach && selectedTab == 0 && !isRadioMode {
+                if !settingsManager.hasSeenFirstRunCoach && selectedTab == 0 && !isRadioMode && walkieBand == .local {
                     FirstRunCoachView(
                         connectedPeersCount: connectedWalkiePeerCount,
                         isTransmitting: isTransmitting,
@@ -152,7 +167,10 @@ struct ContentView: View {
 
                 // Mode switch discovery hint (one-time, after onboarding)
                 if showModeSwitchHint {
-                    ModeSwitchHintOverlay(isShown: $showModeSwitchHint)
+                    ModeSwitchHintOverlay(
+                        isShown: $showModeSwitchHint,
+                        onTryRadio: hasWalkieConnection ? nil : { switchMode(toRadio: true) }
+                    )
                         .zIndex(100)
                         .transition(.opacity)
                 }
@@ -166,9 +184,11 @@ struct ContentView: View {
                 }
             }
             .onAppear {
+                applyOnboardingStartPath()
                 maybeShowModeSwitchHint()
                 restorePersistedAudioMode()
                 windowSize = Self.window(geometry)
+                presentWhatsNewWhenFree()
             }
             .onChange(of: geometry.size) { _ in
                 windowSize = Self.window(geometry)
@@ -185,6 +205,16 @@ struct ContentView: View {
     /// tutto lo schermo dava display lunghi due metri e testi minuscoli: la
     /// radio resta della sua misura e si centra.
     private static let columnWidth: CGFloat = 720
+
+    /// Da iOS 16.4 uno ScrollView che non ha niente da scorrere sta fermo
+    /// (`scrollBounceBehavior(.basedOnSize)`), quindi la colonna del walkie puo'
+    /// stare in `FitOrScroll` su ogni altezza: scorre solo se non ci sta (testo
+    /// grande, promozione sopra la barra). Prima di 16.4 rimbalzerebbe sempre e
+    /// si mangerebbe il trascinamento del PTT, quindi li' resta ai soli schermi bassi.
+    private static var scrollsOnlyWhenNeeded: Bool {
+        if #available(iOS 16.4, *) { return true }
+        return false
+    }
     /// Con i due pannelli: abbastanza per due colonne da radio, non di piu'.
     private static let wideWidth: CGFloat = 1180
 
@@ -244,9 +274,69 @@ struct ContentView: View {
         // L'ascolto HF/POC riparte solo quando l'utente sceglie la banda.
     }
 
+    /// L'ultima scelta dell'onboarding: "Ho un amico vicino" resta sul walkie
+    /// locale, "Sono da solo" accende la CB dal vivo (la radio su iOS 15, dove
+    /// l'ascolto dal vivo non c'e').
+    private func applyOnboardingStartPath() {
+        guard let path = OnboardingStartPath.consume() else { return }
+        selectedTab = 0
+        switch path {
+        case .friend:
+            if isRadioMode { switchMode(toRadio: false) }
+        case .solo:
+            skipModeHintThisSession = true
+            if let listenCBAction {
+                listenCBAction()
+            } else {
+                switchMode(toRadio: true)
+            }
+        }
+    }
+
+    /// Dalla scheda d'aiuto di Esplora e dall'onboarding: walkie acceso, banda CB.
+    private var listenCBAction: (() -> Void)? {
+        guard #available(iOS 16.0, *) else { return nil }
+        return {
+            selectedTab = 0
+            if isRadioMode { switchMode(toRadio: false) }
+            if !isPoweredOn { togglePower() }
+            selectBand(.cb)
+        }
+    }
+
+    /// Le novita' della versione, a chi aggiorna, una volta. Mai sopra la
+    /// paywall ne' durante una trasmissione o una ricezione: si riprova ogni
+    /// due secondi per un po', poi si rinuncia fino al prossimo avvio.
+    private func presentWhatsNewWhenFree() {
+        guard isOnboardingComplete, WhatsNew.isPending else { return }
+        Task { @MainActor in
+            for _ in 0..<15 {
+                try? await Task.sleep(nanoseconds: 2_000_000_000)
+                guard WhatsNew.isPending else { return }
+                var busy = showPaywall || adManager.isPaywallVisible || showBrowser || showSleepTimer
+                    || showLiveChannels || isTransmitting || multipeerManager.isReceiving
+                if #available(iOS 16.0, *) { busy = busy || LiveRadio.shared.isTalking }
+                if !busy {
+                    showModeSwitchHint = false
+                    showWhatsNew = true
+                    return
+                }
+            }
+        }
+    }
+
+    /// Il tasto del foglio delle novita': si parla sul POC.
+    private func tryWhatsNew() {
+        guard #available(iOS 16.0, *) else { return }
+        selectedTab = 0
+        if isRadioMode { switchMode(toRadio: false) }
+        if !isPoweredOn { togglePower() }
+        selectBand(.poc)
+    }
+
     /// Shows the WT/FM toggle discovery hint once, only after onboarding is done.
     private func maybeShowModeSwitchHint() {
-        guard isOnboardingComplete else { return }
+        guard isOnboardingComplete, !skipModeHintThisSession, !WhatsNew.isPending else { return }
         guard !UserDefaults.standard.bool(forKey: "talky_seen_mode_switch_hint") else { return }
         guard !showModeSwitchHint else { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -1094,6 +1184,21 @@ struct ContentView: View {
                 LiveChannelsSheet()
             }
         }
+        .sheet(isPresented: $showWhatsNew, onDismiss: { WhatsNew.markSeen() }) {
+            WhatsNewSheet(onTry: tryWhatsNew)
+        }
+        .onReceive(radioManager.$isBuffering.combineLatest(radioManager.$isPlaying)) { buffering, playing in
+            // `isPlaying` diventa vero appena si sceglie la stazione; senza
+            // buffering vuol dire che AVPlayer suona davvero.
+            guard playing, !buffering, let station = radioManager.currentStation else { return }
+            Funnel.once(Funnel.radioPlay, ["country": station.country])
+        }
+        .onReceive(multipeerManager.$isReceiving.removeDuplicates()) { receiving in
+            // Una voce arrivata da un altro Talky: il walkie ha funzionato.
+            if !receiving, hasWalkieConnection {
+                notificationManager.requestAfterFirstSuccess("reception")
+            }
+        }
         .sheet(isPresented: $showSleepTimer) {
             SleepTimerSheet(onUnlockTap: {
                 showSleepTimer = false
@@ -1131,7 +1236,7 @@ struct ContentView: View {
             // paywall o un foglio aperto non si sovrappone niente: il trigger
             // non risulta mostrato, quindi PaywallTriggerManager lo riprova.
             let trigger = note.userInfo?["trigger"] as? String ?? "unknown"
-            guard !showPaywall, !showBrowser, !showSleepTimer else {
+            guard !showPaywall, !showBrowser, !showSleepTimer, !showWhatsNew else {
                 PaywallFlowLog.log("paywall \(trigger) non aperto: schermata modale gia' aperta (paywall=\(showPaywall), browser=\(showBrowser), timer=\(showSleepTimer))")
                 return
             }
@@ -1458,6 +1563,9 @@ struct ContentView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             multipeerManager.startAdvertising()
             multipeerManager.startBrowsing()
+            // Da qui e non solo da Esplora: il permesso Rete locale (concesso o
+            // negato) entra nel percorso anche di chi Esplora non la apre mai.
+            LocalNetworkGuard.shared.check()
         }
     }
     
@@ -1487,9 +1595,15 @@ struct ContentView: View {
     }
     
     private func stopTransmitting() {
+        let reachedSomeone = isTransmitting && hasWalkieConnection
         hapticManager.transmissionEnded()
         isTransmitting = false
         multipeerManager.stopTransmitting()
+        // Dopo il rilascio del PTT e non durante: il prompt di sistema a dito
+        // premuto interromperebbe la trasmissione.
+        if reachedSomeone {
+            notificationManager.requestAfterFirstSuccess("transmission")
+        }
     }
     
     private func getTabTitle(_ index: Int) -> String {
@@ -1501,6 +1615,11 @@ struct ContentView: View {
         default: return "unknown".localized
         }
     }
+}
+
+private struct TabBarHeightKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = max(value, nextValue()) }
 }
 
 struct TabButton: View {

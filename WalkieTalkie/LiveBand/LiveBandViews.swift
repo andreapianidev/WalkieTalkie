@@ -321,6 +321,21 @@ struct LiveStatusCard: View {
         .onTapGesture {
             if live.isOutOfFreeTime { live.proPrompt = .freeTime }
         }
+        .onAppear { noteListening(live.state) }
+        .onChange(of: live.state) { noteListening($0) }
+    }
+
+    /// Il riquadro c'e' solo mentre una banda dal vivo e' accesa, quindi e' il
+    /// posto dove l'app sa che si sta ascoltando davvero.
+    private func noteListening(_ state: LinkState) {
+        guard state == .online, let band = live.band else { return }
+        Funnel.once(Funnel.liveListen, ["band": band.rawValue])
+        // Il permesso delle notifiche dopo un ascolto vero, non al primo
+        // fruscio: se dopo dieci secondi la banda e' ancora collegata, ha funzionato.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+            guard live.state == .online, live.band != nil else { return }
+            NotificationManager.shared.requestAfterFirstSuccess("live_\(band.rawValue)")
+        }
     }
 
     private var sourceText: String {

@@ -12,12 +12,12 @@ struct OnboardingStrings {
     static let p1Title = NSLocalizedString("onboarding_p1_title", comment: "Page 1 title")
     static let p1Subtitle = NSLocalizedString("onboarding_p1_subtitle", comment: "Page 1 subtitle")
 
-    // MARK: - Page 2 — No internet
-    static let p2Title = NSLocalizedString("onboarding_p2_no_internet_title", comment: "Page 2 title")
-    static let p2Body = NSLocalizedString("onboarding_p2_no_internet_body", comment: "Page 2 body")
+    // MARK: - Page 2 — Two Talky (the walkie needs Talky on the other phone too)
+    static let twoTalkyTitle = NSLocalizedString("onboarding_two_talky_title", comment: "Page 2 title: the walkie needs two Talky")
+    static let twoTalkyBody = NSLocalizedString("onboarding_two_talky_body", comment: "Page 2 body: install Talky on the other phone too")
+    static let twoTalkyRange = NSLocalizedString("onboarding_two_talky_range", comment: "Page 2: range 10-30 m, Wi-Fi and Bluetooth on")
     static let p2RangeCaveat = NSLocalizedString("onboarding_p2_range_caveat", comment: "Page 2 range note")
     static let p2SameWiFi = NSLocalizedString("onboarding_p2_same_wifi", comment: "Page 2: Mac/Android need the same Wi-Fi network")
-    static let p2MultiPlatform = NSLocalizedString("onboarding_p2_multi_platform", comment: "Page 2 multi-platform note (iPad + Apple Silicon Mac)")
 
     // MARK: - Page 3 — Push to talk
     static let p3Title = NSLocalizedString("onboarding_p3_ptt_title", comment: "Page 3 title")
@@ -59,13 +59,18 @@ struct OnboardingStrings {
     static let p5PermissionNote = NSLocalizedString("onboarding_p5_permission_note", comment: "Page 5: neutral explanation of the Local Network permission")
 
     // MARK: - Permissions sheet
-    static let permissionsTitle = NSLocalizedString("onboarding_permissions_title", comment: "Permissions title")
+    static let micTitle = NSLocalizedString("onboarding_mic_title", comment: "Permissions sheet title, microphone only")
     static let permissionsDescription = NSLocalizedString("onboarding_permissions_description", comment: "Permissions description")
     static let microphonePermission = NSLocalizedString("onboarding_microphone_permission", comment: "Microphone permission label")
     static let microphonePermissionWhy = NSLocalizedString("onboarding_permission_mic_why", comment: "Why microphone is needed")
-    static let notificationPermission = NSLocalizedString("onboarding_notification_permission", comment: "Notification permission label")
-    static let notificationPermissionWhy = NSLocalizedString("onboarding_permission_notif_why", comment: "Why notifications are needed")
     static let openSettingsLink = NSLocalizedString("onboarding_permission_open_settings", comment: "Open iOS Settings link")
+
+    // MARK: - Start choice (after the system prompt, never before it)
+    static let startTitle = NSLocalizedString("onboarding_start_title", comment: "Where do you start?")
+    static let startFriend = NSLocalizedString("onboarding_start_friend", comment: "I have a friend nearby")
+    static let startFriendDetail = NSLocalizedString("onboarding_start_friend_detail", comment: "Goes to the walkie")
+    static let startSolo = NSLocalizedString("onboarding_start_solo", comment: "I'm on my own")
+    static let startSoloDetail = NSLocalizedString("onboarding_start_solo_detail", comment: "Goes to live CB listening")
 
     // MARK: - Actions
     static let continueButton = NSLocalizedString("onboarding_continue", comment: "Continue button")

@@ -194,10 +194,7 @@
 "onboarding_p1_title" = "Radio sebenar dan walkie-talkie dalam iPhone anda";
 "onboarding_p1_subtitle" = "Dengar CB, gelombang pendek dan POC secara langsung, mainkan lebih 330 stesen dunia dan bercakap dengan rakan walaupun tiada isyarat.";
 
-"onboarding_p2_no_internet_title" = "Tanpa internet, tanpa SIM";
-"onboarding_p2_no_internet_body" = "Antara iPhone dan iPad, suara bergerak terus dari satu peranti ke peranti lain melalui Wi-Fi dan Bluetooth: tiada penghala, tiada pelayan, tiada akaun.";
 "onboarding_p2_range_caveat" = "Dinding, bukit dan kecerunan mengurangkan jangkauan.";
-"onboarding_p2_multi_platform" = "Talky juga berjalan pada iPad, Mac dan Android: aplikasi yang sama, semua peranti anda dalam perbualan yang sama.";
 "onboarding_p3_ptt_title" = "Tekan dan tahan untuk bercakap";
 "onboarding_p3_ptt_body" = "Seperti walkie-talkie sebenar: tekan dan tahan butang tengah untuk bercakap, lepaskan untuk mendengar.";
 "onboarding_p3_ptt_rule" = "Hanya satu suara pada satu masa di saluran yang sama.";
@@ -211,12 +208,9 @@
 "onboarding_p5_step2" = "Pada iPhone dan iPad buka Teroka dan ketik + di sebelah peranti, kemudian terima pada peranti satu lagi. Mac dan Android bersambung sendiri, pada Wi-Fi yang sama";
 "onboarding_p5_step3" = "Apabila tersambung (titik hijau), tekan dan tahan butang tengah untuk bercakap, lepaskan untuk mendengar";
 
-"onboarding_permissions_title" = "Dua kebenaran dan kami sedia";
 "onboarding_permissions_description" = "Talky memerlukan ini untuk berfungsi.";
 "onboarding_microphone_permission" = "Mikrofon";
 "onboarding_permission_mic_why" = "Untuk merakam suara anda apabila anda tekan untuk bercakap.";
-"onboarding_notification_permission" = "Pemberitahuan";
-"onboarding_permission_notif_why" = "Untuk memberitahu anda jika seseorang memanggil semasa aplikasi ditutup.";
 "onboarding_permission_open_settings" = "Buka Tetapan iOS";
 
 "onboarding_continue" = "Teruskan";
@@ -246,7 +240,6 @@
 "paywall.plan.weekly_suffix" = "/minggu";
 "paywall.plan.yearly" = "Tahunan";
 "paywall.plan.yearly_suffix" = "/tahun";
-"paywall.badge.most_popular" = "PALING POPULAR";
 "paywall.badge.save" = "Jimat %d%%";
 "paywall.compare.weekly_vs_yearly" = "%1$@ setahun. Bayar mingguan anda akan belanja %2$@.";
 "paywall.trial.badge" = "%1$d hari percuma, kemudian %2$@ setahun";
@@ -442,8 +435,6 @@
 "paywall.support.compact" = "Dibina oleh seorang pembangun bebas. Kod Talky terbuka di GitHub.";
 
 /* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
-"paywall.lifetime.cta" = "Bayar sekali ·";
-"paywall.lifetime.subtitle" = "Satu bayaran. Semua Pro selamanya, termasuk tema. Tanpa langganan.";
 "paywall.lifetime.owned" = "Milik anda selamanya. Terima kasih.";
 
 // MARK: - Connection status & cross-platform (2026-08)
@@ -618,3 +609,25 @@
 "room_footer" = "Bilik hanya didengar oleh anda dan sesiapa yang ada kod, walaupun berjauhan: perlu internet. Membuka bilik ialah Talky Pro, masuk dengan jemputan adalah percuma.";
 "room_invite_text" = "Jom bercakap di Talky! Masuk ke bilik saya dengan kod %@: %@ . Jika tiada Talky: %@";
 "live_pro_room_message" = "Membuka bilik peribadi ialah ciri Talky Pro. Orang yang anda jemput masuk secara percuma.";
+"paywall.plan.lifetime" = "Selamanya";
+"paywall.plan.lifetime_suffix" = "sekali";
+"paywall.plan.lifetime_detail" = "Bayar sekali, milik anda selamanya";
+"paywall.compare.lifetime_vs_yearly" = "%1$@ sekali, bukan %2$@ setiap tahun";
+"paywall.cta.lifetime" = "Buka selamanya";
+"pairing_listen_cb" = "Sementara itu, dengar CB secara langsung";
+"mode_switch_try_radio" = "Dengar radio";
+"onboarding_two_talky_title" = "Walkie perlukan Talky pada kedua-dua telefon";
+"onboarding_two_talky_body" = "Talky bercakap dengan telefon lain yang ada Talky: pasangkannya juga pada telefon orang yang bersama anda.";
+"onboarding_two_talky_range" = "Jarak 10 hingga 30 meter, dengan Wi-Fi dan Bluetooth dihidupkan pada kedua-duanya. Tidak perlu internet atau rangkaian.";
+"onboarding_mic_title" = "Satu kebenaran: mikrofon";
+"onboarding_start_title" = "Anda mahu mula dari mana?";
+"onboarding_start_friend" = "Ada kawan berdekatan";
+"onboarding_start_friend_detail" = "Pergi ke walkie: cari telefon masing-masing dan bercakap.";
+"onboarding_start_solo" = "Saya seorang diri";
+"onboarding_start_solo_detail" = "Dengar CB secara langsung atau radio. Cuba walkie apabila ada orang bersama anda.";
+"whats_new_title" = "Apa yang baharu dalam Talky %@";
+"whats_new_poc" = "Di saluran POC kini anda boleh bercakap, bukan sekadar mendengar.";
+"whats_new_rooms" = "Bilik peribadi dengan jemputan, untuk bercakap dengan kawan yang jauh juga. Perlukan internet.";
+"whats_new_widgets" = "Widget baharu untuk Skrin Utama dan kawalan baharu.";
+"whats_new_pairing" = "Bantuan sambungan: jika telefon lain tidak muncul, Talky memberitahu apa yang perlu disemak dan cara menjemputnya.";
+"whats_new_try" = "Cuba bercakap di POC";

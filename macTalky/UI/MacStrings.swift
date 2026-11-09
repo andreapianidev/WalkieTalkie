@@ -25,8 +25,8 @@ nonisolated enum MacString {
     case subscribe, loadingProducts, restorePurchases, manageSubscription, universalNote, version
     case protocolLabel, writeToMe, writeIntro, reportProblem, suggestFeature, sayHello
     case rateTalky, links, talkyIPhone, talkyAndroid, sourceCode, website
-    case license, onePurchase, loadingHint, weekly, yearly, bestValue
-    case themesPackOneTime, yoursForever, payOnce, lifetimeNote, restoreCaps, close
+    case license, onePurchase, loadingHint, weekly, yearly
+    case themesPackOneTime, yoursForever, restoreCaps, close
     case terms, privacy, renewal, devNoteTitle, devNote, seeCode
     case channel, publicChannel, clickToChange, onAir, receiving, hintMic
     case hintWaiting, hintBusy, hintSpace, hintHold, stopLinkCaps, startLinkCaps
@@ -51,6 +51,7 @@ nonisolated enum MacString {
     case talkHold, talkOnAir, talkListenOnly, talkMicDenied, talkSafety, talkMute, talkReport, reportAbuse
     case reportSexual, reportSpam, reportDone, rulesTitle, rulesBody, rulesName, rulesAccept, roomHeader
     case roomCreate, roomJoin, roomRejoin, roomLeave, roomInvite, roomCodeWrong, roomFooter, roomInviteText
+    case lifetimeCaps, lifetimePitch, lifetimeVsYearly
 
     var text: String {
         Self.table[Self.languageKey]?[self] ?? Self.en[self] ?? ""
@@ -204,11 +205,8 @@ nonisolated enum MacString {
         .loadingHint: "If nothing appears, check your internet connection and open this window again.",
         .weekly: "WEEKLY",
         .yearly: "YEARLY",
-        .bestValue: "BEST VALUE",
         .themesPackOneTime: "THEMES PACK · %@ ONE-TIME",
         .yoursForever: "YOURS FOREVER · THANK YOU",
-        .payOnce: "PAY ONCE · %@ FOREVER",
-        .lifetimeNote: "One payment. Everything Pro, themes included. No subscription.",
         .restoreCaps: "RESTORE PURCHASES",
         .close: "CLOSE",
         .terms: "Terms of Use (EULA)",
@@ -337,6 +335,9 @@ nonisolated enum MacString {
         .stDiscovery: "Discovery unavailable",
         .stListenerFailed: "Listener failed",
         .stNetworkDown: "Network unavailable",
+        .lifetimeCaps: "FOREVER",
+        .lifetimePitch: "Pay once, yours forever",
+        .lifetimeVsYearly: "%@ once, instead of %@ every year",
     ]
 
     private static let it: [MacString: String] = [
@@ -447,11 +448,8 @@ nonisolated enum MacString {
         .loadingHint: "Se non compare nulla, controlla la connessione a internet e riapri questa finestra.",
         .weekly: "SETTIMANALE",
         .yearly: "ANNUALE",
-        .bestValue: "PIÙ CONVENIENTE",
         .themesPackOneTime: "PACCHETTO TEMI · %@ UNA VOLTA",
         .yoursForever: "TUO PER SEMPRE · GRAZIE",
-        .payOnce: "PAGHI UNA VOLTA · %@ PER SEMPRE",
-        .lifetimeNote: "Un pagamento. Tutto Pro, temi inclusi. Nessun abbonamento.",
         .restoreCaps: "RIPRISTINA ACQUISTI",
         .close: "CHIUDI",
         .terms: "Condizioni d'uso (EULA)",
@@ -580,6 +578,9 @@ nonisolated enum MacString {
         .stDiscovery: "Ricerca dispositivi non disponibile",
         .stListenerFailed: "Ascolto di rete non riuscito",
         .stNetworkDown: "Rete non disponibile",
+        .lifetimeCaps: "PER SEMPRE",
+        .lifetimePitch: "Paghi una volta, tuo per sempre",
+        .lifetimeVsYearly: "%@ una volta, invece di %@ ogni anno",
     ]
 
     private static let de: [MacString: String] = [
@@ -690,11 +691,8 @@ nonisolated enum MacString {
         .loadingHint: "Wenn nichts erscheint, prüfe deine Internetverbindung und öffne dieses Fenster erneut.",
         .weekly: "WÖCHENTLICH",
         .yearly: "JÄHRLICH",
-        .bestValue: "BESTER PREIS",
         .themesPackOneTime: "THEMES-PAKET · %@ EINMALIG",
         .yoursForever: "FÜR IMMER DEINS · DANKE",
-        .payOnce: "EINMAL ZAHLEN · %@ FÜR IMMER",
-        .lifetimeNote: "Eine Zahlung. Alles von Pro, Designs inklusive. Kein Abo.",
         .restoreCaps: "KÄUFE WIEDERHERSTELLEN",
         .close: "SCHLIESSEN",
         .terms: "Nutzungsbedingungen (EULA)",
@@ -823,6 +821,9 @@ nonisolated enum MacString {
         .stDiscovery: "Gerätesuche nicht verfügbar",
         .stListenerFailed: "Empfang fehlgeschlagen",
         .stNetworkDown: "Netzwerk nicht verfügbar",
+        .lifetimeCaps: "FÜR IMMER",
+        .lifetimePitch: "Einmal zahlen, für immer deins",
+        .lifetimeVsYearly: "%@ einmalig statt %@ jedes Jahr",
     ]
 
     private static let es: [MacString: String] = [
@@ -933,11 +934,8 @@ nonisolated enum MacString {
         .loadingHint: "Si no aparece nada, comprueba tu conexión a internet y vuelve a abrir esta ventana.",
         .weekly: "SEMANAL",
         .yearly: "ANUAL",
-        .bestValue: "MEJOR PRECIO",
         .themesPackOneTime: "PACK DE TEMAS · %@ PAGO ÚNICO",
         .yoursForever: "TUYO PARA SIEMPRE · GRACIAS",
-        .payOnce: "PAGA UNA VEZ · %@ PARA SIEMPRE",
-        .lifetimeNote: "Un pago. Todo Pro, temas incluidos. Sin suscripción.",
         .restoreCaps: "RESTAURAR COMPRAS",
         .close: "CERRAR",
         .terms: "Condiciones de uso (EULA)",
@@ -1066,6 +1064,9 @@ nonisolated enum MacString {
         .stDiscovery: "Búsqueda no disponible",
         .stListenerFailed: "Fallo del receptor de red",
         .stNetworkDown: "Red no disponible",
+        .lifetimeCaps: "PARA SIEMPRE",
+        .lifetimePitch: "Pagas una vez, tuyo para siempre",
+        .lifetimeVsYearly: "%@ una vez, en lugar de %@ cada año",
     ]
 
     private static let fr: [MacString: String] = [
@@ -1176,11 +1177,8 @@ nonisolated enum MacString {
         .loadingHint: "Si rien n'apparaît, vérifiez votre connexion internet et rouvrez cette fenêtre.",
         .weekly: "HEBDOMADAIRE",
         .yearly: "ANNUEL",
-        .bestValue: "MEILLEURE OFFRE",
         .themesPackOneTime: "PACK DE THÈMES · %@ EN UNE FOIS",
         .yoursForever: "À VOUS POUR TOUJOURS · MERCI",
-        .payOnce: "PAYEZ UNE FOIS · %@ POUR TOUJOURS",
-        .lifetimeNote: "Un seul paiement. Tout Pro, thèmes inclus. Sans abonnement.",
         .restoreCaps: "RESTAURER LES ACHATS",
         .close: "FERMER",
         .terms: "Conditions d'utilisation (EULA)",
@@ -1309,6 +1307,9 @@ nonisolated enum MacString {
         .stDiscovery: "Recherche indisponible",
         .stListenerFailed: "Échec de l'écoute réseau",
         .stNetworkDown: "Réseau indisponible",
+        .lifetimeCaps: "À VIE",
+        .lifetimePitch: "Payez une fois, à vous pour toujours",
+        .lifetimeVsYearly: "%@ une fois, au lieu de %@ chaque année",
     ]
 
     private static let ja: [MacString: String] = [
@@ -1419,11 +1420,8 @@ nonisolated enum MacString {
         .loadingHint: "何も表示されない場合は、インターネット接続を確認してこのウインドウを開き直してください。",
         .weekly: "週額",
         .yearly: "年額",
-        .bestValue: "いちばんお得",
         .themesPackOneTime: "テーマパック · %@ 買い切り",
         .yoursForever: "ずっとあなたのもの · ありがとう",
-        .payOnce: "一度だけ支払う · %@ ずっと使える",
-        .lifetimeNote: "一度のお支払いで、Proのすべてを。テーマも込み。サブスクなし。",
         .restoreCaps: "購入を復元",
         .close: "閉じる",
         .terms: "利用規約（EULA）",
@@ -1552,6 +1550,9 @@ nonisolated enum MacString {
         .stDiscovery: "検出を利用できません",
         .stListenerFailed: "受信待機に失敗",
         .stNetworkDown: "ネットワークを利用できません",
+        .lifetimeCaps: "買い切り",
+        .lifetimePitch: "一度の支払いで、ずっとあなたのもの",
+        .lifetimeVsYearly: "%@を1回だけ。毎年%@ではなく",
     ]
 
     private static let ko: [MacString: String] = [
@@ -1662,11 +1663,8 @@ nonisolated enum MacString {
         .loadingHint: "아무것도 표시되지 않으면 인터넷 연결을 확인하고 이 윈도우를 다시 여세요.",
         .weekly: "주간",
         .yearly: "연간",
-        .bestValue: "최고 혜택",
         .themesPackOneTime: "테마 팩 · %@ 1회 결제",
         .yoursForever: "영원히 당신의 것 · 고맙습니다",
-        .payOnce: "한 번 결제 · %@ 평생",
-        .lifetimeNote: "한 번의 결제로 Pro의 모든 것. 테마 포함. 구독 없음.",
         .restoreCaps: "구매 복원",
         .close: "닫기",
         .terms: "이용 약관(EULA)",
@@ -1795,6 +1793,9 @@ nonisolated enum MacString {
         .stDiscovery: "검색을 사용할 수 없음",
         .stListenerFailed: "수신 대기 실패",
         .stNetworkDown: "네트워크를 사용할 수 없음",
+        .lifetimeCaps: "평생",
+        .lifetimePitch: "한 번 결제로 평생 내 것",
+        .lifetimeVsYearly: "%@ 한 번, 매년 %@ 대신",
     ]
 
     private static let ms: [MacString: String] = [
@@ -1905,11 +1906,8 @@ nonisolated enum MacString {
         .loadingHint: "Jika tiada apa yang muncul, semak sambungan internet anda dan buka semula tetingkap ini.",
         .weekly: "MINGGUAN",
         .yearly: "TAHUNAN",
-        .bestValue: "NILAI TERBAIK",
         .themesPackOneTime: "PEK TEMA · %@ SEKALI BAYAR",
         .yoursForever: "MILIK ANDA SELAMANYA · TERIMA KASIH",
-        .payOnce: "BAYAR SEKALI · %@ SELAMANYA",
-        .lifetimeNote: "Satu bayaran. Semua Pro, termasuk tema. Tanpa langganan.",
         .restoreCaps: "PULIHKAN PEMBELIAN",
         .close: "TUTUP",
         .terms: "Terma Penggunaan (EULA)",
@@ -2038,6 +2036,9 @@ nonisolated enum MacString {
         .stDiscovery: "Penemuan tidak tersedia",
         .stListenerFailed: "Pendengar gagal",
         .stNetworkDown: "Rangkaian tidak tersedia",
+        .lifetimeCaps: "SELAMANYA",
+        .lifetimePitch: "Bayar sekali, milik anda selamanya",
+        .lifetimeVsYearly: "%@ sekali, bukan %@ setiap tahun",
     ]
 
     private static let pt: [MacString: String] = [
@@ -2148,11 +2149,8 @@ nonisolated enum MacString {
         .loadingHint: "Se nada aparecer, verifique sua conexão com a internet e abra esta janela de novo.",
         .weekly: "SEMANAL",
         .yearly: "ANUAL",
-        .bestValue: "MELHOR VALOR",
         .themesPackOneTime: "PACOTE DE TEMAS · %@ PAGAMENTO ÚNICO",
         .yoursForever: "SEU PARA SEMPRE · OBRIGADO",
-        .payOnce: "PAGUE UMA VEZ · %@ PARA SEMPRE",
-        .lifetimeNote: "Um pagamento. Tudo do Pro, temas inclusos. Sem assinatura.",
         .restoreCaps: "RESTAURAR COMPRAS",
         .close: "FECHAR",
         .terms: "Termos de Uso (EULA)",
@@ -2281,6 +2279,9 @@ nonisolated enum MacString {
         .stDiscovery: "Busca indisponível",
         .stListenerFailed: "Falha na escuta de rede",
         .stNetworkDown: "Rede indisponível",
+        .lifetimeCaps: "PARA SEMPRE",
+        .lifetimePitch: "Pague uma vez, seu para sempre",
+        .lifetimeVsYearly: "%@ uma vez, em vez de %@ por ano",
     ]
 
     private static let th: [MacString: String] = [
@@ -2391,11 +2392,8 @@ nonisolated enum MacString {
         .loadingHint: "หากไม่มีอะไรแสดง ให้ตรวจสอบการเชื่อมต่ออินเทอร์เน็ตแล้วเปิดหน้าต่างนี้อีกครั้ง",
         .weekly: "รายสัปดาห์",
         .yearly: "รายปี",
-        .bestValue: "คุ้มที่สุด",
         .themesPackOneTime: "แพ็กธีม · %@ จ่ายครั้งเดียว",
         .yoursForever: "เป็นของคุณตลอดไป · ขอบคุณ",
-        .payOnce: "จ่ายครั้งเดียว · %@ ใช้ได้ตลอดไป",
-        .lifetimeNote: "จ่ายครั้งเดียว ได้ทุกอย่างของ Pro รวมธีมด้วย ไม่ต้องสมัครสมาชิก",
         .restoreCaps: "กู้คืนการซื้อ",
         .close: "ปิด",
         .terms: "ข้อกำหนดการใช้งาน (EULA)",
@@ -2524,6 +2522,9 @@ nonisolated enum MacString {
         .stDiscovery: "ค้นหาอุปกรณ์ไม่ได้",
         .stListenerFailed: "การรอรับการเชื่อมต่อล้มเหลว",
         .stNetworkDown: "ใช้เครือข่ายไม่ได้",
+        .lifetimeCaps: "ตลอดไป",
+        .lifetimePitch: "จ่ายครั้งเดียว เป็นของคุณตลอดไป",
+        .lifetimeVsYearly: "%@ ครั้งเดียว แทนที่จะจ่าย %@ ทุกปี",
     ]
 
     private static let tr: [MacString: String] = [
@@ -2634,11 +2635,8 @@ nonisolated enum MacString {
         .loadingHint: "Hiçbir şey görünmezse internet bağlantınızı kontrol edip bu pencereyi yeniden açın.",
         .weekly: "HAFTALIK",
         .yearly: "YILLIK",
-        .bestValue: "EN AVANTAJLI",
         .themesPackOneTime: "TEMA PAKETİ · %@ TEK SEFERLİK",
         .yoursForever: "SONSUZA DEK SENİN · TEŞEKKÜRLER",
-        .payOnce: "BİR KEZ ÖDE · %@ SONSUZA DEK",
-        .lifetimeNote: "Tek ödeme. Pro'nun tamamı, temalar dahil. Abonelik yok.",
         .restoreCaps: "SATIN ALIMLARI GERİ YÜKLE",
         .close: "KAPAT",
         .terms: "Kullanım Koşulları (EULA)",
@@ -2767,6 +2765,9 @@ nonisolated enum MacString {
         .stDiscovery: "Keşif kullanılamıyor",
         .stListenerFailed: "Dinleyici başarısız",
         .stNetworkDown: "Ağ kullanılamıyor",
+        .lifetimeCaps: "ÖMÜR BOYU",
+        .lifetimePitch: "Bir kez öde, sonsuza dek senin",
+        .lifetimeVsYearly: "%@ bir kez, her yıl %@ yerine",
     ]
 
     private static let vi: [MacString: String] = [
@@ -2877,11 +2878,8 @@ nonisolated enum MacString {
         .loadingHint: "Nếu không thấy gì, hãy kiểm tra kết nối internet rồi mở lại cửa sổ này.",
         .weekly: "HẰNG TUẦN",
         .yearly: "HẰNG NĂM",
-        .bestValue: "TIẾT KIỆM NHẤT",
         .themesPackOneTime: "GÓI CHỦ ĐỀ · %@ MỘT LẦN",
         .yoursForever: "CỦA BẠN MÃI MÃI · CẢM ƠN",
-        .payOnce: "TRẢ MỘT LẦN · %@ MÃI MÃI",
-        .lifetimeNote: "Một lần thanh toán. Trọn bộ Pro, gồm cả giao diện. Không cần đăng ký.",
         .restoreCaps: "KHÔI PHỤC GIAO DỊCH",
         .close: "ĐÓNG",
         .terms: "Điều khoản sử dụng (EULA)",
@@ -3010,6 +3008,9 @@ nonisolated enum MacString {
         .stDiscovery: "Không thể dò tìm",
         .stListenerFailed: "Lỗi lắng nghe kết nối",
         .stNetworkDown: "Mạng không khả dụng",
+        .lifetimeCaps: "TRỌN ĐỜI",
+        .lifetimePitch: "Trả một lần, của bạn mãi mãi",
+        .lifetimeVsYearly: "%@ một lần, thay vì %@ mỗi năm",
     ]
 
     private static let zhHans: [MacString: String] = [
@@ -3120,11 +3121,8 @@ nonisolated enum MacString {
         .loadingHint: "如果什么都没有显示，请检查网络连接并重新打开此窗口。",
         .weekly: "按周",
         .yearly: "按年",
-        .bestValue: "最划算",
         .themesPackOneTime: "主题包 · %@ 一次性买断",
         .yoursForever: "永久属于你 · 谢谢",
-        .payOnce: "一次付清 · %@ 永久使用",
-        .lifetimeNote: "付一次，拥有 Pro 的一切，包含主题。无需订阅。",
         .restoreCaps: "恢复购买",
         .close: "关闭",
         .terms: "使用条款（EULA）",
@@ -3253,6 +3251,9 @@ nonisolated enum MacString {
         .stDiscovery: "无法搜索设备",
         .stListenerFailed: "监听失败",
         .stNetworkDown: "网络不可用",
+        .lifetimeCaps: "永久",
+        .lifetimePitch: "付一次，永久归你",
+        .lifetimeVsYearly: "一次 %@，而不是每年 %@",
     ]
 
     private static let zhHant: [MacString: String] = [
@@ -3363,11 +3364,8 @@ nonisolated enum MacString {
         .loadingHint: "如果沒有顯示任何內容，請檢查網路連線並重新開啟此視窗。",
         .weekly: "每週",
         .yearly: "每年",
-        .bestValue: "最划算",
         .themesPackOneTime: "主題包 · %@ 一次買斷",
         .yoursForever: "永久屬於你 · 謝謝",
-        .payOnce: "一次付清 · %@ 永久使用",
-        .lifetimeNote: "付一次，擁有全部 Pro 功能，主題也包含在內。無需訂閱。",
         .restoreCaps: "還原購買",
         .close: "關閉",
         .terms: "使用條款（EULA）",
@@ -3496,5 +3494,8 @@ nonisolated enum MacString {
         .stDiscovery: "無法搜尋裝置",
         .stListenerFailed: "監聽失敗",
         .stNetworkDown: "網路無法使用",
+        .lifetimeCaps: "永久",
+        .lifetimePitch: "付一次，永久屬於你",
+        .lifetimeVsYearly: "一次 %@，而不是每年 %@",
     ]
 }

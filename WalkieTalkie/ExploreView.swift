@@ -5,6 +5,8 @@ import MultipeerConnectivity
 
 struct ExploreView: View {
     @ObservedObject var multipeerManager: MultipeerManager
+    /// Chi e' da solo non trovera' nessuno: la scheda d'aiuto gli propone la CB.
+    var onListenCB: (() -> Void)? = nil
     @ObservedObject private var crossPlatformManager = TalkyCrossPlatformManager.shared
     @State private var searchWave: Bool = false
     @State private var detectedDevices: [DetectedDevice] = []
@@ -208,7 +210,7 @@ struct ExploreView: View {
             }
             
             if detectedDevices.isEmpty {
-                PairingHelpCard(searchStarted: searchStarted, onSearchAgain: searchAgain)
+                PairingHelpCard(searchStarted: searchStarted, onSearchAgain: searchAgain, onListenCB: onListenCB)
             } else {
                 LazyVStack(spacing: 8) {
                     ForEach(detectedDevices) { device in

@@ -41,11 +41,21 @@ final class LocalNetworkGuard: ObservableObject {
             case .waiting(let error), .failed(let error):
                 guard case .dns(let code) = error, code == Self.policyDenied else { return }
                 self?.isDenied = true
+                Funnel.once(Funnel.localNetworkDenied)
             case .ready:
                 self?.isDenied = false
             default:
                 break
             }
+        }
+        // `.ready` arriva anche prima che l'utente risponda al prompt, quindi
+        // non dimostra niente. Un risultato si': Talky pubblica lo stesso
+        // servizio (TalkyCrossPlatformManager), e senza permesso non vedrebbe
+        // nemmeno se stessa.
+        browser.browseResultsChangedHandler = { [weak self] results, _ in
+            guard !results.isEmpty else { return }
+            self?.isDenied = false
+            Funnel.once(Funnel.localNetworkGranted)
         }
         browser.start(queue: .main)
         self.browser = browser

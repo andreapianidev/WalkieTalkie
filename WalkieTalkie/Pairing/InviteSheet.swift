@@ -8,8 +8,19 @@ import CoreImage.CIFilterBuiltins
 /// raggiunge solo chi l'ha gia' installata. Qui chi e' accanto inquadra il
 /// codice con la fotocamera, oppure riceve il link, e arriva allo Store.
 struct InviteSheet: View {
+    /// Da dove si e' aperto l'invito ("explore", "onboarding"), per Firebase.
+    let source: String
+
     @Environment(\.dismiss) private var dismiss
     @State private var showShare = false
+    @State private var openedAt = Date()
+    @State private var sharedLink = false
+
+    /// Il codice non dice quando viene inquadrato. Un foglio rimasto aperto
+    /// almeno questo tempo senza mandare il link e' quasi sempre un telefono
+    /// girato verso l'altro: lo si conta come invito col codice, sapendo che e'
+    /// una stima.
+    private static let qrShownSeconds: TimeInterval = 6
 
     static let storeURL = URL(string: "https://apps.apple.com/app/id6748584483")!
 
@@ -68,10 +79,22 @@ struct InviteSheet: View {
             .sheet(isPresented: $showShare) {
                 ShareSheet(items: [
                     String(format: "invite_message".localized, Self.storeURL.absoluteString)
-                ])
+                ]) { completed in
+                    guard completed else { return }
+                    sharedLink = true
+                    Funnel.log(Funnel.inviteShared, ["channel": "link", "source": source])
+                }
             }
         }
         .navigationViewStyle(.stack)
+        .onAppear {
+            openedAt = Date()
+            Funnel.log(Funnel.inviteOpened, ["source": source])
+        }
+        .onDisappear {
+            guard !sharedLink, Date().timeIntervalSince(openedAt) >= Self.qrShownSeconds else { return }
+            Funnel.log(Funnel.inviteShared, ["channel": "qr", "source": source])
+        }
     }
 
     private static let qrImage: UIImage? = {
@@ -86,9 +109,13 @@ struct InviteSheet: View {
 
 struct ShareSheet: UIViewControllerRepresentable {
     let items: [Any]
+    /// Vero se il link e' partito davvero, falso se il foglio e' stato chiuso.
+    var onFinish: ((Bool) -> Void)? = nil
 
     func makeUIViewController(context: Context) -> UIActivityViewController {
-        UIActivityViewController(activityItems: items, applicationActivities: nil)
+        let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        controller.completionWithItemsHandler = { _, completed, _, _ in onFinish?(completed) }
+        return controller
     }
 
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}

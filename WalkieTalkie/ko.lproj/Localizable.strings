@@ -211,11 +211,8 @@
 "onboarding_p1_title" = "iPhone 속 진짜 무선과 무전기";
 "onboarding_p1_subtitle" = "CB, 단파, POC를 실시간으로 듣고, 전 세계 330개 이상의 라디오를 틀고, 신호가 없는 곳에서도 친구와 이야기하세요.";
 
-"onboarding_p2_no_internet_title" = "인터넷도, 유심도 필요 없음";
-"onboarding_p2_no_internet_body" = "iPhone과 iPad 사이에서는 목소리가 Wi-Fi와 블루투스로 기기에서 기기로 바로 전달됩니다. 공유기도, 서버도, 계정도 필요 없습니다.";
 "onboarding_p2_range_caveat" = "벽과 언덕, 고저차가 있으면 도달 거리가 줄어듭니다.";
 "onboarding_p2_same_wifi" = "Mac이나 Android 기기와 연결하려면 모든 기기를 같은 Wi-Fi 네트워크에 두세요. 이 연결은 로컬 네트워크를 지나갑니다.";
-"onboarding_p2_multi_platform" = "Talky는 iPad, Mac, Android에서도 작동합니다. 같은 앱으로, 모든 기기가 같은 대화에 들어옵니다.";
 
 "onboarding_p3_ptt_title" = "누른 채로 말하기";
 "onboarding_p3_ptt_body" = "진짜 무전기처럼, 가운데 버튼을 누른 채로 말하고 놓으면 듣습니다.";
@@ -231,12 +228,9 @@
 "onboarding_p5_step2" = "iPhone과 iPad에서는 탐색을 열고 기기 옆의 +를 누른 뒤 상대 기기에서 수락하세요. Mac과 Android는 같은 Wi-Fi에서 알아서 연결됩니다";
 "onboarding_p5_step3" = "연결되면(초록 점) 가운데 버튼을 누른 채로 말하고, 놓으면 듣습니다";
 
-"onboarding_permissions_title" = "권한 두 개면 끝";
 "onboarding_permissions_description" = "Talky가 작동하려면 필요합니다.";
 "onboarding_microphone_permission" = "마이크";
 "onboarding_permission_mic_why" = "눌러서 말할 때 목소리를 담기 위해 필요합니다.";
-"onboarding_notification_permission" = "알림";
-"onboarding_permission_notif_why" = "앱이 닫혀 있을 때 누가 부르면 알려드립니다.";
 "onboarding_permission_open_settings" = "iOS 설정 열기";
 
 "onboarding_continue" = "계속";
@@ -266,7 +260,6 @@
 "paywall.plan.weekly_suffix" = "/주";
 "paywall.plan.yearly" = "연간";
 "paywall.plan.yearly_suffix" = "/년";
-"paywall.badge.most_popular" = "가장 인기";
 "paywall.badge.save" = "%d%% 절약";
 "paywall.compare.weekly_vs_yearly" = "연 %1$@. 주 단위로 내면 %2$@을(를) 쓰게 됩니다.";
 "paywall.trial.badge" = "%1$d일 무료, 이후 연 %2$@";
@@ -452,8 +445,6 @@
 "paywall.support.compact" = "1인 개발자가 만듭니다. Talky의 코드는 GitHub에 공개되어 있습니다.";
 
 /* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
-"paywall.lifetime.cta" = "한 번만 결제 ·";
-"paywall.lifetime.subtitle" = "한 번의 결제로 Pro의 모든 것을 영원히. 테마 포함. 구독 없음.";
 "paywall.lifetime.owned" = "영원히 당신의 것입니다. 고맙습니다.";
 
 /* Pass stazione a 24 ore (rewarded) e chiarimento sullo streaming */
@@ -617,3 +608,25 @@
 "room_footer" = "방은 당신과 코드를 가진 사람만 들을 수 있습니다. 멀리 있어도 되지만 인터넷이 필요합니다. 방을 여는 것은 Talky Pro, 초대로 입장하는 것은 무료입니다.";
 "room_invite_text" = "Talky에서 이야기해요! 코드 %@(으)로 내 방에 들어오세요: %@ . Talky가 없다면: %@";
 "live_pro_room_message" = "비공개 방을 여는 것은 Talky Pro 기능입니다. 초대받은 사람은 무료로 입장합니다.";
+"paywall.plan.lifetime" = "평생";
+"paywall.plan.lifetime_suffix" = "한 번";
+"paywall.plan.lifetime_detail" = "한 번 결제로 평생 내 것";
+"paywall.compare.lifetime_vs_yearly" = "%1$@ 한 번, 매년 %2$@ 대신";
+"paywall.cta.lifetime" = "평생 잠금 해제";
+"pairing_listen_cb" = "그동안 CB를 실시간으로 들어보세요";
+"mode_switch_try_radio" = "라디오 듣기";
+"onboarding_two_talky_title" = "무전기는 두 휴대폰 모두에 Talky가 필요합니다";
+"onboarding_two_talky_body" = "Talky는 Talky가 있는 다른 휴대폰과 대화합니다. 함께 있는 사람의 휴대폰에도 설치하세요.";
+"onboarding_two_talky_range" = "범위는 10~30미터, 두 기기 모두 Wi-Fi와 Bluetooth를 켜세요. 인터넷이나 네트워크는 필요 없습니다.";
+"onboarding_mic_title" = "권한 하나: 마이크";
+"onboarding_start_title" = "어디서 시작할까요?";
+"onboarding_start_friend" = "근처에 친구가 있어요";
+"onboarding_start_friend_detail" = "무전기로 이동: 서로의 휴대폰을 찾아 대화하세요.";
+"onboarding_start_solo" = "혼자예요";
+"onboarding_start_solo_detail" = "CB 실시간 청취나 라디오를 들어보세요. 무전기는 누군가와 함께일 때 써보세요.";
+"whats_new_title" = "Talky %@의 새로운 기능";
+"whats_new_poc" = "이제 POC 채널에서 듣기만 하는 게 아니라 말할 수 있습니다.";
+"whats_new_rooms" = "초대 전용 비공개 방으로 멀리 있는 친구와도 대화하세요. 인터넷이 필요합니다.";
+"whats_new_widgets" = "홈 화면용 새 위젯과 새 제어 항목.";
+"whats_new_pairing" = "연결 도움말: 상대 휴대폰이 보이지 않으면 Talky가 확인할 것과 초대하는 방법을 알려줍니다.";
+"whats_new_try" = "POC에서 말해보기";

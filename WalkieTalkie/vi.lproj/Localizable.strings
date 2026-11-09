@@ -211,11 +211,8 @@
 "onboarding_p1_title" = "Radio thật và bộ đàm trong iPhone của bạn";
 "onboarding_p1_subtitle" = "Nghe trực tiếp CB, sóng ngắn và POC, mở hơn 330 đài thế giới và nói chuyện với bạn bè cả ở nơi không có sóng.";
 
-"onboarding_p2_no_internet_title" = "Không internet, không SIM";
-"onboarding_p2_no_internet_body" = "Giữa iPhone và iPad, giọng nói đi thẳng từ máy này sang máy kia qua Wi-Fi và Bluetooth: không router, không máy chủ, không tài khoản.";
 "onboarding_p2_range_caveat" = "Tường, đồi và chênh lệch độ cao làm giảm tầm phủ.";
 "onboarding_p2_same_wifi" = "Để nối tới máy Mac hoặc điện thoại Android, hãy đặt tất cả thiết bị vào cùng một mạng Wi-Fi: đường truyền đó đi qua mạng nội bộ.";
-"onboarding_p2_multi_platform" = "Talky cũng chạy trên iPad, Mac và Android: cùng một ứng dụng, mọi thiết bị của bạn trong cùng cuộc trò chuyện.";
 
 "onboarding_p3_ptt_title" = "Giữ để nói";
 "onboarding_p3_ptt_body" = "Y như bộ đàm thật: giữ nút ở giữa để nói, thả ra để nghe.";
@@ -231,12 +228,9 @@
 "onboarding_p5_step2" = "Trên iPhone và iPad, mở Khám phá rồi chạm + bên cạnh thiết bị, sau đó chấp nhận trên máy kia. Mac và Android tự kết nối, trong cùng mạng Wi-Fi";
 "onboarding_p5_step3" = "Khi đã kết nối (chấm xanh), giữ nút ở giữa để nói, thả ra để nghe";
 
-"onboarding_permissions_title" = "Hai quyền nữa là xong";
 "onboarding_permissions_description" = "Talky cần chúng để hoạt động.";
 "onboarding_microphone_permission" = "Micro";
 "onboarding_permission_mic_why" = "Để thu giọng của bạn khi bạn nhấn để nói.";
-"onboarding_notification_permission" = "Thông báo";
-"onboarding_permission_notif_why" = "Để báo cho bạn khi có người gọi lúc ứng dụng đang đóng.";
 "onboarding_permission_open_settings" = "Mở Cài đặt iOS";
 
 "onboarding_continue" = "Tiếp tục";
@@ -266,7 +260,6 @@
 "paywall.plan.weekly_suffix" = "/tuần";
 "paywall.plan.yearly" = "Hằng năm";
 "paywall.plan.yearly_suffix" = "/năm";
-"paywall.badge.most_popular" = "ĐƯỢC CHỌN NHIỀU NHẤT";
 "paywall.badge.save" = "Tiết kiệm %d%%";
 "paywall.compare.weekly_vs_yearly" = "%1$@ mỗi năm. Trả theo tuần bạn sẽ tốn %2$@.";
 "paywall.trial.badge" = "Miễn phí %1$d ngày, sau đó %2$@ mỗi năm";
@@ -451,8 +444,6 @@
 "paywall.support.compact" = "Do một nhà phát triển độc lập làm ra. Mã nguồn Talky công khai trên GitHub.";
 
 /* Paywall — acquisto una tantum "per sempre" (chiesto da 3 recensioni) */
-"paywall.lifetime.cta" = "Trả một lần ·";
-"paywall.lifetime.subtitle" = "Một lần thanh toán. Trọn bộ Pro, mãi mãi, gồm cả giao diện. Không cần đăng ký.";
 "paywall.lifetime.owned" = "Thuộc về bạn mãi mãi. Cảm ơn bạn.";
 
 /* Pass stazione a 24 ore (rewarded) e chiarimento sullo streaming */
@@ -616,3 +607,25 @@
 "room_footer" = "Chỉ bạn và người có mã mới nghe được phòng, kể cả khi ở xa: cần có internet. Mở phòng là của Talky Pro, vào bằng lời mời thì miễn phí.";
 "room_invite_text" = "Nói chuyện trên Talky nhé! Vào phòng của mình bằng mã %@: %@ . Nếu chưa có Talky: %@";
 "live_pro_room_message" = "Mở phòng riêng là tính năng của Talky Pro. Người bạn mời vào miễn phí.";
+"paywall.plan.lifetime" = "Trọn đời";
+"paywall.plan.lifetime_suffix" = "một lần";
+"paywall.plan.lifetime_detail" = "Trả một lần, của bạn mãi mãi";
+"paywall.compare.lifetime_vs_yearly" = "%1$@ một lần, thay vì %2$@ mỗi năm";
+"paywall.cta.lifetime" = "Mở khóa trọn đời";
+"pairing_listen_cb" = "Trong lúc chờ, nghe CB trực tiếp";
+"mode_switch_try_radio" = "Nghe radio";
+"onboarding_two_talky_title" = "Bộ đàm cần Talky trên cả hai điện thoại";
+"onboarding_two_talky_body" = "Talky nói chuyện với điện thoại khác có Talky: hãy cài cả trên máy của người đang ở cùng bạn.";
+"onboarding_two_talky_range" = "Tầm từ 10 đến 30 mét, bật Wi-Fi và Bluetooth trên cả hai máy. Không cần internet hay mạng.";
+"onboarding_mic_title" = "Một quyền: micrô";
+"onboarding_start_title" = "Bạn muốn bắt đầu từ đâu?";
+"onboarding_start_friend" = "Tôi có bạn ở gần";
+"onboarding_start_friend_detail" = "Vào bộ đàm: tìm điện thoại của nhau và nói chuyện.";
+"onboarding_start_solo" = "Tôi chỉ có một mình";
+"onboarding_start_solo_detail" = "Nghe CB trực tiếp hoặc radio. Thử bộ đàm khi có ai đó ở cùng bạn.";
+"whats_new_title" = "Có gì mới trong Talky %@";
+"whats_new_poc" = "Trên các kênh POC giờ bạn có thể nói, không chỉ nghe.";
+"whats_new_rooms" = "Phòng riêng có lời mời, để nói chuyện cả với bạn bè ở xa. Cần internet.";
+"whats_new_widgets" = "Tiện ích mới cho Màn hình chính và điều khiển mới.";
+"whats_new_pairing" = "Trợ giúp kết nối: nếu điện thoại kia không hiện ra, Talky cho bạn biết cần kiểm tra gì và cách mời họ.";
+"whats_new_try" = "Thử nói trên POC";

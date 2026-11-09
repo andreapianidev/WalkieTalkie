@@ -19,6 +19,7 @@ struct PaywallView: View {
     private var weekly: Product? { iap.products.first { $0.id == ProductID.weekly.rawValue } }
     private var yearly: Product? { iap.products.first { $0.id == ProductID.yearly.rawValue } }
     private var themesPack: Product? { iap.products.first { $0.id == ProductID.themesPackID } }
+    private var lifetime: Product? { iap.products.first { $0.id == ProductID.lifetimeID } }
 
     var body: some View {
         VStack(spacing: 20) {
@@ -87,15 +88,37 @@ struct PaywallView: View {
                 .frame(width: 340)
                 .padding(.vertical, 10)
             } else {
-                HStack(spacing: 12) {
+                // Il per sempre e' il terzo piano, accanto agli altri e con lo
+                // stesso disegno: sotto, in piccolo, non lo vedeva nessuno, ed e'
+                // quello che vende appena lo si vede. In evidenza resta l'annuale.
+                HStack(spacing: 10) {
                     if let weekly {
                         planCard(weekly, title: MacString.weekly.text, highlight: false)
                     }
                     if let yearly {
                         planCard(yearly, title: MacString.yearly.text, highlight: true)
                     }
+                    if let lifetime, !iap.hasLifetime {
+                        planCard(lifetime, title: MacString.lifetimeCaps.text, highlight: false)
+                    }
                 }
                 .frame(width: 380)
+
+                if let lifetime, !iap.hasLifetime {
+                    VStack(spacing: 2) {
+                        Text(MacString.lifetimePitch.text)
+                            .font(.system(size: 11, weight: .semibold, design: .rounded))
+                            .foregroundStyle(Talky.text)
+                        if let yearly {
+                            // Prezzi da StoreKit, nella valuta di chi compra.
+                            Text(MacString.lifetimeVsYearly.format(lifetime.displayPrice, yearly.displayPrice))
+                                .font(.system(size: 10, design: .rounded))
+                                .foregroundStyle(Talky.dim)
+                        }
+                    }
+                    .multilineTextAlignment(.center)
+                    .frame(width: 380)
+                }
 
                 if let themesPack {
                     Button {
@@ -108,28 +131,11 @@ struct PaywallView: View {
                 }
             }
 
-            // "Paghi una volta e basta". Sta sotto le card prezzo e non fra
-            // loro: e' una scelta diversa in natura, non un terzo piano da
-            // confrontare a colpo d'occhio. Stessa logica della paywall iOS.
             if iap.hasLifetime {
                 Text(MacString.yoursForever.text)
                     .font(.vfd(10, weight: .bold))
                     .kerning(1.4)
                     .foregroundStyle(Talky.signal)
-            } else if let lifetime = iap.products.first(where: { $0.id == ProductID.lifetimeID }) {
-                VStack(spacing: 3) {
-                    Button {
-                        buy { try await iap.purchase(lifetime) }
-                    } label: {
-                        Text(MacString.payOnce.format(lifetime.displayPrice))
-                    }
-                    .buttonStyle(ChipButtonStyle(accent: Talky.amber))
-                    .disabled(purchasing)
-
-                    Text(MacString.lifetimeNote.text)
-                        .font(.system(size: 10, design: .rounded))
-                        .foregroundStyle(Talky.dim)
-                }
             }
 
             if let errorMessage {
@@ -264,12 +270,8 @@ struct PaywallView: View {
                 Text(product.displayPrice)
                     .font(.vfd(20, weight: .heavy))
                     .foregroundStyle(highlight ? Talky.coal : Talky.amber)
-                if highlight {
-                    Text(MacString.bestValue.text)
-                        .font(.vfd(8, weight: .bold))
-                        .kerning(1.2)
-                        .foregroundStyle(Talky.coal.opacity(0.7))
-                }
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
