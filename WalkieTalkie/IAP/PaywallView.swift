@@ -202,10 +202,15 @@ struct PaywallView: View {
                     VStack(alignment: .leading, spacing: 20) {
                         topBar
                         heroSection(showIcon: geo.size.height >= 700)
-                        planRows
-                        yearlyComparisonLine
-                        freeTrialBadge
-                        ctaButton
+                        // Chi ha gia' il per sempre non trova niente da
+                        // comprare: un tocco sull'annuale preselezionato lo
+                        // abbonerebbe a quello che ha gia'.
+                        if !iap.hasLifetime {
+                            planRows
+                            yearlyComparisonLine
+                            freeTrialBadge
+                            ctaButton
+                        }
                         lifetimeOwned
                         hairlineDivider
                         featuresList
@@ -509,24 +514,22 @@ struct PaywallView: View {
                 }
             }
 
-            if !iap.hasLifetime {
-                planRow(
-                    title: "paywall.plan.lifetime".localized,
-                    product: lifetimeProduct,
-                    periodSuffix: "paywall.plan.lifetime_suffix".localized,
-                    productID: ProductID.lifetimeID
-                ) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("paywall.plan.lifetime_detail".localized)
-                            .font(.system(size: 12, weight: .semibold))
-                        if let compare = lifetimeComparisonText {
-                            Text(compare)
-                                .font(.system(size: 11))
-                                .opacity(0.75)
-                        }
+            planRow(
+                title: "paywall.plan.lifetime".localized,
+                product: lifetimeProduct,
+                periodSuffix: "paywall.plan.lifetime_suffix".localized,
+                productID: ProductID.lifetimeID
+            ) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("paywall.plan.lifetime_detail".localized)
+                        .font(.system(size: 12, weight: .semibold))
+                    if let compare = lifetimeComparisonText {
+                        Text(compare)
+                            .font(.system(size: 11))
+                            .opacity(0.75)
                     }
-                    .fixedSize(horizontal: false, vertical: true)
                 }
+                .fixedSize(horizontal: false, vertical: true)
             }
         }
         .padding(.top, 4)

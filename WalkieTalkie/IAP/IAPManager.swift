@@ -24,7 +24,11 @@ final class IAPManager: ObservableObject {
     // MARK: - Published State
 
     @Published var products: [Product] = []
-    @Published var isProUser: Bool = false
+    @Published var isProUser: Bool = false {
+        // I widget e il controllo della radio preferita si ricaricano solo
+        // quando cambia questo, non a ogni lettura degli acquisti.
+        didSet { RadioShelf.savePro(isProUser) }
+    }
     @Published var activeSubscription: Product? = nil
     @Published var isLoading: Bool = false
 
@@ -331,6 +335,11 @@ final class IAPManager: ObservableObject {
             }
         }
 
+        #if DEBUG
+        // La scelta Free/Pro dell'avvio vale gia' qui: assegnare prima il
+        // valore vero e poi quello simulato farebbe ricaricare i widget due volte.
+        if let override = debugSimulatedProOverride { isPro = override }
+        #endif
         self.isProUser = isPro
         self.activeSubscription = foundActiveProduct
         self.hasThemesPack = packOwned
@@ -357,6 +366,10 @@ final class IAPManager: ObservableObject {
     }
 
     #if DEBUG
+    /// Vero dopo la scelta Free/Pro dell'avviso di avvio: finche' l'avviso e'
+    /// su, niente fogli sopra (ContentView, foglio Novita').
+    var debugTierChosen: Bool { debugSimulatedProOverride != nil }
+
     func applyDebugSimulatedTier(isPro: Bool) {
         debugSimulatedProOverride = isPro
         self.isProUser = isPro

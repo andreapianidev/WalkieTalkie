@@ -199,6 +199,7 @@ final class WalkieEngine: NSObject, ObservableObject {
         listener = nil
         browser?.stop()
         browser = nil
+        for connection in connections.values { abbandonaInArrivo(connection) }
         connections.values.forEach { $0.cancel() }
         connections.removeAll()
         inArrivo.removeAll()
@@ -405,7 +406,7 @@ final class WalkieEngine: NSObject, ObservableObject {
                                                   nome: self.deviceName,
                                                   destinatari: Array(self.connections.keys))
             // Se ci torna indietro da un ponte non va suonato a chi l'ha detto.
-            _ = self.ponte.primaVolta(trasmissione.id)
+            self.ponte.segna(trasmissione.id)
             self.manda(pcm16, trasmissione: trasmissione, a: Array(self.connections.values))
 
             self.logger.logAudioInfo("TALKY1 audio inviato: \(pcm16.count) bytes a \(self.connections.count) peer")
@@ -432,8 +433,11 @@ final class WalkieEngine: NSObject, ObservableObject {
     /// tratte da fare, lo ritrasmette a chi non l'ha gia' avuto. Su `queue`.
     private func concludi(_ connection: NWConnection) {
         guard let finito = inArrivo.removeValue(forKey: ObjectIdentifier(connection)),
-              let trasmissione = finito.trasmissione,
-              !finito.doppione, trasmissione.ttl > 1, !finito.pcm16.isEmpty else { return }
+              let trasmissione = finito.trasmissione, !finito.doppione else { return }
+        // Da qui le altre copie sono doppioni; prima no, se questa si fosse
+        // interrotta una copia intera da un altro ponte doveva ancora passare.
+        ponte.completa(trasmissione.id)
+        guard trasmissione.ttl > 1, !finito.pcm16.isEmpty else { return }
         let da = finito.peerUID
         let scelte = connections.filter { id, _ in
             id != da && !trasmissione.raggiunti.contains(Ponte.idCorto(id))
@@ -442,6 +446,14 @@ final class WalkieEngine: NSObject, ObservableObject {
         let uscita = trasmissione.perIlPonte(locale: uid, arrivataDa: da, destinatari: Array(scelte.keys))
         manda(finito.pcm16, trasmissione: uscita, a: Array(scelte.values))
         logger.logAudioInfo("Ponte: ritrasmesso a \(scelte.count) peer (ttl \(uscita.ttl))")
+    }
+
+    /// Connessione chiusa con un messaggio a meta': non si segna come arrivato,
+    /// cosi' una copia intera da un altro ponte si suona. Su `queue`.
+    private func abbandonaInArrivo(_ connection: NWConnection) {
+        guard let rimasto = inArrivo.removeValue(forKey: ObjectIdentifier(connection)),
+              let trasmissione = rimasto.trasmissione, !rimasto.doppione else { return }
+        ponte.abbandona(trasmissione.id)
     }
 
     // MARK: - Listener / Bonjour
@@ -694,6 +706,13 @@ final class WalkieEngine: NSObject, ObservableObject {
                 port: 0,
                 channel: message.fields["channel"] ?? Constant.defaultChannel
             )
+            // Chi chiama da un altro canale non entra: ascolterebbe una stanza
+            // privata e, con il ponte, ci farebbe passare la voce di altri.
+            guard peer.channel == currentChannelID else {
+                logger.logNetworkInfo("TALKY1 HELLO da \(peer.name) su un altro canale: chiusa")
+                connection.cancel()
+                return
+            }
             if let existing = connections[peer.id], existing !== connection {
                 existing.cancel()
             }
@@ -713,7 +732,7 @@ final class WalkieEngine: NSObject, ObservableObject {
             // Un messaggio rimasto aperto (flusso senza AUDIO_END) si chiude qui.
             if inArrivo[ObjectIdentifier(connection)] != nil { concludi(connection) }
             let trasmissione = Trasmissione(campi: message.fields)
-            let doppione = trasmissione.map { !ponte.primaVolta($0.id) } ?? false
+            let doppione = trasmissione.map { !ponte.inizia($0.id) } ?? false
             inArrivo[ObjectIdentifier(connection)] = InArrivo(
                 trasmissione: trasmissione,
                 peerUID: connections.first { $0.value === connection }?.key,
@@ -908,7 +927,7 @@ final class WalkieEngine: NSObject, ObservableObject {
     }
 
     private func remove(connection: NWConnection) {
-        inArrivo.removeValue(forKey: ObjectIdentifier(connection))
+        abbandonaInArrivo(connection)
         let removedIDs = connections.compactMap { id, storedConnection in
             storedConnection === connection ? id : nil
         }

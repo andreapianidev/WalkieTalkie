@@ -629,3 +629,12 @@
 "whats_new_widgets" = "De nouveaux widgets pour l'écran d'accueil et de nouvelles commandes.";
 "whats_new_pairing" = "Aide à la connexion : si l'autre téléphone n'apparaît pas, Talky vous dit quoi vérifier et comment l'inviter.";
 "whats_new_try" = "Essayer de parler sur POC";
+
+/* Onboarding: un solo permesso, il microfono */
+"onboarding_mic_description" = "Il sert à parler avec le talkie. La CB en direct et la radio marchent aussi sans.";
+/* Tasti dei widget radio: i titoli servono anche nel bundle dell'app, che esegue gli intent */
+"w_intent_play" = "Écouter la station";
+"w_intent_stop" = "Arrêter la radio";
+"w_intent_station" = "Station";
+"w_fav_control_name" = "Ma radio préférée";
+"mumble_report_mail" = "Ajouter des détails par e-mail";

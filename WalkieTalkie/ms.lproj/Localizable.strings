@@ -631,3 +631,12 @@
 "whats_new_widgets" = "Widget baharu untuk Skrin Utama dan kawalan baharu.";
 "whats_new_pairing" = "Bantuan sambungan: jika telefon lain tidak muncul, Talky memberitahu apa yang perlu disemak dan cara menjemputnya.";
 "whats_new_try" = "Cuba bercakap di POC";
+
+/* Onboarding: un solo permesso, il microfono */
+"onboarding_mic_description" = "Diperlukan untuk bercakap melalui walkie. CB secara langsung dan radio tetap berfungsi tanpanya.";
+/* Tasti dei widget radio: i titoli servono anche nel bundle dell'app, che esegue gli intent */
+"w_intent_play" = "Main stesen";
+"w_intent_stop" = "Hentikan radio";
+"w_intent_station" = "Stesen";
+"w_fav_control_name" = "Radio kegemaran saya";
+"mumble_report_mail" = "Tambah butiran melalui e-mel";

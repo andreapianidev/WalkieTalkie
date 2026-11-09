@@ -36,6 +36,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withTimeoutOrNull
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.ByteArrayOutputStream
@@ -47,7 +48,6 @@ import java.net.InetSocketAddress
 import java.net.Socket
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
@@ -70,6 +70,9 @@ private class InArrivo(
     /** null = versione senza ponte: si suona e basta. */
     val trasmissione: Trasmissione?,
     val peerUid: String,
+    /** Generazione del canale della connessione d'origine: dopo un cambio di
+     *  canale il messaggio non si ritrasmette ai peer del canale nuovo. */
+    val generazione: Long,
     /** Android manda tanti frame fino ad AUDIO_END, iPhone e Mac uno solo. */
     val flusso: Boolean,
     val attesi: Int,
@@ -136,10 +139,13 @@ class CrossPlatformWalkieManager(
     private val memoriaPonte = MemoriaPonte()
     private val inArrivo = ConcurrentHashMap<Long, InArrivo>()
     /**
-     * Ritrasmissioni pronte mentre si sta parlando: partono dopo il nostro
-     * AUDIO_END, altrimenti finirebbero in mezzo ai frame del nostro flusso.
+     * Chi scrive sulle connessioni: la nostra trasmissione lo tiene da prima
+     * dell'AUDIO_META a dopo l'AUDIO_END, una ritrasmissione per il tempo di
+     * scrivere il messaggio. Cosi' una ritrasmissione non entra mai nel flusso
+     * di chi parla: aspetta che finisca, e se intanto parte un'altra
+     * trasmissione passa prima lei (il Mutex e' in ordine di arrivo).
      */
-    private val ponteInAttesa = ConcurrentLinkedQueue<() -> Unit>()
+    private val uscita = Mutex()
 
     val audioManager = AudioManager(context)
     private var audioStreamingJob: Job? = null
@@ -236,12 +242,17 @@ class CrossPlatformWalkieManager(
         onTransmissionStateChanged?.invoke(true)
         audioStreamingJob = scope.launch {
             var audioAnnounced = false
+            var inUscita = false
             try {
+                // Se una ritrasmissione sta scrivendo si aspetta che finisca:
+                // e' questione di un messaggio, non di una coda.
+                uscita.lock()
+                inUscita = true
                 addEvent("Inizio trasmissione audio")
 
                 val trasmissione = Trasmissione.nuova(uid, deviceName, peerConnections.keys)
                 // Se ci torna indietro da un ponte non va suonato a chi l'ha detto.
-                memoriaPonte.primaVolta(trasmissione.id)
+                memoriaPonte.segna(trasmissione.id)
                 val metaMsg = TalkyMessage.audioMeta(
                     byteCount = AudioManager.BUFFER_SIZE_FRAMES * 2,
                     sampleRate = AudioManager.SAMPLE_RATE,
@@ -265,10 +276,7 @@ class CrossPlatformWalkieManager(
                 if (audioAnnounced) {
                     broadcastMessage(TalkyMessage.audioEnd())
                 }
-                while (true) {
-                    val ritrasmissione = ponteInAttesa.poll() ?: break
-                    ritrasmissione()
-                }
+                if (inUscita) uscita.unlock()
                 addEvent("Fine trasmissione audio")
                 onTransmissionStateChanged?.invoke(false)
             }
@@ -699,7 +707,7 @@ class CrossPlatformWalkieManager(
                 addEvent("Peer ${peer.name} disconnesso: ${e.message}")
             }
         } finally {
-            inArrivo.remove(connectionId)
+            abbandona(connectionId)
             disconnectPeer(peer.uid, connectionId, reconnect = true)
         }
     }
@@ -738,10 +746,11 @@ class CrossPlatformWalkieManager(
                 // Un messaggio rimasto aperto (flusso senza AUDIO_END) si chiude qui.
                 concludi(connectionId)
                 val trasmissione = Trasmissione.daCampi(message.fields)
-                val doppione = trasmissione?.let { !memoriaPonte.primaVolta(it.id) } ?: false
+                val doppione = trasmissione?.let { !memoriaPonte.inizia(it.id) } ?: false
                 inArrivo[connectionId] = InArrivo(
                     trasmissione = trasmissione,
                     peerUid = peer.uid,
+                    generazione = connectionGeneration,
                     flusso = message.fields[TalkyProtocol.Keys.STREAM] == "1",
                     attesi = message.fields[TalkyProtocol.Keys.BYTE_COUNT]?.toIntOrNull() ?: 0,
                     doppione = doppione
@@ -792,21 +801,44 @@ class CrossPlatformWalkieManager(
     private fun concludi(connectionId: Long) {
         val finito = inArrivo.remove(connectionId) ?: return
         val trasmissione = finito.trasmissione ?: return
-        if (finito.doppione || trasmissione.ttl <= 1 || finito.pcm.size() == 0) return
+        if (finito.doppione) return
+        // Da qui le altre copie sono doppioni; prima no, perche' se questa si
+        // fosse interrotta una copia intera da un altro ponte doveva passare.
+        memoriaPonte.completa(trasmissione.id)
+        if (trasmissione.ttl <= 1 || finito.pcm.size() == 0) return
         val pcm = finito.pcm.toByteArray()
-        val ritrasmissione = { ritrasmetti(trasmissione, pcm, finito.peerUid) }
-        if (isTransmitting()) {
-            ponteInAttesa.add(ritrasmissione)
-        } else {
-            // Fuori dal lettore di questa connessione: mandare un messaggio
-            // intero a piu' peer richiede tempo e la lettura non deve fermarsi.
-            scope.launch { ritrasmissione() }
+        // Fuori dal lettore di questa connessione: mandare un messaggio intero a
+        // piu' peer richiede tempo e la lettura non deve fermarsi.
+        scope.launch {
+            val preso = withTimeoutOrNull(ATTESA_MASSIMA_PONTE_MS) { uscita.lock() } != null
+            if (!preso) {
+                addEvent("Ponte: ritrasmissione scaduta, scartata")
+                return@launch
+            }
+            try {
+                ritrasmetti(trasmissione, pcm, finito.peerUid, finito.generazione)
+            } finally {
+                uscita.unlock()
+            }
         }
     }
 
-    private fun ritrasmetti(trasmissione: Trasmissione, pcm: ByteArray, arrivataDa: String) {
+    /** La connessione si chiude a meta' messaggio: una copia intera da un altro ponte passera'. */
+    private fun abbandona(connectionId: Long) {
+        val rimasto = inArrivo.remove(connectionId) ?: return
+        val trasmissione = rimasto.trasmissione ?: return
+        if (!rimasto.doppione) memoriaPonte.abbandona(trasmissione.id)
+    }
+
+    private fun ritrasmetti(
+        trasmissione: Trasmissione,
+        pcm: ByteArray,
+        arrivataDa: String,
+        generazione: Long
+    ) {
+        if (channelGeneration.get() != generazione) return
         val scelte = peerConnections.values
-            .filter(::isConnectionCurrent)
+            .filter { it.channelGeneration == generazione && isConnectionCurrent(it) }
             .filter { conn ->
                 conn.peer.uid != arrivataDa &&
                     Trasmissione.idCorto(conn.peer.uid) !in trasmissione.raggiunti
@@ -1142,5 +1174,8 @@ class CrossPlatformWalkieManager(
 
     private companion object {
         const val HANDSHAKE_TIMEOUT_MS = 10_000
+        /** Oltre questo la ritrasmissione e' vecchia: chi parla da piu' di
+         *  mezzo minuto ha gia' cambiato discorso. */
+        const val ATTESA_MASSIMA_PONTE_MS = 30_000L
     }
 }

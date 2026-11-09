@@ -16,16 +16,15 @@ struct LiveTalkPanel: View {
     var body: some View {
         HStack(spacing: 14) {
             if live.canTalk {
-                talkButton
+                LiveTalkButton(talking: live.isTalking, onPress: pressBegan, onRelease: { live.stopTalking() })
             } else {
                 Label(MacString.talkListenOnly.text, systemImage: "ear")
                     .font(.system(size: 11))
                     .foregroundStyle(Talky.dim)
             }
             VStack(alignment: .leading, spacing: 6) {
-                if let room = live.room {
-                    LiveRoomBadge(room: room)
-                } else {
+                HStack(spacing: 12) {
+                    if let room = live.room { LiveRoomBadge(room: room) }
                     safetyMenu
                 }
                 if live.micDenied {
@@ -43,51 +42,33 @@ struct LiveTalkPanel: View {
         .opacity(live.state == .online ? 1 : 0.4)
         .disabled(live.state != .online)
         .sheet(isPresented: $showRules) { LiveRulesSheet() }
-        .alert(MacString.reportDone.text, isPresented: $reported) {
+        .alert(MacString.reportMailed.text, isPresented: $reported) {
             Button("OK", role: .cancel) {}
         }
     }
 
-    private var talkButton: some View {
-        HStack(spacing: 10) {
-            ZStack {
-                Circle()
-                    .fill(live.isTalking ? Talky.signal : Talky.panel)
-                    .frame(width: 54, height: 54)
-                    .overlay(Circle().stroke(Talky.amber.opacity(0.6), lineWidth: 1))
-                Image(systemName: live.isTalking ? "waveform" : "mic.fill")
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundStyle(live.isTalking ? .white : Talky.amber)
-            }
-            .contentShape(Circle())
-            .gesture(
-                DragGesture(minimumDistance: 0)
-                    .onChanged { _ in
-                        guard !live.isTalking else { return }
-                        guard MumbleManners.rulesAccepted else {
-                            showRules = true
-                            return
-                        }
-                        live.startTalking()
-                    }
-                    .onEnded { _ in live.stopTalking() }
-            )
-            Text(live.isTalking ? MacString.talkOnAir.text : MacString.talkHold.text)
-                .font(.vfd(11, weight: .bold))
-                .foregroundStyle(live.isTalking ? Talky.signal : Talky.dim)
+    private func pressBegan() {
+        guard MumbleManners.rulesAccepted else {
+            showRules = true
+            return
         }
-        .accessibilityLabel(MacString.talkHold.text)
+        live.startTalking()
     }
 
+    /// Anche nelle stanze: silenziare chi parla e rileggere le regole. La
+    /// segnalazione di un server c'e' solo sui canali pubblici, perche' il
+    /// server delle stanze e' di Talky.
     private var safetyMenu: some View {
         Menu {
             if let talker = live.talker {
                 Button(MacString.talkMute.format(talker)) { live.muteTalker() }
             }
-            Section(MacString.talkReport.text) {
-                Button(MacString.reportAbuse.text) { report("abuse") }
-                Button(MacString.reportSexual.text) { report("sexual") }
-                Button(MacString.reportSpam.text) { report("spam") }
+            if live.room == nil {
+                Section(MacString.talkReport.text) {
+                    Button(MacString.reportAbuse.text) { report("abuse") }
+                    Button(MacString.reportSexual.text) { report("sexual") }
+                    Button(MacString.reportSpam.text) { report("spam") }
+                }
             }
             Button(MacString.rulesTitle.text) { showRules = true }
         } label: {
@@ -98,9 +79,60 @@ struct LiveTalkPanel: View {
         .font(.system(size: 11))
     }
 
+    /// Sul Mac non c'e' Firebase: la segnalazione e' una mail gia' scritta a
+    /// chi gestisce Talky, con server e motivo, piu' il server nascosto.
     private func report(_ reason: String) {
+        let server = live.currentPOC?.server.id ?? ""
         live.reportCurrent(reason: reason)
+        if let url = MumbleManners.reportMail(server: server, reason: reason) { NSWorkspace.shared.open(url) }
         reported = true
+    }
+}
+
+/// Il tasto da tenere premuto col mouse. Lo stato della pressione vive qui:
+/// se il tasto sparisce, la finestra perde il fuoco o il gesto si annulla,
+/// il passaggio si chiude.
+private struct LiveTalkButton: View {
+    let talking: Bool
+    let onPress: () -> Void
+    let onRelease: () -> Void
+    @GestureState private var held = false
+    @State private var pressed = false
+
+    var body: some View {
+        HStack(spacing: 10) {
+            ZStack {
+                Circle()
+                    .fill(talking ? Talky.signal : Talky.panel)
+                    .frame(width: 54, height: 54)
+                    .overlay(Circle().stroke(Talky.amber.opacity(0.6), lineWidth: 1))
+                Image(systemName: talking ? "waveform" : "mic.fill")
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundStyle(talking ? .white : Talky.amber)
+            }
+            .contentShape(Circle())
+            .gesture(DragGesture(minimumDistance: 0).updating($held) { _, state, _ in state = true })
+            .onChange(of: held) { _, isHeld in
+                if isHeld {
+                    pressed = true
+                    onPress()
+                } else {
+                    release()
+                }
+            }
+            .onReceive(NotificationCenter.default.publisher(for: NSApplication.didResignActiveNotification)) { _ in release() }
+            .onDisappear(perform: release)
+            Text(talking ? MacString.talkOnAir.text : MacString.talkHold.text)
+                .font(.vfd(11, weight: .bold))
+                .foregroundStyle(talking ? Talky.signal : Talky.dim)
+        }
+        .accessibilityLabel(MacString.talkHold.text)
+    }
+
+    private func release() {
+        guard pressed else { return }
+        pressed = false
+        onRelease()
     }
 }
 

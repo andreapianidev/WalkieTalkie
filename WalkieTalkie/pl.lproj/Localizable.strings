@@ -629,3 +629,12 @@
 "whats_new_widgets" = "Nowe widżety na ekran początkowy i nowe przyciski sterowania.";
 "whats_new_pairing" = "Pomoc w łączeniu: jeśli drugi telefon się nie pojawia, Talky powie Ci, co sprawdzić i jak go zaprosić.";
 "whats_new_try" = "Spróbuj mówić na POC";
+
+/* Onboarding: un solo permesso, il microfono */
+"onboarding_mic_description" = "Służy do mówienia przez krótkofalówkę. CB na żywo i radio działają też bez niego.";
+/* Tasti dei widget radio: i titoli servono anche nel bundle dell'app, che esegue gli intent */
+"w_intent_play" = "Włącz stację";
+"w_intent_stop" = "Zatrzymaj radio";
+"w_intent_station" = "Stacja";
+"w_fav_control_name" = "Moje ulubione radio";
+"mumble_report_mail" = "Dodaj szczegóły e-mailem";

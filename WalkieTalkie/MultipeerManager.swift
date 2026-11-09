@@ -8,17 +8,18 @@ import Foundation
 import MultipeerConnectivity
 import AVFoundation
 import Combine
+import CryptoKit
+import Security
 import os.log
 
 class MultipeerManager: NSObject, ObservableObject {
     private let serviceType = "walkie-talkie"
     private let myPeerID = MCPeerID(displayName: UIDevice.current.name)
 
-    /// Id di questa installazione, annunciato come "uid" nel discoveryInfo e
-    /// uguale a quello TALKY1. Fisso fra un avvio e l'altro: e' cosi' che chi ci
-    /// ha gia' accettato una volta ci riconosce e non chiede di nuovo, e che il
-    /// ponte sa a chi un messaggio e' gia' arrivato. Non si puo' usare il
-    /// displayName: da iOS 16 `UIDevice.current.name` e' quasi sempre "iPhone".
+    /// Id di questo avvio, annunciato come "uid" nel discoveryInfo e uguale a
+    /// quello TALKY1: serve al ponte per sapere a chi un messaggio e' gia'
+    /// arrivato. Cambia a ogni avvio; chi ci ha gia' accettato ci riconosce dal
+    /// segreto della coppia (`CoppieFidate`), che non passa mai dalla ricerca.
     private let instanceID = Ponte.shared.uidLocale
 
     /// Istanza condivisa: viene popolata dalla prima `init()` chiamata (tipicamente in ContentView).
@@ -86,10 +87,15 @@ class MultipeerManager: NSObject, ObservableObject {
     /// Inviti ricevuti che aspettano una risposta: il primo e' quello a schermo.
     /// In coda e non uno alla volta, perche' declinare in silenzio il precedente
     /// faceva fallire chi aveva chiesto per primo.
-    private var invitiInCoda: [(peer: MCPeerID, uid: String?, arrivato: Date, handler: (Bool, MCSession?) -> Void)] = []
-    private var rifiutatiUID: [String: Date] = [:]
-    private static let fidatiKey = "multipeer_trusted_devices"
-    private static let maxFidati = 200
+    private var invitiInCoda: [(id: UUID, peer: MCPeerID, arrivato: Date, handler: (Bool, MCSession?) -> Void)] = []
+    /// Chi invita aspetta `connectionTimeout`, 15 s da sempre: oltre, un si'
+    /// non collega piu' niente. Un secondo di margine per il viaggio.
+    private let durataInvito: TimeInterval = 14
+    /// Accettati a mano qui: a collegamento fatto gli si manda il segreto della coppia.
+    private var daAccoppiare: Set<MCPeerID> = []
+    /// Collegati con un invito partito da qui: solo da loro si accetta un segreto,
+    /// cosi' nessuno puo' farsi ricordare senza che l'utente abbia toccato.
+    private var invitatiDaNoi: Set<MCPeerID> = []
 
     // MARK: - Performance Monitoring
     private let performanceMonitor = PerformanceMonitor.shared
@@ -140,6 +146,8 @@ class MultipeerManager: NSObject, ObservableObject {
         
         setupAudio()
         setupHighTrafficOptimizations()
+        // Le build 141 e 142 si fidavano di un uid annunciato in chiaro: via.
+        UserDefaults.standard.removeObject(forKey: "multipeer_trusted_devices")
         // Quello che arriva intero da un Android o da un Mac passa anche agli
         // iPhone collegati qui, e viceversa: l'iPhone e' il ponte fra i trasporti.
         TalkyCrossPlatformManager.shared.daInoltrare = { [weak self] trasmissione, audio, da in
@@ -244,12 +252,15 @@ class MultipeerManager: NSObject, ObservableObject {
         }
     }
     
-    func invitePeer(_ peerID: MCPeerID) {
+    /// `daUtente` e' il tocco in Esplora: vale piu' di un rifiuto dato prima,
+    /// che altrimenti terrebbe il peer fuori per dieci minuti senza dire niente.
+    func invitePeer(_ peerID: MCPeerID, daUtente: Bool = true) {
         // Mai una seconda richiesta mentre la prima e' ancora a schermo dall'altra parte.
         if let inviato = invitiInVolo[peerID], Date().timeIntervalSince(inviato) < connectionTimeout + 2 {
             logger.logNetworkDebug("Invito a \(peerID.displayName) gia' in corso")
             return
         }
+        if daUtente { declinedPeers.remove(peerID) }
 
         guard !declinedPeers.contains(peerID) else {
             logger.logNetworkDebug("Saltato invito: il peer \(peerID.displayName) è stato appena rifiutato dall'utente")
@@ -282,10 +293,10 @@ class MultipeerManager: NSObject, ObservableObject {
         invitiInVolo[peerID] = Date()
         // Il canale corrente viaggia nel context dell'invito: il ricevente lo valida
         // così senza dipendere da `discoveredPeers` (che era una race condition).
-        // A chi ha il ponte si aggiunge l'uid su una seconda riga, per farsi
-        // riconoscere se ci ha gia' accettato. Le versioni vecchie confrontano il
-        // context intero con il loro canale, quindi a loro va il canale e basta.
-        let contesto = peerConPonte.contains(peerID) ? "\(currentChannelID)\nuid=\(instanceID)" : currentChannelID
+        // A chi ha il ponte seguono altre righe (vedi `contestoInvito`). Le
+        // versioni vecchie confrontano il context intero con il loro canale,
+        // quindi a loro va il canale e basta.
+        let contesto = contestoInvito(per: peerID)
 
         // Use connection queue for high traffic scenarios
         connectionQueue.async { [weak self] in
@@ -316,18 +327,27 @@ class MultipeerManager: NSObject, ObservableObject {
         }
     }
     
+    /// Il tocco vale solo per la domanda che l'utente ha davanti: se nel
+    /// frattempo e' scaduta, non deve finire sull'invito successivo.
+    private var invitoAScermoValido: Bool {
+        guard let mostrato = receivedInvitation?.0 else { return false }
+        return invitiInCoda.first?.peer == mostrato
+    }
+
     func acceptInvitation() {
-        guard !invitiInCoda.isEmpty else { return }
+        guard invitoAScermoValido else { return }
         let invito = invitiInCoda.removeFirst()
         invito.handler(true, session)
         accettatiInAttesa.insert(invito.peer)
         fidatiInSessione.insert(invito.peer)
-        if let uid = invito.uid { ricordaFidato(uid) }
+        // Solo chi ha il ponte sa leggere il segreto: a una versione vecchia
+        // arriverebbe come audio.
+        if peerConPonte.contains(invito.peer) { daAccoppiare.insert(invito.peer) }
         mostraProssimoInvito()
     }
 
     func declineInvitation() {
-        guard !invitiInCoda.isEmpty else { return }
+        guard invitoAScermoValido else { return }
         let invito = invitiInCoda.removeFirst()
         invito.handler(false, nil)
         let declinedPeer = invito.peer
@@ -335,7 +355,6 @@ class MultipeerManager: NSObject, ObservableObject {
         DispatchQueue.main.asyncAfter(deadline: .now() + declineCooldown) { [weak self] in
             self?.declinedPeers.remove(declinedPeer)
         }
-        if let uid = invito.uid { rifiutatiUID[uid] = Date() }
         mostraProssimoInvito()
     }
 
@@ -345,14 +364,27 @@ class MultipeerManager: NSObject, ObservableObject {
     private func mostraProssimoInvito() {
         receivedInvitation = nil
         // Oltre il timeout di chi ha invitato, dall'altra parte e' gia' scaduto.
-        let scadenza = Date().addingTimeInterval(-30)
+        let scadenza = Date().addingTimeInterval(-durataInvito)
         while let primo = invitiInCoda.first, primo.arrivato < scadenza {
             invitiInCoda.removeFirst().handler(false, nil)
         }
-        guard let prossimo = invitiInCoda.first?.peer else { return }
+        guard let prossimo = invitiInCoda.first?.id else { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            guard let self, self.invitiInCoda.first?.peer == prossimo else { return }
-            self.receivedInvitation = (prossimo, self.session)
+            guard let self, let primo = self.invitiInCoda.first, primo.id == prossimo else { return }
+            self.mostraInvito(primo.id, peer: primo.peer, arrivato: primo.arrivato)
+        }
+    }
+
+    /// Mette a schermo il primo invito della coda e lo toglie quando scade
+    /// dall'altra parte: un si' dato dopo non collegherebbe niente.
+    private func mostraInvito(_ id: UUID, peer: MCPeerID, arrivato: Date) {
+        receivedInvitation = (peer, session)
+        let restano = max(0, durataInvito - Date().timeIntervalSince(arrivato))
+        DispatchQueue.main.asyncAfter(deadline: .now() + restano) { [weak self] in
+            guard let self, self.invitiInCoda.first?.id == id else { return }
+            self.logger.logNetworkInfo("Invito di \(peer.displayName) scaduto senza risposta")
+            self.invitiInCoda.removeFirst().handler(false, nil)
+            self.mostraProssimoInvito()
         }
     }
 
@@ -362,29 +394,31 @@ class MultipeerManager: NSObject, ObservableObject {
         receivedInvitation = nil
     }
 
-    private func ricordaFidato(_ uid: String) {
-        var fidati = UserDefaults.standard.stringArray(forKey: Self.fidatiKey) ?? []
-        fidati.removeAll { $0 == uid }
-        fidati.append(uid)
-        UserDefaults.standard.set(Array(fidati.suffix(Self.maxFidati)), forKey: Self.fidatiKey)
-    }
-
-    private func rifiutatoDiRecente(_ peerID: MCPeerID, uid: String?) -> Bool {
-        if declinedPeers.contains(peerID) { return true }
-        guard let uid, let quando = rifiutatiUID[uid] else { return false }
-        return Date().timeIntervalSince(quando) < declineCooldown
+    /// Righe dopo il canale, solo verso chi ha il ponte: il nostro uid di
+    /// questo avvio e, se lo abbiamo gia' accettato, le firme della coppia.
+    /// Le build 141 e 142 leggono solo la riga "uid=" e ignorano il resto.
+    private func contestoInvito(per peerID: MCPeerID) -> String {
+        guard peerConPonte.contains(peerID) else { return currentChannelID }
+        var righe = [currentChannelID, "uid=\(instanceID)"]
+        if let suo = uidPerPeer[peerID] {
+            let quando = Int(Date().timeIntervalSince1970)
+            let firme = CoppieFidate.firme(per: peerID.displayName, invitato: suo, quando: quando)
+            if !firme.isEmpty {
+                righe.append("ts=\(quando)")
+                righe += firme.map { "t=\($0)" }
+            }
+        }
+        return righe.joined(separator: "\n")
     }
 
     /// Perche' un invito si accetta senza chiedere, nil se va chiesto. Sul canale
     /// pubblico uno sconosciuto si puo' sempre rifiutare: si accetta da solo
     /// solo chi e' gia' stato accettato o chi stiamo invitando noi.
-    private func motivoAccettazioneAutomatica(_ peerID: MCPeerID, uid: String?) -> String? {
+    private func motivoAccettazioneAutomatica(_ peerID: MCPeerID, coppia: Bool) -> String? {
         // Canale privato: chi c'e' conosce gia' la password.
         if currentChannelID != "public" { return "canale privato" }
         if fidatiInSessione.contains(peerID) { return "gia' accettato in questo avvio" }
-        if let uid, (UserDefaults.standard.stringArray(forKey: Self.fidatiKey) ?? []).contains(uid) {
-            return "gia' accettato"
-        }
+        if coppia { return "gia' accettato" }
         if let inviato = invitiInVolo[peerID], Date().timeIntervalSince(inviato) < connectionTimeout + 2 {
             return "invito incrociato"
         }
@@ -456,7 +490,7 @@ class MultipeerManager: NSObject, ObservableObject {
                 // cap maxRetryAttempts e trasformava la riconnessione in un loop
                 // infinito di inviti (un prompt sul remoto a ogni giro). Il contatore
                 // si azzera già in session(_:peer:didChange:) alla connessione riuscita.
-                self.invitePeer(peer)
+                self.invitePeer(peer, daUtente: false)
             }
         }
     }
@@ -502,6 +536,8 @@ class MultipeerManager: NSObject, ObservableObject {
             self.connectionThrottle.removeAll()
             self.invitiInVolo.removeAll()
             self.accettatiInAttesa.removeAll()
+            self.daAccoppiare.removeAll()
+            self.invitatiDaNoi.removeAll()
             self.declinaTuttiGliInviti()
             self.connectionStatus = "status.disconnected".localized
         }
@@ -527,6 +563,9 @@ class MultipeerManager: NSObject, ObservableObject {
         }
 
         logger.logNetworkInfo("Multipeer riavviato (advertising: \(wasAdvertising), browsing: \(wasBrowsing))")
+        // Anche le connessioni con Android e Mac sono del canale vecchio: con il
+        // ponte porterebbero la voce del gruppo fuori dalla stanza.
+        TalkyCrossPlatformManager.shared.riavvia()
     }
 
     // MARK: - Live Activity glue
@@ -583,6 +622,8 @@ class MultipeerManager: NSObject, ObservableObject {
             self.retryAttempts.removeAll()
             self.invitiInVolo.removeAll()
             self.accettatiInAttesa.removeAll()
+            self.daAccoppiare.removeAll()
+            self.invitatiDaNoi.removeAll()
             self.declinaTuttiGliInviti()
             self.currentTalkerName = nil
             self.isAdvertising = false
@@ -647,7 +688,7 @@ class MultipeerManager: NSObject, ObservableObject {
         for peer in discoveredPeers {
             if !connectedPeers.contains(peer) {
                 retryAttempts.removeValue(forKey: peer)
-                invitePeer(peer)
+                invitePeer(peer, daUtente: false)
             }
         }
     }
@@ -850,7 +891,7 @@ class MultipeerManager: NSObject, ObservableObject {
 
         let trasmissione = Trasmissione.nuova(nome: myPeerID.displayName)
         // Se ci torna indietro da un ponte non va suonato a chi l'ha detto.
-        _ = Ponte.shared.primaVolta(trasmissione.id)
+        Ponte.shared.segna(trasmissione.id)
         let invio = inoltra(trasmissione, audio: audio)
 
         if let errore = invio.errore {
@@ -1047,8 +1088,13 @@ extension MultipeerManager: MCSessionDelegate {
                     self.notificationManager.sendConnectionEstablishedNotification(deviceName: peerID.displayName)
                     Funnel.once(Funnel.connectionEstablished, ["transport": "multipeer"])
                 }
-                self.invitiInVolo.removeValue(forKey: peerID)
+                if self.invitiInVolo.removeValue(forKey: peerID) != nil {
+                    self.invitatiDaNoi.insert(peerID)
+                }
                 self.accettatiInAttesa.remove(peerID)
+                if self.daAccoppiare.remove(peerID) != nil {
+                    self.mandaSegretoCoppia(a: peerID)
+                }
                 self.disconnectedPeers.remove(peerID)
                 self.retryAttempts.removeValue(forKey: peerID) // Reset retry counter on successful connection
                 self.connectionStatus = String(format: "status.connected_count".localized, self.connectedPeers.count)
@@ -1063,6 +1109,8 @@ extension MultipeerManager: MCSessionDelegate {
             case .notConnected:
                 let wasConnected = self.connectedPeers.contains(peerID)
                 self.connectedPeers.removeAll { $0 == peerID }
+                self.daAccoppiare.remove(peerID)
+                self.invitatiDaNoi.remove(peerID)
                 self.logger.logNetworkInfo("Peer \(peerID.displayName) disconnesso. Totale connessi: \(self.connectedPeers.count)")
                 self.connectionStatus = self.connectedPeers.isEmpty ? "status.disconnected".localized : String(format: "status.connected_count".localized, self.connectedPeers.count)
                 
@@ -1140,8 +1188,27 @@ extension MultipeerManager: MCSessionDelegate {
                 self.riproduci(data, talker: peerID.displayName)
                 return
             }
+            self.peerConPonte.insert(peerID)
 
-            let trasmissione = pacchetto.trasmissione
+            let trasmissione: Trasmissione
+            var audio: Data
+            switch pacchetto {
+            case .coppia(let segreto):
+                // Solo da chi abbiamo invitato noi, e una volta: e' la sua
+                // risposta al nostro tocco, non qualcosa che un peer qualsiasi
+                // possa piantare.
+                if self.invitatiDaNoi.remove(peerID) != nil {
+                    CoppieFidate.salva(segreto, nome: peerID.displayName)
+                    self.logger.logNetworkInfo("Coppia ricordata con \(peerID.displayName)")
+                } else {
+                    self.logger.logNetworkWarning("Segreto di coppia non richiesto da \(peerID.displayName), ignorato")
+                }
+                return
+            case .trasmissione(let t, let a):
+                trasmissione = t
+                audio = a
+            }
+
             // Con tutte le tratte intatte l'ha detto proprio questo peer: e' il suo uid.
             if trasmissione.ttl == Trasmissione.ttlIniziale, !trasmissione.origine.isEmpty {
                 self.uidPerPeer[peerID] = trasmissione.origine
@@ -1151,13 +1218,30 @@ extension MultipeerManager: MCSessionDelegate {
                 return
             }
             let nome = trasmissione.nomeOrigine.isEmpty ? peerID.displayName : trasmissione.nomeOrigine
-            self.logger.logAudioInfo("Messaggio audio ricevuto da \(peerID.displayName) (ttl \(trasmissione.ttl)): \(pacchetto.audio.count) bytes")
-            self.riproduci(pacchetto.audio, talker: nome)
+            self.logger.logAudioInfo("Messaggio audio ricevuto da \(peerID.displayName) (ttl \(trasmissione.ttl)): \(audio.count) bytes")
+            self.riproduci(audio, talker: nome)
 
             if trasmissione.ttl > 1 {
+                if audio.count > Trasmissione.Limite.audioPonte {
+                    audio = audio.prefix(Trasmissione.Limite.audioPonte)
+                }
                 let da = self.uidPerPeer[peerID]
-                self.inoltra(trasmissione.perIlPonte(arrivataDa: da), audio: pacchetto.audio, tranneMultipeer: peerID, tranneUID: da)
+                self.inoltra(trasmissione.perIlPonte(arrivataDa: da), audio: audio, tranneMultipeer: peerID, tranneUID: da)
             }
+        }
+    }
+
+    /// Il segreto della coppia, generato da chi ha accettato a mano e mandato
+    /// una volta dentro la sessione: da qui in poi i due telefoni si
+    /// riconoscono negli inviti senza chiedere. Sul main.
+    private func mandaSegretoCoppia(a peerID: MCPeerID) {
+        let segreto = CoppieFidate.nuova(nome: peerID.displayName)
+        do {
+            try session.send(IntestazioneMultipeer.impacchettaCoppia(segreto: segreto), toPeers: [peerID], with: .reliable)
+            logger.logNetworkInfo("Coppia proposta a \(peerID.displayName)")
+        } catch {
+            CoppieFidate.dimentica(segreto)
+            logger.logNetworkError(error, context: "Invio segreto di coppia")
         }
     }
     
@@ -1201,10 +1285,16 @@ extension MultipeerManager: MCNearbyServiceAdvertiserDelegate {
         // nostro browser non aveva ancora scoperto il mittente, l'invito VALIDO veniva
         // rifiutato in silenzio → l'utente vedeva "non si connette" pur essendo vicino.
         // Prima riga: il canale del mittente (context nil = versione molto vecchia, "public").
-        // Dalle versioni con il ponte, seconda riga "uid=...": chi invita.
+        // Dalle versioni con il ponte, altre righe "chiave=valore" (vedi `contestoInvito`).
         let righe = context.flatMap { String(data: $0, encoding: .utf8) }?.components(separatedBy: "\n") ?? []
         let invitedChannel = righe.first ?? "public"
-        let uidNelContesto = righe.dropFirst().first { $0.hasPrefix("uid=") }.map { String($0.dropFirst(4)) }
+        func valori(_ chiave: String) -> [String] {
+            righe.dropFirst().filter { $0.hasPrefix(chiave + "=") }.map { String($0.dropFirst(chiave.count + 1)) }
+        }
+        let uidNelContesto = valori("uid").first
+        let quando = valori("ts").first.flatMap(Int.init)
+        let firme = Array(valori("t").prefix(CoppieFidate.firmePerInvito))
+        let haPonte = righe.count > 1
         guard invitedChannel == currentChannelID else {
             logger.logNetworkError(WalkieTalkieError.invalidPeer, context: "Invito da canale diverso: '\(invitedChannel)' ≠ '\(currentChannelID)'")
             invitationHandler(false, nil)
@@ -1212,10 +1302,10 @@ extension MultipeerManager: MCNearbyServiceAdvertiserDelegate {
         }
 
         DispatchQueue.main.async {
-            let uid = uidNelContesto ?? self.uidPerPeer[peerID]
-            if let uid { self.uidPerPeer[peerID] = uid }
+            if let uidNelContesto { self.uidPerPeer[peerID] = uidNelContesto }
+            if haPonte { self.peerConPonte.insert(peerID) }
 
-            if self.rifiutatoDiRecente(peerID, uid: uid) {
+            if self.declinedPeers.contains(peerID) {
                 self.logger.logNetworkInfo("Invito di \(peerID.displayName) declinato: rifiutato da poco")
                 invitationHandler(false, nil)
                 return
@@ -1224,7 +1314,10 @@ extension MultipeerManager: MCNearbyServiceAdvertiserDelegate {
             // "64 clicks to accept for one 8 person call" (recensione App Store):
             // chi e' gia' stato accettato, chi e' sul nostro canale privato e chi
             // stiamo invitando noi entra senza domande.
-            if let motivo = self.motivoAccettazioneAutomatica(peerID, uid: uid) {
+            let coppia = quando.map {
+                CoppieFidate.riconosce(firme: firme, quando: $0, invitato: self.instanceID, nome: peerID.displayName)
+            } ?? false
+            if let motivo = self.motivoAccettazioneAutomatica(peerID, coppia: coppia) {
                 self.logger.logNetworkInfo("Invito auto-accettato (\(motivo)) da \(peerID.displayName)")
                 self.accettatiInAttesa.insert(peerID)
                 invitationHandler(true, self.session)
@@ -1234,18 +1327,17 @@ extension MultipeerManager: MCNearbyServiceAdvertiserDelegate {
             // Lo stesso dispositivo richiede mentre la domanda e' ancora a
             // schermo: resta la stessa domanda, cambia solo l'invito a cui
             // risponde (il piu' recente, che non e' ancora scaduto dall'altra parte).
-            if let i = self.invitiInCoda.firstIndex(where: { $0.peer == peerID || (uid != nil && $0.uid == uid) }) {
+            let invito = (id: UUID(), peer: peerID, arrivato: Date(), handler: invitationHandler)
+            if let i = self.invitiInCoda.firstIndex(where: { $0.peer == peerID }) {
                 self.invitiInCoda[i].handler(false, nil)
-                self.invitiInCoda[i] = (peerID, uid, Date(), invitationHandler)
-                if i == 0, self.receivedInvitation?.0 != peerID {
-                    self.receivedInvitation = (peerID, self.session)
-                }
+                self.invitiInCoda[i] = invito
+                if i == 0 { self.mostraInvito(invito.id, peer: peerID, arrivato: invito.arrivato) }
                 return
             }
 
-            self.invitiInCoda.append((peerID, uid, Date(), invitationHandler))
+            self.invitiInCoda.append(invito)
             if self.invitiInCoda.count == 1 {
-                self.receivedInvitation = (peerID, self.session)
+                self.mostraInvito(invito.id, peer: peerID, arrivato: invito.arrivato)
             }
         }
     }
@@ -1310,5 +1402,126 @@ extension MultipeerManager: MCNearbyServiceBrowserDelegate {
             self.lastError = WalkieTalkieError.networkConnectionFailed(underlying: error)
             self.connectionStatus = "check_wifi_bluetooth".localized
         }
+    }
+}
+
+// MARK: - Coppie fidate
+
+/// Chi e' stato accettato a mano una volta rientra senza domanda. Non lo si
+/// riconosce da qualcosa che si vede nella ricerca dei vicini (nome, uid), che
+/// chiunque puo' copiare: alla prima accettazione i due telefoni si scambiano
+/// dentro la sessione un segreto casuale, e negli inviti successivi chi invita
+/// porta una firma di quel segreto legata all'uid di questo avvio di chi riceve
+/// e all'ora. Il segreto non viaggia mai: una firma copiata vale solo per
+/// quell'avvio, per pochi minuti e una volta.
+///
+/// Nel Portachiavi, non in UserDefaults: e' una chiave, non una preferenza.
+/// Sul main, come gli inviti.
+enum CoppieFidate {
+    /// Al massimo tante firme in un invito: con il nome "iPhone" (da iOS 16
+    /// quasi tutti) i segreti con lo stesso nome possono essere piu' d'uno.
+    static let firmePerInvito = 8
+    private static let massimo = 200
+    /// Scarto fra gli orologi dei due telefoni accettato per una firma.
+    private static let finestra: TimeInterval = 120
+    private static let servizio = "talky.coppie.multipeer"
+    private static let account = "v1"
+
+    private struct Coppia: Codable {
+        var segreto: Data
+        var nome: String
+        var usata: Date
+    }
+
+    /// Firme gia' viste: la stessa non apre due volte.
+    private static var usate: [String: Date] = [:]
+
+    static func nuova(nome: String) -> Data {
+        var byte = [UInt8](repeating: 0, count: 32)
+        if SecRandomCopyBytes(kSecRandomDefault, byte.count, &byte) != errSecSuccess {
+            byte = (0..<32).map { _ in UInt8.random(in: .min ... .max) }
+        }
+        let segreto = Data(byte)
+        salva(segreto, nome: nome)
+        return segreto
+    }
+
+    static func salva(_ segreto: Data, nome: String) {
+        var tutte = leggi().filter { $0.segreto != segreto }
+        tutte.append(Coppia(segreto: segreto, nome: nome, usata: Date()))
+        scrivi(Array(tutte.sorted { $0.usata < $1.usata }.suffix(massimo)))
+    }
+
+    static func dimentica(_ segreto: Data) {
+        scrivi(leggi().filter { $0.segreto != segreto })
+    }
+
+    /// Le firme da mettere nell'invito a un peer con questo nome, dalla coppia
+    /// usata piu' di recente. Vuoto se non lo abbiamo mai accettato.
+    static func firme(per nome: String, invitato: String, quando: Int) -> [String] {
+        leggi()
+            .filter { $0.nome == nome }
+            .sorted { $0.usata > $1.usata }
+            .prefix(firmePerInvito)
+            .map { firma($0.segreto, invitato: invitato, quando: quando) }
+    }
+
+    /// Vero se una delle firme viene da un segreto che abbiamo, e' per questo
+    /// avvio, e' di adesso e non e' gia' stata usata.
+    static func riconosce(firme: [String], quando: Int, invitato: String, nome: String) -> Bool {
+        let adesso = Date()
+        guard !firme.isEmpty,
+              abs(adesso.timeIntervalSince1970 - TimeInterval(quando)) <= finestra else { return false }
+        usate = usate.filter { adesso.timeIntervalSince($0.value) < finestra * 2 }
+        let nuove = firme.filter { usate[$0] == nil }
+        guard !nuove.isEmpty else { return false }
+
+        var tutte = leggi()
+        for i in tutte.indices {
+            let attesa = firma(tutte[i].segreto, invitato: invitato, quando: quando)
+            guard nuove.contains(attesa) else { continue }
+            usate[attesa] = adesso
+            tutte[i].usata = adesso
+            // Il nome serve solo a scegliere quali firme mandare: se l'altro ha
+            // rinominato il telefono lo si aggiorna, il segreto resta quello.
+            tutte[i].nome = nome
+            scrivi(tutte)
+            return true
+        }
+        return false
+    }
+
+    private static func firma(_ segreto: Data, invitato: String, quando: Int) -> String {
+        let messaggio = Data("talky-invito|\(invitato)|\(quando)".utf8)
+        let codice = HMAC<SHA256>.authenticationCode(for: messaggio, using: SymmetricKey(data: segreto))
+        return Data(codice).prefix(16).base64EncodedString()
+    }
+
+    private static var interrogazione: [String: Any] {
+        [kSecClass as String: kSecClassGenericPassword,
+         kSecAttrService as String: servizio,
+         kSecAttrAccount as String: account]
+    }
+
+    private static func leggi() -> [Coppia] {
+        var q = interrogazione
+        q[kSecReturnData as String] = true
+        q[kSecMatchLimit as String] = kSecMatchLimitOne
+        var risultato: CFTypeRef?
+        guard SecItemCopyMatching(q as CFDictionary, &risultato) == errSecSuccess,
+              let dati = risultato as? Data else { return [] }
+        return (try? JSONDecoder().decode([Coppia].self, from: dati)) ?? []
+    }
+
+    private static func scrivi(_ coppie: [Coppia]) {
+        guard let dati = try? JSONEncoder().encode(coppie) else { return }
+        let stato = SecItemUpdate(interrogazione as CFDictionary, [kSecValueData as String: dati] as CFDictionary)
+        guard stato == errSecItemNotFound else { return }
+        var nuovo = interrogazione
+        nuovo[kSecValueData as String] = dati
+        // Dopo il primo sblocco: gli inviti arrivano anche a schermo spento.
+        // Senza "ThisDeviceOnly", cosi' le coppie tornano con il backup.
+        nuovo[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlock
+        SecItemAdd(nuovo as CFDictionary, nil)
     }
 }

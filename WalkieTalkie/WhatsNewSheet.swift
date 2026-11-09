@@ -45,9 +45,16 @@ struct WhatsNewSheet: View {
                         .foregroundColor(Color("PrimaryTextColor"))
                         .padding(.top, 28)
 
-                    row("dot.radiowaves.up.forward", "whats_new_poc".localized)
-                    row("key.fill", "whats_new_rooms".localized)
-                    row("square.grid.2x2", "whats_new_widgets".localized)
+                    // Solo quello che c'e' su questo iPhone: POC e stanze
+                    // vogliono iOS 16, i widget nuovi iOS 17. L'aiuto al
+                    // collegamento c'e' ovunque.
+                    if #available(iOS 16.0, *) {
+                        row("dot.radiowaves.up.forward", "whats_new_poc".localized)
+                        row("key.fill", "whats_new_rooms".localized)
+                    }
+                    if #available(iOS 17.0, *) {
+                        row("square.grid.2x2", "whats_new_widgets".localized)
+                    }
                     row("questionmark.circle", "whats_new_pairing".localized)
                 }
                 .padding(.horizontal, 24)

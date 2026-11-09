@@ -629,3 +629,12 @@
 "whats_new_widgets" = "Ana Ekran için yeni widget'lar ve yeni denetimler.";
 "whats_new_pairing" = "Bağlantı yardımı: diğer telefon görünmüyorsa Talky neyi kontrol edeceğini ve onu nasıl davet edeceğini söyler.";
 "whats_new_try" = "POC'de konuşmayı dene";
+
+/* Onboarding: un solo permesso, il microfono */
+"onboarding_mic_description" = "Telsizle konuşmak için gerekir. Canlı CB ve radyo onsuz da çalışır.";
+/* Tasti dei widget radio: i titoli servono anche nel bundle dell'app, che esegue gli intent */
+"w_intent_play" = "İstasyonu çal";
+"w_intent_stop" = "Radyoyu durdur";
+"w_intent_station" = "İstasyon";
+"w_fav_control_name" = "En sevdiğim radyo";
+"mumble_report_mail" = "E-postayla ayrıntı ekle";

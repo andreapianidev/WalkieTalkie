@@ -68,16 +68,9 @@ struct WalkieTalkieApp: App {
             .task {
                 // Ascolto dal vivo: 5 minuti gratis al giorno; senza limite, con
                 // SCAN e schermo spento, con Pro o con il pass di 24 ore.
-                if #available(iOS 16.0, *) {
-                    LiveRadio.shared.proGate = { LivePassManager.shared.hasLiveExtras }
-                    // Push to Talk delle stanze: subito, anche quando iOS rilancia
-                    // Talky per una notifica, perche' il sistema le consegni la voce.
-                    RoomPushToTalk.shared.start()
-                    // Segnalazioni dei canali POC: server e motivo, mai nomi di persone.
-                    LiveRadio.shared.onReport = { server, reason in
-                        Analytics.logEvent("mumble_report", parameters: ["server": server, "reason": reason])
-                    }
-                }
+                // Pro, segnalazioni e Push to Talk delle stanze partono in
+                // AppDelegate: questa .task non gira se iOS lancia Talky in
+                // background per una notifica pushtotalk.
                 // IAP bootstrap deve precedere AdManager: i guard !isProUser dipendono dallo stato Pro.
                 await iapManager.bootstrap()
                 #if DEBUG
@@ -220,6 +213,18 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
 
         // Configura il delegate per le notifiche
         UNUserNotificationCenter.current().delegate = self
+
+        if #available(iOS 16.0, *) {
+            LiveRadio.shared.proGate = { LivePassManager.shared.hasLiveExtras }
+            // Segnalazioni dei canali POC: server e motivo, mai nomi di persone.
+            LiveRadio.shared.onReport = { server, reason in
+                Analytics.logEvent("mumble_report", parameters: ["server": server, "reason": reason])
+            }
+            // Push to Talk delle stanze: al lancio e non in una vista, anche
+            // quando iOS rilancia Talky in background per una notifica, perche'
+            // il sistema consegni la voce solo a un gestore gia' creato.
+            RoomPushToTalk.shared.start()
+        }
 
         return true
     }

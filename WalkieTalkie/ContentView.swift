@@ -65,6 +65,7 @@ struct ContentView: View {
     /// schermata finiva coperta ("setting option is cropped", iPhone 15 Pro).
     @State private var tabBarHeight: CGFloat = 0
     @State private var showWhatsNew = false
+    @State private var whatsNewAppeared = false
     /// Chi arriva dall'onboarding con "Sono da solo" e' gia' sulla CB: il
     /// suggerimento del selettore in alto gli toglierebbe la parola alla radio.
     @State private var skipModeHintThisSession = false
@@ -305,22 +306,34 @@ struct ContentView: View {
     }
 
     /// Le novita' della versione, a chi aggiorna, una volta. Mai sopra la
-    /// paywall ne' durante una trasmissione o una ricezione: si riprova ogni
-    /// due secondi per un po', poi si rinuncia fino al prossimo avvio.
+    /// paywall, sotto un annuncio app-open o l'avviso Debug Free/Pro, ne'
+    /// durante una trasmissione o una ricezione: si riprova ogni due secondi
+    /// per un po', poi si rinuncia fino al prossimo avvio.
     private func presentWhatsNewWhenFree() {
         guard isOnboardingComplete, WhatsNew.isPending else { return }
         Task { @MainActor in
             for _ in 0..<15 {
                 try? await Task.sleep(nanoseconds: 2_000_000_000)
                 guard WhatsNew.isPending else { return }
-                var busy = showPaywall || adManager.isPaywallVisible || showBrowser || showSleepTimer
+                var busy = showPaywall || adManager.isPaywallVisible || adManager.appOpen.isPresenting
+                    || showBrowser || showSleepTimer
                     || showLiveChannels || isTransmitting || multipeerManager.isReceiving
                 if #available(iOS 16.0, *) { busy = busy || LiveRadio.shared.isTalking }
-                if !busy {
-                    showModeSwitchHint = false
-                    showWhatsNew = true
-                    return
-                }
+                #if DEBUG
+                busy = busy || (!iapManager.debugTierChosen && !UserDefaults.standard.bool(forKey: "screenshotMode"))
+                #endif
+                if busy { continue }
+                showModeSwitchHint = false
+                // L'app-open non si infila sopra il foglio.
+                adManager.appOpen.suppressNextResume = true
+                whatsNewAppeared = false
+                showWhatsNew = true
+                // Se qualcos'altro occupava lo schermo il foglio non compare, e
+                // `showWhatsNew` resterebbe vero per tutta la sessione, tenendo
+                // fuori anche le paywall. Si rimette a posto e si riprova.
+                try? await Task.sleep(nanoseconds: 1_500_000_000)
+                if whatsNewAppeared { return }
+                showWhatsNew = false
             }
         }
     }
@@ -1186,6 +1199,7 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showWhatsNew, onDismiss: { WhatsNew.markSeen() }) {
             WhatsNewSheet(onTry: tryWhatsNew)
+                .onAppear { whatsNewAppeared = true }
         }
         .onReceive(radioManager.$isBuffering.combineLatest(radioManager.$isPlaying)) { buffering, playing in
             // `isPlaying` diventa vero appena si sceglie la stazione; senza

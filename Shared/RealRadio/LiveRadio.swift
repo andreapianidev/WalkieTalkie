@@ -106,12 +106,17 @@ final class LiveRadio: ObservableObject {
     @Published private(set) var canTalk = false
     /// Stanza privata in cui si e' entrati, nil sui canali pubblici.
     @Published private(set) var room: TalkyRoom?
+    /// Si e' davvero dentro il canale della stanza, non solo collegati al server.
+    @Published private(set) var inRoom = false
     @Published private(set) var isTalking = false
     /// Il microfono e' negato nelle impostazioni del sistema.
     @Published private(set) var micDenied = false
     /// Una segnalazione su un canale POC: server e motivo, per chi gestisce Talky.
     /// Ogni app la manda dove legge le sue statistiche.
     var onReport: (_ server: String, _ reason: String) -> Void = { _, _ in }
+    /// Chiude il passaggio di Push to Talk di sistema (iPhone): quando Talky
+    /// smette di parlare da sola, iOS non deve restare "in trasmissione".
+    var endSystemTransmission: () -> Void = {}
     /// Secondi gratis rimasti oggi, nil con Pro o con il pass.
     @Published private(set) var freeSecondsLeft: Int?
     /// I minuti gratis di oggi sono finiti: la banda resta scelta, muta.
@@ -167,9 +172,18 @@ final class LiveRadio: ObservableObject {
     private let mic = MumbleMic()
     private var micPump: Task<Void, Never>?
     private var micFeed: AsyncStream<Data>.Continuation?
-    /// Passaggio cominciato dal tasto di sistema di Push to Talk: il
-    /// microfono parte quando iOS attiva la sessione audio (micReady).
+    /// Ogni pressione ha il suo numero: dopo ogni attesa in startTalking si
+    /// controlla che sia ancora quella, cosi' un tocco breve non lascia
+    /// acceso il microfono.
+    private var press = 0
+    /// Passaggio cominciato da Push to Talk di sistema: il microfono parte
+    /// quando iOS ha attivato la sessione audio.
+    private var overBySystem = false
     private var micWaiting = false
+    /// La sessione audio di Push to Talk e' attiva adesso. Puo' arrivare
+    /// prima che startTalking sia pronto, o non arrivare affatto se era gia'
+    /// attiva: per questo e' uno stato e non solo un avviso.
+    private var systemSessionActive = false
 
     private var scanTask: Task<Void, Never>?
     private var lastVoice = Date.distantPast
@@ -509,7 +523,9 @@ final class LiveRadio: ObservableObject {
 
     /// Ritorno in primo piano dopo una sospensione: riparte e propone il Pro.
     func resumeFromBackground() {
-        guard isSuspended, !isOutOfFreeTime, let band else { return }
+        // Le stanze non consumano i minuti gratis: un invitato che li ha
+        // finiti sui canali pubblici rientra comunque nella sua stanza.
+        guard isSuspended, let band, !isOutOfFreeTime || (band == .poc && room != nil) else { return }
         isSuspended = false
         player.start()
         switch band {
@@ -692,64 +708,104 @@ final class LiveRadio: ObservableObject {
     // MARK: parlare sul POC
 
     /// Premuto il tasto: microfono acceso, voce nel canale finche' non si rilascia.
-    /// Con `waitForSession` il microfono aspetta micReady(), come vuole Push to Talk.
-    func startTalking(waitForSession: Bool = false) {
-        guard band == .poc, canTalk, !isTalking, let listener = mumble else { return }
+    /// `bySystem`: il passaggio l'ha aperto Push to Talk di Apple, e il
+    /// microfono aspetta che iOS attivi la sessione audio.
+    func startTalking(bySystem: Bool = false) {
+        guard band == .poc, canTalk, !isTalking, let listener = mumble else {
+            // Push to Talk ha gia' aperto il passaggio: si richiude, altrimenti
+            // iOS resta "in trasmissione" senza voce.
+            if bySystem { endSystemTransmission() }
+            return
+        }
         isTalking = true
+        overBySystem = bySystem
+        press += 1
+        let mine = press
         Task { [weak self] in
-            guard await MumbleMic.requestAccess() else {
-                self?.micDenied = true
-                self?.isTalking = false
+            let granted = await MumbleMic.requestAccess()
+            guard let self, self.press == mine, self.isTalking else { return }
+            guard granted else {
+                self.micDenied = true
+                self.stopTalking()
                 return
             }
-            guard let self, self.isTalking, self.mumble === listener else { return }
             self.micDenied = false
-            guard await listener.beginTalking() else {
-                self.isTalking = false
+            guard let over = await listener.beginTalking() else {
+                if self.press == mine { self.stopTalking() }
+                return
+            }
+            // Rilasciato mentre il server apriva il passaggio: si chiude subito.
+            guard self.press == mine, self.isTalking, self.mumble === listener else {
+                await listener.endTalking(over: over)
+                return
+            }
+            let bitRate = await listener.voiceBitRate()
+            guard self.press == mine, self.isTalking, self.mumble === listener else {
+                await listener.endTalking(over: over)
                 return
             }
             let (feed, sink) = AsyncStream.makeStream(of: Data.self, bufferingPolicy: .bufferingNewest(50))
             self.micFeed = sink
             // Un solo consumatore, cosi' i pacchetti partono nell'ordine in cui arrivano.
             self.micPump = Task.detached(priority: .userInitiated) {
-                for await opus in feed { await listener.send(opus) }
-                await listener.endTalking()
+                for await opus in feed { await listener.send(opus, over: over) }
+                await listener.endTalking(over: over)
             }
             self.player.setVolume(0)
-            if let room = self.room {
+            if self.room != nil {
                 // Il custode avvisa con Push to Talk chi della stanza non e' collegato.
-                self.tellKeeper("talk \(room.channelName) \(room.token) \(self.username)")
+                Task { await listener.keeperTalk() }
             }
-            if waitForSession {
+            self.micBitRate = bitRate
+            if bySystem, !self.systemSessionActive {
                 self.micWaiting = true
-            } else if !self.mic.start({ sink.yield($0) }) {
-                self.stopTalking()
+            } else {
+                self.openMic(systemSession: bySystem)
             }
         }
     }
 
-    /// iOS ha attivato la sessione audio di Push to Talk: ora il microfono.
-    func micReady() {
-        guard micWaiting, isTalking, let sink = micFeed else { return }
+    private var micBitRate = 32_000
+
+    private func openMic(systemSession: Bool) {
+        guard isTalking, let sink = micFeed else { return }
         micWaiting = false
-        if !mic.start(systemSession: true, { sink.yield($0) }) { stopTalking() }
+        if !mic.start(systemSession: systemSession, bitRate: micBitRate, { sink.yield($0) }) { stopTalking() }
     }
 
-    /// Messaggio privato al custode delle stanze, se si e' in una stanza.
-    func tellKeeper(_ text: String) {
-        guard room != nil, let listener = mumble else { return }
-        Task { await listener.tellKeeper(text) }
+    /// iOS ha attivato la sessione audio di Push to Talk.
+    func systemAudioActivated() {
+        systemSessionActive = true
+        if micWaiting { openMic(systemSession: true) }
     }
 
+    func systemAudioDeactivated() {
+        systemSessionActive = false
+    }
+
+    /// Fine del passaggio, da qualunque parte arrivi: tasto rilasciato, gesto
+    /// annullato, app in background, server che toglie la parola.
     func stopTalking() {
         guard isTalking else { return }
         isTalking = false
+        press += 1
         micWaiting = false
         mic.stop()
         micFeed?.finish()
         micFeed = nil
         micPump = nil
         player.setVolume(volume)
+        if overBySystem {
+            overBySystem = false
+            endSystemTransmission()
+        }
+    }
+
+    /// Il gettone Push to Talk di questo telefono al custode della stanza.
+    /// Falso se non si e' ancora nel canale della stanza.
+    func registerPushToTalk(token: String, environment: String) async -> Bool {
+        guard room != nil, inRoom, let listener = mumble else { return false }
+        return await listener.keeperPushToTalk(token: token, environment: environment)
     }
 
     /// Chi parla adesso non si sente piu' su questo server.
@@ -799,6 +855,7 @@ final class LiveRadio: ObservableObject {
         isScouting = false
         room = r
         defaults.set(r.code, forKey: Self.lastRoomKey)
+        isSuspended = false
         if band == .poc {
             retried = false
             connectPOC()
@@ -813,6 +870,13 @@ final class LiveRadio: ObservableObject {
         room = nil
         guard band == .poc else { return }
         disconnect()
+        // Fuori dalla stanza i canali pubblici contano i minuti gratis.
+        refreshFreeTime()
+        if isOutOfFreeTime {
+            state = .idle
+            proPrompt = .freeTime
+            return
+        }
         if pocChannels.isEmpty { scoutPOC() } else { connectPOC() }
     }
 
@@ -1000,6 +1064,8 @@ final class LiveRadio: ObservableObject {
         case .mayTalk(let ok):
             canTalk = ok
             if !ok, isTalking { stopTalking() }
+        case .inRoom(let ok):
+            inRoom = ok
         }
     }
 
@@ -1029,6 +1095,7 @@ final class LiveRadio: ObservableObject {
     private func disconnect() {
         if isTalking { stopTalking() }
         canTalk = false
+        inRoom = false
         listenTask?.cancel()
         listenTask = nil
         generation += 1

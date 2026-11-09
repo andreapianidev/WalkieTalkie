@@ -1,0 +1,6 @@
+/* Talky per Mac: i nomi delle azioni di widget e controlli, che macOS legge
+   dall'app. Gli stessi valori di WalkieTalkie/en.lproj. */
+"w_fav_control_name" = "My favourite radio";
+"w_intent_play" = "Play station";
+"w_intent_station" = "Station";
+"w_intent_stop" = "Stop radio";

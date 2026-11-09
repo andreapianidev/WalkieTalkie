@@ -630,3 +630,12 @@
 "whats_new_widgets" = "ホーム画面用の新しいウィジェットと新しいコントロール。";
 "whats_new_pairing" = "接続のサポート：相手の端末が見つからないとき、確認することと招待の方法をTalkyが案内します。";
 "whats_new_try" = "POCで話してみる";
+
+/* Onboarding: un solo permesso, il microfono */
+"onboarding_mic_description" = "トランシーバーで話すために使います。CBのライブ受信とラジオはなくても使えます。";
+/* Tasti dei widget radio: i titoli servono anche nel bundle dell'app, che esegue gli intent */
+"w_intent_play" = "局を再生";
+"w_intent_stop" = "ラジオを停止";
+"w_intent_station" = "局";
+"w_fav_control_name" = "お気に入りのラジオ";
+"mumble_report_mail" = "メールで詳細を追加";

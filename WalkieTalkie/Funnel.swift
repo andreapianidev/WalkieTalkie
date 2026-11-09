@@ -11,7 +11,6 @@ import Foundation
 
 enum Funnel {
     // Una volta per installazione.
-    static let onboardingCompleted = "first_onboarding_completed"
     static let localNetworkDenied = "first_local_network_denied"
     static let localNetworkGranted = "first_local_network_granted"
     static let peerFound = "first_peer_found"

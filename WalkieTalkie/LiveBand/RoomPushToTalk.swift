@@ -20,23 +20,39 @@ import PushToTalk
 final class RoomPushToTalk: NSObject {
     static let shared = RoomPushToTalk()
 
+    /// Dopo una notifica, quanto si aspetta la voce vera prima di togliere
+    /// "chi parla" dalla pillola: un remoto rimasto attivo non lascia trasmettere.
+    private static let pushedSpeakerHold: Duration = .seconds(4)
+
     private var manager: PTChannelManager?
+    private var creating = false
     private var joined: UUID?
+    /// Richiesta di ingresso partita e non ancora confermata.
+    private var joining: UUID?
     private var joinedRoom: TalkyRoom?
     private var pushToken: String?
-    private var registeredFor: String?
     private var watchers: Set<AnyCancellable> = []
     private var live: LiveRadio { .shared }
+    /// Il tasto in app e' premuto: un passaggio aperto dall'app quando il
+    /// dito non c'e' piu' (risposta del sistema arrivata tardi) si richiude.
+    private var appHolding = false
+    /// La pillola mostra un partecipante remoto, messo da noi o dalla notifica.
+    private var remoteShown = false
+    private var speakerReset: Task<Void, Never>?
 
     /// Si e' dentro un canale di sistema: il tasto in app passa da qui.
     var isJoined: Bool { joined != nil }
 
-    /// All'avvio, anche quando iOS rilancia Talky per una notifica: il
-    /// gestore va creato subito perche' il sistema gli consegni la voce.
+    /// All'avvio dell'app, in didFinishLaunching: anche quando iOS rilancia
+    /// Talky in background per una notifica, il sistema consegna la voce
+    /// solo a un gestore gia' creato.
     func start() {
-        guard manager == nil else { return }
+        guard manager == nil, !creating else { return }
+        creating = true
+        live.endSystemTransmission = { [weak self] in self?.endFromApp() }
         Task {
             manager = try? await PTChannelManager.channelManager(delegate: self, restorationDelegate: self)
+            creating = false
             watch()
         }
     }
@@ -45,10 +61,19 @@ final class RoomPushToTalk: NSObject {
 
     func beginFromApp() {
         guard let manager, let joined else { return }
+        appHolding = true
         manager.requestBeginTransmitting(channelUUID: joined)
     }
 
+    /// Il dito si e' alzato dal tasto in app: se la richiesta era partita e il
+    /// passaggio non e' ancora cominciato, la si ritira.
+    func releaseAppPress() {
+        guard appHolding else { return }
+        endFromApp()
+    }
+
     func endFromApp() {
+        appHolding = false
         guard let manager, let joined else { return }
         manager.stopTransmitting(channelUUID: joined)
     }
@@ -56,11 +81,19 @@ final class RoomPushToTalk: NSObject {
     // MARK: seguire la stanza
 
     private func watch() {
-        live.$room.combineLatest(live.$state)
-            .receive(on: RunLoop.main)
-            .sink { [weak self] room, state in self?.follow(room: room, online: state == .online) }
+        // Un attimo di pausa: joinRoom cambia stanza e banda una dopo
+        // l'altra, e senza la pausa si uscirebbe e rientrerebbe nel canale.
+        live.$room.combineLatest(live.$state, live.$band)
+            .debounce(for: .milliseconds(250), scheduler: RunLoop.main)
+            .sink { [weak self] room, state, band in
+                self?.follow(room: band == .poc ? room : nil, online: state == .online)
+            }
             .store(in: &watchers)
-        live.$talker.removeDuplicates()
+        live.$inRoom
+            .receive(on: RunLoop.main)
+            .sink { [weak self] inside in if inside { self?.register() } }
+            .store(in: &watchers)
+        live.$talker
             .receive(on: RunLoop.main)
             .sink { [weak self] talker in self?.showSpeaker(talker) }
             .store(in: &watchers)
@@ -72,45 +105,56 @@ final class RoomPushToTalk: NSObject {
             if let joined { manager.leaveChannel(channelUUID: joined) }
             return
         }
-        let id = Self.channelUUID(room)
+        let id = room.pushToTalkID
         if joined != id {
+            guard joining != id else { return }
             if let joined { manager.leaveChannel(channelUUID: joined) }
+            joining = id
             joinedRoom = room
             manager.requestJoinChannel(channelUUID: id, descriptor: Self.descriptor(room))
             return
         }
         Task { try? await manager.setServiceStatus(online ? .ready : .connecting, channelUUID: id) }
-        if online { register() }
     }
 
-    /// Il gettone va al custode una volta per stanza e collegamento.
+    /// Il gettone al custode a ogni ingresso nella stanza: lo stato del
+    /// custode puo' averlo perso (stanza tolta e rifatta, server rifatto).
     private func register() {
-        guard let room = joinedRoom, let pushToken, live.room == room, live.state == .online else { return }
-        let key = room.code + pushToken
-        guard registeredFor != key else { return }
-        registeredFor = key
+        guard let room = joinedRoom, let pushToken, live.room == room, live.inRoom else { return }
         #if DEBUG
         let env = "sandbox"
         #else
         let env = "production"
         #endif
-        live.tellKeeper("ptt \(room.channelName) \(room.token) \(pushToken) \(env) \(MumbleManners.nickname)")
+        Task { _ = await live.registerPushToTalk(token: pushToken, environment: env) }
     }
 
     private func showSpeaker(_ talker: String?) {
         guard let manager, let joined else { return }
+        if talker != nil { speakerReset?.cancel() }
+        guard talker != nil || remoteShown else { return }
+        remoteShown = talker != nil
         let who = talker.map { PTParticipant(name: $0, image: nil) }
         Task { try? await manager.setActiveRemoteParticipant(who, channelUUID: joined) }
     }
 
-    nonisolated static func channelUUID(_ room: TalkyRoom) -> UUID {
-        // Lo stesso canale per la stessa stanza su ogni telefono e a ogni avvio.
-        var b = Array(room.channelName.utf8.suffix(16))
-        while b.count < 16 { b.append(0) }
-        b[6] = (b[6] & 0x0F) | 0x40
-        b[8] = (b[8] & 0x3F) | 0x80
-        return UUID(uuid: (b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7],
-                           b[8], b[9], b[10], b[11], b[12], b[13], b[14], b[15]))
+    /// La notifica ha messo un remoto nella pillola. Se la voce vera non
+    /// arriva (passaggio gia' finito mentre ci si ricollegava), lo si toglie.
+    private func clearPushedSpeaker(_ channelUUID: UUID) {
+        remoteShown = true
+        speakerReset?.cancel()
+        speakerReset = Task { [weak self] in
+            // Prima il collegamento, poi un attimo per la voce.
+            for _ in 0 ..< 60 {
+                guard let self, !Task.isCancelled else { return }
+                if self.live.state == .online { break }
+                try? await Task.sleep(for: .milliseconds(250))
+            }
+            try? await Task.sleep(for: Self.pushedSpeakerHold)
+            guard let self, !Task.isCancelled, self.live.talker == nil, let manager = self.manager else { return }
+            self.remoteShown = false
+            try? await manager.setActiveRemoteParticipant(nil, channelUUID: channelUUID)
+        }
     }
 
     nonisolated static func descriptor(_ room: TalkyRoom) -> PTChannelDescriptor {
@@ -123,12 +167,20 @@ extension RoomPushToTalk: PTChannelManagerDelegate {
     nonisolated func channelManager(_ channelManager: PTChannelManager, didJoinChannel channelUUID: UUID, reason: PTChannelJoinReason) {
         Task { @MainActor in
             self.joined = channelUUID
+            if self.joining == channelUUID { self.joining = nil }
             // Rilanciata da una notifica o dopo un riavvio: si rientra nella stanza.
-            if self.live.room == nil, let last = self.live.lastRoom, Self.channelUUID(last) == channelUUID {
+            if self.live.room == nil, let last = self.live.lastRoom, last.pushToTalkID == channelUUID {
                 self.joinedRoom = last
                 self.live.joinRoom(last)
             }
             self.register()
+        }
+    }
+
+    nonisolated func channelManager(_ channelManager: PTChannelManager, failedToJoinChannel channelUUID: UUID, error: Error) {
+        Task { @MainActor in
+            if self.joining == channelUUID { self.joining = nil }
+            self.joinedRoom = nil
         }
     }
 
@@ -137,25 +189,39 @@ extension RoomPushToTalk: PTChannelManagerDelegate {
             guard self.joined == channelUUID else { return }
             self.joined = nil
             self.joinedRoom = nil
-            self.registeredFor = nil
+            self.remoteShown = false
+            self.speakerReset?.cancel()
             // Uscita dalla pillola di sistema: si esce anche dalla stanza.
             if reason == .userRequest, self.live.room != nil { self.live.leaveRoom() }
         }
     }
 
     nonisolated func channelManager(_ channelManager: PTChannelManager, channelUUID: UUID, didBeginTransmittingFrom source: PTChannelTransmitRequestSource) {
-        Task { @MainActor in self.live.startTalking(waitForSession: true) }
+        Task { @MainActor in
+            // Chiesto dal tasto in app, ma il dito si e' gia' alzato.
+            if source == .developerRequest, !self.appHolding {
+                channelManager.stopTransmitting(channelUUID: channelUUID)
+                return
+            }
+            self.live.startTalking(bySystem: true)
+        }
     }
 
     nonisolated func channelManager(_ channelManager: PTChannelManager, channelUUID: UUID, didEndTransmittingFrom source: PTChannelTransmitRequestSource) {
-        Task { @MainActor in self.live.stopTalking() }
+        Task { @MainActor in
+            self.appHolding = false
+            self.live.stopTalking()
+        }
+    }
+
+    nonisolated func channelManager(_ channelManager: PTChannelManager, failedToBeginTransmittingInChannel channelUUID: UUID, error: Error) {
+        Task { @MainActor in self.appHolding = false }
     }
 
     nonisolated func channelManager(_ channelManager: PTChannelManager, receivedEphemeralPushToken pushToken: Data) {
         let hex = pushToken.map { String(format: "%02x", $0) }.joined()
         Task { @MainActor in
             self.pushToken = hex
-            self.registeredFor = nil
             self.register()
         }
     }
@@ -164,20 +230,24 @@ extension RoomPushToTalk: PTChannelManagerDelegate {
         let speaker = (pushPayload["activeSpeaker"] as? String) ?? "Talky"
         Task { @MainActor in
             // Talky era chiusa o lontana dalla stanza: ci si ricollega per sentire.
-            if self.live.room == nil, let last = self.live.lastRoom, Self.channelUUID(last) == channelUUID {
+            if let last = self.live.lastRoom, last.pushToTalkID == channelUUID,
+               self.live.room != last || self.live.band != .poc {
                 self.live.joinRoom(last)
             } else if self.live.room != nil, !self.live.isOn {
                 self.live.start(.poc)
             }
+            self.clearPushedSpeaker(channelUUID)
         }
         return .activeRemoteParticipant(PTParticipant(name: speaker, image: nil))
     }
 
     nonisolated func channelManager(_ channelManager: PTChannelManager, didActivate audioSession: AVAudioSession) {
-        Task { @MainActor in self.live.micReady() }
+        Task { @MainActor in self.live.systemAudioActivated() }
     }
 
-    nonisolated func channelManager(_ channelManager: PTChannelManager, didDeactivate audioSession: AVAudioSession) {}
+    nonisolated func channelManager(_ channelManager: PTChannelManager, didDeactivate audioSession: AVAudioSession) {
+        Task { @MainActor in self.live.systemAudioDeactivated() }
+    }
 }
 
 @available(iOS 16.0, *)

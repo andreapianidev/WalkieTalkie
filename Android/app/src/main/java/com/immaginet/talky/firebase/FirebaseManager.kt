@@ -34,18 +34,6 @@ object FirebaseManager {
         ))
     }
 
-    fun trackPeerDiscovered(peerName: String) {
-        trackEvent("peer_discovered", mapOf(
-            "peer_name" to peerName
-        ))
-    }
-
-    fun trackConnectionEstablished(peerName: String) {
-        trackEvent("connection_established", mapOf(
-            "peer_name" to peerName
-        ))
-    }
-
     fun recordNonFatal(error: Throwable) {
         FirebaseCrashlytics.getInstance().recordException(error)
     }

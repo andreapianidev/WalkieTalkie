@@ -212,18 +212,25 @@ play the audio as before.
 
 | Field | Meaning |
 |---|---|
-| `msgId` | Unique id of the transmission (UUID). Receivers remember the last 256 and drop duplicates: the same message arrives directly and through a bridge. |
-| `origin`, `originName` | `uid` and display name of who spoke, not of the bridge that forwarded it. |
-| `ttl` | Hops left. The speaker sends `2`. A receiver forwards only if `ttl > 1`, with `ttl - 1`. |
-| `reached` | Comma-separated short ids (first 8 characters of the `uid`, lowercase) of devices that already got the message from the sender. A bridge does not forward to them, and adds its own targets before forwarding. Without it, a group where everyone is connected to everyone would copy each message from everyone to everyone. |
+| `msgId` | Unique id of the transmission (UUID, at most 64 characters). Receivers remember the last 256 and drop duplicates: the same message arrives directly and through a bridge. |
+| `origin`, `originName` | `uid` and display name of who spoke, not of the bridge that forwarded it. Receivers cut both to 64 characters. |
+| `ttl` | Hops left. The speaker sends `2`. A receiver forwards only if `ttl > 1`, with `ttl - 1`. A value above `2` is lowered to `2`. |
+| `reached` | Comma-separated short ids (first 8 characters of the `uid`, lowercase) of devices that already got the message from the sender. A bridge does not forward to them, and adds its own targets before forwarding. Without it, a group where everyone is connected to everyone would copy each message from everyone to everyone. At most 64 entries are read or written. |
 | `stream` | `1` when the audio comes as many frames closed by `AUDIO_END` (Android). Without it the message is complete after `byteCount` bytes. |
 
 Rules:
 
 - Forward only complete messages: one `AUDIO_META` and one audio frame, back to back
-  on the same connection, never interleaved with another message. Android, while its
-  own user is talking, keeps relays queued until its own `AUDIO_END`.
-- Never forward to the peer it came from.
+  on the same connection, never interleaved with another message. Android holds one
+  output lock from its own `AUDIO_META` to its own `AUDIO_END`: a relay waits for the
+  current transmission to end (at most 30 s, then it is dropped) and never for the next.
+- A `msgId` counts as seen only when its message is complete (`byteCount` reached, or
+  `AUDIO_END`). While it is arriving, a second copy on another connection is dropped;
+  if the connection closes halfway, the id is released and a full copy from another
+  bridge is played.
+- Never forward to the peer it came from, and only to peers on the same channel as the
+  connection it came from. A `HELLO` with a different `channel` closes the connection,
+  and a channel change closes every connection and restarts publishing and browsing.
 - Messages without `msgId` (older versions) are played but not forwarded: without an
   id nobody can tell whether another bridge already delivered them.
 
@@ -231,9 +238,27 @@ On iOS the same fields also travel over MultipeerConnectivity, so an iPhone brid
 between iPhones (Multipeer) and Android/Mac (TALKY1). Older iOS versions play every
 Multipeer message as raw Float32, so the fields sit in a header made of Float32 words
 whose two high bytes are zero: `0x4B54`, `0x3152` ("TK" "R1"), the number of text
-words, then the `k=v|k=v` text two bytes per word, then the Float32 audio. Read as
-samples, each header word is a subnormal number below 1e-40, i.e. a couple of
-milliseconds of silence before the voice. See `WalkieTalkie/Ponte.swift`.
+words (at most 2048), then the `k=v|k=v` text two bytes per word, then the Float32
+audio. Read as samples, each header word is a subnormal number below 1e-40, i.e. a
+couple of milliseconds of silence before the voice. A relay carries at most 30 s of
+audio. See `WalkieTalkie/Ponte.swift`.
+
+### Recognising a device already accepted (iOS, Multipeer only)
+
+The `uid` changes at every launch on every platform, so it never identifies a phone
+over time. On the public channel an iPhone that accepts an invitation by hand sends,
+once and inside the session, a header `0x4B54`, `0x3150` ("TK" "P1") whose text is
+`s=<32 random bytes, base64>`, with no audio after it. Both phones keep that secret
+in the Keychain. It goes only to peers that advertise `ponte=1`, so an older version
+never receives it, and it is accepted only from a peer this phone invited.
+
+Later invitations to a peer with the same display name carry, after the channel line,
+`uid=<inviter uid>`, `ts=<unix seconds>` and up to 8 lines
+`t=<base64 of the first 16 bytes of HMAC-SHA256(secret, "talky-invito|<invitee uid>|<ts>")>`.
+The invitee accepts without asking if one of them matches a secret it holds, `ts` is
+within 120 s, and that `t` was not used before. The secret itself never travels again
+and nothing stable is advertised. These lines go only to peers advertising `ponte=1`;
+older versions compare the whole context with their channel and get the channel alone.
 
 ---
 
@@ -304,7 +329,7 @@ A new implementation is TALKY1-compliant when it:
 - [ ] caps a transmission at 10 s
 - [ ] sends once per peer UID, not per socket
 - [ ] queues received audio frames instead of restarting playback per frame
-- [ ] relay: drops duplicate `msgId`, forwards complete messages with `ttl - 1` only when `ttl > 1`, skips the source and `reached`
+- [ ] relay: drops duplicate `msgId` (marked when complete), lowers `ttl` above 2, forwards complete messages with `ttl - 1` only when `ttl > 1`, skips the source, `reached` and other channels
 
 ---
 

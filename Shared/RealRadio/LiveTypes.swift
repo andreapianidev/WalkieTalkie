@@ -63,6 +63,8 @@ nonisolated enum LiveEvent: Sendable {
     case spectrum(Bool)
     /// Nel canale POC in cui siamo si puo' parlare (permesso Speak, nessun muto dal server).
     case mayTalk(Bool)
+    /// Siamo dentro il canale della stanza privata (dopo la risposta del custode).
+    case inRoom(Bool)
 }
 
 /// Una riga della cascata di un KiwiSDR: potenza per fetta di frequenza,

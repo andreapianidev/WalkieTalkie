@@ -17,7 +17,9 @@ ssh "$HOST" "sudo bash -s" <<REMOTE
 set -e
 DEBIAN_FRONTEND=noninteractive apt-get install -y -q mumble-server python3-jwt python3-cryptography curl >/dev/null
 ini=/etc/mumble/mumble-server.ini
-setkv() { if grep -qE "^;?\\s*\$1=" \$ini; then sed -i -E "s|^;?\\s*\$1=.*|\$1=\$2|" \$ini; else echo "\$1=\$2" >> \$ini; fi; }
+# Una chiave che manca va prima di [Ice]: in coda al file finirebbe nella
+# sezione di Ice e il server non la leggerebbe.
+setkv() { if grep -qE "^;?\\s*\$1=" \$ini; then sed -i -E "s|^;?\\s*\$1=.*|\$1=\$2|" \$ini; else sed -i "/^\\[Ice\\]/i \$1=\$2" \$ini; fi; }
 setkv port 64738
 setkv serverpassword ""
 setkv users 200
@@ -32,6 +34,19 @@ setkv logdays 1
 setkv obfuscate true
 setkv sendversion false
 setkv opusthreshold 0
+# Il server scarta in silenzio i messaggi oltre questo limite (per utente,
+# al secondo e di scorta): con 1 e 5, i valori di serie, un custode che crea
+# due stanze insieme perdeva le regole, e un passaggio subito dopo l'ingresso
+# perdeva il muto tolto. Il custode resta sotto (6 al secondo, 20 di scorta).
+setkv messagelimit 10
+setkv messageburst 40
+# Una stanza in piu' del limite del custode (1000), piu' "Talky".
+setkv channelcountlimit 1100
+# Nomi in ogni alfabeto (thai, hindi, cinese...), senza spazi e senza < >.
+# E' un QRegExp di Qt 5 (Server::readParams), che le classi POSIX come
+# [:space:] non le conosce; niente barre rovesciate, che QSettings leggerebbe
+# come escape. Spazi in testa e in coda li scarta gia' validateUserName.
+setkv username '[^ <>]+'
 mkdir -p /etc/systemd/system/mumble-server.service.d
 printf '[Service]\nMemoryMax=150M\nCPUQuota=50%%\n' > /etc/systemd/system/mumble-server.service.d/talky-limits.conf
 systemctl daemon-reload

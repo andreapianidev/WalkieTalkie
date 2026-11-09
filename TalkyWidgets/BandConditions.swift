@@ -57,8 +57,9 @@ enum TalkyPro {
     /// l'app venga aperta per sapere che l'abbonamento c'e'.
     static func isActive() async -> Bool {
         #if DEBUG
-        // Come l'app in Debug: il collaudo vede i widget Pro senza acquisto.
-        return true
+        // Come l'app in Debug, che all'avvio fa scegliere Free o Pro e lo
+        // scrive nell'App Group. Prima che l'abbia scritto, Pro come prima.
+        return RadioShelf.appSaysPro ?? true
         #else
         for await result in Transaction.currentEntitlements {
             if case .verified(let t) = result, products.contains(t.productID), t.revocationDate == nil {

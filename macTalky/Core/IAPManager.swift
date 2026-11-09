@@ -23,7 +23,11 @@ final class IAPManager: ObservableObject {
     // MARK: - Published State
 
     @Published var products: [Product] = []
-    @Published var isProUser: Bool = false
+    @Published var isProUser: Bool = false {
+        // I widget e il controllo della radio preferita si ricaricano solo
+        // quando cambia questo, non a ogni lettura degli acquisti.
+        didSet { RadioShelf.savePro(isProUser) }
+    }
     @Published var activeSubscription: Product? = nil
     @Published var isLoading: Bool = false
 

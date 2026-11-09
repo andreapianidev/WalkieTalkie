@@ -629,3 +629,12 @@
 "whats_new_widgets" = "New widgets for the Home Screen and new controls.";
 "whats_new_pairing" = "Help connecting: if the other phone doesn't show up, Talky tells you what to check and how to invite it.";
 "whats_new_try" = "Try talking on POC";
+
+/* Onboarding: un solo permesso, il microfono */
+"onboarding_mic_description" = "It's for talking on the walkie. Live CB and the radio work without it too.";
+/* Tasti dei widget radio: i titoli servono anche nel bundle dell'app, che esegue gli intent */
+"w_intent_play" = "Play station";
+"w_intent_stop" = "Stop radio";
+"w_intent_station" = "Station";
+"w_fav_control_name" = "My favourite radio";
+"mumble_report_mail" = "Add details by email";

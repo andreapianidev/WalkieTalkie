@@ -60,8 +60,10 @@ struct ContentView: View {
     var body: some View {
         console
             .onOpenURL(perform: openFromWidget)
-            // Comprato o scaduto Talky Pro: i lucchetti sulle stazioni dei widget cambiano.
-            .onReceive(iap.$isProUser) { _ in radio.publishToWidgets() }
+            // I talky:// dei widget e dei controlli li prende la console gia'
+            // aperta: senza, una WindowGroup puo' aprire una finestra nuova a
+            // ogni URL. I lucchetti dei widget li aggiorna IAPManager.isProUser.
+            .handlesExternalEvents(preferring: ["*"], allowing: ["*"])
     }
 
     /// talky://pro apre Talky Pro; talky://live/cb?hz=... e talky://live/hf?id=...

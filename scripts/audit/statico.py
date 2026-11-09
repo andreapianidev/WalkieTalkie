@@ -328,13 +328,22 @@ def controlla_protocollo():
                 err(f"ponte {nome}: manca il campo {chiave!r} di AUDIO_META")
         if not re.search(r"(ttlIniziale|TTL_INIZIALE)\s*=\s*2\b", t):
             err(f"ponte {nome}: le tratte iniziali non sono 2")
-        if "primaVolta" not in t:
+        if "primaVolta" not in t and "inizia(" not in t:
             err(f"ponte {nome}: nessuna memoria degli id, i doppioni suonerebbero due volte")
+        # L'id si segna quando il messaggio e' arrivato tutto: segnato all'inizio,
+        # un flusso interrotto faceva scartare la copia intera da un altro ponte.
+        if "completa(" not in t or "abbandona(" not in t:
+            err(f"ponte {nome}: l'id va segnato a messaggio completo, e liberato se la connessione cade")
+        # Un ttl piu' alto in arrivo si abbassa: altrimenti un peer modificato
+        # fa girare un messaggio per tutta la folla.
+        if not re.search(r"\bmin(Of)?\(ttl,", t):
+            err(f"ponte {nome}: il ttl in arrivo non e' limitato alle tratte iniziali")
     # Su Multipeer le versioni vecchie suonano tutto come Float32: l'intestazione
     # deve restare nella forma "due byte alti a zero" che suona come silenzio.
     ios_ponte = ponte["iOS"].read_text() if ponte["iOS"].exists() else ""
     mp = (ROOT / "WalkieTalkie/MultipeerManager.swift").read_text()
-    if "0x4B54, 0x3152" not in ios_ponte or "UInt8(parola >> 8), 0, 0" not in ios_ponte:
+    if ("0x4B54" not in ios_ponte or "0x3152" not in ios_ponte
+            or "UInt8(parola >> 8), 0, 0" not in ios_ponte):
         err("ponte iOS: l'intestazione Multipeer non e' piu' silenziosa per le versioni vecchie")
     if "IntestazioneMultipeer.impacchetta" not in mp or "IntestazioneMultipeer.spacchetta" not in mp:
         err("ponte iOS: MultipeerManager non usa l'intestazione del ponte in invio e in ricezione")
@@ -342,6 +351,21 @@ def controlla_protocollo():
     # vecchie confrontano il context intero con il canale e rifiuterebbero.
     if "peerConPonte.contains(peerID)" not in mp:
         err("Multipeer: il context con l'uid deve partire solo verso i peer con il ponte")
+    # Nella ricerca dei vicini non deve viaggiare niente di fisso: l'uid cambia a
+    # ogni avvio, e chi e' gia' stato accettato si riconosce dal segreto della coppia.
+    if "let uidLocale = UUID().uuidString" not in ios_ponte:
+        err("ponte iOS: l'uid annunciato nella ricerca deve cambiare a ogni avvio")
+    if "CoppieFidate.riconosce" not in mp or "multipeer_trusted_devices\")" in mp.replace("removeObject(forKey: \"multipeer_trusted_devices\")", ""):
+        err("Multipeer: l'accettazione automatica deve passare dal segreto della coppia, non da un id annunciato")
+    # Cambio di canale: anche TALKY1 riparte, o le connessioni vecchie portano
+    # la voce di una stanza privata fuori (e il ponte la ripete a tutti).
+    if "TalkyCrossPlatformManager.shared.riavvia()" not in mp:
+        err("Multipeer: al cambio di canale TALKY1 non viene riavviato")
+    # Riproduzione iOS in coda: con stop() sul vecchio messaggio la sua
+    # completion spegneva anche quello nuovo.
+    am = (ROOT / "WalkieTalkie/AudioManager.swift").read_text()
+    if "completionCallbackType: .dataPlayedBack" not in am or "playbackPlayerNode === player" not in am:
+        err("audio iOS: i messaggi ricevuti devono andare in coda, non fermarsi a vicenda")
 
 
 # ---------------------------------------------------------------- radio

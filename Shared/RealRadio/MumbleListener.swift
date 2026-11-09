@@ -157,6 +157,13 @@ actor MumbleListener {
     nonisolated let room: TalkyRoom?
 
     static let rate = 48_000.0
+    /// Quanto si resta senza muto dopo un passaggio. Il server conta i
+    /// cambi di stato nel suo limite di messaggi (1 al secondo, 5 di scorta
+    /// sui server pubblici): chi parla a botta e risposta, togliendo e
+    /// rimettendo il muto a ogni passaggio, lo supera e il muto tolto si perde.
+    static let unmuteHold: Duration = .seconds(8)
+    /// Tempo per avere la stanza dal custode ed entrarci.
+    static let roomPatience: Duration = .seconds(15)
 
     private let audioSink: AsyncStream<PCMChunk>.Continuation
     private let eventSink: AsyncStream<LiveEvent>.Continuation
@@ -169,10 +176,13 @@ actor MumbleListener {
     private var session: UInt32?
     private var synced = false
     private var renamed = false
+    private var plainNamed = false
     private var channels: [UInt32: MumbleChannel] = [:]
     private var users: [UInt32: MumbleUser] = [:]
     private var lastHeard = ContinuousClock.now
     private var lastPing = ContinuousClock.now
+    /// Banda massima del server (ServerSync), in bit al secondo.
+    private var maxBandwidth: Int?
 
     private var floor: UInt32?
     private var floorHeard = ContinuousClock.now
@@ -183,12 +193,21 @@ actor MumbleListener {
     /// Muto o soppresso da un amministratore: non si parla.
     private var silencedByServer = false
     private var mayTalk = false
-    private var talking = false
+    /// Il passaggio in corso, con il numero dato da beginTalking: send e
+    /// endTalking di un passaggio gia' chiuso non toccano quello nuovo.
+    private var over: Int?
+    private var overs = 0
+    private var unmuted = false
+    private var lastOverEnd: ContinuousClock.Instant?
     /// In unita' da 10 ms, come il contatore dei client Mumble.
     private var sequence: UInt64 = 0
 
-    /// Quando e' partita la richiesta della stanza al custode.
-    private var roomAsked: ContinuousClock.Instant?
+    /// Da quando si sta cercando di entrare nella stanza.
+    private var roomSince: ContinuousClock.Instant?
+    private var keeperAsked = false
+    /// Il canale che il custode ha dato alla stanza.
+    private var roomChannel: String?
+    private var inRoom = false
 
     init(target: MumbleLiveChannel, username: String, room: TalkyRoom? = nil) {
         self.target = room?.target ?? target
@@ -261,12 +280,17 @@ actor MumbleListener {
         channels = [:]
         users = [:]
         serverVersion = 0
+        maxBandwidth = nil
         floor = nil
         decoders = [:]
         permissions = [:]
         silencedByServer = false
-        talking = false
-        roomAsked = nil
+        over = nil
+        unmuted = false
+        lastOverEnd = nil
+        roomSince = nil
+        keeperAsked = false
+        setInRoom(false)
         reportMayTalk()
     }
 
@@ -286,11 +310,15 @@ actor MumbleListener {
             if now - lastHeard > .seconds(45) {
                 hangUp()
                 eventSink.yield(.link(.dropped(.timeout)))
+                return
+            }
+            if unmuted, over == nil, let end = lastOverEnd, now - end > Self.unmuteHold, let session {
+                link.send(MumbleControl.selfMute(session: session, on: true))
+                unmuted = false
             }
         }
         if floor != nil, now - floorHeard > .milliseconds(500) { endOfOver() }
-        if let asked = roomAsked, now - asked > .seconds(8) {
-            roomAsked = nil
+        if let since = roomSince, now - since > Self.roomPatience {
             hangUp()
             eventSink.yield(.link(.refused(.down)))
         }
@@ -320,6 +348,7 @@ actor MumbleListener {
         case .serverSync:
             session = f.uint32(1)
             synced = true
+            if let bw = f.uint32(2), bw > 0 { maxBandwidth = Int(bw) }
             if let root = f.uint32(4) { permissions[0] = root }
             if let session { link?.send(MumbleControl.selfMute(session: session, on: true)) }
             eventSink.yield(.link(.online))
@@ -328,13 +357,17 @@ actor MumbleListener {
             if f.bool(3) == true { permissions = [:] }
             if let c = f.uint32(1), let p = f.uint32(2) { permissions[c] = p }
             reportMayTalk()
+        case .permissionDenied:
+            denied(f)
+        case .textMessage:
+            keeperSaid(f)
         case .channelState:
             guard let id = f.uint32(1) else { return }
             var c = channels[id] ?? MumbleChannel(id: id, parent: nil, name: "")
             if let p = f.uint32(2) { c.parent = p }
             if let n = f.string(3) { c.name = n }
             channels[id] = c
-            if let room, synced, c.name == room.channelName { enterChannel() }
+            if room != nil, synced, let wanted = roomChannel, c.name == wanted { enterChannel() }
         case .channelRemove:
             if let id = f.uint32(1) { channels[id] = nil }
         case .userState:
@@ -364,6 +397,15 @@ actor MumbleListener {
             await logon()
             return
         }
+        if type == 2, !plainNamed {
+            // Nome rifiutato: molti server pubblici accettano solo lettere
+            // latine, e un nome in thai o in hindi non passa.
+            plainNamed = true
+            username = MumbleManners.plainName(for: username)
+            hangUp()
+            await logon()
+            return
+        }
         hangUp()
         eventSink.yield(.link(.refused(MumbleControl.problem(type))))
     }
@@ -379,6 +421,7 @@ actor MumbleListener {
             if f.has(5) {
                 reportChannel()
                 link?.send(MumbleControl.permissionQuery(channel: u.channel))
+                updateInRoom()
             }
             reportMayTalk()
         }
@@ -386,7 +429,7 @@ actor MumbleListener {
     }
 
     /// Entra nel canale scelto; se non c'e' piu', in quello con piu' persone.
-    /// Per una stanza privata invece si chiede al custode di aprirla.
+    /// Per una stanza privata invece si chiede al custode quale canale e'.
     private func enterChannel() {
         guard synced, let link, let session else { return }
         if let room {
@@ -405,23 +448,79 @@ actor MumbleListener {
     }
 
     private func enterRoom(_ room: TalkyRoom, link: StreamLink, session: UInt32) {
-        if let here = channels.values.first(where: { $0.name == room.channelName }) {
-            if users[session]?.channel != here.id {
-                link.send(MumbleControl.join(session: session, channel: here.id))
+        if roomSince == nil, !inRoom { roomSince = .now }
+        if let name = roomChannel, let here = roomChannelID(name) {
+            if users[session]?.channel != here {
+                link.send(MumbleControl.join(session: session, channel: here))
             }
-            roomAsked = nil
+            updateInRoom()
             reportChannel()
             reportAudience()
             return
         }
-        guard roomAsked == nil else { return }
-        guard let keeper = users.values.first(where: { $0.name == "SuperUser" }) else {
+        // Nome ancora da sapere, o stanza tolta dallo sweep: lo dice il custode.
+        guard !keeperAsked else { return }
+        guard let keeper = keeperSession() else {
             hangUp()
             eventSink.yield(.link(.refused(.down)))
             return
         }
-        roomAsked = .now
-        link.send(MumbleControl.text(to: keeper.session, "room \(room.channelName) \(room.token)"))
+        keeperAsked = true
+        link.send(MumbleControl.text(to: keeper, "room \(room.token)"))
+    }
+
+    /// Le risposte del custode alla domanda "room".
+    private func keeperSaid(_ f: ProtoFields) {
+        guard room != nil, let actor = f.uint32(1), actor == keeperSession(), let text = f.string(5) else { return }
+        let words = text.split(separator: " ").map(String.init)
+        switch words.first {
+        case "ok" where words.count == 2 && TalkyRoom.isChannelName(words[1]):
+            roomChannel = words[1]
+            keeperAsked = false
+            enterChannel()
+        case "slow", "no":
+            hangUp()
+            eventSink.yield(.link(.refused(.refused)))
+        default:
+            break
+        }
+    }
+
+    /// Un no del server. Sui canali pubblici si resta dove si e', come
+    /// prima; nella stanza invece restare nella radice vorrebbe dire sembrare
+    /// in linea senza sentire niente.
+    private func denied(_ f: ProtoFields) {
+        guard room != nil else { return }
+        let type = f.int(5)
+        let full = type == 9                                     // DenyType.ChannelFull
+        let inRoomChannel = f.uint32(2).map { $0 == roomChannel.flatMap(roomChannelID) } ?? false
+        let keeperUnreachable = f.uint32(1) == 0x200             // TextMessage verso il custode
+        guard full || inRoomChannel || keeperUnreachable else { return }
+        hangUp()
+        eventSink.yield(.link(.refused(full ? .full : .refused)))
+    }
+
+    private func roomChannelID(_ name: String) -> UInt32? {
+        channels.values.first { $0.name == name && ($0.parent ?? 0) == 0 }?.id
+    }
+
+    private func keeperSession() -> UInt32? {
+        users.values.first { $0.name == "SuperUser" }?.session
+    }
+
+    private func updateInRoom() {
+        guard room != nil, let session, let name = roomChannel, let id = roomChannelID(name) else {
+            setInRoom(false)
+            return
+        }
+        setInRoom(users[session]?.channel == id)
+    }
+
+    private func setInRoom(_ now: Bool) {
+        if now { roomSince = nil }
+        guard now != inRoom else { return }
+        inRoom = now
+        eventSink.yield(.inRoom(now))
     }
 
     private func busiest() -> MumbleChannel? {
@@ -446,10 +545,12 @@ actor MumbleListener {
     // MARK: voce
 
     private func voice(_ packet: Data) {
-        guard !talking, let v = MumbleVoicePacket.parse(packet, protobuf: usesProtobuf) else { return }
+        guard over == nil, let v = MumbleVoicePacket.parse(packet, protobuf: usesProtobuf) else { return }
         if let floor, floor != v.session { return }
         if let name = users[v.session]?.name, MumbleManners.isBlocked(name, on: target.server.id) { return }
         if floor == nil {
+            // Un terminatore da solo non apre un passaggio.
+            guard !v.opus.isEmpty else { return }
             floor = v.session
             decoders = [:]
             eventSink.yield(.talker(users[v.session]?.name ?? "#\(v.session)"))
@@ -483,39 +584,65 @@ actor MumbleListener {
         eventSink.yield(.mayTalk(ok))
     }
 
-    /// Inizio di un passaggio: si toglie il muto. Falso se qui non si puo'.
-    func beginTalking() -> Bool {
-        guard mayTalk, let link, let session else { return false }
-        if floor != nil { endOfOver() }
-        talking = true
-        link.send(MumbleControl.selfMute(session: session, on: false))
-        return true
+    /// Bitrate Opus che sta nella banda del server. Il server conta 32 byte
+    /// in piu' per pacchetto (20 + 8 + 4, Server.cpp), 50 pacchetti al secondo.
+    func voiceBitRate() -> Int {
+        guard let bw = maxBandwidth else { return 32_000 }
+        return max(8_000, min(32_000, Int(Double(bw) * 0.85) - 12_800))
     }
 
-    /// Un pacchetto Opus da 20 ms.
-    func send(_ opus: Data) {
-        guard talking, let link else { return }
+    /// Inizio di un passaggio: il numero del passaggio, nil se qui non si puo'.
+    func beginTalking() -> Int? {
+        guard mayTalk, let link, let session else { return nil }
+        if floor != nil { endOfOver() }
+        overs += 1
+        over = overs
+        if !unmuted {
+            link.send(MumbleControl.selfMute(session: session, on: false))
+            unmuted = true
+        }
+        return overs
+    }
+
+    /// Un pacchetto Opus da 20 ms del passaggio `id`.
+    func send(_ opus: Data, over id: Int) {
+        guard over == id, let link else { return }
         sequence += 2
         link.send(MumbleOutgoingVoice.tunnel(
             MumbleOutgoingVoice.packet(opus: opus, sequence: sequence, last: false, protobuf: usesProtobuf)))
     }
 
-    /// Fine del passaggio: pacchetto di chiusura e di nuovo in muto.
-    func endTalking() {
-        guard talking else { return }
-        talking = false
-        guard let link, let session else { return }
+    /// Fine del passaggio `id`: pacchetto di chiusura. Il muto torna dopo
+    /// `unmuteHold` senza passaggi (watch).
+    func endTalking(over id: Int) {
+        guard over == id else { return }
+        over = nil
+        lastOverEnd = .now
+        guard let link else { return }
         sequence += 2
         link.send(MumbleOutgoingVoice.tunnel(
             MumbleOutgoingVoice.packet(opus: Data(), sequence: sequence, last: true, protobuf: usesProtobuf)))
-        link.send(MumbleControl.selfMute(session: session, on: true))
     }
 
-    /// Messaggio privato al custode del server delle stanze (scripts/server).
-    func tellKeeper(_ text: String) {
-        guard room != nil, synced, let link,
-              let keeper = users.values.first(where: { $0.name == "SuperUser" }) else { return }
-        link.send(MumbleControl.text(to: keeper.session, text))
+    /// Al custode: comincia un passaggio, avvisa con Push to Talk chi della
+    /// stanza non e' collegato.
+    func keeperTalk() {
+        guard let room else { return }
+        tellKeeper("talk \(room.token) \(username)")
+    }
+
+    /// Al custode: il gettone Push to Talk di questo telefono per la stanza.
+    /// Falso se non si e' ancora dentro, e allora va rimandato dopo.
+    func keeperPushToTalk(token: String, environment: String) -> Bool {
+        guard let room, inRoom else { return false }
+        return tellKeeper("ptt \(room.token) \(token) \(environment) \(username)")
+    }
+
+    @discardableResult
+    private func tellKeeper(_ text: String) -> Bool {
+        guard room != nil, synced, let link, let keeper = keeperSession() else { return false }
+        link.send(MumbleControl.text(to: keeper, text))
+        return true
     }
 
     /// Chi parla adesso non si sente piu', qui e nei collegamenti futuri.

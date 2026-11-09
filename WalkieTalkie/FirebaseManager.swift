@@ -104,14 +104,6 @@ class FirebaseManager: ObservableObject {
         logger.logError(error, context: "Crashlytics - \(context)")
     }
     
-    /// Imposta informazioni utente per Crashlytics
-    func setUserInfo(userId: String, deviceName: String) {
-        Crashlytics.crashlytics().setUserID(userId)
-        Crashlytics.crashlytics().setCustomValue(deviceName, forKey: "device_name")
-        Crashlytics.crashlytics().setCustomValue("WalkieTalkie", forKey: "app_name")
-        logger.logInfo("Crashlytics: Informazioni utente impostate - \(userId)")
-    }
-    
     /// Registra un log personalizzato in Crashlytics
     func logCustomMessage(_ message: String) {
         Crashlytics.crashlytics().log(message)

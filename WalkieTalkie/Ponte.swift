@@ -17,8 +17,20 @@ import Foundation
 /// toccano anche le code di rete, non solo il main.
 nonisolated struct Trasmissione {
     /// Due tratte: A -> B -> C. Di piu' moltiplica il traffico in una folla
-    /// senza portare la voce molto piu' lontano.
+    /// senza portare la voce molto piu' lontano. E' anche il massimo che si
+    /// accetta: un ttl piu' alto in arrivo viene abbassato a questo.
     static let ttlIniziale = 2
+
+    /// Quello che arriva da un altro telefono si taglia qui: un peer difettoso
+    /// o modificato non deve poter far crescere l'intestazione senza limite.
+    enum Limite {
+        static let id = 64
+        static let origine = 64
+        static let nome = 64
+        static let raggiunti = 64
+        /// Audio ritrasmesso su Multipeer: 30 s di Float32 a 48 kHz.
+        static let audioPonte = 48_000 * 4 * 30
+    }
 
     let id: String
     /// uid di chi ha parlato, e il suo nome da mostrare a chi ascolta.
@@ -35,7 +47,7 @@ nonisolated struct Trasmissione {
         Trasmissione(
             id: UUID().uuidString,
             origine: Ponte.shared.uidLocale,
-            nomeOrigine: nome,
+            nomeOrigine: String(nome.prefix(Limite.nome)),
             ttl: ttlIniziale,
             raggiunti: [Ponte.idCorto(Ponte.shared.uidLocale)]
         )
@@ -59,19 +71,23 @@ nonisolated struct Trasmissione {
             Chiave.origine: origine,
             Chiave.nomeOrigine: nomeOrigine,
             Chiave.ttl: String(ttl),
-            Chiave.raggiunti: raggiunti.sorted().joined(separator: ",")
+            Chiave.raggiunti: raggiunti.sorted().prefix(Limite.raggiunti).joined(separator: ",")
         ]
     }
 
-    /// nil se mancano id o ttl: il messaggio viene da una versione senza ponte.
+    /// nil se mancano id o ttl (il messaggio viene da una versione senza
+    /// ponte) o se l'id e' fuori misura.
     init?(campi: [String: String]) {
-        guard let id = campi[Chiave.id], !id.isEmpty,
+        guard let id = campi[Chiave.id], !id.isEmpty, id.count <= Limite.id,
               let ttl = campi[Chiave.ttl].flatMap(Int.init) else { return nil }
         self.id = id
-        self.origine = campi[Chiave.origine] ?? ""
-        self.nomeOrigine = campi[Chiave.nomeOrigine] ?? ""
-        self.ttl = ttl
-        self.raggiunti = Set((campi[Chiave.raggiunti] ?? "").split(separator: ",").map(String.init))
+        self.origine = String((campi[Chiave.origine] ?? "").prefix(Limite.origine))
+        self.nomeOrigine = String((campi[Chiave.nomeOrigine] ?? "").prefix(Limite.nome))
+        self.ttl = min(ttl, Self.ttlIniziale)
+        self.raggiunti = Set((campi[Chiave.raggiunti] ?? "")
+            .split(separator: ",")
+            .prefix(Limite.raggiunti)
+            .map { Ponte.idCorto(String($0)) })
     }
 
     private init(id: String, origine: String, nomeOrigine: String, ttl: Int, raggiunti: Set<String>) {
@@ -96,44 +112,92 @@ nonisolated struct Trasmissione {
 nonisolated final class Ponte: @unchecked Sendable {
     static let shared = Ponte()
 
-    /// Un id per installazione, lo stesso su Multipeer e TALKY1. Fisso fra un
-    /// avvio e l'altro perche' serve anche a riconoscere chi e' gia' stato
-    /// accettato una volta. E' un UUID a caso, non dice niente del telefono.
-    let uidLocale: String
+    /// Un id per avvio, lo stesso su Multipeer e TALKY1: al ponte serve solo
+    /// riconoscere un dispositivo dentro una sessione, anche se lo vede da due
+    /// trasporti. Cambia a ogni avvio perche' viaggia in chiaro nella ricerca
+    /// dei vicini e un id fisso renderebbe il telefono riconoscibile per sempre.
+    /// Chi e' gia' stato accettato si riconosce con il segreto della coppia
+    /// (`CoppieFidate` in MultipeerManager.swift), non con questo.
+    let uidLocale = UUID().uuidString
 
     private let lock = NSLock()
+    /// Messaggi arrivati interi (o mandati da qui): un'altra copia e' un doppione.
     private var visti: Set<String> = []
     private var ordine: [String] = []
+    /// Messaggi che stanno arrivando a pezzi: una seconda copia in parallelo si
+    /// scarta, ma se questa si interrompe una copia intera e' ancora benvenuta.
+    private var inCorso: Set<String> = []
     /// Bastano gli ultimi: un doppione arriva entro pochi secondi dall'originale.
     private let memoria = 256
 
     private init() {
-        let chiave = "talky_device_uid"
-        if let salvato = UserDefaults.standard.string(forKey: chiave) {
-            uidLocale = salvato
-        } else {
-            uidLocale = UUID().uuidString
-            UserDefaults.standard.set(uidLocale, forKey: chiave)
-        }
+        // Le build 141 e 142 tenevano un id fisso: lo si toglie.
+        UserDefaults.standard.removeObject(forKey: "talky_device_uid")
     }
 
     static func idCorto(_ uid: String) -> String {
         String(uid.lowercased().prefix(8))
     }
 
-    /// Vero la prima volta che si vede questo id, falso per i doppioni. Lo
-    /// stesso messaggio puo' arrivare due volte: diretto e passando da un ponte.
+    /// Per i messaggi che arrivano interi in un colpo solo (Multipeer): vero la
+    /// prima volta, falso per i doppioni e per un messaggio che sta gia'
+    /// arrivando da un altro trasporto.
     func primaVolta(_ id: String) -> Bool {
         lock.lock()
         defer { lock.unlock() }
-        guard !visti.contains(id) else { return false }
-        visti.insert(id)
+        guard !visti.contains(id), !inCorso.contains(id) else { return false }
+        ricordaLocked(id)
+        return true
+    }
+
+    /// Un messaggio partito da qui: se torna indietro da un ponte non si suona.
+    func segna(_ id: String) {
+        lock.lock()
+        defer { lock.unlock() }
+        ricordaLocked(id)
+    }
+
+    /// Comincia ad arrivare un messaggio a pezzi (TALKY1). Falso se e' un
+    /// doppione o se un'altra copia sta gia' arrivando.
+    func inizia(_ id: String) -> Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        guard !visti.contains(id), !inCorso.contains(id) else { return false }
+        if inCorso.count >= memoria { inCorso.removeAll() }
+        inCorso.insert(id)
+        return true
+    }
+
+    /// Il messaggio e' arrivato tutto: da qui le altre copie sono doppioni.
+    func completa(_ id: String) {
+        lock.lock()
+        defer { lock.unlock() }
+        inCorso.remove(id)
+        ricordaLocked(id)
+    }
+
+    /// La connessione e' caduta a meta': una copia intera da un ponte passera'.
+    func abbandona(_ id: String) {
+        lock.lock()
+        defer { lock.unlock() }
+        inCorso.remove(id)
+    }
+
+    private func ricordaLocked(_ id: String) {
+        guard visti.insert(id).inserted else { return }
         ordine.append(id)
         if ordine.count > memoria {
             visti.remove(ordine.removeFirst())
         }
-        return true
     }
+}
+
+/// Quello che puo' viaggiare su Multipeer con l'intestazione del ponte.
+nonisolated enum MessaggioMultipeer {
+    /// Una trasmissione, con la voce dopo l'intestazione.
+    case trasmissione(Trasmissione, audio: Data)
+    /// Il segreto della coppia, mandato una volta da chi ha accettato a mano.
+    case coppia(segreto: Data)
 }
 
 /// L'intestazione del ponte su Multipeer, in testa all'audio Float32.
@@ -145,13 +209,28 @@ nonisolated final class Ponte: @unchecked Sendable {
 /// voce, intatta e allineata, che le versioni vecchie suonano come sempre.
 ///
 /// Parole (UInt32 little-endian, solo i 16 bit bassi usati):
-///   0x4B54 0x3152 ("TK" "R1"), numero di parole di testo, poi il testo
-///   "k=v|k=v" dei campi di `Trasmissione`, due byte per parola.
+///   0x4B54 0x3152 ("TK" "R1") per una trasmissione, 0x4B54 0x3150 ("TK" "P1")
+///   per il segreto della coppia; poi il numero di parole di testo, poi il testo
+///   "k=v|k=v" due byte per parola. Il segreto parte solo verso chi annuncia il
+///   ponte: una versione vecchia non lo riceve mai.
 nonisolated enum IntestazioneMultipeer {
-    private static let firma: [UInt16] = [0x4B54, 0x3152]
+    private static let firma: UInt16 = 0x4B54
+    private static let tipoTrasmissione: UInt16 = 0x3152
+    private static let tipoCoppia: UInt16 = 0x3150
+    /// 4 KB di testo bastano e avanzano: oltre, il messaggio non e' nostro.
+    private static let massimoParole = 2048
+    private static let chiaveSegreto = "s"
 
     static func impacchetta(_ trasmissione: Trasmissione, audio: Data) -> Data {
-        let testo = Array(codificaCampi(trasmissione.campi).utf8)
+        intestazione(tipo: tipoTrasmissione, campi: trasmissione.campi) + audio
+    }
+
+    static func impacchettaCoppia(segreto: Data) -> Data {
+        intestazione(tipo: tipoCoppia, campi: [chiaveSegreto: segreto.base64EncodedString()])
+    }
+
+    private static func intestazione(tipo: UInt16, campi: [String: String]) -> Data {
+        let testo = Array(codificaCampi(campi).utf8.prefix(massimoParole * 2))
         var parole: [UInt16] = []
         parole.reserveCapacity(testo.count / 2 + 1)
         var i = 0
@@ -163,16 +242,15 @@ nonisolated enum IntestazioneMultipeer {
         }
 
         var messaggio = Data()
-        messaggio.reserveCapacity((firma.count + 1 + parole.count) * 4 + audio.count)
-        for parola in firma + [UInt16(parole.count)] + parole {
+        messaggio.reserveCapacity((3 + parole.count) * 4)
+        for parola in [firma, tipo, UInt16(clamping: parole.count)] + parole {
             messaggio.append(contentsOf: [UInt8(parola & 0xFF), UInt8(parola >> 8), 0, 0])
         }
-        messaggio.append(audio)
         return messaggio
     }
 
     /// nil se il messaggio e' Float32 nudo di una versione vecchia.
-    static func spacchetta(_ messaggio: Data) -> (trasmissione: Trasmissione, audio: Data)? {
+    static func spacchetta(_ messaggio: Data) -> MessaggioMultipeer? {
         let byte = [UInt8](messaggio.prefix(12))
         guard byte.count == 12 else { return nil }
         func parola(_ n: Int, da b: [UInt8]) -> UInt16? {
@@ -180,8 +258,9 @@ nonisolated enum IntestazioneMultipeer {
             guard b[o + 2] == 0, b[o + 3] == 0 else { return nil }
             return UInt16(b[o]) | UInt16(b[o + 1]) << 8
         }
-        guard parola(0, da: byte) == firma[0], parola(1, da: byte) == firma[1],
-              let quante = parola(2, da: byte) else { return nil }
+        guard parola(0, da: byte) == firma,
+              let tipo = parola(1, da: byte), tipo == tipoTrasmissione || tipo == tipoCoppia,
+              let quante = parola(2, da: byte), Int(quante) <= massimoParole else { return nil }
 
         let fineTesto = 12 + Int(quante) * 4
         guard messaggio.count >= fineTesto else { return nil }
@@ -195,10 +274,15 @@ nonisolated enum IntestazioneMultipeer {
         }
         while testo.last == 0 { testo.removeLast() }
 
-        guard let riga = String(bytes: testo, encoding: .utf8),
-              let trasmissione = Trasmissione(campi: decodificaCampi(riga)) else { return nil }
+        guard let riga = String(bytes: testo, encoding: .utf8) else { return nil }
+        let campi = decodificaCampi(riga)
+        if tipo == tipoCoppia {
+            guard let s = campi[chiaveSegreto].flatMap({ Data(base64Encoded: $0) }), s.count == 32 else { return nil }
+            return .coppia(segreto: s)
+        }
+        guard let trasmissione = Trasmissione(campi: campi) else { return nil }
         let audio = messaggio.subdata(in: messaggio.startIndex + fineTesto ..< messaggio.endIndex)
-        return (trasmissione, audio)
+        return .trasmissione(trasmissione, audio: audio)
     }
 
     // Stessa codifica dei campi TALKY1 (percent-encoding, "|" fra i campi).

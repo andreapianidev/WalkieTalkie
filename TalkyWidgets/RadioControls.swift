@@ -66,6 +66,9 @@ struct FavoriteRadioControl: ControlWidget {
 
     var body: some ControlWidgetConfiguration {
         StaticControlConfiguration(kind: RadioShelf.favoriteControlKind, provider: Favorite()) { value in
+            // Un bottone solo: ControlWidgetTemplateBuilder non ammette if, quindi
+            // l'azione non puo' cambiare col Pro. Cambia l'etichetta, e senza Pro
+            // l'intent porta avanti l'app sulla paywall (PresetIntents+App).
             ControlWidgetButton(action: PlayFavoriteRadioIntent()) {
                 if value.hasPro {
                     Label(value.name ?? String(localized: "w_fav_control_name"), systemImage: "radio")

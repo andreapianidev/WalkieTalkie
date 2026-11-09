@@ -21,6 +21,7 @@ final class LocalNetworkGuard: ObservableObject {
     private static let policyDenied: DNSServiceErrorType = -65570
     private var browser: NWBrowser?
     private var foregroundObserver: NSObjectProtocol?
+    private var activeObserver: NSObjectProtocol?
 
     private init() {
         // Chi va in Impostazioni ad accendere il permesso torna all'app: la
@@ -41,7 +42,7 @@ final class LocalNetworkGuard: ObservableObject {
             case .waiting(let error), .failed(let error):
                 guard case .dns(let code) = error, code == Self.policyDenied else { return }
                 self?.isDenied = true
-                Funnel.once(Funnel.localNetworkDenied)
+                self?.noteDenied()
             case .ready:
                 self?.isDenied = false
             default:
@@ -59,6 +60,29 @@ final class LocalNetworkGuard: ObservableObject {
         }
         browser.start(queue: .main)
         self.browser = browser
+    }
+
+    /// Il diniego va a Firebase solo a app attiva: mentre il prompt Rete
+    /// locale e' a schermo l'app e' inattiva, e su alcune versioni di iOS il
+    /// browser segnala PolicyDenied anche li', prima di qualunque risposta.
+    /// In quel caso si aspetta il rientro e si guarda se e' ancora negato.
+    private func noteDenied() {
+        guard UIApplication.shared.applicationState == .active else {
+            guard activeObserver == nil else { return }
+            activeObserver = NotificationCenter.default.addObserver(
+                forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main
+            ) { [weak self] _ in
+                guard let self else { return }
+                if let observer = self.activeObserver { NotificationCenter.default.removeObserver(observer) }
+                self.activeObserver = nil
+                // Il browser passa a pronto qualche istante dopo il "Consenti".
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+                    if self?.isDenied == true { Funnel.once(Funnel.localNetworkDenied) }
+                }
+            }
+            return
+        }
+        Funnel.once(Funnel.localNetworkDenied)
     }
 
     func recheck() {

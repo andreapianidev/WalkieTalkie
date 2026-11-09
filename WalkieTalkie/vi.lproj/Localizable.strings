@@ -629,3 +629,12 @@
 "whats_new_widgets" = "Tiện ích mới cho Màn hình chính và điều khiển mới.";
 "whats_new_pairing" = "Trợ giúp kết nối: nếu điện thoại kia không hiện ra, Talky cho bạn biết cần kiểm tra gì và cách mời họ.";
 "whats_new_try" = "Thử nói trên POC";
+
+/* Onboarding: un solo permesso, il microfono */
+"onboarding_mic_description" = "Cần để nói qua bộ đàm. CB trực tiếp và radio vẫn dùng được khi không có nó.";
+/* Tasti dei widget radio: i titoli servono anche nel bundle dell'app, che esegue gli intent */
+"w_intent_play" = "Phát đài";
+"w_intent_stop" = "Dừng radio";
+"w_intent_station" = "Đài";
+"w_fav_control_name" = "Radio yêu thích của tôi";
+"mumble_report_mail" = "Thêm chi tiết qua email";

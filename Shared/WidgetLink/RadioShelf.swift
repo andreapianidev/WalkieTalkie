@@ -50,6 +50,7 @@ nonisolated enum RadioShelf {
     private static let recentsKey = "shelf_presets_are_recents"
     private static let onAirKey = "shelf_on_air"
     private static let channelKey = "shelf_walkie_channel"
+    private static let proKey = "shelf_pro"
 
     private static var store: UserDefaults { UserDefaults(suiteName: group) ?? .standard }
 
@@ -68,6 +69,10 @@ nonisolated enum RadioShelf {
     /// Nome del canale privato del walkie; nil quando si e' sul canale pubblico.
     static var walkieChannel: String? { store.string(forKey: channelKey) }
 
+    /// Talky Pro come lo vede l'app (in Debug anche la scelta Free/Pro
+    /// dell'avvio). Nil finche' l'app non l'ha mai scritto.
+    static var appSaysPro: Bool? { store.object(forKey: proKey) as? Bool }
+
     // MARK: scrittura, dall'app
 
     static func savePresets(_ cards: [PresetCard], recents: Bool) {
@@ -80,10 +85,29 @@ nonisolated enum RadioShelf {
     }
 
     static func saveOnAir(_ card: OnAirCard?) {
-        if write(card, onAirKey) {
-            WidgetCenter.shared.reloadTimelines(ofKind: onAirKind)
+        let before = onAir
+        guard write(card, onAirKey) else { return }
+        WidgetCenter.shared.reloadTimelines(ofKind: onAirKind)
+        // "Le mie radio" del brano in onda non mostra niente: cambia solo se
+        // cambia la stazione che suona, non a ogni titolo nuovo.
+        if before?.station.id != card?.station.id || before?.playing != card?.playing {
             WidgetCenter.shared.reloadTimelines(ofKind: presetsKind)
         }
+    }
+
+    /// Comprato, scaduto o (in Debug) scelto all'avvio: lucchetti e griglie
+    /// cambiano in tutti i widget, quindi si ricaricano tutti. Succede di rado.
+    static func savePro(_ pro: Bool) {
+        guard appSaysPro != pro else { return }
+        store.set(pro, forKey: proKey)
+        reloadEverything()
+    }
+
+    /// Per quando il widget mostra uno stato che l'app ha appena smentito
+    /// (un play su una stazione che per l'app e' chiusa).
+    static func reloadEverything() {
+        WidgetCenter.shared.reloadAllTimelines()
+        reloadControl(favoriteControlKind)
     }
 
     static func saveWalkieChannel(_ name: String?) {

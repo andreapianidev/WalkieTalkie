@@ -71,6 +71,10 @@ final class TalkyCrossPlatformManager: NSObject, ObservableObject {
         var pcm16 = Data()
     }
     private var inArrivo: [ObjectIdentifier: InArrivo] = [:]
+    /// Canale dichiarato nell'HELLO di ogni peer. Si manda e si ritrasmette solo
+    /// a chi e' sul nostro canale: una connessione rimasta da prima di un cambio
+    /// porterebbe la voce di una stanza privata a chi non ne fa parte.
+    private var canalePerPeer: [String: String] = [:]
 
     /// Un messaggio intero arrivato da TALKY1 con ancora tratte da fare:
     /// MultipeerManager lo ritrasmette sugli altri peer, di tutti e due i
@@ -100,25 +104,49 @@ final class TalkyCrossPlatformManager: NSObject, ObservableObject {
 
     func stop() {
         queue.async { [weak self] in
-            guard let self else { return }
-            self.listener?.cancel()
-            self.listener = nil
-            // NetService e browser vivono sul main run loop: si fermano li'.
-            let service = self.netService
-            let browser = self.browser
-            self.netService = nil
-            self.browser = nil
-            DispatchQueue.main.async {
-                service?.stop()
-                browser?.stop()
-                self.resolvingServices.removeAll()
-            }
-            self.connections.values.joined().forEach { $0.cancel() }
-            self.connections.removeAll()
-            self.publishConnectionCount()
-            self.started = false
-            self.setStatus("Cross-platform stopped")
+            self?.ferma()
+            self?.setStatus("Cross-platform stopped")
         }
+    }
+
+    /// Dopo un cambio di canale: le connessioni del canale vecchio si chiudono,
+    /// il TXT Bonjour si ripubblica con il canale nuovo e la ricerca riparte da
+    /// capo, cosi' chi era gia' sul canale nuovo viene trovato e chiamato.
+    func riavvia() {
+        queue.async { [weak self] in
+            guard let self, self.started else { return }
+            self.ferma()
+            self.started = true
+            self.startListener()
+            self.startBrowsing()
+        }
+    }
+
+    /// Su `queue`.
+    private func ferma() {
+        listener?.cancel()
+        listener = nil
+        // NetService e browser vivono sul main run loop: si fermano li'.
+        let service = netService
+        let browser = browser
+        netService = nil
+        self.browser = nil
+        DispatchQueue.main.async {
+            service?.stop()
+            browser?.stop()
+            self.resolvingServices.removeAll()
+            self.serviceNameToPeerID.removeAll()
+            self.peers.removeAll()
+        }
+        let tutte = connections.values.joined()
+        for connessione in tutte {
+            abbandonaInArrivo(connessione)
+        }
+        connections.removeAll()
+        canalePerPeer.removeAll()
+        tutte.forEach { $0.cancel() }
+        publishConnectionCount()
+        started = false
     }
 
     /// Manda un messaggio audio ai peer TALKY1 indicati (uid), tutti se `a` e' nil.
@@ -127,7 +155,10 @@ final class TalkyCrossPlatformManager: NSObject, ObservableObject {
     func sendAudio(floatPCM data: Data, trasmissione: Trasmissione, a destinatari: Set<String>? = nil) {
         queue.async { [weak self] in
             guard let self else { return }
-            let scelte = self.connections.filter { destinatari?.contains($0.key) ?? true }
+            let canale = self.currentChannelID
+            let scelte = self.connections.filter {
+                (destinatari?.contains($0.key) ?? true) && self.canalePerPeer[$0.key] == canale
+            }
             guard !scelte.isEmpty else { return }
 
             var pcm16 = self.convertFloat32ToPCM16LE(data)
@@ -371,6 +402,7 @@ final class TalkyCrossPlatformManager: NSObject, ObservableObject {
 
         let chiave = ObjectIdentifier(connection)
         if inArrivo[chiave]?.doppione == true { return }
+        guard let uid = peerUID(of: connection), canalePerPeer[uid] == currentChannelID else { return }
 
         let floatPCM = convertPCM16LEToFloat32(payload)
         guard !floatPCM.isEmpty else { return }
@@ -389,13 +421,24 @@ final class TalkyCrossPlatformManager: NSObject, ObservableObject {
     /// tratte da fare, lo passa al ponte. Su `queue`.
     private func concludi(_ connection: NWConnection) {
         guard let finito = inArrivo.removeValue(forKey: ObjectIdentifier(connection)),
-              let trasmissione = finito.trasmissione,
-              !finito.doppione, trasmissione.ttl > 1, !finito.pcm16.isEmpty else { return }
+              let trasmissione = finito.trasmissione, !finito.doppione else { return }
+        // Da qui le altre copie sono doppioni: prima no, perche' se questa si
+        // fosse interrotta una copia intera da un ponte doveva ancora passare.
+        Ponte.shared.completa(trasmissione.id)
+        guard trasmissione.ttl > 1, !finito.pcm16.isEmpty,
+              let da = finito.peerUID, canalePerPeer[da] == currentChannelID else { return }
         let audio = convertPCM16LEToFloat32(finito.pcm16)
-        let da = finito.peerUID
         DispatchQueue.main.async { [weak self] in
             self?.daInoltrare?(trasmissione, audio, da)
         }
+    }
+
+    /// Una connessione si chiude con un messaggio a meta': non lo si segna come
+    /// arrivato, cosi' una copia intera da un altro ponte si suona. Su `queue`.
+    private func abbandonaInArrivo(_ connection: NWConnection) {
+        guard let rimasto = inArrivo.removeValue(forKey: ObjectIdentifier(connection)),
+              let trasmissione = rimasto.trasmissione, !rimasto.doppione else { return }
+        Ponte.shared.abbandona(trasmissione.id)
     }
 
     private func peerUID(of connection: NWConnection) -> String? {
@@ -412,6 +455,12 @@ final class TalkyCrossPlatformManager: NSObject, ObservableObject {
                 port: 0,
                 channel: message.fields["channel"] ?? Constant.defaultChannel
             )
+            guard peer.channel == currentChannelID else {
+                logger.logNetworkInfo("Cross-platform HELLO da \(peer.name) su un altro canale: chiusa")
+                connection.cancel()
+                return
+            }
+            canalePerPeer[peer.id] = peer.channel
             var vive = connections[peer.id] ?? []
             if !vive.contains(where: { $0 === connection }) { vive.append(connection) }
             connections[peer.id] = vive
@@ -425,7 +474,7 @@ final class TalkyCrossPlatformManager: NSObject, ObservableObject {
             // Un messaggio rimasto aperto (flusso senza AUDIO_END) si chiude qui.
             if inArrivo[ObjectIdentifier(connection)] != nil { concludi(connection) }
             let trasmissione = Trasmissione(campi: message.fields)
-            let doppione = trasmissione.map { !Ponte.shared.primaVolta($0.id) } ?? false
+            let doppione = trasmissione.map { !Ponte.shared.inizia($0.id) } ?? false
             inArrivo[ObjectIdentifier(connection)] = InArrivo(
                 trasmissione: trasmissione,
                 peerUID: peerUID(of: connection),
@@ -482,12 +531,13 @@ final class TalkyCrossPlatformManager: NSObject, ObservableObject {
     }
 
     private func remove(connection: NWConnection) {
-        inArrivo.removeValue(forKey: ObjectIdentifier(connection))
+        abbandonaInArrivo(connection)
         var removedIDs: [String] = []
         for (id, vive) in connections where vive.contains(where: { $0 === connection }) {
             let rimaste = vive.filter { $0 !== connection }
             if rimaste.isEmpty {
                 connections.removeValue(forKey: id)
+                canalePerPeer.removeValue(forKey: id)
                 removedIDs.append(id)
             } else {
                 connections[id] = rimaste

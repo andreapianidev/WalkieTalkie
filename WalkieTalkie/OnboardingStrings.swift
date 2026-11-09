@@ -60,7 +60,7 @@ struct OnboardingStrings {
 
     // MARK: - Permissions sheet
     static let micTitle = NSLocalizedString("onboarding_mic_title", comment: "Permissions sheet title, microphone only")
-    static let permissionsDescription = NSLocalizedString("onboarding_permissions_description", comment: "Permissions description")
+    static let permissionsDescription = NSLocalizedString("onboarding_mic_description", comment: "Why the microphone: the walkie; live CB and radio work without it")
     static let microphonePermission = NSLocalizedString("onboarding_microphone_permission", comment: "Microphone permission label")
     static let microphonePermissionWhy = NSLocalizedString("onboarding_permission_mic_why", comment: "Why microphone is needed")
     static let openSettingsLink = NSLocalizedString("onboarding_permission_open_settings", comment: "Open iOS Settings link")

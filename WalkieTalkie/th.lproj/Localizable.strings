@@ -630,3 +630,12 @@
 "whats_new_widgets" = "วิดเจ็ตใหม่สำหรับหน้าจอโฮมและตัวควบคุมใหม่";
 "whats_new_pairing" = "ช่วยเชื่อมต่อ: ถ้าไม่เห็นโทรศัพท์อีกเครื่อง Talky จะบอกว่าต้องตรวจอะไรและเชิญอย่างไร";
 "whats_new_try" = "ลองพูดใน POC";
+
+/* Onboarding: un solo permesso, il microfono */
+"onboarding_mic_description" = "ใช้สำหรับพูดผ่านวอล์กกี้ ส่วน CB สดและวิทยุใช้ได้แม้ไม่อนุญาต";
+/* Tasti dei widget radio: i titoli servono anche nel bundle dell'app, che esegue gli intent */
+"w_intent_play" = "เล่นสถานี";
+"w_intent_stop" = "หยุดวิทยุ";
+"w_intent_station" = "สถานี";
+"w_fav_control_name" = "วิทยุโปรดของฉัน";
+"mumble_report_mail" = "เพิ่มรายละเอียดทางอีเมล";

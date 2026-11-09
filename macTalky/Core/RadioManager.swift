@@ -8,6 +8,7 @@ import Foundation
 import AVFoundation
 import Combine
 import MediaPlayer
+import AppKit
 import os.log
 
 /// Qualità nominale dello stream — derivata dall'URL.
@@ -616,6 +617,14 @@ class RadioManager: NSObject, ObservableObject {
         // Un avvio nuovo non suona niente: se l'app era stata chiusa mentre
         // suonava, il widget "In onda" smette di dirlo.
         publishToWidgets()
+        // Chiusa con Cmd-Q mentre suona: senza questo il widget direbbe IN
+        // ONDA fino al lancio successivo.
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(appWillTerminate),
+            name: NSApplication.willTerminateNotification,
+            object: nil
+        )
     }
 
     private func loadPersistedState() {
@@ -1139,7 +1148,11 @@ extension RadioManager {
     /// widget e la stazione del controllo "La mia radio preferita".
     var presetStations: [RadioStation] {
         let rank = Dictionary(recentStationIds.enumerated().map { ($1, $0) }, uniquingKeysWith: min)
-        return favoriteStations.sorted {
+        // Dal catalogo intero e non da `favoriteStations`, che salta le
+        // stazioni a riposo: una preferita che ha dato errore resta sul widget,
+        // e chi la tocca la riprova.
+        let favorites = favoriteStationIds.compactMap { id in catalog.first { $0.id == id } }
+        return favorites.sorted {
             (rank[$0.id] ?? .max, $0.name) < (rank[$1.id] ?? .max, $1.name)
         }
     }
@@ -1159,6 +1172,12 @@ extension RadioManager {
                       playing: currentStation != nil && isPlaying)
         }
         RadioShelf.saveOnAir(onAir)
+    }
+
+    /// L'app sta per chiudersi: la stazione resta sul widget, ma spenta.
+    @objc fileprivate func appWillTerminate() {
+        guard let station = currentStation else { return }
+        RadioShelf.saveOnAir(OnAirCard(station: card(station), title: nil, playing: false))
     }
 
     private func card(_ station: RadioStation) -> PresetCard {

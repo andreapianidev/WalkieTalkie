@@ -630,3 +630,12 @@
 "whats_new_widgets" = "홈 화면용 새 위젯과 새 제어 항목.";
 "whats_new_pairing" = "연결 도움말: 상대 휴대폰이 보이지 않으면 Talky가 확인할 것과 초대하는 방법을 알려줍니다.";
 "whats_new_try" = "POC에서 말해보기";
+
+/* Onboarding: un solo permesso, il microfono */
+"onboarding_mic_description" = "무전기로 말할 때 필요합니다. CB 실시간 청취와 라디오는 없어도 됩니다.";
+/* Tasti dei widget radio: i titoli servono anche nel bundle dell'app, che esegue gli intent */
+"w_intent_play" = "방송국 재생";
+"w_intent_stop" = "라디오 정지";
+"w_intent_station" = "방송국";
+"w_fav_control_name" = "즐겨 찾는 라디오";
+"mumble_report_mail" = "이메일로 자세히 알리기";

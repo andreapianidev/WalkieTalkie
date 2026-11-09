@@ -629,3 +629,12 @@
 "whats_new_widgets" = "Widget baru untuk Layar Utama dan kontrol baru.";
 "whats_new_pairing" = "Bantuan koneksi: kalau ponsel satunya tidak muncul, Talky memberi tahu apa yang perlu diperiksa dan cara mengundangnya.";
 "whats_new_try" = "Coba bicara di POC";
+
+/* Onboarding: un solo permesso, il microfono */
+"onboarding_mic_description" = "Diperlukan untuk bicara lewat walkie. CB langsung dan radio tetap berfungsi tanpanya.";
+/* Tasti dei widget radio: i titoli servono anche nel bundle dell'app, che esegue gli intent */
+"w_intent_play" = "Putar stasiun";
+"w_intent_stop" = "Hentikan radio";
+"w_intent_station" = "Stasiun";
+"w_fav_control_name" = "Radio favoritku";
+"mumble_report_mail" = "Tambahkan detail lewat email";

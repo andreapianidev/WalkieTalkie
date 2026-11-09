@@ -835,8 +835,9 @@ struct PermissionsView: View {
         // Chi installa adesso ha appena visto tutto: le novita' della versione
         // sono per chi aggiorna.
         WhatsNew.markSeen()
+        // La fine dell'onboarding la registra gia' WalkieTalkieApp
+        // (first_onboarding_complete); qui solo la strada scelta.
         Funnel.log(Funnel.onboardingPath, ["path": path.rawValue])
-        Funnel.once(Funnel.onboardingCompleted, ["path": path.rawValue])
         isOnboardingComplete = true
         dismiss()
     }

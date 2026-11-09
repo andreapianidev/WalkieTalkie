@@ -35,11 +35,17 @@ extension PlayFavoriteRadioIntent {
     @MainActor
     func perform() async throws -> some IntentResult {
         guard UserDefaults.standard.bool(forKey: "fastboot_isProUser") else {
-            // Prima di iOS 26 un controllo non puo' portare avanti l'app:
-            // il controllo mostra gia' il lucchetto, e il tocco non fa niente.
+            // Senza Pro: l'app viene avanti sulla paywall. Se il controllo
+            // mostrava ancora la radio, era indietro sullo stato Pro e si ricarica.
+            RadioShelf.reloadEverything()
+            let openPaywall = { @MainActor in
+                if let pro = URL(string: "talky://pro") { LiveActivityDeepLink.handle(pro) }
+            }
             if #available(iOS 26.0, *) {
                 try await continueInForeground(alwaysConfirm: false)
-                if let pro = URL(string: "talky://pro") { LiveActivityDeepLink.handle(pro) }
+                openPaywall()
+            } else {
+                throw needsToContinueInForegroundError(continuation: openPaywall)
             }
             return .result()
         }
@@ -48,3 +54,9 @@ extension PlayFavoriteRadioIntent {
         return .result()
     }
 }
+
+// Prima di iOS 26 l'unico modo di portare avanti l'app da un intent: serve al
+// tocco senza Pro, che deve arrivare alla paywall invece di non fare niente.
+// Solo qui, nell'app: alle estensioni il protocollo non e' concesso.
+@available(iOS 17.0, *)
+extension PlayFavoriteRadioIntent: ForegroundContinuableIntent {}

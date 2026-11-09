@@ -34,7 +34,9 @@ extension PlayFavoriteRadioIntent {
     func perform() async throws -> some IntentResult {
         guard UserDefaults.standard.bool(forKey: "fastboot_isProUser") else {
             // Senza Pro si porta avanti la console e si apre la paywall,
-            // che ContentView mostra per ogni talky:// che non riconosce.
+            // che ContentView mostra per ogni talky:// che non riconosce. Se il
+            // controllo mostrava ancora la radio, si ricarica.
+            RadioShelf.reloadEverything()
             try await continueInForeground(alwaysConfirm: false)
             if let pro = URL(string: "talky://pro") { NSWorkspace.shared.open(pro) }
             return .result()

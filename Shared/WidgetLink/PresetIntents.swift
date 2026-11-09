@@ -49,3 +49,14 @@ struct PlayFavoriteRadioIntent: AudioPlaybackIntent {
 
     init() {}
 }
+
+#if os(iOS)
+// Anche LiveActivityIntent: con la sola AudioPlaybackIntent l'app lanciata in
+// background suona ma non puo' avviare la Live Activity, e la radio partita
+// dal widget restava senza Dynamic Island.
+@available(iOS 17.0, *)
+extension PlayPresetIntent: LiveActivityIntent {}
+
+@available(iOS 17.0, *)
+extension PlayFavoriteRadioIntent: LiveActivityIntent {}
+#endif

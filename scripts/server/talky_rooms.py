@@ -6,44 +6,68 @@
 # Chi entra in Mumble senza registrarsi non puo' mettere un codice a un canale,
 # quindi lo fa questo processo, collegato come SuperUser:
 #   - all'avvio scrive le regole del canale radice (si entra, non si parla,
-#     non si scrive, non si creano canali) e del canale "Talky" dove sta lui;
-#   - Talky gli manda in privato "room <nome> <token>": se la stanza non c'e'
-#     la crea, con @all fuori e il gruppo #<token> dentro;
-#   - le stanze vuote da piu' di 24 ore le cancella;
+#     non si scrive, non si ascolta a distanza, non si creano canali) e del
+#     canale "Talky" dove sta lui; le stanze che non conosce o con regole
+#     diverse da quelle di adesso le cancella;
+#   - Talky gli manda in privato "room <token>": il custode sceglie lui un nome
+#     a caso per il canale, ci mette @all fuori e il gruppo #<token> dentro,
+#     controlla che il server le abbia davvero applicate e solo allora risponde
+#     "ok <nome>". Il nome non si ricava dal codice, quindi chi vede l'albero
+#     dei canali non ha niente da provare a indovinare;
+#   - le stanze vuote da piu' di 24 ore le toglie dal server, ma ne tiene
+#     l'impronta: chi torna con lo stesso codice ritrova lo stesso nome e le
+#     notifiche Push to Talk gia' registrate;
 #   - Push to Talk: un iPhone Pro gli lascia il gettone APNs della stanza
 #     ("ptt ..."), e quando qualcuno comincia a parlare ("talk ...") manda
 #     la notifica pushtotalk a chi della stanza non e' collegato adesso,
 #     cosi' iOS sveglia Talky anche chiusa e mostra chi parla.
-# Il token arriva solo a lui (messaggio a una sessione), mai in un canale.
+# Il token arriva solo a lui (messaggio a una sessione), mai in un canale, e
+# nello stato si salva solo la sua impronta.
 #
 # Solo libreria standard. La password di SuperUser arriva dall'ambiente
 # (TALKY_MUMBLE_SUPERUSER_PASSWORD), mai da questo file: il repo e' pubblico.
 
+import collections
 import hashlib
 import json
 import os
-import subprocess
-import threading
 import re
+import secrets
 import socket
 import ssl
 import struct
+import subprocess
 import sys
+import threading
 import time
 
 HOST = os.environ.get("TALKY_MUMBLE_LOCAL_HOST", "127.0.0.1")
 PORT = int(os.environ.get("TALKY_MUMBLE_INTERNAL_PORT", "64738"))
 PASSWORD = os.environ["TALKY_MUMBLE_SUPERUSER_PASSWORD"]
 STATE = os.environ.get("TALKY_ROOMS_STATE", "/var/lib/talky-rooms/rooms.json")
+STATE_VERSION = 2
 IDLE_SECONDS = 24 * 3600
+FORGET_SECONDS = 30 * 24 * 3600
 HOME = "Talky"
 ROOM_NAME = re.compile(r"^room-[0-9a-f]{16}$")
 TOKEN = re.compile(r"^[0-9a-f]{32}$")
 PUSH_TOKEN = re.compile(r"^[0-9a-f]{32,200}$")
-NICK = re.compile(r"^[\w-]{1,24}$")
+# Nomi Unicode come li accetta il server (deploy_rooms.sh): niente spazi, niente < >.
+NICK = re.compile(r"^[^\s<>]{1,64}$")
 PTT_PER_ROOM = 30
 PTT_TTL = 7 * 24 * 3600
 PTT_GAP = 15
+PENDING_SECONDS = 15
+MAX_ROOMS = 1000
+# Per sessione: chi prova codici a raffica si ferma qui, e un nuovo
+# collegamento costa all'autoban del server.
+ROOM_ASKS_PER_MINUTE = 10
+NEW_ROOMS_PER_HOUR = 5
+OTHER_PER_MINUTE = 40
+# Il server scarta in silenzio i messaggi oltre messagelimit/messageburst
+# (deploy_rooms.sh li mette a 10 e 40): il custode resta sotto.
+SEND_PER_SECOND = 6
+SEND_BURST = 20
 
 # APNs: la chiave del team (RF29RR7SKM, in ~/.secrets), passata da systemd
 # con LoadCredential. Senza chiave le stanze funzionano lo stesso, senza notifiche.
@@ -51,6 +75,13 @@ APNS_KEY = os.environ.get("APNS_KEY_PATH", "")
 APNS_KEY_ID = os.environ.get("APNS_KEY_ID", "")
 APNS_TEAM = os.environ.get("APNS_TEAM_ID", "")
 APNS_TOPIC = "com.Andrea-Piani.WalkieTalkie.voip-ptt"
+# Solo queste risposte vogliono dire "gettone da buttare"; un 400 per un
+# errore di configurazione (BadTopic, InvalidPushType) non cancella niente.
+APNS_DEAD = {"BadDeviceToken", "DeviceTokenNotForTopic", "Unregistered", "ExpiredToken"}
+
+
+def log(*a):
+    print(time.strftime("%Y-%m-%d %H:%M:%S"), *a, flush=True)
 
 
 class Pusher:
@@ -59,7 +90,7 @@ class Pusher:
     def __init__(self):
         self.jwt = None
         self.minted = 0
-        self.dead = []   # gettoni che APNs dice non validi, li toglie il ciclo principale
+        self.dead = collections.deque()   # gettoni che APNs dice non validi, li toglie il ciclo principale
         try:
             import jwt  # python3-jwt
             self.lib = jwt
@@ -85,7 +116,7 @@ class Pusher:
             return
         host = "api.sandbox.push.apple.com" if env == "sandbox" else "api.push.apple.com"
         body = json.dumps({"aps": {}, "activeSpeaker": speaker})
-        cmd = ["curl", "-s", "-o", "/dev/null", "-w", "%{http_code}", "--http2", "-m", "10",
+        cmd = ["curl", "-s", "-o", "-", "-w", "\n%{http_code}", "--http2", "-m", "10",
                "-H", "authorization: bearer " + self.bearer(),
                "-H", "apns-topic: " + APNS_TOPIC, "-H", "apns-push-type: pushtotalk",
                "-H", "apns-priority: 10", "-H", "apns-expiration: 0",
@@ -93,27 +124,34 @@ class Pusher:
 
         def run():
             try:
-                code = subprocess.run(cmd, capture_output=True, text=True, timeout=15).stdout.strip()
+                out = subprocess.run(cmd, capture_output=True, text=True, timeout=15).stdout
             except (OSError, subprocess.SubprocessError):
                 return
-            if code in ("400", "410"):
+            text, _, code = out.rpartition("\n")
+            if code == "200":
+                return
+            try:
+                reason = json.loads(text).get("reason", "") if text.strip() else ""
+            except ValueError:
+                reason = ""
+            if code == "410" or reason in APNS_DEAD:
                 self.dead.append(token)
-            if code != "200":
-                log("apns", code, token[:8])
+            log("apns", code, reason, token[:8])
 
         threading.Thread(target=run, daemon=True).start()
 
+
 # src/ACL.h
 WRITE, TRAVERSE, ENTER, SPEAK = 0x1, 0x2, 0x4, 0x8
-MAKE_CHANNEL, WHISPER, TEXT, MAKE_TEMP = 0x40, 0x100, 0x200, 0x400
+MAKE_CHANNEL, WHISPER, TEXT, MAKE_TEMP, LISTEN = 0x40, 0x100, 0x200, 0x400, 0x800
 REGISTER, SELF_REGISTER = 0x40000, 0x80000
+ROOM_INSIDE = TRAVERSE | ENTER | SPEAK | WHISPER | TEXT | LISTEN
+ROOM_SHUT = ENTER | SPEAK | WHISPER | TEXT | LISTEN | MAKE_CHANNEL | MAKE_TEMP
 
-VERSION, AUTH, PING, REJECT, SYNC = 0, 2, 3, 4, 5
+VERSION, UDP_TUNNEL, AUTH, PING, REJECT, SYNC = 0, 1, 2, 3, 4, 5
 CH_REMOVE, CH_STATE, USER_REMOVE, USER_STATE, TEXT_MSG, ACL = 6, 7, 8, 9, 11, 13
-
-
-def log(*a):
-    print(time.strftime("%Y-%m-%d %H:%M:%S"), *a, flush=True)
+# Messaggi che il server conta nel suo limite (RATELIMIT in Messages.cpp).
+LIMITED = {CH_STATE, USER_STATE, TEXT_MSG, ACL}
 
 
 # --- protobuf a mano, solo quello che serve ---
@@ -160,6 +198,8 @@ def parse(b):
             out.setdefault(f, []).append(rv())
         elif w == 2:
             n = rv()
+            if i + n > len(b):
+                raise ValueError("campo troncato")
             out.setdefault(f, []).append(b[i:i + n])
             i += n
         elif w == 1:
@@ -179,7 +219,32 @@ def first(m, f, default=None):
 
 
 def chan_acl(group, grant, deny, here=True, subs=True):
-    return f_int(1, int(here)) + f_int(2, int(subs)) + f_str(5, group) + f_int(6, grant) + f_int(7, deny)
+    # inherited (campo 3) a 0 esplicito: il server oggi non lo legge, ma il
+    # .proto lo vuole vero per default e un server futuro potrebbe scartarle.
+    return (f_int(1, int(here)) + f_int(2, int(subs)) + f_int(3, 0) + f_str(5, group)
+            + f_int(6, grant) + f_int(7, deny))
+
+
+def sha(token):
+    return hashlib.sha256(token.encode()).hexdigest()
+
+
+def room_rules_ok(m, fingerprint):
+    """Risposta a una richiesta ACL: le regole della stanza ci sono tutte?"""
+    if first(m, 2, 1) != 0:          # inherit_acls: deve essere spento
+        return False
+    shut = inside = False
+    for raw in m.get(4, []):
+        a = parse(raw)
+        if first(a, 3, 1):           # ereditata da un genitore
+            continue
+        group = first(a, 5, b"").decode(errors="replace")
+        grant, deny = first(a, 6, 0), first(a, 7, 0)
+        if group == "all" and deny & ROOM_SHUT == ROOM_SHUT and not grant & ROOM_SHUT:
+            shut = True
+        elif group.startswith("#") and sha(group[1:]) == fingerprint and grant & ROOM_INSIDE == ROOM_INSIDE:
+            inside = shut   # vale solo se viene dopo la chiusura
+    return shut and inside
 
 
 class Rooms:
@@ -190,18 +255,27 @@ class Rooms:
         self.channels = {}   # id -> {"name", "parent"}
         self.users = {}      # session -> {"ch": canale, "name": nome}
         self.home = None
+        self.rooms = {}      # impronta del token -> {"name", "seen", "ptt"}
         data = self.load()
-        # Prima del 9/11 sera il file era solo {nome: ultimo uso}.
-        if "seen" in data:
-            self.last_seen = data.get("seen", {})
-            self.tokens = data.get("tok", {})
-            self.ptt = data.get("ptt", {})
+        if data.get("v") == STATE_VERSION:
+            self.rooms = data.get("rooms", {})
         else:
-            self.last_seen, self.tokens, self.ptt = data, {}, {}
+            # Stato di prima del 9/11 sera: stanze col nome ricavato dal codice
+            # e senza Listen negato. Si ripartono da zero, quelle sul server
+            # le toglie il primo collegamento.
+            log("stato vecchio, stanze dimenticate:", len(data.get("seen", data)))
+            if data:
+                self.save()
         self.pusher = Pusher()
         self.pushed = {}     # gettone -> ultima notifica
-        self.pending = {}    # nome -> token, in attesa del ChannelState
+        self.pending = {}    # impronta -> {"name", "token", "waiters", "ts", "cid", "checks"}
+        self.asks = collections.defaultdict(collections.deque)   # (sessione, tipo) -> istanti
+        self.outq = collections.deque()
+        self.allowance = SEND_BURST
+        self.last_fill = time.time()
+        self.checking = {}   # canale -> impronta, controlli delle stanze gia' note
         self.synced = False
+        self.dirty = False
 
     def load(self):
         try:
@@ -214,11 +288,32 @@ class Rooms:
         os.makedirs(os.path.dirname(STATE), exist_ok=True)
         tmp = STATE + ".tmp"
         with open(tmp, "w") as fh:
-            json.dump({"seen": self.last_seen, "tok": self.tokens, "ptt": self.ptt}, fh)
+            json.dump({"v": STATE_VERSION, "rooms": self.rooms}, fh)
         os.replace(tmp, STATE)
+        self.dirty = False
+
+    # --- invio ---
+
+    def send_now(self, kind, body):
+        self.sock.sendall(struct.pack(">HI", kind, len(body)) + body)
 
     def send(self, kind, body):
-        self.sock.sendall(struct.pack(">HI", kind, len(body)) + body)
+        if kind in LIMITED:
+            self.outq.append((kind, body))
+            self.flush()
+        else:
+            self.send_now(kind, body)
+
+    def flush(self):
+        now = time.time()
+        self.allowance = min(SEND_BURST, self.allowance + (now - self.last_fill) * SEND_PER_SECOND)
+        self.last_fill = now
+        while self.outq and self.allowance >= 1:
+            self.allowance -= 1
+            self.send_now(*self.outq.popleft())
+
+    def tell(self, session, text):
+        self.send(TEXT_MSG, f_int(2, session) + f_str(5, text))
 
     def connect(self):
         ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
@@ -226,10 +321,10 @@ class Rooms:
         ctx.verify_mode = ssl.CERT_NONE
         raw = socket.create_connection((HOST, PORT), timeout=10)
         self.sock = ctx.wrap_socket(raw)
-        self.sock.settimeout(1.0)
+        self.sock.settimeout(0.2)
         v = (1 << 16) | (5 << 8)
-        self.send(VERSION, f_int(1, v) + f_str(2, "talky-rooms") + f_str(3, "Linux") + f_int(5, (1 << 48) | (5 << 32)))
-        self.send(AUTH, f_str(1, "SuperUser") + f_str(2, PASSWORD) + f_int(5, 1))
+        self.send_now(VERSION, f_int(1, v) + f_str(2, "talky-rooms") + f_str(3, "Linux") + f_int(5, (1 << 48) | (5 << 32)))
+        self.send_now(AUTH, f_str(1, "SuperUser") + f_str(2, PASSWORD) + f_int(5, 1))
 
     def frames(self):
         try:
@@ -252,20 +347,23 @@ class Rooms:
 
     def write_root_rules(self):
         # Nel canale radice si entra e si passa, ma non si parla, non si
-        # scrive e non si creano canali: niente di pubblico da moderare.
+        # scrive, non si ascolta a distanza e non si creano canali.
         acls = chan_acl("all", TRAVERSE | ENTER,
-                        SPEAK | WHISPER | TEXT | MAKE_CHANNEL | MAKE_TEMP | REGISTER | SELF_REGISTER)
+                        SPEAK | WHISPER | TEXT | LISTEN | MAKE_CHANNEL | MAKE_TEMP | REGISTER | SELF_REGISTER)
         self.send(ACL, f_int(1, 0) + f_int(2, 0) + f_bytes(4, acls))
 
     def write_home_rules(self, cid):
         # Il canale del custode: gli si puo' scrivere in privato, non ci si entra.
-        acls = chan_acl("all", TRAVERSE | TEXT, ENTER | SPEAK | WHISPER)
+        acls = chan_acl("all", TRAVERSE | TEXT, ENTER | SPEAK | WHISPER | LISTEN)
         self.send(ACL, f_int(1, cid) + f_int(2, 0) + f_bytes(4, acls))
 
     def write_room_rules(self, cid, token):
-        closed = chan_acl("all", TRAVERSE, ENTER | SPEAK | WHISPER | TEXT | MAKE_CHANNEL | MAKE_TEMP)
-        inside = chan_acl("#" + token, TRAVERSE | ENTER | SPEAK | WHISPER | TEXT, 0)
+        closed = chan_acl("all", TRAVERSE, ROOM_SHUT)
+        inside = chan_acl("#" + token, ROOM_INSIDE, 0)
         self.send(ACL, f_int(1, cid) + f_int(2, 0) + f_bytes(4, closed) + f_bytes(4, inside))
+
+    def ask_rules(self, cid):
+        self.send(ACL, f_int(1, cid) + f_int(5, 1))
 
     def by_name(self, name):
         for cid, c in self.channels.items():
@@ -273,14 +371,23 @@ class Rooms:
                 return cid
         return None
 
+    def room_of_name(self, name):
+        for fp, r in self.rooms.items():
+            if r["name"] == name:
+                return fp
+        return None
+
     def create(self, name):
         # ChannelState: parent 2, name 3; senza channel_id vuol dire "crea".
         self.send(CH_STATE, f_int(2, 0) + f_str(3, name))
 
+    def remove(self, cid):
+        self.send_now(CH_REMOVE, f_int(1, cid))
+
     # --- messaggi ---
 
     def on_frame(self, kind, body):
-        if kind == PING:
+        if kind in (PING, UDP_TUNNEL):
             return
         m = parse(body)
         if kind == REJECT:
@@ -294,7 +401,8 @@ class Rooms:
                 self.create(HOME)
             else:
                 self.enter_home()
-            log("collegato, sessione", self.session, "canali", len(self.channels))
+            self.audit_rooms()
+            log("collegato, sessione", self.session, "canali", len(self.channels), "stanze", len(self.rooms))
         elif kind == CH_STATE:
             cid = first(m, 1)
             if cid is None:
@@ -307,80 +415,171 @@ class Rooms:
             if self.synced and c["name"] == HOME and self.home is None:
                 self.home = cid
                 self.enter_home()
-            token = self.pending.pop(c["name"], None)
-            if token:
-                self.write_room_rules(cid, token)
-                self.tokens[c["name"]] = hashlib.sha256(token.encode()).hexdigest()
-                self.last_seen[c["name"]] = time.time()
-                self.save()
-                log("stanza creata", c["name"])
+            for fp, p in self.pending.items():
+                if p["cid"] is None and p["name"] == c["name"] and c["parent"] == 0:
+                    p["cid"] = cid
+                    self.write_room_rules(cid, p["token"])
+                    self.ask_rules(cid)
+                    break
         elif kind == CH_REMOVE:
             self.channels.pop(first(m, 1), None)
         elif kind == USER_STATE:
             s = first(m, 1)
             if s is not None:
                 u = self.users.setdefault(s, {"ch": 0, "name": ""})
-                if 5 in m:
-                    u["ch"] = first(m, 5)
                 if 3 in m:
                     u["name"] = first(m, 3).decode(errors="replace")
+                if 5 in m:
+                    u["ch"] = first(m, 5)
+                    self.touch_channel(u["ch"])
         elif kind == USER_REMOVE:
-            self.users.pop(first(m, 1), None)
+            s = first(m, 1)
+            self.users.pop(s, None)
+            for key in [k for k in self.asks if k[0] == s]:
+                self.asks.pop(key, None)
         elif kind == TEXT_MSG:
             self.on_text(first(m, 1), first(m, 5, b"").decode(errors="replace"))
+        elif kind == ACL:
+            self.on_rules(first(m, 1), m)
 
     def enter_home(self):
         self.write_home_rules(self.home)
         self.send(USER_STATE, f_int(1, self.session) + f_int(5, self.home))
 
-    def on_text(self, actor, text):
-        parts = re.sub(r"<[^>]+>", "", text).strip().split()
-        if len(parts) < 3 or not ROOM_NAME.match(parts[1]) or not TOKEN.match(parts[2]):
-            return
-        if parts[0] == "ptt" and len(parts) == 6:
-            self.on_ptt(*parts[1:])
-            return
-        if parts[0] == "talk" and len(parts) == 4:
-            self.on_talk(*parts[1:])
-            return
-        if parts[0] != "room" or len(parts) != 3:
-            return
-        name, token = parts[1], parts[2]
-        cid = self.by_name(name)
-        # Se esiste gia' non si tocca: vale il token con cui e' nata, e chi
-        # ne manda uno diverso semplicemente non entra.
-        if cid is None and name not in self.pending:
-            self.pending[name] = token
-            self.create(name)
-        if actor is not None:
-            self.send(TEXT_MSG, f_int(2, actor) + f_str(5, "ok " + name))
+    def touch_channel(self, cid):
+        name = self.channels.get(cid, {}).get("name", "")
+        fp = self.room_of_name(name) if ROOM_NAME.match(name) else None
+        if fp:
+            self.rooms[fp]["seen"] = time.time()
+            self.dirty = True
 
-    def token_ok(self, name, token):
-        if self.by_name(name) is None:
+    def audit_rooms(self):
+        # Stanze sul server che lo stato non conosce: nate col protocollo di
+        # prima (nome dal codice, Listen aperto) o da altri. Si tolgono. Le
+        # altre si ricontrollano: se le regole non sono quelle di adesso, via.
+        known = {r["name"]: fp for fp, r in self.rooms.items()}
+        for cid, c in list(self.channels.items()):
+            if c["parent"] != 0 or not ROOM_NAME.match(c["name"]):
+                continue
+            fp = known.get(c["name"])
+            if fp is None:
+                self.remove(cid)
+                log("stanza sconosciuta tolta", c["name"])
+            else:
+                self.checking[cid] = fp
+                self.ask_rules(cid)
+
+    def on_rules(self, cid, m):
+        for fp, p in list(self.pending.items()):
+            if p["cid"] != cid:
+                continue
+            if room_rules_ok(m, fp):
+                old = self.rooms.get(fp, {})
+                self.rooms[fp] = {"name": p["name"], "seen": time.time(), "ptt": old.get("ptt", {})}
+                self.save()
+                for w in p["waiters"]:
+                    self.tell(w, "ok " + p["name"])
+                del self.pending[fp]
+                log("stanza pronta", p["name"])
+            elif p["checks"] < 2:
+                p["checks"] += 1
+                self.write_room_rules(cid, p["token"])
+                self.ask_rules(cid)
+            else:
+                self.remove(cid)
+                for w in p["waiters"]:
+                    self.tell(w, "no")
+                del self.pending[fp]
+                log("regole non applicate, stanza tolta", p["name"])
+            return
+        fp = self.checking.pop(cid, None)
+        if fp and not room_rules_ok(m, fp):
+            name = self.rooms.pop(fp, {}).get("name")
+            self.remove(cid)
+            self.save()
+            log("stanza con regole vecchie tolta", name)
+
+    def allowed(self, actor, kind, limit, window):
+        q = self.asks[(actor, kind)]
+        now = time.time()
+        while q and now - q[0] > window:
+            q.popleft()
+        if len(q) >= limit:
             return False
-        sha = hashlib.sha256(token.encode()).hexdigest()
-        # Stanze nate prima che il custode tenesse l'impronta: vale la prima.
-        return self.tokens.setdefault(name, sha) == sha
+        q.append(now)
+        return True
 
-    def on_ptt(self, name, token, push, env, nick):
+    def on_text(self, actor, text):
+        if actor is None:
+            return
+        parts = re.sub(r"<[^>]+>", "", text).strip().split()
+        if len(parts) < 2 or not TOKEN.match(parts[1]):
+            return
+        verb = parts[0]
+        if verb == "room" and len(parts) == 2:
+            if not self.allowed(actor, "room", ROOM_ASKS_PER_MINUTE, 60):
+                self.tell(actor, "slow")
+                return
+            self.on_room(actor, parts[1])
+            return
+        if not self.allowed(actor, "other", OTHER_PER_MINUTE, 60):
+            return
+        if verb == "ptt" and len(parts) == 5:
+            self.on_ptt(*parts[1:])
+        elif verb == "talk" and len(parts) == 3:
+            self.on_talk(*parts[1:])
+
+    def on_room(self, actor, token):
+        fp = sha(token)
+        if fp in self.pending:
+            self.pending[fp]["waiters"].add(actor)
+            return
+        room = self.rooms.get(fp)
+        if room and self.by_name(room["name"]) is not None:
+            room["seen"] = time.time()
+            self.dirty = True
+            self.tell(actor, "ok " + room["name"])
+            return
+        if room is None:
+            if len(self.rooms) + len(self.pending) >= MAX_ROOMS or \
+                    not self.allowed(actor, "new", NEW_ROOMS_PER_HOUR, 3600):
+                self.tell(actor, "no")
+                return
+            name = "room-" + secrets.token_hex(8)
+            while self.by_name(name) is not None or self.room_of_name(name):
+                name = "room-" + secrets.token_hex(8)
+        else:
+            name = room["name"]   # tolta dallo sweep: torna con lo stesso nome
+        self.pending[fp] = {"name": name, "token": token, "waiters": {actor},
+                            "ts": time.time(), "cid": None, "checks": 0}
+        self.create(name)
+
+    def on_ptt(self, token, push, env, nick):
         if not (PUSH_TOKEN.match(push) and env in ("sandbox", "production") and NICK.match(nick)):
             return
-        if not self.token_ok(name, token):
+        room = self.rooms.get(sha(token))
+        if room is None:
             return
-        room = self.ptt.setdefault(name, {})
-        room[push] = {"env": env, "nick": nick, "ts": time.time()}
-        if len(room) > PTT_PER_ROOM:
-            for old in sorted(room, key=lambda k: room[k]["ts"])[:len(room) - PTT_PER_ROOM]:
-                room.pop(old)
+        ptt = room.setdefault("ptt", {})
+        ptt[push] = {"env": env, "nick": nick, "ts": time.time()}
+        if len(ptt) > PTT_PER_ROOM:
+            for old in sorted(ptt, key=lambda k: ptt[k]["ts"])[:len(ptt) - PTT_PER_ROOM]:
+                ptt.pop(old)
+        room["seen"] = time.time()
         self.save()
 
-    def on_talk(self, name, token, nick):
-        if not NICK.match(nick) or not self.token_ok(name, token):
+    def on_talk(self, token, nick):
+        room = self.rooms.get(sha(token))
+        if room is None or not NICK.match(nick):
             return
-        cid = self.by_name(name)
+        cid = self.by_name(room["name"])
+        if cid is None:
+            return
+        room["seen"] = time.time()
+        self.dirty = True
         here = {u["name"] for u in self.users.values() if u["ch"] == cid}
         now = time.time()
-        for push, info in list(self.ptt.get(name, {}).items()):
+        for push, info in list(room.get("ptt", {}).items()):
             # A chi e' gia' nella stanza la voce arriva da Mumble.
             if info["nick"] == nick or info["nick"] in here:
                 continue
@@ -389,30 +588,46 @@ class Rooms:
             self.pushed[push] = now
             self.pusher.send(push, info["env"], nick)
 
+    def expire_pending(self):
+        now = time.time()
+        for fp, p in list(self.pending.items()):
+            if now - p["ts"] < PENDING_SECONDS:
+                continue
+            if p["cid"] is not None:
+                self.remove(p["cid"])
+            for w in p["waiters"]:
+                self.tell(w, "no")
+            del self.pending[fp]
+            log("stanza non nata in tempo", p["name"])
+
     def sweep(self):
         now = time.time()
-        changed = False
+        dead = set()
+        while self.pusher.dead:
+            dead.add(self.pusher.dead.popleft())
         occupied = {u["ch"] for u in self.users.values()}
-        for room in self.ptt.values():
-            for push in [k for k, v in room.items() if now - v["ts"] > PTT_TTL or k in self.pusher.dead]:
-                room.pop(push)
-                changed = True
-        self.pusher.dead.clear()
-        for cid, c in list(self.channels.items()):
-            name = c["name"]
-            if not ROOM_NAME.match(name) or c["parent"] != 0:
-                continue
-            if cid in occupied:
-                self.last_seen[name] = now
-                changed = True
-            elif now - self.last_seen.setdefault(name, now) > IDLE_SECONDS:
-                self.send(CH_REMOVE, f_int(1, cid))
-                self.last_seen.pop(name, None)
-                self.tokens.pop(name, None)
-                self.ptt.pop(name, None)
-                changed = True
-                log("stanza tolta", name)
-        if changed:
+        on_server = {c["name"]: cid for cid, c in self.channels.items() if c["parent"] == 0}
+        for fp, room in list(self.rooms.items()):
+            ptt = room.setdefault("ptt", {})
+            for push in [k for k, v in ptt.items() if now - v["ts"] > PTT_TTL or k in dead]:
+                ptt.pop(push)
+                self.dirty = True
+            cid = on_server.get(room["name"])
+            if cid is not None and cid in occupied:
+                room["seen"] = now
+                self.dirty = True
+            elif cid is not None and now - room["seen"] > IDLE_SECONDS:
+                # Via dal server, ma l'impronta resta: lo stesso codice
+                # ritrova lo stesso nome e le stesse notifiche.
+                self.remove(cid)
+                self.dirty = True
+                log("stanza vuota tolta dal server", room["name"])
+            elif cid is None and now - room["seen"] > FORGET_SECONDS:
+                del self.rooms[fp]
+                self.dirty = True
+                log("stanza dimenticata", room["name"])
+        self.pushed = {k: v for k, v in self.pushed.items() if now - v < PTT_GAP}
+        if self.dirty:
             self.save()
 
     def run(self):
@@ -420,14 +635,22 @@ class Rooms:
         last_ping = last_sweep = time.time()
         while True:
             for kind, body in self.frames():
-                self.on_frame(kind, body)
+                try:
+                    self.on_frame(kind, body)
+                except ConnectionError:
+                    raise
+                except Exception as e:  # un messaggio storto non fa cadere il custode
+                    log("messaggio %d scartato: %s" % (kind, e))
+            self.flush()
             now = time.time()
             if now - last_ping > 15:
-                self.send(PING, f_int(1, int(now * 1000)))
+                self.send_now(PING, f_int(1, int(now * 1000)))
                 last_ping = now
-            if self.synced and now - last_sweep > 600:
-                self.sweep()
-                last_sweep = now
+            if self.synced:
+                self.expire_pending()
+                if now - last_sweep > 600:
+                    self.sweep()
+                    last_sweep = now
 
 
 if __name__ == "__main__":

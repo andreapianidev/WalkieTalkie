@@ -13,16 +13,13 @@ struct POCTalkControls: View {
     @ObservedObject var live = LiveRadio.shared
     let compact: Bool
     @State private var showRules = false
-    @State private var reported = false
-    /// Il dito e' sul tasto: con Push to Talk il passaggio comincia solo
-    /// quando risponde il sistema, e il gesto non deve chiederlo di continuo.
-    @State private var pressing = false
+    @State private var report: (server: String, reason: String)?
 
     var body: some View {
         VStack(spacing: compact ? 6 : 10) {
             if live.state == .online {
                 if live.canTalk {
-                    talkButton
+                    POCTalkButton(talking: live.isTalking, compact: compact, onPress: pressBegan, onRelease: pressEnded)
                 } else {
                     Label("mumble_listen_only".localized, systemImage: "ear")
                         .font(.caption2)
@@ -37,71 +34,51 @@ struct POCTalkControls: View {
                     }
                     .foregroundColor(.orange)
                 }
-                if let room = live.room {
-                    POCRoomBadge(room: room)
-                } else {
+                HStack(spacing: 14) {
+                    if let room = live.room { POCRoomBadge(room: room) }
                     moderationMenu
                 }
             }
         }
         .sheet(isPresented: $showRules) { POCRulesSheet() }
-        .alert("mumble_report_done".localized, isPresented: $reported) {
+        .alert("mumble_report_done".localized,
+               isPresented: Binding(get: { report != nil }, set: { if !$0 { report = nil } }),
+               presenting: report) { sent in
+            Button("mumble_report_mail".localized) {
+                if let url = MumbleManners.reportMail(server: sent.server, reason: sent.reason) {
+                    UIApplication.shared.open(url)
+                }
+            }
             Button("ok".localized, role: .cancel) {}
         }
     }
 
-    private var talkButton: some View {
-        let size: CGFloat = compact ? 64 : 84
-        return ZStack {
-            Circle()
-                .fill(live.isTalking ? Color.red : Color.black)
-                .frame(width: size, height: size)
-            Circle()
-                .fill(Color.white)
-                .frame(width: size - 12, height: size - 12)
-            Image(systemName: live.isTalking ? "waveform" : "mic.fill")
-                .font(.system(size: compact ? 20 : 26, weight: .bold))
-                .foregroundColor(live.isTalking ? .red : .black)
+    private var throughPushToTalk: Bool { live.room != nil && RoomPushToTalk.shared.isJoined }
+
+    private func pressBegan() {
+        guard MumbleManners.rulesAccepted else {
+            showRules = true
+            return
         }
-        .contentShape(Circle())
-        .gesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { _ in
-                    guard !pressing, !live.isTalking else { return }
-                    guard MumbleManners.rulesAccepted else {
-                        showRules = true
-                        return
-                    }
-                    pressing = true
-                    if live.room != nil, RoomPushToTalk.shared.isJoined {
-                        RoomPushToTalk.shared.beginFromApp()
-                    } else {
-                        live.startTalking()
-                    }
-                }
-                .onEnded { _ in
-                    pressing = false
-                    if live.room != nil, RoomPushToTalk.shared.isJoined {
-                        RoomPushToTalk.shared.endFromApp()
-                    }
-                    live.stopTalking()
-                }
-        )
-        .overlay(alignment: .bottom) {
-            Text((live.isTalking ? "mumble_talking" : "mumble_hold_to_talk").localized)
-                .font(.caption2)
-                .fontWeight(.semibold)
-                .foregroundColor(live.isTalking ? .red : .secondary)
-                .fixedSize()
-                .offset(y: compact ? 16 : 20)
+        guard !live.isTalking else { return }
+        if throughPushToTalk {
+            RoomPushToTalk.shared.beginFromApp()
+        } else {
+            live.startTalking()
         }
-        .padding(.bottom, compact ? 14 : 18)
-        .accessibilityLabel("mumble_hold_to_talk".localized)
-        .accessibilityAddTraits(.isButton)
     }
 
-    /// Sempre raggiungibile mentre si e' in un canale: Apple vuole che chi
-    /// e' disturbato possa silenziare e segnalare senza cercare.
+    /// Anche quando il gesto viene annullato (tasto sparito, scorrimento,
+    /// avviso di sistema, app in background): il microfono non resta acceso.
+    private func pressEnded() {
+        live.stopTalking()
+        RoomPushToTalk.shared.releaseAppPress()
+    }
+
+    /// Sempre raggiungibile mentre si e' in un canale, stanze comprese: Apple
+    /// vuole che chi e' disturbato possa silenziare e segnalare senza cercare.
+    /// Nella stanza, che e' su un server di Talky, la segnalazione di un
+    /// server non c'entra: restano silenzia e regole.
     private var moderationMenu: some View {
         Menu {
             if let talker = live.talker {
@@ -111,13 +88,16 @@ struct POCTalkControls: View {
                     Label(String(format: "mumble_mute_user".localized, talker), systemImage: "speaker.slash")
                 }
             }
-            Section("mumble_report".localized) {
-                ForEach(["abuse", "sexual", "spam"], id: \.self) { reason in
-                    Button(role: .destructive) {
-                        live.reportCurrent(reason: reason)
-                        reported = true
-                    } label: {
-                        Text("mumble_report_reason_\(reason)".localized)
+            if live.room == nil {
+                Section("mumble_report".localized) {
+                    ForEach(["abuse", "sexual", "spam"], id: \.self) { reason in
+                        Button(role: .destructive) {
+                            let server = live.currentPOC?.server.id ?? ""
+                            live.reportCurrent(reason: reason)
+                            report = (server, reason)
+                        } label: {
+                            Text("mumble_report_reason_\(reason)".localized)
+                        }
                     }
                 }
             }
@@ -131,6 +111,69 @@ struct POCTalkControls: View {
                 .font(.caption2)
         }
         .foregroundColor(.secondary)
+    }
+}
+
+/// Il tasto da tenere premuto. Lo stato del dito vive qui e non nella vista
+/// che lo contiene: se il tasto sparisce a meta' pressione si riparte puliti,
+/// e un gesto annullato chiude il passaggio invece di lasciarlo aperto.
+@available(iOS 16.0, *)
+private struct POCTalkButton: View {
+    let talking: Bool
+    let compact: Bool
+    let onPress: () -> Void
+    let onRelease: () -> Void
+    @GestureState private var held = false
+    @State private var pressed = false
+    @Environment(\.scenePhase) private var scenePhase
+
+    var body: some View {
+        let size: CGFloat = compact ? 64 : 84
+        ZStack {
+            Circle()
+                .fill(talking ? Color.red : Color.black)
+                .frame(width: size, height: size)
+            Circle()
+                .fill(Color.white)
+                .frame(width: size - 12, height: size - 12)
+            Image(systemName: talking ? "waveform" : "mic.fill")
+                .font(.system(size: compact ? 20 : 26, weight: .bold))
+                .foregroundColor(talking ? .red : .black)
+        }
+        .contentShape(Circle())
+        // Prima dello scorrimento: lo ScrollView di FitOrScroll non si prende il dito.
+        .highPriorityGesture(
+            DragGesture(minimumDistance: 0).updating($held) { _, state, _ in state = true }
+        )
+        .onChange(of: held) { isHeld in
+            if isHeld {
+                pressed = true
+                onPress()
+            } else {
+                release()
+            }
+        }
+        .onChange(of: scenePhase) { phase in
+            if phase != .active { release() }
+        }
+        .onDisappear(perform: release)
+        .overlay(alignment: .bottom) {
+            Text((talking ? "mumble_talking" : "mumble_hold_to_talk").localized)
+                .font(.caption2)
+                .fontWeight(.semibold)
+                .foregroundColor(talking ? .red : .secondary)
+                .fixedSize()
+                .offset(y: compact ? 16 : 20)
+        }
+        .padding(.bottom, compact ? 14 : 18)
+        .accessibilityLabel("mumble_hold_to_talk".localized)
+        .accessibilityAddTraits(.isButton)
+    }
+
+    private func release() {
+        guard pressed else { return }
+        pressed = false
+        onRelease()
     }
 }
 

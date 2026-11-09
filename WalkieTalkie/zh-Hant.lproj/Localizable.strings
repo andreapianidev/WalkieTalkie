@@ -631,3 +631,12 @@
 "whats_new_widgets" = "適用於主畫面的新小工具和新控制項目。";
 "whats_new_pairing" = "連線協助：如果找不到另一支手機，Talky 會告訴你要檢查什麼以及如何邀請對方。";
 "whats_new_try" = "試試在 POC 上說話";
+
+/* Onboarding: un solo permesso, il microfono */
+"onboarding_mic_description" = "用於在對講機上講話。沒有它，CB 直播和電台也能用。";
+/* Tasti dei widget radio: i titoli servono anche nel bundle dell'app, che esegue gli intent */
+"w_intent_play" = "播放電台";
+"w_intent_stop" = "停止收音機";
+"w_intent_station" = "電台";
+"w_fav_control_name" = "我最愛的電台";
+"mumble_report_mail" = "以郵件補充詳情";

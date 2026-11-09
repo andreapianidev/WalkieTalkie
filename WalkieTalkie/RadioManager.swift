@@ -8,6 +8,7 @@ import Foundation
 import AVFoundation
 import Combine
 import MediaPlayer
+import UIKit
 import os.log
 
 /// Qualità nominale dello stream — derivata dall'URL.
@@ -625,6 +626,14 @@ class RadioManager: NSObject, ObservableObject {
         // Un avvio nuovo non suona niente: se l'app era stata chiusa mentre
         // suonava, il widget "In onda" smette di dirlo.
         publishToWidgets()
+        // Chiusa dal selettore delle app mentre suona: senza questo il widget
+        // direbbe IN ONDA fino al lancio successivo.
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(appWillTerminate),
+            name: UIApplication.willTerminateNotification,
+            object: nil
+        )
     }
 
     private func loadPersistedState() {
@@ -730,9 +739,7 @@ class RadioManager: NSObject, ObservableObject {
         // Il pass a 24 ore guadagnato con un rewarded vale quanto l'abbonamento
         // per QUESTA stazione e per il tempo che gli resta: e' l'unico modo in
         // cui un utente Free puo' passare di qui.
-        if station.isPro
-            && !UserDefaults.standard.bool(forKey: "fastboot_isProUser")
-            && !StationPassManager.shared.isUnlocked(station.id) {
+        if isBehindPaywall(station) {
             logger.logInfo("Riproduzione bloccata da paywall per stazione Pro: \(station.name)")
             blockedByPaywall = true
             return
@@ -1324,7 +1331,11 @@ extension RadioManager {
     /// widget e la stazione del controllo "La mia radio preferita".
     var presetStations: [RadioStation] {
         let rank = Dictionary(recentStationIds.enumerated().map { ($1, $0) }, uniquingKeysWith: min)
-        return favoriteStations.sorted {
+        // Dal catalogo intero e non da `favoriteStations`, che salta le
+        // stazioni a riposo: una preferita che ha dato errore resta sul widget,
+        // e chi la tocca la riprova.
+        let favorites = favoriteStationIds.compactMap { id in catalog.first { $0.id == id } }
+        return favorites.sorted {
             (rank[$0.id] ?? .max, $0.name) < (rank[$1.id] ?? .max, $1.name)
         }
     }
@@ -1334,6 +1345,15 @@ extension RadioManager {
     /// radio, come farebbe il selettore, cosi' all'apertura l'interfaccia
     /// corrisponde a quello che si sente, e si spegne l'ascolto HF/CB/POC.
     func playFromWidget(_ station: RadioStation) {
+        // Il widget l'ha creduta aperta ma per l'app non lo e' (Pro scaduto,
+        // pass finito): niente cambio di modalita', la CB o il POC che si
+        // stavano ascoltando continuano, e niente paywall a sorpresa alla
+        // prossima apertura. Il widget torna a mostrare il lucchetto.
+        guard !isBehindPaywall(station) else {
+            logger.logInfo("Play dal widget su stazione chiusa: \(station.name)")
+            RadioShelf.reloadEverything()
+            return
+        }
         UserDefaults.standard.set(true, forKey: "talky_is_radio_mode")
         if #available(iOS 16.0, *) { LiveRadio.shared.stop() }
         playStation(station)
@@ -1353,6 +1373,19 @@ extension RadioManager {
                       playing: currentStation != nil && isPlaying)
         }
         RadioShelf.saveOnAir(onAir)
+    }
+
+    /// Stazione Pro senza Talky Pro e senza pass di 24 ore.
+    func isBehindPaywall(_ station: RadioStation) -> Bool {
+        station.isPro
+            && !UserDefaults.standard.bool(forKey: "fastboot_isProUser")
+            && !StationPassManager.shared.isUnlocked(station.id)
+    }
+
+    /// L'app sta per chiudersi: la stazione resta sul widget, ma spenta.
+    @objc fileprivate func appWillTerminate() {
+        guard let station = currentStation else { return }
+        RadioShelf.saveOnAir(OnAirCard(station: card(station), title: nil, playing: false))
     }
 
     private func card(_ station: RadioStation) -> PresetCard {

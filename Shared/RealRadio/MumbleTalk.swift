@@ -143,6 +143,7 @@ nonisolated final class MumbleMic: @unchecked Sendable {
     private let engine = AVAudioEngine()
     private var converter: AVAudioConverter?
     private var encoder: OpusEncoder?
+    private var encoderBitRate = 0
     private var pending: [Float] = []
     private var onPacket: ((Data) -> Void)?
     private let target = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: OpusEncoder.rate, channels: 1, interleaved: false)!
@@ -163,20 +164,24 @@ nonisolated final class MumbleMic: @unchecked Sendable {
 
     /// Accende il microfono; `packet` riceve un pacchetto Opus ogni 20 ms.
     /// `systemSession`: la sessione audio l'ha gia' attivata Push to Talk,
-    /// che non vuole che l'app la tocchi.
-    func start(systemSession: Bool = false, _ packet: @escaping (Data) -> Void) -> Bool {
+    /// che non vuole che l'app la attivi; la categoria invece si puo' e si
+    /// deve mettere, perche' con `.playback` (lasciata dalla radio) l'ingresso
+    /// del microfono non ha canali.
+    /// `bitRate`: quello che sta sotto la banda del server (ServerSync).
+    func start(systemSession: Bool = false, bitRate: Int = 32_000, _ packet: @escaping (Data) -> Void) -> Bool {
         queue.sync {
             #if os(iOS)
-            if !systemSession {
-                let session = AVAudioSession.sharedInstance()
-                if session.category != .playAndRecord {
-                    try? session.setCategory(.playAndRecord, mode: .default,
-                                             options: [.defaultToSpeaker, .allowBluetooth, .allowBluetoothA2DP])
-                }
-                try? session.setActive(true)
+            let session = AVAudioSession.sharedInstance()
+            if session.category != .playAndRecord {
+                try? session.setCategory(.playAndRecord, mode: .default,
+                                         options: [.defaultToSpeaker, .allowBluetooth, .allowBluetoothA2DP])
             }
+            if !systemSession { try? session.setActive(true) }
             #endif
-            if encoder == nil { encoder = OpusEncoder() }
+            if encoder == nil || encoderBitRate != bitRate {
+                encoder = OpusEncoder(bitRate: bitRate)
+                encoderBitRate = bitRate
+            }
             guard encoder != nil else { return false }
             onPacket = packet
             pending = []
@@ -194,6 +199,7 @@ nonisolated final class MumbleMic: @unchecked Sendable {
                 return true
             } catch {
                 node.removeTap(onBus: 0)
+                onPacket = nil
                 return false
             }
         }
@@ -274,6 +280,28 @@ nonisolated enum MumbleManners {
         return s.isEmpty ? "Talky-\(Int.random(in: 1000 ... 9999))" : String(s)
     }
 
+    /// Per i server che accettano solo nomi latini (Reject InvalidUsername):
+    /// lo stesso numero, cosi' chi ascolta continua a riconoscerlo.
+    static func plainName(for name: String) -> String {
+        let digits = name.unicodeScalars.filter { ("0" ... "9").contains($0) }
+        let tail = String(String.UnicodeScalarView(digits)).suffix(4)
+        return "Talky-" + (tail.count == 4 ? String(tail) : String(Int.random(in: 1000 ... 9999)))
+    }
+
+    /// La segnalazione a chi gestisce Talky: una mail gia' scritta, con il
+    /// server e il motivo, che l'utente manda o no. Nessun nome di persone.
+    static func reportMail(server: String, reason: String) -> URL? {
+        var c = URLComponents()
+        c.scheme = "mailto"
+        c.path = "andreapiani.dev@gmail.com"
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+        c.queryItems = [
+            URLQueryItem(name: "subject", value: "Talky POC report: \(reason)"),
+            URLQueryItem(name: "body", value: "server: \(server)\nreason: \(reason)\napp: \(version)\n\n")
+        ]
+        return c.url
+    }
+
     /// Chi si e' silenziato, per server: "host:porta|nome".
     static func isBlocked(_ name: String, on server: String) -> Bool {
         blocked.contains(key(name, server))
@@ -302,10 +330,10 @@ nonisolated enum MumbleManners {
 // MARK: stanze private
 
 /// Una stanza privata sul server Mumble di Talky (VM2, scripts/server/).
-/// Dal codice che ci si scambia si ricavano due cose diverse: il nome del
-/// canale, che vedono tutti quelli collegati al server, e il token che
-/// apre la porta, che arriva solo al custode in un messaggio privato. Le
-/// stesse derivazioni stanno in scripts/server/talky_rooms.py (prova).
+/// Dal codice che ci si scambia si ricava solo il token che apre la porta,
+/// e il token arriva solo al custode, in un messaggio privato. Il nome del
+/// canale lo sceglie il custode a caso e lo dice in risposta: chi vede
+/// l'albero dei canali non puo' risalire al codice.
 nonisolated struct TalkyRoom: Sendable, Hashable {
     /// Otto caratteri senza 0, 1, I, L, O: si dettano al telefono senza errori.
     let code: String
@@ -314,6 +342,10 @@ nonisolated struct TalkyRoom: Sendable, Hashable {
     /// Il server delle stanze. La 22 perche' e' l'unica porta che la rete
     /// Oracle lascia passare; sulla VM e' girata sulla 64738 di mumble-server.
     static let server = MumbleServer(name: "Talky", host: "92.5.15.244", port: 22, country: "", countryCode: "")
+    /// Il nome che il custode da' ai canali delle stanze: "room-" e 16 esadecimali.
+    static func isChannelName(_ s: String) -> Bool {
+        s.hasPrefix("room-") && s.count == 21 && s.dropFirst(5).allSatisfy { "0123456789abcdef".contains($0) }
+    }
 
     init?(code raw: String) {
         let clean = raw.uppercased().filter { Self.alphabet.contains($0) }
@@ -329,10 +361,20 @@ nonisolated struct TalkyRoom: Sendable, Hashable {
     /// "K7P2-QX9A", come si mostra e si condivide.
     var display: String { "\(code.prefix(4))-\(code.suffix(4))" }
 
-    var channelName: String { "room-" + Self.hex("talky-room-name:" + code).prefix(16) }
     var token: String { String(Self.hex("talky-room-token:" + code).prefix(32)) }
 
-    var target: MumbleLiveChannel { MumbleLiveChannel(server: Self.server, channel: channelName, users: 0) }
+    /// Il canale Push to Talk di sistema: lo stesso per la stessa stanza su
+    /// ogni telefono e a ogni avvio, ricavato dal token e non dal nome.
+    var pushToTalkID: UUID {
+        var b = Array(SHA256.hash(data: Data(("talky-ptt-channel:" + token).utf8))).prefix(16).map { $0 }
+        b[6] = (b[6] & 0x0F) | 0x40
+        b[8] = (b[8] & 0x3F) | 0x80
+        return UUID(uuid: (b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7],
+                           b[8], b[9], b[10], b[11], b[12], b[13], b[14], b[15]))
+    }
+
+    /// Il canale vero si sa solo quando risponde il custode.
+    var target: MumbleLiveChannel { MumbleLiveChannel(server: Self.server, channel: "", users: 0) }
 
     /// Link d'invito: apre Talky nella stanza; chi non ce l'ha usa il codice.
     var link: URL { URL(string: "talky://room/\(code)")! }

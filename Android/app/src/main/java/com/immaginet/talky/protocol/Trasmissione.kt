@@ -29,7 +29,7 @@ data class Trasmissione(
             TalkyProtocol.Keys.ORIGIN to origine,
             TalkyProtocol.Keys.ORIGIN_NAME to nomeOrigine,
             TalkyProtocol.Keys.TTL to ttl.toString(),
-            TalkyProtocol.Keys.REACHED to raggiunti.sorted().joinToString(",")
+            TalkyProtocol.Keys.REACHED to raggiunti.sorted().take(LIMITE_RAGGIUNTI).joinToString(",")
         )
 
     /** La copia da ritrasmettere: una tratta in meno, e chi l'ha gia'. */
@@ -39,29 +39,39 @@ data class Trasmissione(
     }
 
     companion object {
-        /** Due tratte: A -> B -> C. Di piu' moltiplica il traffico in una folla. */
+        /** Due tratte: A -> B -> C. Di piu' moltiplica il traffico in una folla.
+         *  E' anche il massimo accettato: un ttl piu' alto in arrivo si abbassa. */
         const val TTL_INIZIALE = 2
+
+        // Quello che arriva da un altro dispositivo si taglia qui: un peer
+        // difettoso o modificato non deve far crescere i campi senza limite.
+        private const val LIMITE_ID = 64
+        private const val LIMITE_ORIGINE = 64
+        private const val LIMITE_NOME = 64
+        private const val LIMITE_RAGGIUNTI = 64
 
         fun nuova(origine: String, nome: String, destinatari: Collection<String>): Trasmissione =
             Trasmissione(
                 id = UUID.randomUUID().toString(),
                 origine = origine,
-                nomeOrigine = nome,
+                nomeOrigine = nome.take(LIMITE_NOME),
                 ttl = TTL_INIZIALE,
-                raggiunti = (listOf(origine) + destinatari).map(::idCorto).toSet()
+                raggiunti = (listOf(origine) + destinatari).take(LIMITE_RAGGIUNTI).map(::idCorto).toSet()
             )
 
-        /** null se il messaggio viene da una versione senza ponte. */
+        /** null se il messaggio viene da una versione senza ponte o se l'id e' fuori misura. */
         fun daCampi(campi: Map<String, String>): Trasmissione? {
-            val id = campi[TalkyProtocol.Keys.MSG_ID]?.takeIf { it.isNotEmpty() } ?: return null
+            val id = campi[TalkyProtocol.Keys.MSG_ID]
+                ?.takeIf { it.isNotEmpty() && it.length <= LIMITE_ID } ?: return null
             val ttl = campi[TalkyProtocol.Keys.TTL]?.toIntOrNull() ?: return null
             return Trasmissione(
                 id = id,
-                origine = campi[TalkyProtocol.Keys.ORIGIN].orEmpty(),
-                nomeOrigine = campi[TalkyProtocol.Keys.ORIGIN_NAME].orEmpty(),
-                ttl = ttl,
+                origine = campi[TalkyProtocol.Keys.ORIGIN].orEmpty().take(LIMITE_ORIGINE),
+                nomeOrigine = campi[TalkyProtocol.Keys.ORIGIN_NAME].orEmpty().take(LIMITE_NOME),
+                ttl = minOf(ttl, TTL_INIZIALE),
                 raggiunti = campi[TalkyProtocol.Keys.REACHED].orEmpty()
-                    .split(',').filter { it.isNotEmpty() }.toSet()
+                    .split(',').filter { it.isNotEmpty() }
+                    .take(LIMITE_RAGGIUNTI).map(::idCorto).toSet()
             )
         }
 
@@ -71,15 +81,40 @@ data class Trasmissione(
 
 /**
  * Gli ultimi id visti, per scartare i doppioni: lo stesso messaggio arriva
- * diretto e passando da un ponte, a pochi secondi di distanza.
+ * diretto e passando da un ponte, a pochi secondi di distanza. Un id conta come
+ * visto solo quando il messaggio e' arrivato tutto: se una connessione cade a
+ * meta', la copia intera da un altro ponte deve ancora passare.
  */
 class MemoriaPonte(private val capienza: Int = 256) {
     private val visti = LinkedHashSet<String>()
+    private val inCorso = HashSet<String>()
+
+    /** Un messaggio partito da qui: se torna indietro da un ponte non si suona. */
+    @Synchronized
+    fun segna(id: String) = ricorda(id)
+
+    /** Comincia ad arrivare un messaggio: false se e' un doppione o se un'altra copia sta gia' arrivando. */
+    @Synchronized
+    fun inizia(id: String): Boolean {
+        if (id in visti || id in inCorso) return false
+        if (inCorso.size >= capienza) inCorso.clear()
+        inCorso.add(id)
+        return true
+    }
 
     @Synchronized
-    fun primaVolta(id: String): Boolean {
-        if (!visti.add(id)) return false
+    fun completa(id: String) {
+        inCorso.remove(id)
+        ricorda(id)
+    }
+
+    @Synchronized
+    fun abbandona(id: String) {
+        inCorso.remove(id)
+    }
+
+    private fun ricorda(id: String) {
+        if (!visti.add(id)) return
         if (visti.size > capienza) visti.remove(visti.first())
-        return true
     }
 }

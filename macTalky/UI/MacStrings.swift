@@ -49,7 +49,7 @@ nonisolated enum MacString {
     case kindDigital, stStarting, stStandby, stNoPeers, stBusy, stTransmitting
     case stReady, stReadyPort, stPublishFailed, stDiscovery, stListenerFailed, stNetworkDown
     case talkHold, talkOnAir, talkListenOnly, talkMicDenied, talkSafety, talkMute, talkReport, reportAbuse
-    case reportSexual, reportSpam, reportDone, rulesTitle, rulesBody, rulesName, rulesAccept, roomHeader
+    case reportSexual, reportSpam, reportMailed, rulesTitle, rulesBody, rulesName, rulesAccept, roomHeader
     case roomCreate, roomJoin, roomRejoin, roomLeave, roomInvite, roomCodeWrong, roomFooter, roomInviteText
     case lifetimeCaps, lifetimePitch, lifetimeVsYearly
 
@@ -110,7 +110,6 @@ nonisolated enum MacString {
         .reportAbuse: "Insults or threats",
         .reportSexual: "Sexual content",
         .reportSpam: "Spam or noise",
-        .reportDone: "Report sent. This server won't be suggested to you again.",
         .rulesTitle: "Before you talk",
         .rulesBody: "On POC you talk in public channels with people you don't know, on servers run by others. Insults, threats, sexual content, hate and spam are not allowed: whoever uses them gets muted and reported, and the server can ban them. Mute or report anyone who bothers you from Safety, under the talk button.",
         .rulesName: "Your name in the channels",
@@ -340,6 +339,7 @@ nonisolated enum MacString {
         .lifetimeCaps: "FOREVER",
         .lifetimePitch: "Pay once, yours forever",
         .lifetimeVsYearly: "%@ once, instead of %@ every year",
+        .reportMailed: "This server won't be suggested to you again. To complete the report, send the email we prepared for Talky.",
     ]
 
     private static let it: [MacString: String] = [
@@ -353,7 +353,6 @@ nonisolated enum MacString {
         .reportAbuse: "Insulti o minacce",
         .reportSexual: "Contenuti sessuali",
         .reportSpam: "Spam o rumore",
-        .reportDone: "Segnalazione inviata. Questo server non ti verrà più proposto.",
         .rulesTitle: "Prima di parlare",
         .rulesBody: "Sul POC parli in canali pubblici con persone che non conosci, su server gestiti da altri. Non sono ammessi insulti, minacce, contenuti sessuali, odio e spam: chi li usa viene silenziato e segnalato, e il server può escluderlo. Silenzia o segnala chi ti disturba da Sicurezza, sotto il tasto per parlare.",
         .rulesName: "Il tuo nome nei canali",
@@ -583,6 +582,7 @@ nonisolated enum MacString {
         .lifetimeCaps: "PER SEMPRE",
         .lifetimePitch: "Paghi una volta, tuo per sempre",
         .lifetimeVsYearly: "%@ una volta, invece di %@ ogni anno",
+        .reportMailed: "Questo server non ti verrà più proposto. Per completare la segnalazione, invia la mail che abbiamo preparato per Talky.",
     ]
 
     private static let de: [MacString: String] = [
@@ -596,7 +596,6 @@ nonisolated enum MacString {
         .reportAbuse: "Beleidigungen oder Drohungen",
         .reportSexual: "Sexuelle Inhalte",
         .reportSpam: "Spam oder Lärm",
-        .reportDone: "Meldung gesendet. Dieser Server wird dir nicht mehr vorgeschlagen.",
         .rulesTitle: "Bevor du sprichst",
         .rulesBody: "Bei POC sprichst du in öffentlichen Kanälen mit Menschen, die du nicht kennst, auf Servern, die andere betreiben. Beleidigungen, Drohungen, sexuelle Inhalte, Hass und Spam sind nicht erlaubt: Wer sie nutzt, wird stummgeschaltet und gemeldet, und der Server kann ihn sperren. Wer dich stört, schaltest du unter Sicherheit stumm oder meldest ihn, unter der Sprechtaste.",
         .rulesName: "Dein Name in den Kanälen",
@@ -826,6 +825,7 @@ nonisolated enum MacString {
         .lifetimeCaps: "FÜR IMMER",
         .lifetimePitch: "Einmal zahlen, für immer deins",
         .lifetimeVsYearly: "%@ einmalig statt %@ jedes Jahr",
+        .reportMailed: "Dieser Server wird dir nicht mehr vorgeschlagen. Um die Meldung abzuschließen, sende die E-Mail an Talky, die wir vorbereitet haben.",
     ]
 
     private static let es: [MacString: String] = [
@@ -839,7 +839,6 @@ nonisolated enum MacString {
         .reportAbuse: "Insultos o amenazas",
         .reportSexual: "Contenido sexual",
         .reportSpam: "Spam o ruido",
-        .reportDone: "Denuncia enviada. No volveremos a proponerte este servidor.",
         .rulesTitle: "Antes de hablar",
         .rulesBody: "En POC hablas en canales públicos con personas que no conoces, en servidores gestionados por otros. No se permiten insultos, amenazas, contenido sexual, odio ni spam: quien los usa es silenciado y denunciado, y el servidor puede expulsarlo. Silencia o denuncia a quien te moleste desde Seguridad, bajo el botón para hablar.",
         .rulesName: "Tu nombre en los canales",
@@ -1069,6 +1068,7 @@ nonisolated enum MacString {
         .lifetimeCaps: "PARA SIEMPRE",
         .lifetimePitch: "Pagas una vez, tuyo para siempre",
         .lifetimeVsYearly: "%@ una vez, en lugar de %@ cada año",
+        .reportMailed: "No volveremos a proponerte este servidor. Para completar la denuncia, envía el correo que hemos preparado para Talky.",
     ]
 
     private static let fr: [MacString: String] = [
@@ -1082,7 +1082,6 @@ nonisolated enum MacString {
         .reportAbuse: "Insultes ou menaces",
         .reportSexual: "Contenu sexuel",
         .reportSpam: "Spam ou bruit",
-        .reportDone: "Signalement envoyé. Ce serveur ne te sera plus proposé.",
         .rulesTitle: "Avant de parler",
         .rulesBody: "Sur POC tu parles dans des canaux publics avec des inconnus, sur des serveurs gérés par d'autres. Insultes, menaces, contenu sexuel, haine et spam sont interdits : qui les utilise est rendu muet et signalé, et le serveur peut l'exclure. Coupe ou signale qui te dérange depuis Sécurité, sous le bouton pour parler.",
         .rulesName: "Ton nom dans les canaux",
@@ -1312,6 +1311,7 @@ nonisolated enum MacString {
         .lifetimeCaps: "À VIE",
         .lifetimePitch: "Payez une fois, à vous pour toujours",
         .lifetimeVsYearly: "%@ une fois, au lieu de %@ chaque année",
+        .reportMailed: "Ce serveur ne te sera plus proposé. Pour finaliser le signalement, envoie l'e-mail préparé pour Talky.",
     ]
 
     private static let ja: [MacString: String] = [
@@ -1325,7 +1325,6 @@ nonisolated enum MacString {
         .reportAbuse: "侮辱や脅迫",
         .reportSexual: "性的なコンテンツ",
         .reportSpam: "スパムや雑音",
-        .reportDone: "報告を送信しました。このサーバーは今後表示されません。",
         .rulesTitle: "話す前に",
         .rulesBody: "POCでは、他の人が運営するサーバーの公開チャンネルで、知らない人と話します。侮辱、脅迫、性的なコンテンツ、ヘイト、スパムは禁止です。使った人はミュートされて報告され、サーバーから追放されることがあります。迷惑な相手は、話すボタンの下の「安全」からミュートまたは報告できます。",
         .rulesName: "チャンネルでの名前",
@@ -1555,6 +1554,7 @@ nonisolated enum MacString {
         .lifetimeCaps: "買い切り",
         .lifetimePitch: "一度の支払いで、ずっとあなたのもの",
         .lifetimeVsYearly: "%@を1回だけ。毎年%@ではなく",
+        .reportMailed: "このサーバーは今後表示されません。報告を完了するには、Talky宛てに用意したメールを送信してください。",
     ]
 
     private static let ko: [MacString: String] = [
@@ -1568,7 +1568,6 @@ nonisolated enum MacString {
         .reportAbuse: "모욕 또는 협박",
         .reportSexual: "성적인 콘텐츠",
         .reportSpam: "스팸 또는 소음",
-        .reportDone: "신고가 전송되었습니다. 이 서버는 더 이상 추천되지 않습니다.",
         .rulesTitle: "말하기 전에",
         .rulesBody: "POC에서는 다른 사람이 운영하는 서버의 공개 채널에서 모르는 사람과 이야기합니다. 모욕, 협박, 성적인 콘텐츠, 혐오, 스팸은 허용되지 않습니다. 이를 사용하는 사람은 음소거되고 신고되며 서버에서 추방될 수 있습니다. 불편한 사람은 말하기 버튼 아래 안전에서 음소거하거나 신고하세요.",
         .rulesName: "채널에서 쓸 이름",
@@ -1798,6 +1797,7 @@ nonisolated enum MacString {
         .lifetimeCaps: "평생",
         .lifetimePitch: "한 번 결제로 평생 내 것",
         .lifetimeVsYearly: "%@ 한 번, 매년 %@ 대신",
+        .reportMailed: "이 서버는 더 이상 추천되지 않습니다. 신고를 마치려면 Talky에 보낼 이메일을 전송하세요.",
     ]
 
     private static let ms: [MacString: String] = [
@@ -1811,7 +1811,6 @@ nonisolated enum MacString {
         .reportAbuse: "Hinaan atau ugutan",
         .reportSexual: "Kandungan seksual",
         .reportSpam: "Spam atau bunyi bising",
-        .reportDone: "Laporan dihantar. Pelayan ini tidak akan dicadangkan lagi.",
         .rulesTitle: "Sebelum bercakap",
         .rulesBody: "Di POC anda bercakap dalam saluran awam dengan orang yang anda tidak kenal, di pelayan yang diurus oleh orang lain. Hinaan, ugutan, kandungan seksual, kebencian dan spam tidak dibenarkan: sesiapa yang menggunakannya akan disenyapkan dan dilaporkan, dan pelayan boleh menyekatnya. Senyapkan atau laporkan sesiapa yang mengganggu anda dari Keselamatan, di bawah butang bercakap.",
         .rulesName: "Nama anda dalam saluran",
@@ -2041,6 +2040,7 @@ nonisolated enum MacString {
         .lifetimeCaps: "SELAMANYA",
         .lifetimePitch: "Bayar sekali, milik anda selamanya",
         .lifetimeVsYearly: "%@ sekali, bukan %@ setiap tahun",
+        .reportMailed: "Pelayan ini tidak akan dicadangkan lagi. Untuk melengkapkan laporan, hantar e-mel kepada Talky yang telah kami sediakan.",
     ]
 
     private static let pt: [MacString: String] = [
@@ -2054,7 +2054,6 @@ nonisolated enum MacString {
         .reportAbuse: "Insultos ou ameaças",
         .reportSexual: "Conteúdo sexual",
         .reportSpam: "Spam ou ruído",
-        .reportDone: "Denúncia enviada. Este servidor não será mais sugerido para você.",
         .rulesTitle: "Antes de falar",
         .rulesBody: "No POC você fala em canais públicos com pessoas que não conhece, em servidores administrados por outros. Insultos, ameaças, conteúdo sexual, ódio e spam não são permitidos: quem usa é silenciado e denunciado, e o servidor pode bani-lo. Silencie ou denuncie quem incomodar em Segurança, abaixo do botão de falar.",
         .rulesName: "Seu nome nos canais",
@@ -2284,6 +2283,7 @@ nonisolated enum MacString {
         .lifetimeCaps: "PARA SEMPRE",
         .lifetimePitch: "Pague uma vez, seu para sempre",
         .lifetimeVsYearly: "%@ uma vez, em vez de %@ por ano",
+        .reportMailed: "Este servidor não será mais sugerido para você. Para concluir a denúncia, envie o e-mail que preparamos para o Talky.",
     ]
 
     private static let th: [MacString: String] = [
@@ -2297,7 +2297,6 @@ nonisolated enum MacString {
         .reportAbuse: "ดูหมิ่นหรือข่มขู่",
         .reportSexual: "เนื้อหาทางเพศ",
         .reportSpam: "สแปมหรือเสียงรบกวน",
-        .reportDone: "ส่งรายงานแล้ว เซิร์ฟเวอร์นี้จะไม่ถูกแนะนำให้คุณอีก",
         .rulesTitle: "ก่อนพูด",
         .rulesBody: "ใน POC คุณพูดในช่องสาธารณะกับคนที่คุณไม่รู้จัก บนเซิร์ฟเวอร์ที่ผู้อื่นดูแล ห้ามดูหมิ่น ข่มขู่ เนื้อหาทางเพศ ความเกลียดชัง และสแปม ผู้ที่ทำจะถูกปิดเสียงและรายงาน และเซิร์ฟเวอร์อาจแบนได้ ปิดเสียงหรือรายงานผู้ที่รบกวนคุณได้จากความปลอดภัย ใต้ปุ่มพูด",
         .rulesName: "ชื่อของคุณในช่อง",
@@ -2527,6 +2526,7 @@ nonisolated enum MacString {
         .lifetimeCaps: "ตลอดไป",
         .lifetimePitch: "จ่ายครั้งเดียว เป็นของคุณตลอดไป",
         .lifetimeVsYearly: "%@ ครั้งเดียว แทนที่จะจ่าย %@ ทุกปี",
+        .reportMailed: "เซิร์ฟเวอร์นี้จะไม่ถูกแนะนำให้คุณอีก หากต้องการรายงานให้เสร็จสมบูรณ์ ให้ส่งอีเมลถึง Talky ที่เราเตรียมไว้",
     ]
 
     private static let tr: [MacString: String] = [
@@ -2540,7 +2540,6 @@ nonisolated enum MacString {
         .reportAbuse: "Hakaret veya tehdit",
         .reportSexual: "Cinsel içerik",
         .reportSpam: "Spam veya gürültü",
-        .reportDone: "Bildirim gönderildi. Bu sunucu sana bir daha önerilmeyecek.",
         .rulesTitle: "Konuşmadan önce",
         .rulesBody: "POC'ta, başkalarının yönettiği sunuculardaki herkese açık kanallarda tanımadığın kişilerle konuşursun. Hakaret, tehdit, cinsel içerik, nefret ve spam yasaktır: bunları kullananın sesi kapatılır ve bildirilir, sunucu da onu engelleyebilir. Seni rahatsız edeni konuşma tuşunun altındaki Güvenlik bölümünden sustur veya bildir.",
         .rulesName: "Kanallardaki adın",
@@ -2770,6 +2769,7 @@ nonisolated enum MacString {
         .lifetimeCaps: "ÖMÜR BOYU",
         .lifetimePitch: "Bir kez öde, sonsuza dek senin",
         .lifetimeVsYearly: "%@ bir kez, her yıl %@ yerine",
+        .reportMailed: "Bu sunucu sana bir daha önerilmeyecek. Bildirimi tamamlamak için Talky'ye hazırladığımız e-postayı gönder.",
     ]
 
     private static let vi: [MacString: String] = [
@@ -2783,7 +2783,6 @@ nonisolated enum MacString {
         .reportAbuse: "Lăng mạ hoặc đe dọa",
         .reportSexual: "Nội dung tình dục",
         .reportSpam: "Spam hoặc tiếng ồn",
-        .reportDone: "Đã gửi báo cáo. Máy chủ này sẽ không được gợi ý cho bạn nữa.",
         .rulesTitle: "Trước khi nói",
         .rulesBody: "Trên POC bạn nói chuyện trong các kênh công khai với người lạ, trên máy chủ do người khác quản lý. Không được lăng mạ, đe dọa, nội dung tình dục, thù ghét và spam: ai vi phạm sẽ bị tắt tiếng và báo cáo, và máy chủ có thể cấm người đó. Tắt tiếng hoặc báo cáo người làm phiền bạn trong mục An toàn, bên dưới nút nói.",
         .rulesName: "Tên của bạn trong kênh",
@@ -3013,6 +3012,7 @@ nonisolated enum MacString {
         .lifetimeCaps: "TRỌN ĐỜI",
         .lifetimePitch: "Trả một lần, của bạn mãi mãi",
         .lifetimeVsYearly: "%@ một lần, thay vì %@ mỗi năm",
+        .reportMailed: "Máy chủ này sẽ không được gợi ý cho bạn nữa. Để hoàn tất báo cáo, hãy gửi email chúng tôi đã soạn sẵn cho Talky.",
     ]
 
     private static let zhHans: [MacString: String] = [
@@ -3026,7 +3026,6 @@ nonisolated enum MacString {
         .reportAbuse: "辱骂或威胁",
         .reportSexual: "色情内容",
         .reportSpam: "垃圾信息或噪音",
-        .reportDone: "举报已发送。以后不会再向你推荐此服务器。",
         .rulesTitle: "说话之前",
         .rulesBody: "在 POC 中，你会在他人管理的服务器上的公共频道里与陌生人交谈。禁止辱骂、威胁、色情内容、仇恨言论和垃圾信息：违者会被屏蔽和举报，服务器也可以将其封禁。可在说话按钮下方的“安全”中屏蔽或举报打扰你的人。",
         .rulesName: "你在频道中的名字",
@@ -3256,6 +3255,7 @@ nonisolated enum MacString {
         .lifetimeCaps: "永久",
         .lifetimePitch: "付一次，永久归你",
         .lifetimeVsYearly: "一次 %@，而不是每年 %@",
+        .reportMailed: "此服务器将不再向你推荐。要完成举报，请发送我们为 Talky 准备好的邮件。",
     ]
 
     private static let zhHant: [MacString: String] = [
@@ -3269,7 +3269,6 @@ nonisolated enum MacString {
         .reportAbuse: "辱罵或威脅",
         .reportSexual: "色情內容",
         .reportSpam: "垃圾訊息或雜音",
-        .reportDone: "檢舉已送出。之後不會再向你推薦此伺服器。",
         .rulesTitle: "說話之前",
         .rulesBody: "在 POC 中，你會在他人管理的伺服器上的公開頻道裡與陌生人交談。禁止辱罵、威脅、色情內容、仇恨言論和垃圾訊息：違者會被封鎖和檢舉，伺服器也可以將其停權。可在說話按鈕下方的「安全」中封鎖或檢舉打擾你的人。",
         .rulesName: "你在頻道中的名字",
@@ -3499,6 +3498,7 @@ nonisolated enum MacString {
         .lifetimeCaps: "永久",
         .lifetimePitch: "付一次，永久屬於你",
         .lifetimeVsYearly: "一次 %@，而不是每年 %@",
+        .reportMailed: "此伺服器將不再向你推薦。若要完成檢舉，請寄出我們為 Talky 準備好的郵件。",
     ]
 
     private static let id: [MacString: String] = [
@@ -3512,7 +3512,6 @@ nonisolated enum MacString {
         .reportAbuse: "Hinaan atau ancaman",
         .reportSexual: "Konten seksual",
         .reportSpam: "Spam atau bising",
-        .reportDone: "Laporan terkirim. Server ini tidak akan disarankan lagi untukmu.",
         .rulesTitle: "Sebelum kamu bicara",
         .rulesBody: "Di POC kamu bicara di saluran publik dengan orang yang tidak kamu kenal, di server yang dikelola orang lain. Hinaan, ancaman, konten seksual, ujaran kebencian, dan spam dilarang: yang melakukannya akan dibisukan dan dilaporkan, dan server bisa memblokirnya. Bisukan atau laporkan siapa pun yang mengganggumu dari Keamanan, di bawah tombol bicara.",
         .rulesName: "Namamu di saluran",
@@ -3742,6 +3741,7 @@ nonisolated enum MacString {
         .lifetimeCaps: "SELAMANYA",
         .lifetimePitch: "Sekali bayar, milikmu selamanya",
         .lifetimeVsYearly: "%@ sekali, bukan %@ setiap tahun",
+        .reportMailed: "Server ini tidak akan disarankan lagi. Untuk menyelesaikan laporan, kirim email yang sudah kami siapkan untuk Talky.",
     ]
 
     private static let pl: [MacString: String] = [
@@ -3755,7 +3755,6 @@ nonisolated enum MacString {
         .reportAbuse: "Obelgi lub groźby",
         .reportSexual: "Treści seksualne",
         .reportSpam: "Spam lub hałas",
-        .reportDone: "Zgłoszenie wysłane. Ten serwer nie będzie Ci już proponowany.",
         .rulesTitle: "Zanim zaczniesz mówić",
         .rulesBody: "Na POC rozmawiasz na publicznych kanałach z nieznajomymi, na serwerach prowadzonych przez innych. Obelgi, groźby, treści seksualne, mowa nienawiści i spam są zabronione: kto ich używa, zostaje wyciszony i zgłoszony, a serwer może go zbanować. Wycisz lub zgłoś każdego, kto Ci przeszkadza, w sekcji Bezpieczeństwo pod przyciskiem mówienia.",
         .rulesName: "Twoja nazwa na kanałach",
@@ -3985,5 +3984,6 @@ nonisolated enum MacString {
         .lifetimeCaps: "NA ZAWSZE",
         .lifetimePitch: "Płacisz raz, masz na zawsze",
         .lifetimeVsYearly: "%@ jednorazowo zamiast %@ co roku",
+        .reportMailed: "Ten serwer nie będzie ci już proponowany. Aby dokończyć zgłoszenie, wyślij e-mail do Talky, który przygotowaliśmy.",
     ]
 }
