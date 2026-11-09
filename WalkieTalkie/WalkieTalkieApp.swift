@@ -130,6 +130,8 @@ struct WalkieTalkieApp: App {
             .onReceive(iapManager.$isProUser) { _ in
                 // Comprato Pro (o scaduto): l'ascolto fermo per i minuti finiti riparte.
                 if #available(iOS 16.0, *) { LiveRadio.shared.entitlementsChanged() }
+                // E sulle stazioni dei widget cambiano i lucchetti.
+                RadioManager.shared.publishToWidgets()
             }
             .onChange(of: scenePhase) { newPhase in
                 if newPhase == .background {

@@ -115,6 +115,8 @@ class RadioManager: NSObject, ObservableObject {
     /// Diventa `true` quando l'utente tenta di riprodurre una stazione Pro senza essere Pro.
     /// La UI dovrebbe osservare questo flag, mostrare il paywall e poi resettarlo a `false`.
     @Published var blockedByPaywall: Bool = false
+    /// Il brano che lo stream dichiara adesso (ICY o ID3), se lo dichiara.
+    @Published private(set) var trackTitle: String?
 
     // MARK: - Favorites & Recents (persisted in UserDefaults)
     @Published private(set) var favoriteStationIds: Set<Int> = []
@@ -611,6 +613,9 @@ class RadioManager: NSObject, ObservableObject {
         super.init()
         loadPersistedState()
         setupRemoteCommandCenter()
+        // Un avvio nuovo non suona niente: se l'app era stata chiusa mentre
+        // suonava, il widget "In onda" smette di dirlo.
+        publishToWidgets()
     }
 
     private func loadPersistedState() {
@@ -646,6 +651,7 @@ class RadioManager: NSObject, ObservableObject {
 
         isBuffering = true
         currentStation = station
+        trackTitle = nil
 
         let player = AVPlayer(url: url)
         player.volume = volume
@@ -672,6 +678,7 @@ class RadioManager: NSObject, ObservableObject {
                 name: .AVPlayerItemNewErrorLogEntry,
                 object: item
             )
+            listenForTrackTitle(on: item)
         }
 
         // Reset errore precedente
@@ -686,6 +693,7 @@ class RadioManager: NSObject, ObservableObject {
 
         // Registra come ultima stazione e nei recenti
         recordPlayedStation(station)
+        publishToWidgets()
 
         logger.logAudioInfo("Avviata riproduzione: \(station.name) - \(station.country)")
     }
@@ -706,10 +714,13 @@ class RadioManager: NSObject, ObservableObject {
         isPlaying = false
         isBuffering = false
         currentStation = nil
+        trackTitle = nil
         lastError = nil
 
         // Cancella Now Playing Info
         clearNowPlayingInfo()
+        // Il reset fra una stazione e l'altra non conta: lo scrive playStation.
+        if resyncWalkieAfter { publishToWidgets() }
 
         logger.logAudioInfo("Radio fermata")
     }
@@ -723,6 +734,7 @@ class RadioManager: NSObject, ObservableObject {
             setupNowPlayingInfo(for: station)
             startOrUpdateLiveActivity(for: station)
         }
+        publishToWidgets()
 
         logger.logAudioInfo("Radio in pausa")
     }
@@ -736,6 +748,7 @@ class RadioManager: NSObject, ObservableObject {
             setupNowPlayingInfo(for: station)
             startOrUpdateLiveActivity(for: station)
         }
+        publishToWidgets()
 
         logger.logAudioInfo("Radio ripresa")
     }
@@ -794,6 +807,7 @@ class RadioManager: NSObject, ObservableObject {
             favoriteStationIds.insert(station.id)
         }
         UserDefaults.standard.set(Array(favoriteStationIds), forKey: favoritesKey)
+        publishToWidgets()
         logger.logInfo("Favorites: toggled \(station.name) → \(favoriteStationIds.contains(station.id) ? "ON" : "OFF")")
     }
 
@@ -1034,6 +1048,7 @@ class RadioManager: NSObject, ObservableObject {
             
             self.isPlaying = false
             self.isBuffering = false
+            self.publishToWidgets()
         }
     }
     
@@ -1114,5 +1129,72 @@ class RadioManager: NSObject, ObservableObject {
     deinit {
         NotificationCenter.default.removeObserver(self)
         stopRadio()
+    }
+}
+// MARK: - Widget radio
+
+extension RadioManager {
+    /// Le preferite nell'ordine in cui si ascoltano davvero: prima quella
+    /// suonata per ultima, poi le altre per nome. E' l'ordine dei tasti del
+    /// widget e la stazione del controllo "La mia radio preferita".
+    var presetStations: [RadioStation] {
+        let rank = Dictionary(recentStationIds.enumerated().map { ($1, $0) }, uniquingKeysWith: min)
+        return favoriteStations.sorted {
+            (rank[$0.id] ?? .max, $0.name) < (rank[$1.id] ?? .max, $1.name)
+        }
+    }
+
+    /// Preferite e stazione in onda per i widget. Lo scaffale ricarica solo
+    /// quelli il cui dato e' cambiato davvero. Sul Mac non c'e' il pass di
+    /// 24 ore: una stazione Pro senza Pro resta chiusa.
+    func publishToWidgets() {
+        let favorites = presetStations
+        let shelf = favorites.isEmpty ? recentStations : favorites
+        RadioShelf.savePresets(shelf.prefix(8).map(card), recents: favorites.isEmpty)
+
+        let last = lastStationId.flatMap { id in catalog.first { $0.id == id } }
+        let onAir = (currentStation ?? last).map {
+            OnAirCard(station: card($0),
+                      title: currentStation == nil ? nil : trackTitle,
+                      playing: currentStation != nil && isPlaying)
+        }
+        RadioShelf.saveOnAir(onAir)
+    }
+
+    private func card(_ station: RadioStation) -> PresetCard {
+        PresetCard(id: station.id, name: station.name, flag: station.flagEmoji,
+                   dial: station.displayLabel, isPro: station.isPro, passUntil: nil)
+    }
+
+    /// Il titolo del brano arriva dentro lo stream: ICY sugli Icecast e
+    /// Shoutcast, ID3 negli HLS. Molte stazioni non lo mandano.
+    fileprivate func listenForTrackTitle(on item: AVPlayerItem) {
+        let tap = AVPlayerItemMetadataOutput(identifiers: nil)
+        tap.setDelegate(self, queue: .main)
+        item.add(tap)
+    }
+
+    fileprivate func showTrackTitle(_ raw: String?, from tap: AVPlayerItemMetadataOutput) {
+        // Un titolo in ritardo dalla stazione di prima non si mostra su quella nuova.
+        guard radioPlayer?.currentItem?.outputs.contains(where: { $0 === tap }) == true else { return }
+        let title = raw?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let clean = (title?.isEmpty ?? true) || title == currentStation?.name ? nil : title
+        guard clean != trackTitle else { return }
+        trackTitle = clean
+        publishToWidgets()
+    }
+}
+
+extension RadioManager: AVPlayerItemMetadataOutputPushDelegate {
+    nonisolated func metadataOutput(_ output: AVPlayerItemMetadataOutput,
+                                    didOutputTimedMetadataGroups groups: [AVTimedMetadataGroup],
+                                    from track: AVPlayerItemTrack?) {
+        let items = groups.flatMap(\.items)
+        guard let item = items.first(where: { $0.identifier == .icyMetadataStreamTitle })
+                ?? items.first(where: { $0.commonKey == .commonKeyTitle }) else { return }
+        Task { @MainActor in
+            let raw = try? await item.load(.stringValue)
+            self.showTrackTitle(raw, from: output)
+        }
     }
 }

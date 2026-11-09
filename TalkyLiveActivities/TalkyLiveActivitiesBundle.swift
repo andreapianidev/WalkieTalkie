@@ -25,9 +25,13 @@ struct TalkyLiveActivitiesBundle: WidgetBundle {
             PropagationWidget()
             SunWidget()
             BandLockWidget()
+            PresetsWidget()
+            OnAirWidget()
         }
         if #available(iOS 18.0, *) {
             ListenCBControl()
+            WalkieChannelControl()
+            FavoriteRadioControl()
         }
     }
 }

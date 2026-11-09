@@ -29,7 +29,7 @@ enum LiveActivityDeepLink {
             NotificationCenter.default.post(name: .talkyRadioNextStation, object: nil)
         case ("radio", "/prev"):
             NotificationCenter.default.post(name: .talkyRadioPreviousStation, object: nil)
-        case ("live", _), ("pro", _), ("room", _):
+        case ("live", _), ("pro", _), ("room", _), ("walkie", "/channel"):
             // Dai widget: li consuma ContentView appena c'e', anche dopo un
             // avvio a freddo in cui l'URL arriva prima della schermata.
             WidgetLinkInbox.shared.pending = url

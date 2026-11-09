@@ -127,6 +127,11 @@
 			path = Tour;
 			sourceTree = "<group>";
 		};
+		7A11E0AD1000000000000E01 /* WidgetLink */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = WidgetLink;
+			sourceTree = "<group>";
+		};
 		7A11E0AD1000000000000C01 /* TalkyWidgets */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = TalkyWidgets;
@@ -227,6 +232,7 @@
 				7A11E0AD1000000000000A01 /* RealRadio */,
 				7A11E0AD1000000000000B01 /* Place */,
 				7A11E0AD1000000000000D01 /* Tour */,
+				7A11E0AD1000000000000E01 /* WidgetLink */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -258,6 +264,7 @@
 				7A11E0AD2000000000000005 /* TalkyMacWidgets */,
 				7A11E0AD1000000000000B01 /* Place */,
 				7A11E0AD1000000000000C01 /* TalkyWidgets */,
+				7A11E0AD1000000000000E01 /* WidgetLink */,
 			);
 			name = TalkyMacWidgets;
 			productName = TalkyMacWidgets;
@@ -283,6 +290,7 @@
 				7A11E0AD1000000000000A01 /* RealRadio */,
 				7A11E0AD1000000000000B01 /* Place */,
 				7A11E0AD1000000000000D01 /* Tour */,
+				7A11E0AD1000000000000E01 /* WidgetLink */,
 			);
 			name = WalkieTalkie;
 			packageProductDependencies = (
@@ -318,6 +326,7 @@
 				7A11E0AD1000000000000A01 /* RealRadio */,
 				7A11E0AD1000000000000B01 /* Place */,
 				7A11E0AD1000000000000D01 /* Tour */,
+				7A11E0AD1000000000000E01 /* WidgetLink */,
 			);
 			name = macTalky;
 			packageProductDependencies = (
@@ -341,6 +350,7 @@
 			fileSystemSynchronizedGroups = (
 				7A11E0AD1000000000000B01 /* Place */,
 				7A11E0AD1000000000000C01 /* TalkyWidgets */,
+				7A11E0AD1000000000000E01 /* WidgetLink */,
 			);
 			name = TalkyLiveActivities;
 			productName = TalkyLiveActivities;
@@ -492,7 +502,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 138;
 				DEVELOPMENT_TEAM = ERAK83QBBM;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -521,7 +531,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 138;
 				DEVELOPMENT_TEAM = ERAK83QBBM;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -551,7 +561,7 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 138;
 				DEVELOPMENT_TEAM = ERAK83QBBM;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = TalkyLiveActivities/Info.plist;
@@ -705,7 +715,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 138;
 				DEVELOPMENT_TEAM = ERAK83QBBM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -747,7 +757,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 138;
 				DEVELOPMENT_TEAM = ERAK83QBBM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -790,7 +800,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 138;
 				DEVELOPMENT_TEAM = ERAK83QBBM;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -832,7 +842,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 138;
 				DEVELOPMENT_TEAM = ERAK83QBBM;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -872,7 +882,7 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 138;
 				DEVELOPMENT_TEAM = ERAK83QBBM;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = TalkyLiveActivities/Info.plist;

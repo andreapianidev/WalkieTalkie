@@ -24,3 +24,25 @@
 "w_after_sunrise" = "日の出後";
 "w_control_name" = "Talky CB 19";
 "w_control_about" = "CBチャンネル19に合わせてTalkyを開きます。";
+
+/* Widget e controlli della radio: le mie radio, in onda adesso. */
+"w_presets_name" = "マイラジオ";
+"w_presets_about" = "お気に入りの局をウィジェットから直接再生。Talkyを開く必要はありません。1局は無料、Talky Proなら4局または8局。";
+"w_presets_title" = "マイラジオ";
+"w_presets_recents" = "最近聴いた局";
+"w_presets_empty" = "Talkyで局のハートをタップすると、ここに表示されます。";
+"w_onair_name" = "オンエア中";
+"w_onair_about" = "聴いている局と、いま流れている曲。停止ボタン付き。ラジオがオフのときは、最後に聴いた局をすぐ再生できます。";
+"w_onair_live" = "オンエア";
+"w_onair_off" = "ラジオオフ";
+"w_onair_no_title" = "この局は曲名を送信していません";
+"w_onair_last" = "最後に聴いた局";
+"w_onair_never" = "Talkyで局を再生すると、ここに表示されます。";
+"w_walkie_control_name" = "自分のチャンネルでトランシーバー";
+"w_walkie_control_about" = "使用中のチャンネルでTalkyのトランシーバーを開きます。";
+"w_walkie_public" = "公開チャンネル";
+"w_fav_control_name" = "お気に入りのラジオ";
+"w_fav_control_about" = "Talkyを開かずにお気に入りの局を再生します。Talky Pro。";
+"w_intent_play" = "局を再生";
+"w_intent_stop" = "ラジオを停止";
+"w_intent_station" = "局";

@@ -3,6 +3,7 @@
 //
 //  I widget di Talky sulla scrivania del Mac: gli stessi di iOS (cartella
 //  TalkyWidgets), senza quelli della schermata di blocco che il Mac non ha.
+//  I controlli vanno nel Centro di Controllo e nella barra dei menu.
 
 import SwiftUI
 import WidgetKit
@@ -13,5 +14,10 @@ struct TalkyMacWidgets: WidgetBundle {
         ChannelWidget()
         PropagationWidget()
         SunWidget()
+        PresetsWidget()
+        OnAirWidget()
+        ListenCBControl()
+        WalkieChannelControl()
+        FavoriteRadioControl()
     }
 }

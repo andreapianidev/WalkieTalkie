@@ -24,3 +24,25 @@
 "w_after_sunrise" = "Après le lever";
 "w_control_name" = "Talky CB 19";
 "w_control_about" = "Ouvre Talky sur le canal 19 de la CB.";
+
+/* Widget e controlli della radio: le mie radio, in onda adesso. */
+"w_presets_name" = "Mes radios";
+"w_presets_about" = "Vos stations préférées, avec la lecture directement sur le widget : inutile d'ouvrir Talky. Une station gratuite, 4 ou 8 avec Talky Pro.";
+"w_presets_title" = "MES RADIOS";
+"w_presets_recents" = "DERNIÈRES ÉCOUTÉES";
+"w_presets_empty" = "Touchez le cœur d'une station dans Talky et elle apparaîtra ici.";
+"w_onair_name" = "À l'antenne";
+"w_onair_about" = "La station que vous écoutez et le titre qu'elle diffuse, avec stop. Radio éteinte, la dernière station, prête à repartir.";
+"w_onair_live" = "À L'ANTENNE";
+"w_onair_off" = "RADIO ÉTEINTE";
+"w_onair_no_title" = "Cette station n'envoie pas le titre des morceaux";
+"w_onair_last" = "Dernière station écoutée";
+"w_onair_never" = "Lancez une station dans Talky et elle apparaîtra ici.";
+"w_walkie_control_name" = "Talkie sur mon canal";
+"w_walkie_control_about" = "Ouvre le talkie de Talky sur le canal que vous utilisez.";
+"w_walkie_public" = "Canal public";
+"w_fav_control_name" = "Ma radio préférée";
+"w_fav_control_about" = "Lance votre station préférée sans ouvrir Talky. Talky Pro.";
+"w_intent_play" = "Écouter la station";
+"w_intent_stop" = "Arrêter la radio";
+"w_intent_station" = "Station";

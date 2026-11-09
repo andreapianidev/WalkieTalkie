@@ -24,3 +24,25 @@
 "w_after_sunrise" = "Selepas terbit";
 "w_control_name" = "Talky CB 19";
 "w_control_about" = "Membuka Talky pada saluran CB 19.";
+
+/* Widget e controlli della radio: le mie radio, in onda adesso. */
+"w_presets_name" = "Radio saya";
+"w_presets_about" = "Stesen kegemaran anda, dengan main terus pada widget: tidak perlu membuka Talky. Satu stesen percuma, 4 atau 8 dengan Talky Pro.";
+"w_presets_title" = "RADIO SAYA";
+"w_presets_recents" = "DIDENGAR TERAKHIR";
+"w_presets_empty" = "Ketik hati pada stesen dalam Talky dan ia akan muncul di sini.";
+"w_onair_name" = "Ke udara sekarang";
+"w_onair_about" = "Stesen yang anda dengar dan lagu yang sedang disiarkan, dengan butang henti. Apabila radio dimatikan, stesen terakhir, sedia untuk dimainkan.";
+"w_onair_live" = "KE UDARA";
+"w_onair_off" = "RADIO DIMATIKAN";
+"w_onair_no_title" = "Stesen ini tidak menghantar tajuk lagu";
+"w_onair_last" = "Stesen terakhir didengar";
+"w_onair_never" = "Mainkan stesen dalam Talky dan ia akan muncul di sini.";
+"w_walkie_control_name" = "Walkie pada saluran saya";
+"w_walkie_control_about" = "Membuka walkie Talky pada saluran yang anda gunakan.";
+"w_walkie_public" = "Saluran awam";
+"w_fav_control_name" = "Radio kegemaran saya";
+"w_fav_control_about" = "Memainkan stesen kegemaran anda tanpa membuka Talky. Talky Pro.";
+"w_intent_play" = "Main stesen";
+"w_intent_stop" = "Hentikan radio";
+"w_intent_station" = "Stesen";

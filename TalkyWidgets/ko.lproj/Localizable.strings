@@ -24,3 +24,25 @@
 "w_after_sunrise" = "일출 후";
 "w_control_name" = "Talky CB 19";
 "w_control_about" = "CB 19번 채널로 Talky를 엽니다.";
+
+/* Widget e controlli della radio: le mie radio, in onda adesso. */
+"w_presets_name" = "내 라디오";
+"w_presets_about" = "즐겨 찾는 방송국을 위젯에서 바로 재생합니다. Talky를 열 필요가 없습니다. 1개 방송국은 무료, Talky Pro로 4개 또는 8개.";
+"w_presets_title" = "내 라디오";
+"w_presets_recents" = "최근 들은 방송";
+"w_presets_empty" = "Talky에서 방송국의 하트를 탭하면 여기에 표시됩니다.";
+"w_onair_name" = "지금 방송 중";
+"w_onair_about" = "듣고 있는 방송국과 지금 나오는 곡, 정지 버튼 포함. 라디오가 꺼져 있으면 마지막 방송국을 바로 재생할 수 있습니다.";
+"w_onair_live" = "방송 중";
+"w_onair_off" = "라디오 꺼짐";
+"w_onair_no_title" = "이 방송국은 곡 제목을 보내지 않습니다";
+"w_onair_last" = "마지막으로 들은 방송국";
+"w_onair_never" = "Talky에서 방송국을 재생하면 여기에 표시됩니다.";
+"w_walkie_control_name" = "내 채널에서 무전기";
+"w_walkie_control_about" = "사용 중인 채널로 Talky 무전기를 엽니다.";
+"w_walkie_public" = "공개 채널";
+"w_fav_control_name" = "즐겨 찾는 라디오";
+"w_fav_control_about" = "Talky를 열지 않고 즐겨 찾는 방송국을 재생합니다. Talky Pro.";
+"w_intent_play" = "방송국 재생";
+"w_intent_stop" = "라디오 정지";
+"w_intent_station" = "방송국";

@@ -24,3 +24,25 @@
 "w_after_sunrise" = "Sau khi mọc";
 "w_control_name" = "Talky CB 19";
 "w_control_about" = "Mở Talky ở kênh CB 19.";
+
+/* Widget e controlli della radio: le mie radio, in onda adesso. */
+"w_presets_name" = "Radio của tôi";
+"w_presets_about" = "Các đài yêu thích, bấm phát ngay trên widget: không cần mở Talky. Miễn phí một đài, 4 hoặc 8 đài với Talky Pro.";
+"w_presets_title" = "RADIO CỦA TÔI";
+"w_presets_recents" = "NGHE GẦN ĐÂY";
+"w_presets_empty" = "Chạm vào trái tim của một đài trong Talky, đài sẽ hiện ở đây.";
+"w_onair_name" = "Đang phát sóng";
+"w_onair_about" = "Đài bạn đang nghe và bài hát đài đang phát, kèm nút dừng. Khi tắt radio, hiện đài nghe gần nhất, sẵn sàng phát lại.";
+"w_onair_live" = "ĐANG PHÁT";
+"w_onair_off" = "RADIO TẮT";
+"w_onair_no_title" = "Đài này không gửi tên bài hát";
+"w_onair_last" = "Đài nghe gần nhất";
+"w_onair_never" = "Phát một đài trong Talky, đài sẽ hiện ở đây.";
+"w_walkie_control_name" = "Bộ đàm trên kênh của tôi";
+"w_walkie_control_about" = "Mở bộ đàm Talky ở kênh bạn đang dùng.";
+"w_walkie_public" = "Kênh công khai";
+"w_fav_control_name" = "Radio yêu thích của tôi";
+"w_fav_control_about" = "Phát đài yêu thích mà không cần mở Talky. Talky Pro.";
+"w_intent_play" = "Phát đài";
+"w_intent_stop" = "Dừng radio";
+"w_intent_station" = "Đài";

@@ -24,3 +24,25 @@
 "w_after_sunrise" = "Depois do nascer";
 "w_control_name" = "Talky PX 19";
 "w_control_about" = "Abre o Talky no canal 19 da PX.";
+
+/* Widget e controlli della radio: le mie radio, in onda adesso. */
+"w_presets_name" = "Minhas rádios";
+"w_presets_about" = "Suas estações favoritas, com play direto no widget: não precisa abrir o Talky. Uma estação grátis, 4 ou 8 com o Talky Pro.";
+"w_presets_title" = "MINHAS RÁDIOS";
+"w_presets_recents" = "OUVIDAS POR ÚLTIMO";
+"w_presets_empty" = "Toque no coração de uma estação no Talky e ela aparece aqui.";
+"w_onair_name" = "No ar agora";
+"w_onair_about" = "A estação que você está ouvindo e a música que ela está tocando, com stop. Com o rádio desligado, a última estação, pronta para tocar.";
+"w_onair_live" = "NO AR";
+"w_onair_off" = "RÁDIO DESLIGADO";
+"w_onair_no_title" = "Esta estação não envia o nome das músicas";
+"w_onair_last" = "Última estação ouvida";
+"w_onair_never" = "Toque uma estação no Talky e ela aparece aqui.";
+"w_walkie_control_name" = "Walkie no meu canal";
+"w_walkie_control_about" = "Abre o walkie do Talky no canal que você está usando.";
+"w_walkie_public" = "Canal público";
+"w_fav_control_name" = "Minha rádio favorita";
+"w_fav_control_about" = "Toca sua estação favorita sem abrir o Talky. Talky Pro.";
+"w_intent_play" = "Tocar estação";
+"w_intent_stop" = "Parar o rádio";
+"w_intent_station" = "Estação";

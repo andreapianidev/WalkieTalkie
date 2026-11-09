@@ -24,3 +24,25 @@
 "w_after_sunrise" = "Nach Sonnenaufgang";
 "w_control_name" = "Talky CB 19";
 "w_control_about" = "Öffnet Talky auf CB-Kanal 19.";
+
+/* Widget e controlli della radio: le mie radio, in onda adesso. */
+"w_presets_name" = "Meine Sender";
+"w_presets_about" = "Deine Lieblingssender mit Play direkt im Widget, ohne Talky zu öffnen. Ein Sender gratis, 4 oder 8 mit Talky Pro.";
+"w_presets_title" = "MEINE SENDER";
+"w_presets_recents" = "ZULETZT GEHÖRT";
+"w_presets_empty" = "Tippe in Talky bei einem Sender auf das Herz, dann erscheint er hier.";
+"w_onair_name" = "Jetzt auf Sendung";
+"w_onair_about" = "Der Sender, den du hörst, und der Titel, den er gerade sendet, mit Stopp. Ist das Radio aus, der letzte Sender, bereit zum Abspielen.";
+"w_onair_live" = "AUF SENDUNG";
+"w_onair_off" = "RADIO AUS";
+"w_onair_no_title" = "Dieser Sender überträgt keine Titel";
+"w_onair_last" = "Zuletzt gehörter Sender";
+"w_onair_never" = "Spiel in Talky einen Sender ab, dann erscheint er hier.";
+"w_walkie_control_name" = "Walkie auf meinem Kanal";
+"w_walkie_control_about" = "Öffnet das Talky-Walkie auf dem Kanal, den du gerade nutzt.";
+"w_walkie_public" = "Öffentlicher Kanal";
+"w_fav_control_name" = "Mein Lieblingssender";
+"w_fav_control_about" = "Spielt deinen Lieblingssender, ohne Talky zu öffnen. Talky Pro.";
+"w_intent_play" = "Sender abspielen";
+"w_intent_stop" = "Radio stoppen";
+"w_intent_station" = "Sender";

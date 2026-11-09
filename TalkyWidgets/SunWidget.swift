@@ -144,22 +144,3 @@ struct SunWidget: Widget {
         #endif
     }
 }
-
-#if os(iOS)
-import AppIntents
-
-/// Centro di Controllo e tasto Azione: apre Talky gia' sul canale 19 della CB
-/// (come il controllo "Accendi" di Etere).
-@available(iOS 18.0, *)
-struct ListenCBControl: ControlWidget {
-    var body: some ControlWidgetConfiguration {
-        StaticControlConfiguration(kind: "com.Andrea-Piani.WalkieTalkie.cb19") {
-            ControlWidgetButton(action: OpenURLIntent(URL(string: "talky://live/cb?hz=27185000")!)) {
-                Label("CB 19", systemImage: "antenna.radiowaves.left.and.right")
-            }
-        }
-        .displayName("w_control_name")
-        .description("w_control_about")
-    }
-}
-#endif

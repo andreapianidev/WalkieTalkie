@@ -24,3 +24,25 @@
 "w_after_sunrise" = "หลังพระอาทิตย์ขึ้น";
 "w_control_name" = "Talky CB 19";
 "w_control_about" = "เปิด Talky ที่ช่อง CB 19";
+
+/* Widget e controlli della radio: le mie radio, in onda adesso. */
+"w_presets_name" = "วิทยุของฉัน";
+"w_presets_about" = "สถานีโปรดของคุณ กดเล่นได้บนวิดเจ็ตเลย ไม่ต้องเปิด Talky ฟรีหนึ่งสถานี 4 หรือ 8 สถานีกับ Talky Pro";
+"w_presets_title" = "วิทยุของฉัน";
+"w_presets_recents" = "ฟังล่าสุด";
+"w_presets_empty" = "แตะรูปหัวใจที่สถานีใน Talky แล้วสถานีจะมาอยู่ที่นี่";
+"w_onair_name" = "กำลังออกอากาศ";
+"w_onair_about" = "สถานีที่คุณกำลังฟังและเพลงที่กำลังเปิด พร้อมปุ่มหยุด เมื่อปิดวิทยุ จะแสดงสถานีล่าสุดพร้อมเล่นต่อ";
+"w_onair_live" = "ออกอากาศ";
+"w_onair_off" = "ปิดวิทยุ";
+"w_onair_no_title" = "สถานีนี้ไม่ส่งชื่อเพลง";
+"w_onair_last" = "สถานีที่ฟังล่าสุด";
+"w_onair_never" = "เปิดฟังสถานีใน Talky แล้วสถานีจะมาอยู่ที่นี่";
+"w_walkie_control_name" = "วอล์กกี้ช่องของฉัน";
+"w_walkie_control_about" = "เปิดวอล์กกี้ของ Talky ที่ช่องที่คุณใช้อยู่";
+"w_walkie_public" = "ช่องสาธารณะ";
+"w_fav_control_name" = "วิทยุโปรดของฉัน";
+"w_fav_control_about" = "เล่นสถานีโปรดของคุณโดยไม่ต้องเปิด Talky Talky Pro";
+"w_intent_play" = "เล่นสถานี";
+"w_intent_stop" = "หยุดวิทยุ";
+"w_intent_station" = "สถานี";

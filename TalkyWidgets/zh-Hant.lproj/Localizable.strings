@@ -24,3 +24,25 @@
 "w_after_sunrise" = "日出後";
 "w_control_name" = "Talky CB 19";
 "w_control_about" = "開啟 Talky 並調到 CB 19 頻道。";
+
+/* Widget e controlli della radio: le mie radio, in onda adesso. */
+"w_presets_name" = "我的電台";
+"w_presets_about" = "你收藏的電台，在小工具上直接播放，無需打開 Talky。免費一個電台，Talky Pro 可放 4 個或 8 個。";
+"w_presets_title" = "我的電台";
+"w_presets_recents" = "最近收聽";
+"w_presets_empty" = "在 Talky 中輕點電台的心形，它就會出現在這裡。";
+"w_onair_name" = "正在播出";
+"w_onair_about" = "你正在收聽的電台和正在播放的歌曲，附停止按鈕。收音機關閉時，顯示上次收聽的電台，隨時可以播放。";
+"w_onair_live" = "正在播出";
+"w_onair_off" = "收音機已關";
+"w_onair_no_title" = "該電台不傳送歌曲名稱";
+"w_onair_last" = "上次收聽的電台";
+"w_onair_never" = "在 Talky 中播放一個電台，它就會出現在這裡。";
+"w_walkie_control_name" = "我的頻道對講機";
+"w_walkie_control_about" = "在你正在使用的頻道開啟 Talky 對講機。";
+"w_walkie_public" = "公共頻道";
+"w_fav_control_name" = "我最愛的電台";
+"w_fav_control_about" = "無需開啟 Talky 即可播放你最愛的電台。Talky Pro。";
+"w_intent_play" = "播放電台";
+"w_intent_stop" = "停止收音機";
+"w_intent_station" = "電台";

@@ -3,6 +3,9 @@
 //
 //  Widget gratuito: il canale preferito sul display del walkie, con la
 //  banda aperta o chiusa adesso. Un tocco apre Talky gia' sintonizzato.
+//  Nel medio anche quando cambia: al prossimo tramonto o alba, e come
+//  stara' dopo la banda di questo canale (tutte le bande sono in Sole e
+//  bande, con Talky Pro).
 
 import AppIntents
 import SwiftUI
@@ -158,6 +161,70 @@ struct ChannelWidgetView: View {
     #endif
 
     private var dial: some View {
+        Group {
+            if family == .systemMedium {
+                HStack(spacing: 14) {
+                    dialFace
+                    Rectangle()
+                        .fill(.white.opacity(0.15))
+                        .frame(width: 1)
+                    nextSwitch
+                }
+            } else {
+                dialFace
+            }
+        }
+        .widgetURL(entry.channel.link)
+        .containerBackground(.black, for: .widget)
+    }
+
+    /// Il prossimo cambio fra giorno e notte e la stessa banda dopo il cambio.
+    private var nextSwitch: some View {
+        let conditions = entry.conditions
+        let change = conditions.sunUp ? conditions.sunset : conditions.sunrise
+        let after = conditions.outlookAfterSwitch(entry.channel.shortwave)
+        return VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 5) {
+                Image(systemName: conditions.sunUp ? "sunset.fill" : "sunrise.fill")
+                    .font(.system(size: 11))
+                    .foregroundStyle(TalkyDial.amber)
+                Text(String(localized: conditions.sunUp ? "w_sunset" : "w_sunrise"))
+                    .font(.system(size: 10, weight: .heavy, design: .monospaced))
+                    .foregroundStyle(TalkyDial.amber)
+                    .lineLimit(1)
+            }
+            Text(change.map { $0.formatted(date: .omitted, time: .shortened) } ?? "--")
+                .font(.system(size: 22, weight: .bold, design: .monospaced))
+                .foregroundStyle(.white)
+                .minimumScaleFactor(0.6)
+                .lineLimit(1)
+            if let change {
+                Text(change, style: .relative)
+                    .font(.system(size: 10, weight: .medium, design: .monospaced))
+                    .foregroundStyle(.white.opacity(0.6))
+                    .lineLimit(1)
+            }
+            Spacer(minLength: 0)
+            Text(String(localized: conditions.sunUp ? "w_after_sunset" : "w_after_sunrise"))
+                .font(.system(size: 9, weight: .semibold, design: .monospaced))
+                .foregroundStyle(.white.opacity(0.55))
+                .lineLimit(1)
+            HStack(spacing: 5) {
+                Circle()
+                    .fill(TalkyDial.color(after))
+                    .frame(width: 7, height: 7)
+                Text(TalkyDial.text(after))
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(.white)
+                Text(entry.channel.shortwave.name)
+                    .font(.system(size: 9, weight: .medium, design: .monospaced))
+                    .foregroundStyle(.white.opacity(0.55))
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var dialFace: some View {
         let outlook = entry.conditions.outlook(entry.channel.shortwave)
         return VStack(alignment: .leading, spacing: 6) {
             HStack {
@@ -197,8 +264,6 @@ struct ChannelWidgetView: View {
                     .foregroundStyle(.white.opacity(0.55))
             }
         }
-        .widgetURL(entry.channel.link)
-        .containerBackground(.black, for: .widget)
     }
 }
 
@@ -211,9 +276,9 @@ struct ChannelWidget: Widget {
         .configurationDisplayName("w_channel_name")
         .description("w_channel_about")
         #if os(iOS)
-        .supportedFamilies([.systemSmall, .accessoryRectangular, .accessoryInline])
+        .supportedFamilies([.systemSmall, .systemMedium, .accessoryRectangular, .accessoryInline])
         #else
-        .supportedFamilies([.systemSmall])
+        .supportedFamilies([.systemSmall, .systemMedium])
         #endif
     }
 }

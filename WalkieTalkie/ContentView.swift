@@ -1107,6 +1107,12 @@ struct ContentView: View {
         }) {
             PaywallView(trigger: paywallTrigger)
         }
+        .onChange(of: isRadioMode) { radio in
+            // La radio partita da un widget mette l'app in modalita' radio
+            // senza passare dal selettore: la banda torna quella locale,
+            // come quando si cambia modalita' a mano.
+            if radio { walkieBand = .local }
+        }
         .onReceive(WidgetLinkInbox.shared.$pending) { url in
             guard let url else { return }
             WidgetLinkInbox.shared.pending = nil
@@ -1282,6 +1288,15 @@ struct ContentView: View {
     /// talky://pro apre Talky Pro; talky://live/cb?hz=... e talky://live/hf?id=...
     /// accendono la banda e sintonizzano.
     private func openFromWidget(_ url: URL) {
+        // talky://walkie/channel, dal controllo "Walkie sul mio canale": il
+        // walkie fra telefoni acceso, sul canale (pubblico o privato) in uso.
+        if url.host?.lowercased() == "walkie" {
+            selectedTab = 0
+            if isRadioMode { switchMode(toRadio: false) }
+            if !isPoweredOn { togglePower() }
+            selectBand(.local)
+            return
+        }
         // talky://room/K7P2QX9A, dal link d'invito a una stanza privata.
         if url.host?.lowercased() == "room" {
             guard #available(iOS 16.0, *), let room = TalkyRoom(code: url.lastPathComponent) else { return }

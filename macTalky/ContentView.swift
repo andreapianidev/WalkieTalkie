@@ -60,12 +60,25 @@ struct ContentView: View {
     var body: some View {
         console
             .onOpenURL(perform: openFromWidget)
+            // Comprato o scaduto Talky Pro: i lucchetti sulle stazioni dei widget cambiano.
+            .onReceive(iap.$isProUser) { _ in radio.publishToWidgets() }
     }
 
     /// talky://pro apre Talky Pro; talky://live/cb?hz=... e talky://live/hf?id=...
-    /// arrivano dai widget e accendono la banda gia' sintonizzata.
+    /// arrivano dai widget e accendono la banda gia' sintonizzata;
+    /// talky://walkie e talky://radio aprono la sezione.
     private func openFromWidget(_ url: URL) {
         guard url.scheme == "talky" else { return }
+        switch url.host?.lowercased() {
+        case "walkie":
+            section = .walkie
+            return
+        case "radio":
+            section = .radio
+            return
+        default:
+            break
+        }
         // talky://room/K7P2QX9A, dal link d'invito a una stanza privata.
         if url.host?.lowercased() == "room" {
             guard let room = TalkyRoom(code: url.lastPathComponent) else { return }

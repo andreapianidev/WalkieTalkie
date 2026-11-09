@@ -24,3 +24,25 @@
 "w_after_sunrise" = "Gün doğumundan sonra";
 "w_control_name" = "Talky CB 19";
 "w_control_about" = "Talky'yi CB 19. kanalda açar.";
+
+/* Widget e controlli della radio: le mie radio, in onda adesso. */
+"w_presets_name" = "Radyolarım";
+"w_presets_about" = "Sevdiğin istasyonlar, çalma tuşu doğrudan widget'ta: Talky'yi açmana gerek yok. Bir istasyon ücretsiz, Talky Pro ile 4 ya da 8.";
+"w_presets_title" = "RADYOLARIM";
+"w_presets_recents" = "SON DİNLENENLER";
+"w_presets_empty" = "Talky'de bir istasyonun kalbine dokun, burada görünsün.";
+"w_onair_name" = "Şimdi yayında";
+"w_onair_about" = "Dinlediğin istasyon ve şu an çaldığı şarkı, durdurma tuşuyla. Radyo kapalıyken son istasyon, çalmaya hazır.";
+"w_onair_live" = "YAYINDA";
+"w_onair_off" = "RADYO KAPALI";
+"w_onair_no_title" = "Bu istasyon şarkı adı göndermiyor";
+"w_onair_last" = "Son dinlenen istasyon";
+"w_onair_never" = "Talky'de bir istasyon çal, burada görünsün.";
+"w_walkie_control_name" = "Kanalımda telsiz";
+"w_walkie_control_about" = "Talky telsizini kullandığın kanalda açar.";
+"w_walkie_public" = "Genel kanal";
+"w_fav_control_name" = "En sevdiğim radyo";
+"w_fav_control_about" = "En sevdiğin istasyonu Talky'yi açmadan çalar. Talky Pro.";
+"w_intent_play" = "İstasyonu çal";
+"w_intent_stop" = "Radyoyu durdur";
+"w_intent_station" = "İstasyon";

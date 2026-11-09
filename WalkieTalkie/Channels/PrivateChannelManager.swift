@@ -37,7 +37,10 @@ final class PrivateChannelManager: ObservableObject {
     @Published private(set) var currentChannelID: String = PrivateChannelManager.publicChannelID
 
     /// Nome user-facing del canale corrente (nil se in modalità pubblica).
-    @Published private(set) var currentChannelName: String? = nil
+    @Published private(set) var currentChannelName: String? = nil {
+        // Il controllo "Walkie sul mio canale" mostra il nome del canale in uso.
+        didSet { RadioShelf.saveWalkieChannel(currentChannelName) }
+    }
 
     // MARK: - Dependencies
 
@@ -55,6 +58,7 @@ final class PrivateChannelManager: ObservableObject {
         self.currentChannelName = (savedID == PrivateChannelManager.publicChannelID) ? nil : savedName
 
         logger.logNetworkInfo("PrivateChannelManager init - canale: \(savedID) (\(savedName ?? "pubblico"))")
+        RadioShelf.saveWalkieChannel(currentChannelName)
     }
 
     // MARK: - Pro Gating
