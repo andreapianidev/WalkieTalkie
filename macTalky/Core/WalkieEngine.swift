@@ -63,7 +63,7 @@ final class WalkieEngine: NSObject, ObservableObject {
     @Published private(set) var peers: [Peer] = []
     @Published private(set) var connectedPeerCount: Int = 0
     @Published private(set) var connectedPeerIDs: Set<String> = []
-    @Published private(set) var status: String = "Standby"
+    @Published private(set) var status: String = MacString.stStandby.text
     @Published private(set) var isNetworkActive = false
     @Published private(set) var isTransmitting = false
     @Published private(set) var isReceiving = false
@@ -154,7 +154,7 @@ final class WalkieEngine: NSObject, ObservableObject {
         queue.async { [weak self] in
             guard let self, !self.started else { return }
             self.started = true
-            self.setStatus("Starting link…")
+            self.setStatus(MacString.stStarting.text)
             self.startListener()
             // Se il listener non è nemmeno partito, `startListener` ha già fatto
             // teardown e azzerato `started`: non avviare browser e timer.
@@ -169,7 +169,7 @@ final class WalkieEngine: NSObject, ObservableObject {
 
     func stop() {
         queue.async { [weak self] in
-            self?.teardown(status: "Standby")
+            self?.teardown(status: MacString.stStandby.text)
         }
     }
 
@@ -243,13 +243,13 @@ final class WalkieEngine: NSObject, ObservableObject {
             return
         }
         guard connectedPeerCount > 0 else {
-            setStatus("No peers connected")
+            setStatus(MacString.stNoPeers.text)
             return
         }
         // Half-duplex, come una radio vera: aprire il microfono mentre un peer
         // sta parlando farebbe rientrare dagli altoparlanti la voce ricevuta.
         guard !isReceiving else {
-            setStatus("Busy: a peer is talking")
+            setStatus(MacString.stBusy.text)
             return
         }
 
@@ -324,7 +324,7 @@ final class WalkieEngine: NSObject, ObservableObject {
         isTransmitting = true
         transmitStartDate = Date()
         transmitElapsed = 0
-        setStatus("Transmitting…")
+        setStatus(MacString.stTransmitting.text)
         logger.logAudioInfo("Trasmissione PTT avviata (native SR \(nativeFormat.sampleRate) → 48000 mono)")
 
         transmitTimer?.invalidate()
@@ -358,7 +358,7 @@ final class WalkieEngine: NSObject, ObservableObject {
 
         isTransmitting = false
         inputLevel = 0
-        setStatus("Ready")
+        setStatus(MacString.stReady.text)
 
         let floatPCM = captureAccumulator.drain()
         guard !floatPCM.isEmpty else {
@@ -419,14 +419,14 @@ final class WalkieEngine: NSObject, ObservableObject {
                 case .ready:
                     if let port = listener.port {
                         self.publishService(port: Int(port.rawValue))
-                        self.setStatus("Ready on port \(port.rawValue)")
+                        self.setStatus(MacString.stReadyPort.format(Int(port.rawValue)))
                         DispatchQueue.main.async { self.isNetworkActive = true }
                     }
                 case .failed(let error):
                     self.logger.logNetworkError(error, context: "TALKY1 listener failed")
                     // Teardown completo: senza questo `started` resterebbe true e
                     // il pulsante START LINK non potrebbe più riprovare.
-                    self.teardown(status: "Listener failed")
+                    self.teardown(status: MacString.stListenerFailed.text)
                 case .cancelled:
                     DispatchQueue.main.async { self.isNetworkActive = false }
                 default:
@@ -437,7 +437,7 @@ final class WalkieEngine: NSObject, ObservableObject {
             listener.start(queue: queue)
         } catch {
             logger.logNetworkError(error, context: "TALKY1 listener setup")
-            teardown(status: "Network unavailable")
+            teardown(status: MacString.stNetworkDown.text)
         }
     }
 
@@ -648,7 +648,7 @@ final class WalkieEngine: NSObject, ObservableObject {
             }
             publishConnectionCount()
             upsert(peer)
-            setStatus("Ready")
+            setStatus(MacString.stReady.text)
             logger.logNetworkInfo("TALKY1 HELLO ricevuto da \(peer.name)")
         case "HEARTBEAT":
             break
@@ -918,7 +918,7 @@ extension WalkieEngine: NetServiceDelegate {
         logger.logNetworkWarning("TALKY1 service publish failed: \(errorDict)")
         // Senza annuncio Bonjour nessuno ci trova: la lampada NET non deve
         // restare accesa come se il link fosse operativo.
-        setStatus("Bonjour publish failed")
+        setStatus(MacString.stPublishFailed.text)
         DispatchQueue.main.async { self.isNetworkActive = false }
     }
 
@@ -991,7 +991,7 @@ extension WalkieEngine: NetServiceBrowserDelegate {
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didNotSearch errorDict: [String: NSNumber]) {
         logger.logNetworkWarning("TALKY1 browser failed: \(errorDict)")
-        setStatus("Discovery unavailable")
+        setStatus(MacString.stDiscovery.text)
     }
 }
 

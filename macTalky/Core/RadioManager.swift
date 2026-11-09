@@ -1025,10 +1025,10 @@ class RadioManager: NSObject, ObservableObject {
             guard let self = self else { return }
             
             if let error = error {
-                self.lastError = "Errore riproduzione: \(error.localizedDescription)"
+                self.lastError = MacString.playbackError.format(error.localizedDescription)
                 self.logger.logAudioError(error, context: "Errore stream radio")
             } else {
-                self.lastError = "Stream non disponibile (404 - File Not Found)"
+                self.lastError = MacString.streamUnavailable.text
                 self.logger.logAudioWarning("Stream radio non disponibile - URL potrebbe essere scaduto")
             }
             

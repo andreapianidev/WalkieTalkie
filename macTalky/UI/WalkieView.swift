@@ -64,18 +64,18 @@ struct WalkieView: View {
         } label: {
             ConsolePanel(padding: 14) {
                 VStack(spacing: 4) {
-                    PanelLabel("Channel")
+                    PanelLabel(MacString.channel.text)
                     HStack(spacing: 8) {
                         Image(systemName: channels.currentChannelName == nil ? "globe" : "lock.fill")
                             .font(.system(size: 12, weight: .bold))
                             .foregroundStyle(Talky.amber)
-                        Text((channels.currentChannelName ?? "PUBLIC").uppercased())
+                        Text(channels.currentChannelName?.uppercased() ?? MacString.publicChannel.text)
                             .font(.vfd(20, weight: .heavy))
                             .kerning(2.5)
                             .foregroundStyle(Talky.amber)
                             .shadow(color: Talky.amberDeep.opacity(0.7), radius: 7)
                     }
-                    Text("click to change")
+                    Text(MacString.clickToChange.text)
                         .font(.vfd(8))
                         .kerning(1.6)
                         .foregroundStyle(Talky.dim.opacity(0.7))
@@ -143,7 +143,7 @@ struct WalkieView: View {
             VStack(spacing: 6) {
                 Image(systemName: receiving ? "speaker.wave.3.fill" : "mic.fill")
                     .font(.system(size: 42, weight: .bold))
-                Text(active ? "ON AIR" : receiving ? "RECEIVING" : "TALK")
+                Text(active ? MacString.onAir.text : receiving ? MacString.receiving.text : "TALK")
                     .font(.vfd(15, weight: .heavy))
                     .kerning(3)
                 if active {
@@ -174,10 +174,12 @@ struct WalkieView: View {
     }
 
     private var pttHint: String {
-        if !engine.hasMicPermission { return "CLICK TO GRANT MICROPHONE ACCESS" }
-        if engine.connectedPeerCount == 0 { return "WAITING FOR PEERS ON THE LOCAL NETWORK" }
-        if engine.isReceiving { return "CHANNEL BUSY: WAIT FOR THE PEER TO FINISH" }
-        return settings.spacebarPTT ? "HOLD THE BUTTON OR THE SPACE BAR TO TALK" : "HOLD THE BUTTON TO TALK"
+        // Solo informativo, niente "concedi l'accesso": il pre-prompt non deve
+        // spingere verso il si' (5.1.1(iv)), il bottone neutro sta nel roster.
+        if !engine.hasMicPermission { return MacString.hintMic.text }
+        if engine.connectedPeerCount == 0 { return MacString.hintWaiting.text }
+        if engine.isReceiving { return MacString.hintBusy.text }
+        return settings.spacebarPTT ? MacString.hintSpace.text : MacString.hintHold.text
     }
 
     // MARK: - Status strip
@@ -198,10 +200,10 @@ struct WalkieView: View {
             }
 
             if engine.isNetworkActive {
-                Button("STOP LINK") { engine.stop() }
+                Button(MacString.stopLinkCaps.text) { engine.stop() }
                     .buttonStyle(ChipButtonStyle(accent: Talky.alarm))
             } else {
-                Button("START LINK") { engine.start() }
+                Button(MacString.startLinkCaps.text) { engine.start() }
                     .buttonStyle(ChipButtonStyle(accent: Talky.signal))
             }
         }
@@ -214,7 +216,7 @@ struct WalkieView: View {
         ConsolePanel {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
-                    PanelLabel("Peers on channel")
+                    PanelLabel(MacString.peersOnChannel.text)
                     Spacer()
                     Text("\(engine.connectedPeerCount)")
                         .font(.vfd(12, weight: .bold))
@@ -226,7 +228,7 @@ struct WalkieView: View {
                         Image(systemName: "antenna.radiowaves.left.and.right.slash")
                             .font(.system(size: 26))
                             .foregroundStyle(Talky.dim.opacity(0.6))
-                        Text("Scanning for Talky devices…\niPhone, Android and Mac on the same Wi-Fi appear here.")
+                        Text(MacString.scanningPeers.text)
                             .font(.system(size: 11))
                             .multilineTextAlignment(.center)
                             .foregroundStyle(Talky.dim)
@@ -252,17 +254,17 @@ struct WalkieView: View {
                 // che e' il rimedio suggerito da Apple.
                 if !engine.hasMicPermission {
                     VStack(spacing: 6) {
-                        Text("Push-to-talk needs the microphone. The Radio module works without it.")
+                        Text(MacString.micNeeded.text)
                             .font(.system(size: 11, design: .rounded))
                             .foregroundStyle(Talky.dim)
                             .multilineTextAlignment(.center)
                             .fixedSize(horizontal: false, vertical: true)
 
                         if engine.micPermissionDenied {
-                            Button("Open System Settings") { openMicrophoneSettings() }
+                            Button(MacString.openSystemSettings.text) { openMicrophoneSettings() }
                                 .buttonStyle(ChipButtonStyle(accent: Talky.dim, filled: true))
                         } else {
-                            Button("Continue") { engine.requestMicPermission() }
+                            Button(MacString.continueButton.text) { engine.requestMicPermission() }
                                 .buttonStyle(ChipButtonStyle(accent: Talky.dim, filled: true))
                         }
                     }
@@ -291,7 +293,7 @@ struct WalkieView: View {
                     .font(.system(size: 12, weight: .semibold, design: .rounded))
                     .foregroundStyle(Talky.text)
                     .lineLimit(1)
-                Text(connected ? "linked" : "discovered")
+                Text(connected ? MacString.linked.text : MacString.discovered.text)
                     .font(.vfd(9))
                     .foregroundStyle(Talky.dim)
             }
@@ -354,12 +356,12 @@ struct ChannelSheet: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
             HStack {
-                PanelLabel("Private channel")
+                PanelLabel(MacString.privateChannel.text)
                 Spacer()
                 if !iap.isProUser { ProBadge() }
             }
 
-            Text("Devices that share the same channel password can hear each other. Everyone else stays on PUBLIC. Works across iPhone, Android and Mac.")
+            Text(MacString.privateNote.text)
                 .font(.system(size: 12))
                 .foregroundStyle(Talky.dim)
                 .fixedSize(horizontal: false, vertical: true)
@@ -372,7 +374,7 @@ struct ChannelSheet: View {
                             .font(.vfd(14, weight: .bold))
                             .foregroundStyle(Talky.text)
                         Spacer()
-                        Button("LEAVE") {
+                        Button(MacString.leave.text) {
                             channels.leaveChannel()
                             dismiss()
                         }
@@ -381,9 +383,9 @@ struct ChannelSheet: View {
                 }
             }
 
-            TextField("Channel name", text: $name)
+            TextField(MacString.channelName.text, text: $name)
                 .textFieldStyle(.roundedBorder)
-            SecureField("Password (min 4 characters)", text: $password)
+            SecureField(MacString.passwordField.format(PrivateChannelManager.minPasswordLength), text: $password)
                 .textFieldStyle(.roundedBorder)
 
             if let error {
@@ -393,10 +395,10 @@ struct ChannelSheet: View {
             }
 
             HStack {
-                Button("CANCEL") { dismiss() }
+                Button(MacString.cancel.text) { dismiss() }
                     .buttonStyle(ChipButtonStyle(accent: Talky.dim))
                 Spacer()
-                Button("JOIN CHANNEL") {
+                Button(MacString.joinChannel.text) {
                     guard iap.isProUser else {
                         dismiss()
                         showPaywall = true
@@ -405,7 +407,7 @@ struct ChannelSheet: View {
                     if channels.joinChannel(name: name, password: password) {
                         dismiss()
                     } else {
-                        error = "Check name and password (min \(PrivateChannelManager.minPasswordLength) characters)."
+                        error = MacString.joinError.format(PrivateChannelManager.minPasswordLength)
                     }
                 }
                 .buttonStyle(ChipButtonStyle(filled: true))

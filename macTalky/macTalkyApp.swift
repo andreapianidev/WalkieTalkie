@@ -81,8 +81,8 @@ struct macTalkyApp: App {
         .windowStyle(.hiddenTitleBar)
         .commands {
             CommandGroup(replacing: .newItem) {}
-            CommandMenu("Radio") {
-                Button(radio.isPlaying ? "Pause" : "Play") {
+            CommandMenu(MacString.radio.text) {
+                Button(radio.isPlaying ? MacString.pause.text : MacString.play.text) {
                     if radio.isPlaying {
                         radio.pauseRadio()
                     } else if radio.currentStation != nil {
@@ -92,12 +92,12 @@ struct macTalkyApp: App {
                     }
                 }
                 .keyboardShortcut("p", modifiers: [.command])
-                Button("Next Station") { radio.nextStation() }
+                Button(MacString.nextStation.text) { radio.nextStation() }
                     .keyboardShortcut(.rightArrow, modifiers: [.command])
-                Button("Previous Station") { radio.previousStation() }
+                Button(MacString.previousStation.text) { radio.previousStation() }
                     .keyboardShortcut(.leftArrow, modifiers: [.command])
                 Divider()
-                Button("Stop") { radio.stopRadio() }
+                Button(MacString.stop.text) { radio.stopRadio() }
                     .keyboardShortcut(".", modifiers: [.command])
             }
         }

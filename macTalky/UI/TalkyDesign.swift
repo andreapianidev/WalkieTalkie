@@ -63,11 +63,11 @@ enum ConsoleBackdrop: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .carbon: return "Carbon"
-        case .nightOps: return "Night Ops"
-        case .oliveDrab: return "Olive Drab"
-        case .desertFox: return "Desert Fox"
-        case .navalGrey: return "Naval Grey"
+        case .carbon: return MacString.themeCarbon.text
+        case .nightOps: return MacString.themeNightOps.text
+        case .oliveDrab: return MacString.themeOliveDrab.text
+        case .desertFox: return MacString.themeDesertFox.text
+        case .navalGrey: return MacString.themeNavalGrey.text
         }
     }
 
@@ -284,7 +284,7 @@ struct PanelLabel: View {
     init(_ text: String) { self.text = text }
 
     var body: some View {
-        Text(text.uppercased())
+        Text(text.uppercased(with: MacString.locale))
             .font(.vfd(10, weight: .bold))
             .kerning(2.2)
             .foregroundStyle(Talky.dim)

@@ -24,15 +24,9 @@ private enum OBString {
         return Self.table[lang]?[self] ?? Self.table["en"]![self]!
     }
 
-    private static var languageKey: String {
-        let locale = Locale.current
-        let code = locale.language.languageCode?.identifier ?? "en"
-        if code == "zh" {
-            let script = locale.language.script?.identifier ?? "Hans"
-            return script == "Hant" ? "zh-Hant" : "zh-Hans"
-        }
-        return code
-    }
+    // La stessa scelta di MacString: onboarding e resto dell'app non devono
+    // finire in due lingue diverse quando la prima preferenza non e' fra le 14.
+    private static var languageKey: String { MacString.languageKey }
 
     private static let table: [String: [OBString: String]] = [
         "en": [

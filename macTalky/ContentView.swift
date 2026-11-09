@@ -17,7 +17,7 @@ enum ConsoleSection: String, CaseIterable, Identifiable {
     var title: String {
         switch self {
         case .walkie: return "Walkie"
-        case .radio: return "Radio"
+        case .radio: return MacString.radio.text
         case .live: return "Live HF · CB · POC"
         }
     }
@@ -145,7 +145,7 @@ struct ContentView: View {
                     .kerning(3)
                     .foregroundStyle(Talky.amber)
                     .shadow(color: Talky.amberDeep.opacity(0.6), radius: 8)
-                Text("FIELD COMMS CONSOLE")
+                Text(MacString.fieldConsole.text)
                     .font(.vfd(8, weight: .semibold))
                     .kerning(2.4)
                     .foregroundStyle(Talky.dim)
@@ -154,7 +154,7 @@ struct ContentView: View {
             .padding(.horizontal, 20)
             .padding(.bottom, 28)
 
-            PanelLabel("Modules")
+            PanelLabel(MacString.modules.text)
                 .padding(.horizontal, 20)
                 .padding(.bottom, 8)
 
@@ -169,13 +169,13 @@ struct ContentView: View {
 
             // Selettore sfondo tattico
             VStack(alignment: .leading, spacing: 8) {
-                PanelLabel("Backdrop")
+                PanelLabel(MacString.backdrop.text)
                 HStack(spacing: 8) {
                     ForEach(ConsoleBackdrop.allCases) { item in
                         backdropSwatch(item)
                     }
                 }
-                Text(backdrop.title.uppercased())
+                Text(backdrop.title.uppercased(with: MacString.locale))
                     .font(.vfd(8, weight: .semibold))
                     .kerning(1.6)
                     .foregroundStyle(Talky.dim.opacity(0.8))
@@ -188,13 +188,13 @@ struct ContentView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         StatusLamp(color: Talky.signal, on: engine.isNetworkActive)
-                        Text(engine.isNetworkActive ? "LINK ACTIVE" : "LINK DOWN")
+                        Text(engine.isNetworkActive ? MacString.linkActive.text : MacString.linkDown.text)
                             .font(.vfd(10, weight: .bold))
                             .kerning(1.2)
                             .foregroundStyle(engine.isNetworkActive ? Talky.signal : Talky.dim)
                         Spacer()
                     }
-                    Text("\(engine.connectedPeerCount) peer\(engine.connectedPeerCount == 1 ? "" : "s") · \(engine.status)")
+                    Text(MacString.count(engine.connectedPeerCount, one: .peerOne, many: .peerMany) + " · " + engine.status)
                         .font(.vfd(9))
                         .foregroundStyle(Talky.dim)
                         .lineLimit(2)
@@ -224,7 +224,7 @@ struct ContentView: View {
                         NSApp.keyWindow?.makeFirstResponder(nil)
                         withAnimation { showUpsell() }
                     } label: {
-                        Text("UNLOCK PRO")
+                        Text(MacString.unlockPro.text)
                     }
                     .buttonStyle(ChipButtonStyle(filled: true))
                 }
@@ -238,7 +238,7 @@ struct ContentView: View {
                         .overlay(Circle().strokeBorder(Talky.stroke, lineWidth: 1))
                 }
                 .buttonStyle(.plain)
-                .help("Settings (⌘,)")
+                .help(MacString.settingsHelp.text)
             }
             .frame(maxWidth: .infinity)
             .padding(.bottom, 18)
@@ -297,7 +297,7 @@ struct ContentView: View {
                 Image(systemName: item.icon)
                     .font(.system(size: 13, weight: .semibold))
                     .frame(width: 18)
-                Text(item.title.uppercased())
+                Text(item.title.uppercased(with: MacString.locale))
                     .font(.vfd(12, weight: .bold))
                     .kerning(1.6)
                 Spacer()

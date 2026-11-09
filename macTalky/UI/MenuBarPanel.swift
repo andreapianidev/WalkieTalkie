@@ -39,11 +39,11 @@ struct MenuBarPanel: View {
         HStack(spacing: 8) {
             StatusLamp(color: Talky.signal, on: engine.isNetworkActive)
             VStack(alignment: .leading, spacing: 1) {
-                Text((channels.currentChannelName ?? "PUBLIC").uppercased())
+                Text(channels.currentChannelName?.uppercased() ?? MacString.publicChannel.text)
                     .font(.vfd(12, weight: .heavy))
                     .kerning(1.6)
                     .foregroundStyle(Talky.amber)
-                Text("\(engine.connectedPeerCount) peer\(engine.connectedPeerCount == 1 ? "" : "s") linked")
+                Text(MacString.count(engine.connectedPeerCount, one: .peersLinkedOne, many: .peersLinkedMany))
                     .font(.vfd(9))
                     .foregroundStyle(Talky.dim)
             }
@@ -78,7 +78,7 @@ struct MenuBarPanel: View {
                 Image(systemName: receiving ? "speaker.wave.3.fill" : "mic.fill")
                     .font(.system(size: 15, weight: .bold))
                 VStack(spacing: 1) {
-                    Text(active ? "ON AIR" : receiving ? "RECEIVING" : "HOLD TO TALK")
+                    Text(active ? MacString.onAir.text : receiving ? MacString.receiving.text : MacString.holdToTalk.text)
                         .font(.vfd(12, weight: .heavy))
                         .kerning(1.8)
                     if active {
@@ -124,15 +124,15 @@ struct MenuBarPanel: View {
                         .font(.system(size: 11, weight: .semibold, design: .rounded))
                         .foregroundStyle(Talky.text)
                         .lineLimit(1)
-                    Text(radio.isBuffering ? "TUNING…" : station.genre.uppercased())
+                    Text(radio.isBuffering ? MacString.tuning.text : station.genre.uppercased())
                         .font(.vfd(8))
                         .kerning(1.2)
                         .foregroundStyle(Talky.dim)
                 } else {
-                    Text("Radio standby")
+                    Text(MacString.radioStandby.text)
                         .font(.system(size: 11, weight: .semibold, design: .rounded))
                         .foregroundStyle(Talky.dim)
-                    Text("\(radio.radioStations.count) STATIONS")
+                    Text(MacString.stationsCount.format(radio.radioStations.count))
                         .font(.vfd(8))
                         .kerning(1.2)
                         .foregroundStyle(Talky.dim.opacity(0.7))
@@ -170,7 +170,7 @@ struct MenuBarPanel: View {
 
     private var footer: some View {
         HStack {
-            Button("OPEN CONSOLE") {
+            Button(MacString.openConsole.text) {
                 openWindow(id: "main")
                 NSApp.activate(ignoringOtherApps: true)
             }
@@ -193,7 +193,7 @@ struct MenuBarPanel: View {
                     .foregroundStyle(Talky.dim)
             }
             .buttonStyle(.plain)
-            .help("Quit macTalky")
+            .help(MacString.quit.text)
         }
     }
 }

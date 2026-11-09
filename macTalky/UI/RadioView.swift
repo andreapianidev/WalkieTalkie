@@ -13,11 +13,11 @@ enum RadioFilter: String, CaseIterable, Identifiable {
 
     var label: String {
         switch self {
-        case .all: return "ALL"
-        case .free: return "FREE"
+        case .all: return MacString.filterAll.text
+        case .free: return MacString.filterFree.text
         case .pro: return "PRO"
-        case .favorites: return "FAVORITES"
-        case .recents: return "RECENTS"
+        case .favorites: return MacString.filterFavorites.text
+        case .recents: return MacString.filterRecents.text
         }
     }
 }
@@ -55,7 +55,7 @@ struct RadioView: View {
                     .padding(.top, 20)
                     .padding(.bottom, 6)
                     .opacity(display.flowing ? 1 : 0.35)
-                Text(display.flowing ? "ON AIR" : (radio.isPlaying ? "TUNING IN…" : "PAUSED"))
+                Text(display.flowing ? MacString.radioOnAir.text : (radio.isPlaying ? MacString.tuning.text : MacString.paused.text))
                     .font(.vfd(9, weight: .heavy))
                     .foregroundStyle(display.flowing ? Talky.amber : Talky.dim)
                     .padding(8)
@@ -69,9 +69,9 @@ struct RadioView: View {
     private var header: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 12) {
-                PanelLabel("World band receiver")
+                PanelLabel(MacString.worldBand.text)
                 Spacer()
-                Text("\(radio.radioStations.count) STATIONS")
+                Text(MacString.stationsCount.format(radio.radioStations.count))
                     .font(.vfd(10, weight: .bold))
                     .kerning(1.4)
                     .foregroundStyle(Talky.dim)
@@ -81,7 +81,7 @@ struct RadioView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "magnifyingglass")
                         .foregroundStyle(Talky.dim)
-                    TextField("Search station, country or genre…", text: $search)
+                    TextField(MacString.searchStations.text, text: $search)
                         .textFieldStyle(.plain)
                         .font(.system(size: 13))
                         .foregroundStyle(Talky.text)
@@ -183,9 +183,9 @@ struct RadioView: View {
 
     private var emptyMessage: String {
         switch filter {
-        case .favorites: return "No favorites yet. Click the star on any station."
-        case .recents: return "Stations you play will appear here."
-        default: return "No station matches your search."
+        case .favorites: return MacString.noFavorites.text
+        case .recents: return MacString.noRecents.text
+        default: return MacString.noMatch.text
         }
     }
 
@@ -256,16 +256,16 @@ struct RadioView: View {
                             .shadow(color: Talky.amberDeep.opacity(0.6), radius: 6)
                             .lineLimit(1)
                         Text(radio.isBuffering
-                             ? "TUNING…"
+                             ? MacString.tuning.text
                              : "\(station.genre.uppercased()) · \(station.countryName.uppercased())")
                             .font(.vfd(9))
                             .kerning(1.4)
                             .foregroundStyle(Talky.dim)
                     } else {
-                        Text("STANDBY")
+                        Text(MacString.standby.text)
                             .font(.vfd(15, weight: .bold))
                             .foregroundStyle(Talky.dim)
-                        Text(radio.lastError ?? "SELECT A STATION")
+                        Text(radio.lastError ?? MacString.selectStation.text)
                             .font(.vfd(9))
                             .kerning(1.4)
                             .foregroundStyle(radio.lastError == nil ? Talky.dim : Talky.alarm)

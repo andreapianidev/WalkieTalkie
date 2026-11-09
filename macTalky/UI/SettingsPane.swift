@@ -17,17 +17,17 @@ struct SettingsPane: View {
     var body: some View {
         TabView {
             generalTab
-                .tabItem { Label("General", systemImage: "gearshape") }
+                .tabItem { Label(MacString.tabGeneral.text, systemImage: "gearshape") }
             walkieTab
                 .tabItem { Label("Walkie", systemImage: "dot.radiowaves.left.and.right") }
             radioTab
-                .tabItem { Label("Radio", systemImage: "antenna.radiowaves.left.and.right") }
+                .tabItem { Label(MacString.radio.text, systemImage: "antenna.radiowaves.left.and.right") }
             appearanceTab
-                .tabItem { Label("Appearance", systemImage: "paintpalette") }
+                .tabItem { Label(MacString.tabAppearance.text, systemImage: "paintpalette") }
             proTab
                 .tabItem { Label("Talky Pro", systemImage: "crown") }
             aboutTab
-                .tabItem { Label("About", systemImage: "info.circle") }
+                .tabItem { Label(MacString.tabAbout.text, systemImage: "info.circle") }
         }
         .frame(width: 520, height: 460)
     }
@@ -36,24 +36,24 @@ struct SettingsPane: View {
 
     private var generalTab: some View {
         Form {
-            Section("Identity") {
-                TextField("Device name on the network", text: $settings.deviceName)
-                Text("Other Talky devices (iPhone, Android, Mac) see this name. Applied after restarting the link.")
+            Section(MacString.identity.text) {
+                TextField(MacString.deviceName.text, text: $settings.deviceName)
+                Text(MacString.identityNote.text)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
-            Section("Startup") {
-                Toggle("Start network link at launch", isOn: $settings.autoStartNetwork)
-                Toggle("Resume last radio station at launch", isOn: $settings.autoResumeRadio)
+            Section(MacString.startup.text) {
+                Toggle(MacString.autoStartLink.text, isOn: $settings.autoStartNetwork)
+                Toggle(MacString.autoResumeRadio.text, isOn: $settings.autoResumeRadio)
             }
-            Section("Menu bar") {
-                Toggle("Show mini console in the menu bar", isOn: $settings.showMenuBarExtra)
-                Text("Push-to-talk, peers and radio controls always one click away, even with the main window closed.")
+            Section(MacString.menuBar.text) {
+                Toggle(MacString.showMiniConsole.text, isOn: $settings.showMenuBarExtra)
+                Text(MacString.menuBarNote.text)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
             Section {
-                Button("Reset all settings to defaults") {
+                Button(MacString.resetDefaults.text) {
                     settings.resetToDefaults()
                 }
             }
@@ -65,42 +65,44 @@ struct SettingsPane: View {
 
     private var walkieTab: some View {
         Form {
-            Section("Push-to-talk") {
-                Toggle("Hold Space bar to talk", isOn: $settings.spacebarPTT)
-                LabeledContent("Max transmission") { Text("10 seconds") }
-                Text("One transmission is sent as a single TALKY1 frame: the 10 s cap keeps it compatible with Talky iOS and Android receivers.")
+            Section(MacString.pushToTalk.text) {
+                Toggle(MacString.holdSpace.text, isOn: $settings.spacebarPTT)
+                LabeledContent(MacString.maxTransmission.text) { Text(MacString.tenSeconds.text) }
+                Text(MacString.transmissionNote.text)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
-            Section("Microphone") {
-                LabeledContent("Permission") {
+            Section(MacString.microphone.text) {
+                LabeledContent(MacString.permission.text) {
                     if engine.hasMicPermission {
-                        Label("Authorized", systemImage: "checkmark.circle.fill")
+                        Label(MacString.authorized.text, systemImage: "checkmark.circle.fill")
                             .foregroundStyle(.green)
                     } else if engine.micPermissionDenied {
                         // Il prompt di sistema non si ripresenta dopo un rifiuto:
                         // un bottone "chiedi accesso" qui sarebbe un vicolo cieco.
-                        Button("Open System Settings") {
+                        Button(MacString.openSystemSettings.text) {
                             if let url = URL(string:
                                 "x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone") {
                                 NSWorkspace.shared.open(url)
                             }
                         }
                     } else {
-                        Button("Request access") { engine.requestMicPermission() }
+                        // Guideline 5.1.1(iv): prima del prompt di sistema il bottone
+                        // resta neutro, come quello del roster in WalkieView.
+                        Button(MacString.continueButton.text) { engine.requestMicPermission() }
                     }
                 }
             }
-            Section("Network link") {
-                LabeledContent("Status") { Text(engine.status) }
-                LabeledContent("Connected peers") { Text("\(engine.connectedPeerCount)") }
+            Section(MacString.networkLink.text) {
+                LabeledContent(MacString.status.text) { Text(engine.status) }
+                LabeledContent(MacString.connectedPeers.text) { Text("\(engine.connectedPeerCount)") }
                 HStack {
-                    Button(engine.isNetworkActive ? "Stop link" : "Start link") {
+                    Button(engine.isNetworkActive ? MacString.stopLink.text : MacString.startLink.text) {
                         engine.isNetworkActive ? engine.stop() : engine.start()
                     }
-                    Button("Restart link") { engine.channelDidChange() }
+                    Button(MacString.restartLink.text) { engine.channelDidChange() }
                 }
-                Text("Talky devices discover each other over Bonjour on the local network: no internet, no accounts (TALKY1 protocol).")
+                Text(MacString.bonjourNote.text)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -112,8 +114,8 @@ struct SettingsPane: View {
 
     private var radioTab: some View {
         Form {
-            Section("Playback") {
-                LabeledContent("Volume") {
+            Section(MacString.playback.text) {
+                LabeledContent(MacString.volume.text) {
                     Slider(
                         value: Binding(
                             get: { Double(settings.radioVolume) },
@@ -123,12 +125,12 @@ struct SettingsPane: View {
                     )
                     .frame(width: 180)
                 }
-                Toggle("Resume last station at launch", isOn: $settings.autoResumeRadio)
+                Toggle(MacString.resumeLastStation.text, isOn: $settings.autoResumeRadio)
             }
-            Section("Stations") {
-                LabeledContent("Catalog") { Text("\(radio.radioStations.count) stations · \(radio.freeStations.count) free") }
-                LabeledContent("Favorites") { Text("\(radio.favoriteStations.count)") }
-                Text("While a peer talks on the walkie, the radio automatically ducks to 20% and comes back after the message.")
+            Section(MacString.stations.text) {
+                LabeledContent(MacString.catalog.text) { Text(MacString.catalogValue.format(radio.radioStations.count, radio.freeStations.count)) }
+                LabeledContent(MacString.favorites.text) { Text("\(radio.favoriteStations.count)") }
+                Text(MacString.duckNote.text)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -140,11 +142,11 @@ struct SettingsPane: View {
 
     private var appearanceTab: some View {
         Form {
-            Section("Console backdrop") {
+            Section(MacString.consoleBackdrop.text) {
                 ForEach(ConsoleBackdrop.allCases) { item in
                     backdropRow(item)
                 }
-                Text("Premium backdrops unlock with Talky Pro or the Themes Pack, the same purchases as the iOS app (universal purchase).")
+                Text(MacString.premiumNote.text)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -182,18 +184,18 @@ struct SettingsPane: View {
 
     private var proTab: some View {
         Form {
-            Section("Status") {
+            Section(MacString.status.text) {
                 LabeledContent("Talky Pro") {
-                    Text(iap.isProUser ? "Active" : "Not active")
+                    Text(iap.isProUser ? MacString.active.text : MacString.notActive.text)
                         .foregroundStyle(iap.isProUser ? .green : .secondary)
                 }
-                LabeledContent("Themes Pack") {
-                    Text(iap.hasThemesPack ? "Purchased" : "Not purchased")
+                LabeledContent(MacString.themesPack.text) {
+                    Text(iap.hasThemesPack ? MacString.purchased.text : MacString.notPurchased.text)
                         .foregroundStyle(iap.hasThemesPack ? .green : .secondary)
                 }
             }
             if !iap.isProUser {
-                Section("Subscribe") {
+                Section(MacString.subscribe.text) {
                     ForEach(iap.products.filter { ProductID.subscriptionIDs.contains($0.id) }, id: \.id) { product in
                         LabeledContent(product.displayName.isEmpty ? product.id : product.displayName) {
                             Button(product.displayPrice) {
@@ -202,17 +204,17 @@ struct SettingsPane: View {
                         }
                     }
                     if iap.products.isEmpty {
-                        Text("Products are loading from the App Store…")
+                        Text(MacString.loadingProducts.text)
                             .foregroundStyle(.secondary)
                     }
                 }
             }
             Section {
-                Button("Restore purchases") {
+                Button(MacString.restorePurchases.text) {
                     Task { try? await iap.restorePurchases() }
                 }
-                Link("Manage subscription", destination: URL(string: "https://apps.apple.com/account/subscriptions")!)
-                Text("One purchase unlocks Pro on iPhone, iPad and Mac (universal purchase).")
+                Link(MacString.manageSubscription.text, destination: URL(string: "https://apps.apple.com/account/subscriptions")!)
+                Text(MacString.universalNote.text)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -246,29 +248,29 @@ struct SettingsPane: View {
     private var aboutTab: some View {
         Form {
             Section("macTalky") {
-                LabeledContent("Version") {
+                LabeledContent(MacString.version.text) {
                     Text("\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0") (\(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"))")
                 }
-                LabeledContent("Protocol") { Text("TALKY1 · Bonjour + TCP · PCM 48 kHz") }
+                LabeledContent(MacString.protocolLabel.text) { Text("TALKY1 · Bonjour + TCP · PCM 48 kHz") }
             }
-            Section("Write to me") {
-                Text("I'm Andrea and I make Talky. I read every message and reply myself.")
+            Section(MacString.writeToMe.text) {
+                Text(MacString.writeIntro.text)
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                Link("Report a problem", destination: Self.mailURL(topic: "problem"))
-                Link("Suggest a feature", destination: Self.mailURL(topic: "idea"))
-                Link("Just say hello", destination: Self.mailURL(topic: "message"))
-                Link("Rate Talky on the App Store", destination: URL(string: "macappstore://apps.apple.com/app/id6748584483?action=write-review")!)
+                Link(MacString.reportProblem.text, destination: Self.mailURL(topic: "problem"))
+                Link(MacString.suggestFeature.text, destination: Self.mailURL(topic: "idea"))
+                Link(MacString.sayHello.text, destination: Self.mailURL(topic: "message"))
+                Link(MacString.rateTalky.text, destination: URL(string: "macappstore://apps.apple.com/app/id6748584483?action=write-review")!)
             }
-            Section("Links") {
-                Link("Talky for iPhone & iPad", destination: URL(string: "https://apps.apple.com/app/id6748584483")!)
-                Link("Talky for Android (GitHub Releases)", destination: URL(string: "https://github.com/andreapianidev/WalkieTalkie/releases")!)
-                Link("Source code on GitHub", destination: URL(string: "https://github.com/andreapianidev/WalkieTalkie")!)
-                Link("Website", destination: URL(string: "https://walkie-talky.vercel.app")!)
+            Section(MacString.links.text) {
+                Link(MacString.talkyIPhone.text, destination: URL(string: "https://apps.apple.com/app/id6748584483")!)
+                Link(MacString.talkyAndroid.text, destination: URL(string: "https://github.com/andreapianidev/WalkieTalkie/releases")!)
+                Link(MacString.sourceCode.text, destination: URL(string: "https://github.com/andreapianidev/WalkieTalkie")!)
+                Link(MacString.website.text, destination: URL(string: "https://walkie-talky.vercel.app")!)
                 Link("andreapiani.com", destination: URL(string: "https://www.andreapiani.com")!)
             }
             Section {
-                Text("© 2026 Andrea Piani · NIE Z2331796-S · Tijarafe, Santa Cruz de Tenerife · Islas Canarias. Source-available under the PolyForm Noncommercial License 1.0.0.")
+                Text("© 2026 Andrea Piani · NIE Z2331796-S · Tijarafe, Santa Cruz de Tenerife · Islas Canarias. " + MacString.license.text)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

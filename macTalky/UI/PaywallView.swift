@@ -29,7 +29,7 @@ struct PaywallView: View {
                     .kerning(4)
                     .foregroundStyle(Talky.amber)
                     .shadow(color: Talky.amberDeep.opacity(0.7), radius: 10)
-                Text("One purchase. iPhone, iPad and Mac.")
+                Text(MacString.onePurchase.text)
                     .font(.system(size: 12, design: .rounded))
                     .foregroundStyle(Talky.dim)
             }
@@ -74,10 +74,12 @@ struct PaywallView: View {
             } else if iap.products.isEmpty {
                 VStack(spacing: 8) {
                     ProgressView()
-                    Text("Loading products from the App Store…")
+                    Text(MacString.loadingProducts.text)
                         .font(.system(size: 11))
                         .foregroundStyle(Talky.dim)
-                    Text("If nothing loads, make sure the Mac platform is enabled for Talky on App Store Connect.")
+                    // Prima qui c'era una nota per lo sviluppatore (App Store Connect):
+                    // a chi compra serve sapere cosa fare, non come si configura lo Store.
+                    Text(MacString.loadingHint.text)
                         .font(.system(size: 10))
                         .foregroundStyle(Talky.dim.opacity(0.7))
                         .multilineTextAlignment(.center)
@@ -87,10 +89,10 @@ struct PaywallView: View {
             } else {
                 HStack(spacing: 12) {
                     if let weekly {
-                        planCard(weekly, title: "WEEKLY", highlight: false)
+                        planCard(weekly, title: MacString.weekly.text, highlight: false)
                     }
                     if let yearly {
-                        planCard(yearly, title: "YEARLY", highlight: true)
+                        planCard(yearly, title: MacString.yearly.text, highlight: true)
                     }
                 }
                 .frame(width: 380)
@@ -99,7 +101,7 @@ struct PaywallView: View {
                     Button {
                         buy { try await iap.purchaseThemesPack() }
                     } label: {
-                        Text("THEMES PACK · \(themesPack.displayPrice) ONE-TIME")
+                        Text(MacString.themesPackOneTime.format(themesPack.displayPrice))
                     }
                     .buttonStyle(ChipButtonStyle(accent: Talky.teal))
                     .disabled(purchasing)
@@ -110,7 +112,7 @@ struct PaywallView: View {
             // loro: e' una scelta diversa in natura, non un terzo piano da
             // confrontare a colpo d'occhio. Stessa logica della paywall iOS.
             if iap.hasLifetime {
-                Text("YOURS FOREVER · THANK YOU")
+                Text(MacString.yoursForever.text)
                     .font(.vfd(10, weight: .bold))
                     .kerning(1.4)
                     .foregroundStyle(Talky.signal)
@@ -119,12 +121,12 @@ struct PaywallView: View {
                     Button {
                         buy { try await iap.purchase(lifetime) }
                     } label: {
-                        Text("PAY ONCE · \(lifetime.displayPrice) FOREVER")
+                        Text(MacString.payOnce.format(lifetime.displayPrice))
                     }
                     .buttonStyle(ChipButtonStyle(accent: Talky.amber))
                     .disabled(purchasing)
 
-                    Text("One payment. Everything Pro, themes included. No subscription.")
+                    Text(MacString.lifetimeNote.text)
                         .font(.system(size: 10, design: .rounded))
                         .foregroundStyle(Talky.dim)
                 }
@@ -139,31 +141,30 @@ struct PaywallView: View {
             }
 
             HStack(spacing: 14) {
-                Button("RESTORE PURCHASES") {
+                Button(MacString.restoreCaps.text) {
                     buy { try await iap.restorePurchases(); return true }
                 }
                 .buttonStyle(ChipButtonStyle(accent: Talky.dim))
                 .disabled(purchasing)
 
-                Button("CLOSE") { dismiss() }
+                Button(MacString.close.text) { dismiss() }
                     .buttonStyle(ChipButtonStyle(accent: Talky.dim))
             }
 
             // Guideline 3.1.2: un'app con abbonamenti auto-rinnovabili deve
             // esporre Terms of Use e Privacy Policy raggiungibili *dalla paywall*,
             // non solo nella descrizione su App Store — ed e' esattamente il link
-            // mancante che ha fatto respingere la 1.1.1 lato metadati. Testo in
-            // inglese perche' macTalky non e' localizzata; 10pt per non rubare
-            // altezza a una sheet che non ha ScrollView.
+            // mancante che ha fatto respingere la 1.1.1 lato metadati. 10pt per
+            // non rubare altezza a una sheet che non ha ScrollView.
             VStack(spacing: 4) {
                 HStack(spacing: 6) {
-                    Link("Terms of Use (EULA)",
+                    Link(MacString.terms.text,
                          destination: LegalPage.terms.url)
                     Text("·").foregroundStyle(Talky.dim.opacity(0.5))
-                    Link("Privacy Policy",
+                    Link(MacString.privacy.text,
                          destination: LegalPage.privacy.url)
                 }
-                Text("Subscriptions renew automatically unless cancelled at least 24 hours before the end of the period. Manage them in your Apple Account settings.")
+                Text(MacString.renewal.text)
                     .frame(width: 380)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(Talky.dim.opacity(0.7))
@@ -184,9 +185,8 @@ struct PaywallView: View {
 
     /// Chi c'è dietro Talky. Sta fra le feature e i prezzi perché è il *perché*
     /// che dà senso al *quanto*: l'app è scritta da una persona sola e il codice
-    /// è pubblico, quindi Pro è un contributo, non un lucchetto. macTalky non è
-    /// localizzata, quindi resta in inglese; ed è deliberatamente più corto del
-    /// testo iOS, perché questo pannello non ha ScrollView e la sua altezza è
+    /// è pubblico, quindi Pro è un contributo, non un lucchetto. È più corto
+    /// del testo iOS perché questo pannello non ha ScrollView e la sua altezza è
     /// quella della sheet: un paragrafo di sei righe a 11pt lo farebbe sembrare
     /// una EULA invece di una console.
     private var supporterNote: some View {
@@ -195,19 +195,19 @@ struct PaywallView: View {
                 Image(systemName: "heart.fill")
                     .font(.system(size: 10, weight: .bold))
                     .foregroundStyle(Talky.amber)
-                Text("A NOTE FROM THE DEV")
+                Text(MacString.devNoteTitle.text)
                     .font(.vfd(9, weight: .bold))
                     .kerning(1.6)
                     .foregroundStyle(Talky.dim)
             }
 
-            Text("Talky is built by one independent developer, and its code is public on GitHub. Pro is a contribution that keeps it alive, and Talky stays free for everyone else.")
+            Text(MacString.devNote.text)
                 .font(.system(size: 11, design: .rounded))
                 .foregroundStyle(Talky.text.opacity(0.8))
                 .lineSpacing(2)
                 .fixedSize(horizontal: false, vertical: true)
 
-            Link("See the code on GitHub",
+            Link(MacString.seeCode.text,
                  destination: URL(string: "https://github.com/andreapianidev/WalkieTalkie")!)
                 .font(.system(size: 11, weight: .semibold, design: .rounded))
                 .foregroundStyle(Talky.dim)
@@ -265,7 +265,7 @@ struct PaywallView: View {
                     .font(.vfd(20, weight: .heavy))
                     .foregroundStyle(highlight ? Talky.coal : Talky.amber)
                 if highlight {
-                    Text("BEST VALUE")
+                    Text(MacString.bestValue.text)
                         .font(.vfd(8, weight: .bold))
                         .kerning(1.2)
                         .foregroundStyle(Talky.coal.opacity(0.7))

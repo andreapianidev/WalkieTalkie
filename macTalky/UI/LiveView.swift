@@ -48,16 +48,16 @@ struct LiveView: View {
 
     private var header: some View {
         HStack(spacing: 10) {
-            PanelLabel("Live receiver")
+            PanelLabel(MacString.liveReceiver.text)
             Spacer()
             ForEach([LiveRadio.Band.hf, .cb, .poc], id: \.self) { b in
-                Button(b == .hf ? "HF SHORTWAVE" : b == .cb ? "CB 27 MHZ" : "POC CHANNELS") {
+                Button(b == .hf ? MacString.bandHF.text : b == .cb ? "CB 27 MHZ" : MacString.bandPOC.text) {
                     band = b
                     if live.isOn { live.start(b) }
                 }
                 .buttonStyle(ChipButtonStyle(accent: band == b ? Talky.amber : Talky.dim, filled: band == b))
             }
-            Button(live.isOn ? "STOP" : "LISTEN") {
+            Button(live.isOn ? MacString.stopCaps.text : MacString.listen.text) {
                 live.isOn ? live.stop() : live.start(band)
             }
             .buttonStyle(ChipButtonStyle(accent: live.isOn ? Talky.alarm : Talky.signal, filled: true))
@@ -73,7 +73,7 @@ struct LiveView: View {
                 LazyVStack(alignment: .leading, spacing: 2) {
                     if band == .cb {
                         row(title: "DX 27.555",
-                            subtitle: "27.555 MHz USB · SSB DX calling frequency",
+                            subtitle: "27.555 MHz USB · " + MacString.dxCall.text,
                             selected: live.band == .cb && live.tuning.hz == CitizensBand.dxCall) {
                             live.tuneCB(hz: CitizensBand.dxCall)
                             if live.band != .cb { live.start(.cb) }
@@ -99,7 +99,7 @@ struct LiveView: View {
                         if live.pocChannels.isEmpty {
                             HStack(spacing: 8) {
                                 if live.isScouting { ProgressView().controlSize(.small) }
-                                Text(live.isScouting ? "Looking for channels with people on them…" : "Press LISTEN to find live channels")
+                                Text(live.isScouting ? MacString.scouting.text : MacString.pressListen.text)
                                     .font(.system(size: 12))
                                     .foregroundStyle(Talky.dim)
                             }
@@ -107,7 +107,7 @@ struct LiveView: View {
                         }
                         ForEach(Array(live.pocChannels.enumerated()), id: \.element.id) { i, ch in
                             row(title: ch.channel,
-                                subtitle: "\(ch.server.name) · \(ch.users) in channel",
+                                subtitle: ch.server.name + " · " + MacString.inChannel.format(ch.users),
                                 selected: live.band == .poc && i == live.pocIndex) {
                                 live.stopScan()
                                 live.selectPOC(i)
@@ -151,13 +151,13 @@ struct LiveView: View {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     StatusLamp(color: statusColor, on: live.isOn)
-                    Text(live.isOn ? statusText : "STANDBY")
+                    Text(live.isOn ? statusText : MacString.standby.text)
                         .font(.vfd(10, weight: .bold))
                         .kerning(1.2)
                         .foregroundStyle(live.isOn ? statusColor : Talky.dim)
                         .lineLimit(1)
                     Spacer()
-                    Text("LISTEN ONLY")
+                    Text(MacString.listenOnly.text)
                         .font(.vfd(9, weight: .bold))
                         .kerning(1.4)
                         .foregroundStyle(Talky.dim)
@@ -174,7 +174,7 @@ struct LiveView: View {
                             .foregroundStyle(Talky.amber.opacity(0.8))
                         Spacer()
                         if live.squelchOn {
-                            Text(live.squelchOpen ? "BUSY" : "SQL")
+                            Text(live.squelchOpen ? MacString.busy.text : "SQL")
                                 .font(.vfd(11, weight: .bold))
                                 .foregroundStyle(live.squelchOpen ? Talky.signal : Talky.dim)
                         }
@@ -233,18 +233,18 @@ struct LiveView: View {
                     PanoramaView(panorama: live.panorama,
                                  tuning: live.tuning,
                                  signalDBm: live.signalDBm,
-                                 words: PanoramaWords(overNoise: "%d dB ABOVE NOISE",
-                                                      noiseOnly: "NOISE ONLY",
+                                 words: PanoramaWords(overNoise: MacString.overNoise.text,
+                                                      noiseOnly: MacString.noiseOnly.text,
                                                       waiting: live.isOutOfFreeTime ? freeTimeUp
-                                                          : live.spectrumSearching ? "LOOKING FOR A RECEIVER WITH SPECTRUM"
-                                                          : live.spectrumMissing ? "NO SPECTRUM FROM THESE RECEIVERS, AUDIO ONLY"
-                                                          : "WAITING FOR SPECTRUM"))
+                                                          : live.spectrumSearching ? MacString.spectrumSearching.text
+                                                          : live.spectrumMissing ? MacString.spectrumMissing.text
+                                                          : MacString.spectrumWaiting.text))
                         .frame(height: 230)
                         .onTapGesture { if live.isOutOfFreeTime { showPaywall = true } }
                 }
 
                 HStack {
-                    Text((band.isKiwi ? "RECEIVER " : "SERVER ") + (live.sourceName.isEmpty ? "--" : live.sourceName.uppercased()))
+                    Text((band.isKiwi ? MacString.receiverLabel.text : MacString.serverLabel.text) + " " + (live.sourceName.isEmpty ? "--" : live.sourceName.uppercased()))
                         .font(.vfd(9, weight: .semibold))
                         .foregroundStyle(Talky.dim)
                         .lineLimit(1)
@@ -270,14 +270,14 @@ struct LiveView: View {
     /// CB: canali o DX, modo, squelch, frequenza scritta a mano.
     private var cbControls: some View {
         HStack(spacing: 10) {
-            Button(live.cbIsDX ? "CHANNELS" : "DX 27.555") { live.toggleCBSection() }
+            Button(live.cbIsDX ? MacString.channelsCaps.text : "DX 27.555") { live.toggleCBSection() }
                 .buttonStyle(ChipButtonStyle(accent: Talky.teal))
-            Button("MODE \(live.tuning.emission.rawValue)") { live.cycleCBMode() }
+            Button(MacString.modeFormat.format(live.tuning.emission.rawValue)) { live.cycleCBMode() }
                 .buttonStyle(ChipButtonStyle(accent: Talky.teal))
-                .help("AM, FM, LSB or USB")
+                .help(MacString.modeHelp.text)
             Button("SQL") { live.toggleSquelch() }
                 .buttonStyle(ChipButtonStyle(accent: Talky.teal, filled: live.squelchOn))
-                .help("Squelch: silence when nobody is transmitting")
+                .help(MacString.squelchHelp.text)
             Spacer()
             TextField("27.555", text: $typedFrequency)
                 .textFieldStyle(.roundedBorder)
@@ -287,7 +287,7 @@ struct LiveView: View {
             Text("MHz")
                 .font(.vfd(10))
                 .foregroundStyle(typedWrong ? Talky.alarm : Talky.dim)
-            Button("TUNE", action: tuneTyped)
+            Button(MacString.tune.text, action: tuneTyped)
                 .buttonStyle(ChipButtonStyle(accent: Talky.teal))
                 .disabled(typedFrequency.isEmpty)
         }
@@ -305,10 +305,10 @@ struct LiveView: View {
 
     private var mainControls: some View {
         HStack(spacing: 10) {
-            Button { live.step(-1) } label: { Label("PREV", systemImage: "backward.fill") }
+            Button { live.step(-1) } label: { Label(MacString.prev.text, systemImage: "backward.fill") }
                 .buttonStyle(ChipButtonStyle())
                 .keyboardShortcut(.leftArrow, modifiers: [])
-            Button { live.step(1) } label: { Label("NEXT", systemImage: "forward.fill") }
+            Button { live.step(1) } label: { Label(MacString.next.text, systemImage: "forward.fill") }
                 .buttonStyle(ChipButtonStyle())
                 .keyboardShortcut(.rightArrow, modifiers: [])
             if band.isKiwi {
@@ -328,13 +328,13 @@ struct LiveView: View {
                     }
                 } label: {
                     HStack(spacing: 6) {
-                        Text(live.isScanning ? "SCAN ON" : "SCAN")
+                        Text(live.isScanning ? MacString.scanOn.text : MacString.scan.text)
                         if !iap.isProUser { ProBadge() }
                     }
                 }
                 .buttonStyle(ChipButtonStyle(accent: Talky.teal, filled: live.isScanning))
                 if band == .poc {
-                    Button("REFRESH") { live.rescanPOC() }
+                    Button(MacString.refresh.text) { live.rescanPOC() }
                         .buttonStyle(ChipButtonStyle(accent: Talky.teal))
                         .disabled(live.isScouting)
                 }
@@ -349,11 +349,7 @@ struct LiveView: View {
     }
 
     private var footnote: some View {
-        Text(band == .hf
-             ? "You listen through public KiwiSDR receivers, shared for free by radio amateurs around the world. Talky picks a receiver near the station."
-             : band == .cb
-             ? "Real CB, from the public KiwiSDR receivers nearest to you. You hear whoever is transmitting when propagation opens the band, usually during the day. With squelch on, the hiss stays muted between transmissions."
-             : "Public Mumble channels with people on them right now. Talky joins muted and only listens.")
+        Text(band == .hf ? MacString.footHF.text : band == .cb ? MacString.footCB.text : MacString.footPOC.text)
             .font(.system(size: 11))
             .foregroundStyle(Talky.dim)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -376,15 +372,15 @@ struct LiveView: View {
     }
 
     private var cbLine: String {
-        if live.isScanning { return live.scanHolding ? "SCAN STOPPED, SOMEONE IS TRANSMITTING" : "SCANNING" }
-        if live.squelchOpen { return "SIGNAL ON THE CHANNEL" }
-        return live.squelchOn ? "CHANNEL CLEAR, SQUELCH CLOSED" : "SQUELCH OFF, YOU HEAR THE BAND NOISE"
+        if live.isScanning { return live.scanHolding ? MacString.scanStoppedTX.text : MacString.scanning.text }
+        if live.squelchOpen { return MacString.signalOnChannel.text }
+        return live.squelchOn ? MacString.channelClear.text : MacString.squelchOff.text
     }
 
     private var pocLine: String {
-        if let t = live.talker { return "SPEAKING: \(t.uppercased())" }
-        if live.isScanning { return live.scanHolding ? "SCAN STOPPED, SOMEONE IS TALKING" : "SCANNING" }
-        if let n = live.audience { return "\(n) IN CHANNEL · NOBODY TALKING RIGHT NOW" }
+        if let t = live.talker { return MacString.speaking.format(t.uppercased()) }
+        if live.isScanning { return live.scanHolding ? MacString.scanStoppedTalk.text : MacString.scanning.text }
+        if let n = live.audience { return MacString.audienceQuiet.format(n) }
         return live.sourceName.uppercased()
     }
 
@@ -396,35 +392,35 @@ struct LiveView: View {
         }
     }
 
-    private var freeTimeUp: String { "TODAY'S \(FreeListening.secondsPerDay / 60) FREE MINUTES ARE USED" }
+    private var freeTimeUp: String { MacString.freeTimeUp.format(FreeListening.secondsPerDay / 60) }
 
     private var statusText: String {
         if live.isOutOfFreeTime { return freeTimeUp }
         if let left = live.freeSecondsLeft, live.state == .online {
-            return String(format: "LIVE · FREE %d:%02d", left / 60, left % 60)
+            return MacString.liveFree.format(left / 60, left % 60)
         }
-        if live.band == .poc, live.isScouting, live.pocChannels.isEmpty { return "SEARCHING CHANNELS" }
+        if live.band == .poc, live.isScouting, live.pocChannels.isEmpty { return MacString.searchingChannels.text }
         switch live.state {
-        case .idle, .connecting: return "CONNECTING"
-        case .online: return "LIVE"
+        case .idle, .connecting: return MacString.connecting.text
+        case .online: return MacString.live.text
         case .refused(let p), .dropped(let p):
             switch p {
-            case .full: return live.band == .poc ? "SERVER FULL" : "NO FREE RECEIVER RIGHT NOW"
-            case .refused, .needsCertificate: return "ACCESS REFUSED"
-            case .down: return live.band == .poc ? "NO LIVE CHANNELS, PRESS REFRESH" : "RECEIVER LIST UNREACHABLE"
-            case .closed: return "LINK CLOSED"
-            case .timeout: return "NO RESPONSE"
+            case .full: return live.band == .poc ? MacString.serverFull.text : MacString.noFreeReceiver.text
+            case .refused, .needsCertificate: return MacString.accessRefused.text
+            case .down: return live.band == .poc ? MacString.noLiveChannels.text : MacString.receiverListDown.text
+            case .closed: return MacString.linkClosed.text
+            case .timeout: return MacString.noResponse.text
             }
         }
     }
 
     private func kindText(_ kind: HFChannel.Kind) -> String {
         switch kind {
-        case .aviation: return "Aviation weather, around the clock"
-        case .time: return "Time signal, around the clock"
-        case .amateur: return "Radio amateurs, activity varies"
-        case .citizens: return "CB citizens band, activity varies"
-        case .digital: return "FT8 digital signals"
+        case .aviation: return MacString.kindAviation.text
+        case .time: return MacString.kindTime.text
+        case .amateur: return MacString.kindAmateur.text
+        case .citizens: return MacString.kindCitizens.text
+        case .digital: return MacString.kindDigital.text
         }
     }
 }
