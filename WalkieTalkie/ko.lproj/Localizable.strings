@@ -19,7 +19,7 @@
 "version" = "버전";
 "developed_by" = "개발";
 "website" = "웹사이트";
-"open_source" = "오픈 소스";
+"open_source" = "소스 코드";
 "view_on_github" = "GitHub에서 보기";
 "license" = "라이선스";
 

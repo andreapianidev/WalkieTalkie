@@ -173,7 +173,7 @@ cp keystore.properties.sample keystore.properties   # then edit values, or remov
 - Requires the Android SDK and a `local.properties` with `sdk.dir` (Android Studio generates it automatically).
 - `google-services.json` is included for Firebase; replace it with yours or remove the Firebase plugins.
 
-> 📣 **Ad units note**: for the open-source / sideload APK, [`AdConfig.kt`](Android/app/src/main/java/com/immaginet/talky/ads/AdConfig.kt) intentionally uses Google's **test** ad units (and a test AdMob App ID in the manifest). This is the policy-compliant choice for an APK that is **not** distributed via the Play Store. Replace the `LIVE_*` IDs and the manifest App ID with your own real AdMob IDs before any Play Store release, the config switches to live IDs automatically once real (non-placeholder) values are present in a release build.
+> 📣 **Ad units note**: for the sideload APK built from this source, [`AdConfig.kt`](Android/app/src/main/java/com/immaginet/talky/ads/AdConfig.kt) intentionally uses Google's **test** ad units (and a test AdMob App ID in the manifest). This is the policy-compliant choice for an APK that is **not** distributed via the Play Store. Replace the `LIVE_*` IDs and the manifest App ID with your own real AdMob IDs before any Play Store release, the config switches to live IDs automatically once real (non-placeholder) values are present in a release build.
 
 > 🚫 **Not on Google Play (yet).** This repo ships the Android **source + a [signed APK](https://github.com/andreapianidev/WalkieTalkie/releases/download/android-v1.1/Talky-Android-v1.1.apk) via [GitHub Releases](https://github.com/andreapianidev/WalkieTalkie/releases)** for sideloading. A Play Store listing would additionally require real AdMob IDs and a Play Console upload.
 
@@ -835,7 +835,7 @@ By opening a pull request you agree that **your contribution is licensed under t
 - **Read, study and learn** from the code, this repo exists primarily as an educational reference for production-grade SwiftUI / Multipeer / StoreKit / AdMob / ActivityKit integration.
 - **Fork and modify** for personal, academic, research, journalism, hobby or non-profit purposes.
 - **Run** your modified copy on your own devices.
-- **Share** the source or your patches, as long as the [`LICENSE`](LICENSE) file and the copyright notice stay intact.
+- **Share** the source or your patches, as long as everyone who gets a copy also gets the [`LICENSE`](LICENSE) terms and its `Required Notice` line.
 - **Use by educational institutions, public-research organisations, NGOs, charities and government bodies** is explicitly permitted (see PolyForm §"Noncommercial Organizations").
 
 ### 🚫 What you ARE NOT allowed to do without a commercial license
@@ -843,8 +843,12 @@ By opening a pull request you agree that **your contribution is licensed under t
 - ❌ Use this code, in whole or in part, in any **product, service, SaaS, enterprise deployment, paid app, ad-supported service, sponsored build, consulting deliverable** or any activity primarily directed toward **commercial advantage or monetary compensation**.
 - ❌ Train **commercial machine-learning models** on this codebase.
 - ❌ **Re-license** the code under more permissive terms (MIT, Apache-2.0, BSD, GPL, …), this is explicitly forbidden.
-- ❌ Remove, alter, or obscure the **copyright notice**, the [`LICENSE`](LICENSE) file, the in-app "About" attribution, the project name, or the identifying branding from any distributed copy.
+- ❌ Use the **Talky name or icon** for a fork or derived app: the license covers the code, not the brand. A copy you distribute needs its own name and icon, see [`TRADEMARK.md`](TRADEMARK.md).
 - ❌ Pretend the code is yours.
+
+### 🕰️ Earlier versions
+
+Before 23 May 2026 this README described the project as MIT, with no `LICENSE` file. From commit `fedb7fb` (23 May 2026) the project is licensed only under PolyForm Noncommercial 1.0.0, and so is everything written or changed since then: for example the Mac app (August 2026), live CB, HF and POC listening (October 2026), the widgets and the iPad and iPhone Duo layouts (November 2026).
 
 ### 💼 Commercial license
 
@@ -857,7 +861,7 @@ Reasonable commercial terms are available for individuals, startups and enterpri
 
 ### 🛡️ Enforcement & DMCA
 
-Violations of this license, including unauthorised App Store submissions, paid-app derivatives and trademark-passing-off, will be enforced through **App Store / Play Store DMCA take-down requests**, **GitHub DMCA**, and where appropriate **legal action under Italian and EU copyright law (Law 633/1941 as amended) and the Berne Convention**. Please don't make us do that, just email instead.
+Violations of this license, including unauthorised App Store submissions, paid-app derivatives and copies that pass themselves off as Talky, will be enforced through **App Store / Play Store DMCA take-down requests**, **GitHub DMCA**, and where appropriate **legal action under Italian and EU copyright law (Law 633/1941 as amended) and the Berne Convention**. Please don't make us do that, just email instead.
 
 ### 📜 Full legal text
 
@@ -871,7 +875,7 @@ The plain-language summary above is informational only and does not replace the 
 
 - **Developer**: Andrea Piani · NIE Z2331796-S · Tijarafe, Santa Cruz de Tenerife · Islas Canarias
 - **Website**: <https://www.andreapiani.com>
-- **Privacy policy**: <https://privacypolicyhub.vercel.app>
+- **Privacy policy**: <https://www.andreapiani.com/talky/privacy/>
 - **Support coffee** ☕: <https://buymeacoffee.com/andreapianidev>
 
 ### Sister app: Peak (GPS Altimeter + Walkie)

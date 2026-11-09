@@ -7,40 +7,49 @@ Copyright (c) 2025-2026 Andrea Piani · NIE Z2331796-S · Tijarafe, Santa Cruz d
 Project: Talky, Walkie-Talkie & Radio (iOS)
 Source:  https://github.com/andreapianidev/WalkieTalkie
 
+Required Notice: Copyright (c) 2025-2026 Andrea Piani · NIE Z2331796-S · Tijarafe, Santa Cruz de Tenerife · Islas Canarias · https://github.com/andreapianidev/WalkieTalkie
+
 ================================================================================
 PLAIN-LANGUAGE SUMMARY (informative, not a substitute for the legal text below)
 ================================================================================
 
-You MAY:
+You MAY, free of charge:
   - Read, study, fork, modify and run this code for personal use, research,
-    teaching, academic work, journalism, personal hobby projects and any other
-    purpose that is NOT primarily intended for or directed toward commercial
-    advantage or monetary compensation.
-  - Share the code or your modifications, as long as this LICENSE file and the
-    copyright notice are preserved and recipients are informed of the terms.
+    teaching, journalism, hobby projects and any other purpose that has no
+    anticipated commercial application.
+  - Use it in a school, a public research body, a charity or a government
+    institution, whatever their funding (see "Noncommercial Organizations").
+  - Share the code or your changes, as long as everyone who receives a copy
+    also receives these terms (or their URL) and the "Required Notice" line
+    above.
 
 You MAY NOT, without a separate written commercial license from the copyright
 holder (Andrea Piani):
-  - Publish, distribute or sell this app — or any app substantially derived from
-    it — on the Apple App Store, Google Play, any other app store, or any other
-    paid or ad-supported channel.
+  - Distribute this app, or an app derived from it, on the App Store, Google
+    Play or any other channel in exchange for money, subscriptions, in-app
+    purchases, advertising or any other commercial advantage.
   - Use this code, in whole or in part, in any product, service or activity
-    intended for commercial advantage or monetary compensation, including but
-    not limited to: SaaS offerings, enterprise deployments, paid mobile or
-    desktop applications, advertising-supported services, sponsored builds,
-    consulting deliverables billed to a client, or training of commercial
-    machine-learning models.
-  - Re-license, sublicense, or relicense this code under terms more permissive
-    than this one (including MIT, Apache-2.0, BSD, GPL, etc.).
-  - Remove or obscure the copyright notice, this LICENSE file, the in-app
-    "About" attribution, or the project's identifying branding from any
-    distributed copy.
+    with a commercial purpose: SaaS, enterprise deployments, paid or
+    ad-supported apps, sponsored builds, work billed to a client, training of
+    commercial machine-learning models.
+  - Grant anyone else rights over this code beyond these terms: no
+    sublicensing and no relicensing under MIT, Apache-2.0, BSD, GPL or any
+    other license (see "No Other Rights").
+
+Name and icon: this license covers the code, not the brand. "Talky" and the
+Talky icon are not licensed for use in any copy or derived app: a fork you
+distribute must use its own name and icon, so that nobody mistakes it for the
+original. See TRADEMARK.md.
+
+Earlier versions: before 23 May 2026 the README described this project as MIT,
+with no LICENSE file. From commit fedb7fb (23 May 2026) the project is licensed
+only under the terms below, and so is everything written or changed since then.
 
 Commercial license requests: andreapiani.dev@gmail.com
 (Reasonable commercial terms are available; please reach out.)
 
 ================================================================================
-FULL LICENSE TEXT — PolyForm Noncommercial License 1.0.0
+FULL LICENSE TEXT: PolyForm Noncommercial License 1.0.0
 ================================================================================
 
 ## Acceptance
