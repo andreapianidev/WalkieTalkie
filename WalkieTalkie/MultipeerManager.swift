@@ -14,13 +14,12 @@ class MultipeerManager: NSObject, ObservableObject {
     private let serviceType = "walkie-talkie"
     private let myPeerID = MCPeerID(displayName: UIDevice.current.name)
 
-    /// Identificatore univoco di questa istanza (per-lancio). Serve a decidere in modo
-    /// DETERMINISTICO chi invita chi quando due device si scoprono a vicenda: solo il peer
-    /// con `instanceID` minore invia l'invito. Evita il doppio-invito incrociato che
-    /// causava sessioni in conflitto e connessioni bloccate in "connecting".
-    /// (Non si può usare il solo displayName: da iOS 16 `UIDevice.current.name` ritorna
-    /// spesso "iPhone" generico → collisioni.)
-    private let instanceID = UUID().uuidString
+    /// Id di questa installazione, annunciato come "uid" nel discoveryInfo e
+    /// uguale a quello TALKY1. Fisso fra un avvio e l'altro: e' cosi' che chi ci
+    /// ha gia' accettato una volta ci riconosce e non chiede di nuovo, e che il
+    /// ponte sa a chi un messaggio e' gia' arrivato. Non si puo' usare il
+    /// displayName: da iOS 16 `UIDevice.current.name` e' quasi sempre "iPhone".
+    private let instanceID = Ponte.shared.uidLocale
 
     /// Istanza condivisa: viene popolata dalla prima `init()` chiamata (tipicamente in ContentView).
     /// Usata da `PrivateChannelManager` per riavviare advertising/browsing al cambio canale.
@@ -45,7 +44,6 @@ class MultipeerManager: NSObject, ObservableObject {
     /// `nil` quando nessuno parla. Mostrato nella Live Activity walkie.
     @Published var currentTalkerName: String?
     @Published var receivedInvitation: (MCPeerID, MCSession)?
-    private var pendingInvitationHandler: ((Bool, MCSession?) -> Void)?
     @Published var lastError: WalkieTalkieError?
     @Published var connectionStatus: String = "status.disconnected".localized
     
@@ -60,7 +58,9 @@ class MultipeerManager: NSObject, ObservableObject {
     
     // MARK: - High Traffic Optimization Properties
     private var declinedPeers: Set<MCPeerID> = []
-    private let declineCooldown: TimeInterval = 120 // 2 min cooldown after user declines
+    /// Chi e' stato rifiutato non deve tornare a chiedere subito: per dieci
+    /// minuti i suoi inviti si declinano senza mostrare niente.
+    private let declineCooldown: TimeInterval = 600
     private var connectionThrottle: [MCPeerID: Date] = [:]
     private let throttleInterval: TimeInterval = 2.0 // Minimum time between connection attempts
     private var maxConcurrentConnections = 8 // Limit for high traffic scenarios
@@ -69,6 +69,28 @@ class MultipeerManager: NSObject, ObservableObject {
     private var lastMemoryWarning: Date?
     private let memoryWarningCooldown: TimeInterval = 30.0
     
+    // MARK: - Inviti e ponte (tutto sul main)
+
+    /// uid di ogni peer, dal discoveryInfo o dall'intestazione del ponte.
+    private var uidPerPeer: [MCPeerID: String] = [:]
+    /// Peer che annunciano il ponte: capiscono l'uid nel context dell'invito.
+    private var peerConPonte: Set<MCPeerID> = []
+    /// Inviti partiti da qui e non ancora conclusi. Un secondo tocco non manda
+    /// un'altra richiesta, e se nel frattempo l'altro invita noi si accetta da solo.
+    private var invitiInVolo: [MCPeerID: Date] = [:]
+    /// Inviti accettati (a mano o da soli) e non ancora collegati.
+    private var accettatiInAttesa: Set<MCPeerID> = []
+    /// Accettati in questo avvio: le versioni vecchie cambiano uid a ogni avvio,
+    /// ma nello stesso avvio una riconnessione non deve richiedere conferma.
+    private var fidatiInSessione: Set<MCPeerID> = []
+    /// Inviti ricevuti che aspettano una risposta: il primo e' quello a schermo.
+    /// In coda e non uno alla volta, perche' declinare in silenzio il precedente
+    /// faceva fallire chi aveva chiesto per primo.
+    private var invitiInCoda: [(peer: MCPeerID, uid: String?, arrivato: Date, handler: (Bool, MCSession?) -> Void)] = []
+    private var rifiutatiUID: [String: Date] = [:]
+    private static let fidatiKey = "multipeer_trusted_devices"
+    private static let maxFidati = 200
+
     // MARK: - Performance Monitoring
     private let performanceMonitor = PerformanceMonitor.shared
     
@@ -98,7 +120,8 @@ class MultipeerManager: NSObject, ObservableObject {
         let discoveryInfo = [
             "deviceName": UIDevice.current.name,
             "channel": initialChannel,
-            "uid": instanceID
+            "uid": Ponte.shared.uidLocale,
+            "ponte": "1"
         ]
         advertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: discoveryInfo, serviceType: serviceType)
         browser = MCNearbyServiceBrowser(peer: myPeerID, serviceType: serviceType)
@@ -117,6 +140,11 @@ class MultipeerManager: NSObject, ObservableObject {
         
         setupAudio()
         setupHighTrafficOptimizations()
+        // Quello che arriva intero da un Android o da un Mac passa anche agli
+        // iPhone collegati qui, e viceversa: l'iPhone e' il ponte fra i trasporti.
+        TalkyCrossPlatformManager.shared.daInoltrare = { [weak self] trasmissione, audio, da in
+            self?.inoltra(trasmissione.perIlPonte(arrivataDa: da), audio: audio, tranneUID: da)
+        }
         TalkyCrossPlatformManager.shared.start()
     }
     
@@ -217,6 +245,12 @@ class MultipeerManager: NSObject, ObservableObject {
     }
     
     func invitePeer(_ peerID: MCPeerID) {
+        // Mai una seconda richiesta mentre la prima e' ancora a schermo dall'altra parte.
+        if let inviato = invitiInVolo[peerID], Date().timeIntervalSince(inviato) < connectionTimeout + 2 {
+            logger.logNetworkDebug("Invito a \(peerID.displayName) gia' in corso")
+            return
+        }
+
         guard !declinedPeers.contains(peerID) else {
             logger.logNetworkDebug("Saltato invito: il peer \(peerID.displayName) è stato appena rifiutato dall'utente")
             return
@@ -245,15 +279,21 @@ class MultipeerManager: NSObject, ObservableObject {
             return
         }
         
+        invitiInVolo[peerID] = Date()
+        // Il canale corrente viaggia nel context dell'invito: il ricevente lo valida
+        // così senza dipendere da `discoveredPeers` (che era una race condition).
+        // A chi ha il ponte si aggiunge l'uid su una seconda riga, per farsi
+        // riconoscere se ci ha gia' accettato. Le versioni vecchie confrontano il
+        // context intero con il loro canale, quindi a loro va il canale e basta.
+        let contesto = peerConPonte.contains(peerID) ? "\(currentChannelID)\nuid=\(instanceID)" : currentChannelID
+
         // Use connection queue for high traffic scenarios
         connectionQueue.async { [weak self] in
             guard let self = self else { return }
             
             let inviteStartTime = Date()
             self.connectionThrottle[peerID] = inviteStartTime
-            // Il canale corrente viaggia nel context dell'invito: il ricevente lo valida
-            // così senza dipendere da `discoveredPeers` (che era una race condition).
-            let contextData = self.currentChannelID.data(using: .utf8)
+            let contextData = contesto.data(using: .utf8)
             self.browser.invitePeer(peerID, to: self.session, withContext: contextData, timeout: self.connectionTimeout)
             self.retryAttempts[peerID] = currentAttempts + 1
             
@@ -277,23 +317,78 @@ class MultipeerManager: NSObject, ObservableObject {
     }
     
     func acceptInvitation() {
-        guard let handler = pendingInvitationHandler else { return }
-        handler(true, session)
-        receivedInvitation = nil
-        pendingInvitationHandler = nil
+        guard !invitiInCoda.isEmpty else { return }
+        let invito = invitiInCoda.removeFirst()
+        invito.handler(true, session)
+        accettatiInAttesa.insert(invito.peer)
+        fidatiInSessione.insert(invito.peer)
+        if let uid = invito.uid { ricordaFidato(uid) }
+        mostraProssimoInvito()
     }
-    
+
     func declineInvitation() {
-        guard let handler = pendingInvitationHandler else { return }
-        if let declinedPeer = receivedInvitation?.0 {
-            declinedPeers.insert(declinedPeer)
-            DispatchQueue.main.asyncAfter(deadline: .now() + declineCooldown) { [weak self] in
-                self?.declinedPeers.remove(declinedPeer)
-            }
+        guard !invitiInCoda.isEmpty else { return }
+        let invito = invitiInCoda.removeFirst()
+        invito.handler(false, nil)
+        let declinedPeer = invito.peer
+        declinedPeers.insert(declinedPeer)
+        DispatchQueue.main.asyncAfter(deadline: .now() + declineCooldown) { [weak self] in
+            self?.declinedPeers.remove(declinedPeer)
         }
-        handler(false, nil)
+        if let uid = invito.uid { rifiutatiUID[uid] = Date() }
+        mostraProssimoInvito()
+    }
+
+    /// Toglie la domanda a schermo e, se c'e', mostra la prossima. La pausa
+    /// lascia chiudere l'alert: ripresentarlo nello stesso istante in cui
+    /// SwiftUI lo sta togliendo non lo fa ricomparire.
+    private func mostraProssimoInvito() {
         receivedInvitation = nil
-        pendingInvitationHandler = nil
+        // Oltre il timeout di chi ha invitato, dall'altra parte e' gia' scaduto.
+        let scadenza = Date().addingTimeInterval(-30)
+        while let primo = invitiInCoda.first, primo.arrivato < scadenza {
+            invitiInCoda.removeFirst().handler(false, nil)
+        }
+        guard let prossimo = invitiInCoda.first?.peer else { return }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            guard let self, self.invitiInCoda.first?.peer == prossimo else { return }
+            self.receivedInvitation = (prossimo, self.session)
+        }
+    }
+
+    private func declinaTuttiGliInviti() {
+        invitiInCoda.forEach { $0.handler(false, nil) }
+        invitiInCoda.removeAll()
+        receivedInvitation = nil
+    }
+
+    private func ricordaFidato(_ uid: String) {
+        var fidati = UserDefaults.standard.stringArray(forKey: Self.fidatiKey) ?? []
+        fidati.removeAll { $0 == uid }
+        fidati.append(uid)
+        UserDefaults.standard.set(Array(fidati.suffix(Self.maxFidati)), forKey: Self.fidatiKey)
+    }
+
+    private func rifiutatoDiRecente(_ peerID: MCPeerID, uid: String?) -> Bool {
+        if declinedPeers.contains(peerID) { return true }
+        guard let uid, let quando = rifiutatiUID[uid] else { return false }
+        return Date().timeIntervalSince(quando) < declineCooldown
+    }
+
+    /// Perche' un invito si accetta senza chiedere, nil se va chiesto. Sul canale
+    /// pubblico uno sconosciuto si puo' sempre rifiutare: si accetta da solo
+    /// solo chi e' gia' stato accettato o chi stiamo invitando noi.
+    private func motivoAccettazioneAutomatica(_ peerID: MCPeerID, uid: String?) -> String? {
+        // Canale privato: chi c'e' conosce gia' la password.
+        if currentChannelID != "public" { return "canale privato" }
+        if fidatiInSessione.contains(peerID) { return "gia' accettato in questo avvio" }
+        if let uid, (UserDefaults.standard.stringArray(forKey: Self.fidatiKey) ?? []).contains(uid) {
+            return "gia' accettato"
+        }
+        if let inviato = invitiInVolo[peerID], Date().timeIntervalSince(inviato) < connectionTimeout + 2 {
+            return "invito incrociato"
+        }
+        return nil
     }
     
     // MARK: - Simulator Detection
@@ -405,6 +500,9 @@ class MultipeerManager: NSObject, ObservableObject {
             self.disconnectedPeers.removeAll()
             self.retryAttempts.removeAll()
             self.connectionThrottle.removeAll()
+            self.invitiInVolo.removeAll()
+            self.accettatiInAttesa.removeAll()
+            self.declinaTuttiGliInviti()
             self.connectionStatus = "status.disconnected".localized
         }
 
@@ -412,7 +510,8 @@ class MultipeerManager: NSObject, ObservableObject {
         let discoveryInfo = [
             "deviceName": UIDevice.current.name,
             "channel": currentChannelID,
-            "uid": instanceID
+            "uid": instanceID,
+            "ponte": "1"
         ]
         advertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: discoveryInfo, serviceType: serviceType)
         advertiser.delegate = self
@@ -482,6 +581,9 @@ class MultipeerManager: NSObject, ObservableObject {
             self.discoveredPeers.removeAll()
             self.disconnectedPeers.removeAll()
             self.retryAttempts.removeAll()
+            self.invitiInVolo.removeAll()
+            self.accettatiInAttesa.removeAll()
+            self.declinaTuttiGliInviti()
             self.currentTalkerName = nil
             self.isAdvertising = false
             self.isBrowsing = false
@@ -739,43 +841,100 @@ class MultipeerManager: NSObject, ObservableObject {
 
     
     private func sendAccumulatedAudio() {
-        let hasApplePeers = !connectedPeers.isEmpty
-        let hasCrossPlatformPeers = TalkyCrossPlatformManager.shared.connectedPeerCount > 0
-
-        guard hasApplePeers || hasCrossPlatformPeers else {
-            logger.logAudioDebug("Nessun peer connesso per l'invio audio accumulato")
-            recordedAudioData = Data() // Reset
-            return
-        }
-        
         guard !recordedAudioData.isEmpty else {
             logger.logAudioDebug("Nessun audio da inviare")
             return
         }
-        
-        let optimizedData = optimizeBandwidth(for: recordedAudioData)
-        logger.logAudioInfo("Invio messaggio audio completo: \(optimizedData.count) bytes a \(connectedPeers.count) peer Apple e \(TalkyCrossPlatformManager.shared.connectedPeerCount) peer cross-platform")
+        let audio = optimizeBandwidth(for: recordedAudioData)
+        recordedAudioData = Data()
 
-        if hasApplePeers {
-            do {
-                try session.send(optimizedData, toPeers: connectedPeers, with: .reliable)
-                logger.logAudioInfo("Messaggio audio inviato a tutti i peer Apple.")
-            } catch {
-                lastError = WalkieTalkieError.audioTransmissionFailed(underlying: error)
-                logger.logAudioError(lastError!, context: "Errore invio audio accumulato")
-            }
+        let trasmissione = Trasmissione.nuova(nome: myPeerID.displayName)
+        // Se ci torna indietro da un ponte non va suonato a chi l'ha detto.
+        _ = Ponte.shared.primaVolta(trasmissione.id)
+        let invio = inoltra(trasmissione, audio: audio)
+
+        if let errore = invio.errore {
+            lastError = WalkieTalkieError.audioTransmissionFailed(underlying: errore)
+            logger.logAudioError(lastError!, context: "Errore invio audio accumulato")
         }
+        guard invio.mandati > 0 || invio.errore != nil else {
+            logger.logAudioDebug("Nessun peer connesso per l'invio audio accumulato")
+            return
+        }
+        if invio.mandati > 0 {
+            Funnel.once(Funnel.transmissionSuccess, ["peer_count": invio.mandati])
+        }
+        logger.logAudioInfo("Messaggio audio inviato a \(invio.mandati) peer: \(audio.count) bytes")
 
         // Pro recording: salva una copia dell'audio trasmesso (no-op se non Pro).
-        // Eseguito DOPO l'invio ai peer e PRIMA del reset del buffer.
-        let snapshot = recordedAudioData
-        TalkyCrossPlatformManager.shared.sendAudio(floatPCM: snapshot)
         DispatchQueue.main.async {
-            RecordingsManager.shared.saveTransmittedAudio(snapshot)
+            RecordingsManager.shared.saveTransmittedAudio(audio)
         }
+    }
 
-        // Reset dei dati dopo l'invio
-         recordedAudioData = Data()
+    /// Manda un messaggio a chi non l'ha ancora, su Multipeer e su TALKY1:
+    /// tutti i peer collegati tranne quello da cui e' arrivato e quelli che
+    /// l'avevano gia' ricevuto direttamente. Sul main.
+    @discardableResult
+    private func inoltra(_ trasmissione: Trasmissione,
+                         audio: Data,
+                         tranneMultipeer: MCPeerID? = nil,
+                         tranneUID: String? = nil) -> (mandati: Int, errore: Error?) {
+        func giaServito(_ uid: String?) -> Bool {
+            guard let uid else { return false }
+            return uid == tranneUID || trasmissione.raggiunti.contains(Ponte.idCorto(uid))
+        }
+        let viaMultipeer = connectedPeers.filter { $0 != tranneMultipeer && !giaServito(uidPerPeer[$0]) }
+        let viaTalky1 = TalkyCrossPlatformManager.shared.connectedPeerIDs.filter { !giaServito($0) }
+        guard !viaMultipeer.isEmpty || !viaTalky1.isEmpty else { return (0, nil) }
+
+        // Chi lo riceve da qui non deve riceverlo di nuovo da un altro ponte.
+        var uscita = trasmissione
+        uscita.raggiunti.formUnion(viaMultipeer.compactMap { uidPerPeer[$0] }.map(Ponte.idCorto))
+        uscita.raggiunti.formUnion(viaTalky1.map(Ponte.idCorto))
+
+        var mandati = 0
+        var errore: Error?
+        if !viaMultipeer.isEmpty {
+            do {
+                try session.send(IntestazioneMultipeer.impacchetta(uscita, audio: audio), toPeers: viaMultipeer, with: .reliable)
+                mandati += viaMultipeer.count
+            } catch {
+                errore = error
+                logger.logNetworkError(error, context: "Invio Multipeer (ttl \(uscita.ttl))")
+            }
+        }
+        if !viaTalky1.isEmpty {
+            TalkyCrossPlatformManager.shared.sendAudio(floatPCM: audio, trasmissione: uscita, a: viaTalky1)
+            mandati += viaTalky1.count
+        }
+        if tranneMultipeer != nil || tranneUID != nil {
+            logger.logAudioInfo("Ponte: ritrasmesso a \(mandati) peer (ttl \(uscita.ttl))")
+        }
+        return (mandati, errore)
+    }
+
+    /// Suona un messaggio ricevuto e aggiorna indicatori e cronologia. Sul main.
+    private func riproduci(_ audio: Data, talker: String) {
+        isReceiving = true
+        currentTalkerName = talker
+        syncWalkieLiveActivity()
+        FirstTimeEventTracker.shared.fireOnce(FirstTimeEventTracker.Events.reception)
+        TransmissionHistoryManager.shared.recordReception(peerName: talker, dataSize: audio.count)
+        // Privacy: NON salviamo l'audio ricevuto da altri peer (GDPR + App Store review).
+        // Solo metadata (peer, timestamp, durata stimata) finiscono nella cronologia.
+        notificationManager.sendIncomingTransmissionNotification()
+
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.audioManager.playReceivedAudio(audio)
+
+            // Reset stato ricezione dopo un delay per mostrare l'indicatore
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                self.isReceiving = false
+                self.currentTalkerName = nil
+                self.syncWalkieLiveActivity()
+            }
+        }
     }
     
     
@@ -886,7 +1045,10 @@ extension MultipeerManager: MCSessionDelegate {
                     // Feedback aptico e notifica per connessione
                     self.hapticManager.connectionEstablished()
                     self.notificationManager.sendConnectionEstablishedNotification(deviceName: peerID.displayName)
+                    Funnel.once(Funnel.connectionEstablished, ["transport": "multipeer"])
                 }
+                self.invitiInVolo.removeValue(forKey: peerID)
+                self.accettatiInAttesa.remove(peerID)
                 self.disconnectedPeers.remove(peerID)
                 self.retryAttempts.removeValue(forKey: peerID) // Reset retry counter on successful connection
                 self.connectionStatus = String(format: "status.connected_count".localized, self.connectedPeers.count)
@@ -914,6 +1076,8 @@ extension MultipeerManager: MCSessionDelegate {
                     
                     self.hapticManager.connectionLost()
                     self.notificationManager.sendConnectionLostNotification(deviceName: peerID.displayName)
+                } else if let motivo = self.motivoFallimento(peerID) {
+                    Funnel.log(Funnel.connectionFailed, ["reason": motivo, "transport": "multipeer"])
                 }
                 
                 // Riconnessione automatica SOLO per peer che erano davvero connessi
@@ -942,6 +1106,21 @@ extension MultipeerManager: MCSessionDelegate {
         }
     }
     
+    /// Perche' non si e' arrivati al collegamento, nil se non c'era un tentativo
+    /// nostro in corso. Multipeer non dice se l'altro ha rifiutato o non ha
+    /// risposto: un no arriva subito, un silenzio allo scadere del timeout.
+    private func motivoFallimento(_ peerID: MCPeerID) -> String? {
+        let negato = LocalNetworkGuard.shared.isDenied
+        if let inviato = invitiInVolo.removeValue(forKey: peerID) {
+            if negato { return "permission" }
+            return Date().timeIntervalSince(inviato) < connectionTimeout - 1 ? "declined" : "timeout"
+        }
+        if accettatiInAttesa.remove(peerID) != nil {
+            return negato ? "permission" : "handshake"
+        }
+        return nil
+    }
+
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
         DispatchQueue.main.async {
             // Gestisci messaggi heartbeat
@@ -949,43 +1128,35 @@ extension MultipeerManager: MCSessionDelegate {
                 self.logger.logNetworkDebug("Heartbeat ricevuto da \(peerID.displayName)")
                 return
             }
-            
-            // Gestione messaggi audio completi
-            let dataSize = data.count
-            if dataSize > 0 {
-                self.logger.logAudioInfo("Messaggio audio completo ricevuto da \(peerID.displayName): \(dataSize) bytes")
-                
-                // Aggiorna stato ricezione
-                DispatchQueue.main.async {
-                    self.isReceiving = true
-                    self.currentTalkerName = peerID.displayName
-                    self.syncWalkieLiveActivity()
-                    FirstTimeEventTracker.shared.fireOnce(
-                        FirstTimeEventTracker.Events.reception,
-                        parameters: ["peer_name": peerID.displayName]
-                    )
-                    TransmissionHistoryManager.shared.recordReception(peerName: peerID.displayName, dataSize: dataSize)
-                    // Privacy: NON salviamo l'audio ricevuto da altri peer (GDPR + App Store review).
-                    // Solo metadata (peer, timestamp, durata stimata) finiscono nella cronologia.
-                    // La registrazione resta attiva solo per le trasmissioni in uscita dell'utente.
-                }
-
-                // Invia notifica di trasmissione in arrivo
-                self.notificationManager.sendIncomingTransmissionNotification()
-
-                // Ottimizzazione memoria: processa audio in background
-                DispatchQueue.global(qos: .userInitiated).async {
-                    self.audioManager.playReceivedAudio(data)
-
-                    // Reset stato ricezione dopo un delay per mostrare l'indicatore
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                        self.isReceiving = false
-                        self.currentTalkerName = nil
-                        self.syncWalkieLiveActivity()
-                    }
-                }
-            } else {
+            guard !data.isEmpty else {
                 self.logger.logAudioDebug("Dati vuoti ricevuti da \(peerID.displayName)")
+                return
+            }
+
+            // Versione vecchia: Float32 nudo, si suona e basta (senza id non si
+            // puo' sapere se altrove e' gia' arrivato, quindi non si ritrasmette).
+            guard let pacchetto = IntestazioneMultipeer.spacchetta(data) else {
+                self.logger.logAudioInfo("Messaggio audio ricevuto da \(peerID.displayName): \(data.count) bytes")
+                self.riproduci(data, talker: peerID.displayName)
+                return
+            }
+
+            let trasmissione = pacchetto.trasmissione
+            // Con tutte le tratte intatte l'ha detto proprio questo peer: e' il suo uid.
+            if trasmissione.ttl == Trasmissione.ttlIniziale, !trasmissione.origine.isEmpty {
+                self.uidPerPeer[peerID] = trasmissione.origine
+            }
+            guard Ponte.shared.primaVolta(trasmissione.id) else {
+                self.logger.logAudioDebug("Ponte: doppione da \(peerID.displayName) scartato")
+                return
+            }
+            let nome = trasmissione.nomeOrigine.isEmpty ? peerID.displayName : trasmissione.nomeOrigine
+            self.logger.logAudioInfo("Messaggio audio ricevuto da \(peerID.displayName) (ttl \(trasmissione.ttl)): \(pacchetto.audio.count) bytes")
+            self.riproduci(pacchetto.audio, talker: nome)
+
+            if trasmissione.ttl > 1 {
+                let da = self.uidPerPeer[peerID]
+                self.inoltra(trasmissione.perIlPonte(arrivataDa: da), audio: pacchetto.audio, tranneMultipeer: peerID, tranneUID: da)
             }
         }
     }
@@ -1029,9 +1200,11 @@ extension MultipeerManager: MCNearbyServiceAdvertiserDelegate {
         // Il vecchio guard `discoveredPeers.contains(peerID)` era una race condition: se il
         // nostro browser non aveva ancora scoperto il mittente, l'invito VALIDO veniva
         // rifiutato in silenzio → l'utente vedeva "non si connette" pur essendo vicino.
-        // Il context contiene il channelID del mittente: accettiamo solo se combacia.
-        // (context nil = peer su vecchia versione → trattato come canale "public".)
-        let invitedChannel = context.flatMap { String(data: $0, encoding: .utf8) } ?? "public"
+        // Prima riga: il canale del mittente (context nil = versione molto vecchia, "public").
+        // Dalle versioni con il ponte, seconda riga "uid=...": chi invita.
+        let righe = context.flatMap { String(data: $0, encoding: .utf8) }?.components(separatedBy: "\n") ?? []
+        let invitedChannel = righe.first ?? "public"
+        let uidNelContesto = righe.dropFirst().first { $0.hasPrefix("uid=") }.map { String($0.dropFirst(4)) }
         guard invitedChannel == currentChannelID else {
             logger.logNetworkError(WalkieTalkieError.invalidPeer, context: "Invito da canale diverso: '\(invitedChannel)' ≠ '\(currentChannelID)'")
             invitationHandler(false, nil)
@@ -1039,26 +1212,41 @@ extension MultipeerManager: MCNearbyServiceAdvertiserDelegate {
         }
 
         DispatchQueue.main.async {
-            // Auto-accept sui canali PRIVATI (password condivisa): chi è sullo stesso
-            // canale privato si è già scambiato la password, quindi richiedere un tap
-            // accept/decline per ogni peer è solo frizione ("64 clicks to accept for one
-            // 8 person call" — recensione App Store). Sul canale PUBBLICO resta il prompt
-            // manuale: lì chiunque vicino può inviare un invito, quindi la conferma
-            // esplicita protegge da connessioni indesiderate.
-            if self.currentChannelID != "public" {
-                self.logger.logNetworkInfo("Invito auto-accettato (canale privato) da \(peerID.displayName)")
+            let uid = uidNelContesto ?? self.uidPerPeer[peerID]
+            if let uid { self.uidPerPeer[peerID] = uid }
+
+            if self.rifiutatoDiRecente(peerID, uid: uid) {
+                self.logger.logNetworkInfo("Invito di \(peerID.displayName) declinato: rifiutato da poco")
+                invitationHandler(false, nil)
+                return
+            }
+
+            // "64 clicks to accept for one 8 person call" (recensione App Store):
+            // chi e' gia' stato accettato, chi e' sul nostro canale privato e chi
+            // stiamo invitando noi entra senza domande.
+            if let motivo = self.motivoAccettazioneAutomatica(peerID, uid: uid) {
+                self.logger.logNetworkInfo("Invito auto-accettato (\(motivo)) da \(peerID.displayName)")
+                self.accettatiInAttesa.insert(peerID)
                 invitationHandler(true, self.session)
                 return
             }
 
-            // Se c'è già un invito pendente non gestito dall'utente, declina il
-            // precedente automaticamente: lasciarlo in sospeso fa scadere il timeout
-            // sul peer remoto (~30s) lasciandolo bloccato in "connecting".
-            if let previous = self.pendingInvitationHandler {
-                previous(false, nil)
+            // Lo stesso dispositivo richiede mentre la domanda e' ancora a
+            // schermo: resta la stessa domanda, cambia solo l'invito a cui
+            // risponde (il piu' recente, che non e' ancora scaduto dall'altra parte).
+            if let i = self.invitiInCoda.firstIndex(where: { $0.peer == peerID || (uid != nil && $0.uid == uid) }) {
+                self.invitiInCoda[i].handler(false, nil)
+                self.invitiInCoda[i] = (peerID, uid, Date(), invitationHandler)
+                if i == 0, self.receivedInvitation?.0 != peerID {
+                    self.receivedInvitation = (peerID, self.session)
+                }
+                return
             }
-            self.receivedInvitation = (peerID, self.session)
-            self.pendingInvitationHandler = invitationHandler
+
+            self.invitiInCoda.append((peerID, uid, Date(), invitationHandler))
+            if self.invitiInCoda.count == 1 {
+                self.receivedInvitation = (peerID, self.session)
+            }
         }
     }
     
@@ -1092,6 +1280,9 @@ extension MultipeerManager: MCNearbyServiceBrowserDelegate {
         logger.logNetworkInfo("Trovato peer: \(peerID.displayName) (canale: \(peerChannel))")
         
         DispatchQueue.main.async {
+            if let uid = info?["uid"] { self.uidPerPeer[peerID] = uid }
+            if info?["ponte"] == "1" { self.peerConPonte.insert(peerID) }
+            Funnel.once(Funnel.peerFound, ["transport": "multipeer"])
             if !self.discoveredPeers.contains(peerID) {
                 self.discoveredPeers.append(peerID)
                 self.logger.logNetworkInfo("Peer aggiunto alla lista: \(peerID.displayName)")

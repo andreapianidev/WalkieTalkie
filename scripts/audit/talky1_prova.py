@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Un finto dispositivo Talky che parla TALKY1, per provare dal Mac l'app vera.
 
-Fa le tre cose che fa un Android o un Mac con l'iPhone:
+Fa le tre cose che fa un Android o un Mac con l'iPhone (l'audio parte sia nel
+formato vecchio sia con i campi del ponte A-B-C, e una volta come doppione):
   1. guarda chi si annuncia su `_walkie-talkie._tcp` (Multipeer e TALKY1);
   2. si annuncia come "Talky Prova" e aspetta che l'app lo chiami da sola;
   3. chiama lui ogni Talky TALKY1 trovato, scambia HELLO e manda audio.
@@ -92,8 +93,18 @@ def scambio(sock, chi, canale, uid=UID):
         return
     esito(True, f"{chi}: HELLO ricevuto da {msg[1].get('name')!r} canale {msg[1].get('channel')!r}")
     pcm = audio_prova()
+    # Prima come una versione vecchia, poi con i campi del ponte. ttl=1: l'app
+    # deve suonarlo ma non ritrasmetterlo. Lo stesso msgId mandato di nuovo e'
+    # un doppione: l'app non deve suonarlo una seconda volta (si sente un La solo
+    # per i due messaggi del ponte) e la connessione deve restare aperta.
     manda(sock, riga("AUDIO_META", byteCount=str(len(pcm)), sampleRate="48000", channels="1", encoding="pcm_s16le"))
     manda(sock, pcm)
+    ponte = dict(msgId=str(uuid.uuid4()), origin=uid, originName="Talky Prova", ttl="1",
+                 reached=uid[:8].lower())
+    for _ in range(2):
+        manda(sock, riga("AUDIO_META", byteCount=str(len(pcm)), sampleRate="48000", channels="1",
+                         encoding="pcm_s16le", **ponte))
+        manda(sock, pcm)
     manda(sock, riga("HEARTBEAT"))
     # Dopo l'audio la connessione deve restare viva: se l'app la chiude o
     # smette di leggere, il secondo messaggio non passa.

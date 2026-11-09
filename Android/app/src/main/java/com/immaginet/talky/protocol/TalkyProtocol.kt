@@ -30,15 +30,17 @@ data class TalkyMessage(
         fun heartbeat(): TalkyMessage =
             TalkyMessage(type = TalkyMessageType.HEARTBEAT)
 
+        /** `ponte` sono i campi di [Trasmissione]: le versioni vecchie li ignorano. */
         fun audioMeta(
             byteCount: Int,
             sampleRate: Int,
             channels: Int,
-            encoding: String
+            encoding: String,
+            ponte: Map<String, String> = emptyMap()
         ): TalkyMessage =
             TalkyMessage(
                 type = TalkyMessageType.AUDIO_META,
-                fields = mapOf(
+                fields = ponte + mapOf(
                     TalkyProtocol.Keys.BYTE_COUNT to byteCount.toString(),
                     TalkyProtocol.Keys.SAMPLE_RATE to sampleRate.toString(),
                     TalkyProtocol.Keys.CHANNELS to channels.toString(),
@@ -69,6 +71,15 @@ object TalkyProtocol {
         const val SAMPLE_RATE = "sampleRate"
         const val CHANNELS = "channels"
         const val ENCODING = "encoding"
+
+        // Ponte A-B-C, uguali su iOS e Mac.
+        const val MSG_ID = "msgId"
+        const val ORIGIN = "origin"
+        const val ORIGIN_NAME = "originName"
+        const val TTL = "ttl"
+        const val REACHED = "reached"
+        /** "1": l'audio arriva a pezzi fino ad AUDIO_END, come lo manda Android. */
+        const val STREAM = "stream"
     }
 
     fun encodeLine(message: TalkyMessage): String {

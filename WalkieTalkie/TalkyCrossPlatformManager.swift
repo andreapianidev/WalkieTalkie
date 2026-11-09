@@ -38,7 +38,9 @@ final class TalkyCrossPlatformManager: NSObject, ObservableObject {
     private let logger = Logger.shared
     private let audioManager = AudioManager.shared
     private let queue = DispatchQueue(label: "talky.crossplatform.queue", qos: .userInitiated)
-    private let uid = UUID().uuidString
+    /// Lo stesso id che l'iPhone annuncia su Multipeer: chi fa da ponte
+    /// riconosce un dispositivo anche se lo vede da due trasporti.
+    private let uid = Ponte.shared.uidLocale
     private let deviceName = UIDevice.current.name
 
     private var listener: NWListener?
@@ -55,6 +57,32 @@ final class TalkyCrossPlatformManager: NSObject, ObservableObject {
     /// due, e l'altro lato ne chiude una sola: tenerne una per peer voleva dire
     /// restare, a volte, proprio con quella chiusa e smettere di trasmettere.
     private var connections: [String: [NWConnection]] = [:]
+
+    /// Il messaggio che sta arrivando su ogni connessione, fra AUDIO_META e la
+    /// sua fine. Serve al ponte: un messaggio si ritrasmette solo intero.
+    private struct InArrivo {
+        /// nil = versione senza ponte: si suona e basta.
+        let trasmissione: Trasmissione?
+        let peerUID: String?
+        /// Android manda tanti frame fino ad AUDIO_END, iPhone e Mac uno solo.
+        let flusso: Bool
+        let attesi: Int
+        let doppione: Bool
+        var pcm16 = Data()
+    }
+    private var inArrivo: [ObjectIdentifier: InArrivo] = [:]
+
+    /// Un messaggio intero arrivato da TALKY1 con ancora tratte da fare:
+    /// MultipeerManager lo ritrasmette sugli altri peer, di tutti e due i
+    /// trasporti. Chiamato sul main con l'audio gia' in Float32.
+    var daInoltrare: ((Trasmissione, Data, String?) -> Void)?
+
+    /// Oltre un frame TALKY1 nessuno legge: tutti scartano i frame sopra 1 MB.
+    private static let maxFrameBytes = 1024 * 1024
+    /// Una connessione uscente che non e' pronta entro questo tempo e' persa.
+    private static let connectTimeout: TimeInterval = 10
+    /// `kDNSServiceErr_PolicyDenied`: il permesso Rete locale e' spento.
+    private static let policyDenied: Int32 = -65570
 
     private override init() {
         super.init()
@@ -93,30 +121,34 @@ final class TalkyCrossPlatformManager: NSObject, ObservableObject {
         }
     }
 
-    func sendAudio(floatPCM data: Data) {
+    /// Manda un messaggio audio ai peer TALKY1 indicati (uid), tutti se `a` e' nil.
+    /// AUDIO_META e frame partono di seguito sulla stessa coda, quindi un
+    /// messaggio ritrasmesso non si infila mai in mezzo a un altro.
+    func sendAudio(floatPCM data: Data, trasmissione: Trasmissione, a destinatari: Set<String>? = nil) {
         queue.async { [weak self] in
             guard let self else { return }
-            guard !self.connections.isEmpty else { return }
+            let scelte = self.connections.filter { destinatari?.contains($0.key) ?? true }
+            guard !scelte.isEmpty else { return }
 
-            let pcm16 = self.convertFloat32ToPCM16LE(data)
+            var pcm16 = self.convertFloat32ToPCM16LE(data)
+            if pcm16.count > Self.maxFrameBytes {
+                pcm16 = pcm16.prefix(Self.maxFrameBytes)
+            }
             guard !pcm16.isEmpty else { return }
 
-            let meta = self.encodeLine(
-                type: "AUDIO_META",
-                fields: [
-                    "byteCount": "\(pcm16.count)",
-                    "sampleRate": "48000",
-                    "channels": "1",
-                    "encoding": "pcm_s16le"
-                ]
-            )
+            var fields = trasmissione.campi
+            fields["byteCount"] = "\(pcm16.count)"
+            fields["sampleRate"] = "48000"
+            fields["channels"] = "1"
+            fields["encoding"] = "pcm_s16le"
+            let meta = self.encodeLine(type: "AUDIO_META", fields: fields)
 
-            for connection in self.connections.values.compactMap(\.last) {
+            for connection in scelte.values.compactMap(\.last) {
                 self.sendFrame(Data(meta.utf8), on: connection)
                 self.sendFrame(pcm16, on: connection)
             }
 
-            self.logger.logAudioInfo("Cross-platform audio inviato: \(pcm16.count) bytes")
+            self.logger.logAudioInfo("Cross-platform audio inviato: \(pcm16.count) bytes a \(scelte.count) peer")
         }
     }
 
@@ -215,17 +247,58 @@ final class TalkyCrossPlatformManager: NSObject, ObservableObject {
         let endpointHost = NWEndpoint.Host(peer.host)
         guard let endpointPort = NWEndpoint.Port(rawValue: UInt16(peer.port)) else { return }
         let connection = NWConnection(host: endpointHost, port: endpointPort, using: .tcp)
+        // Il motivo si registra una volta sola per tentativo: `.waiting` puo'
+        // ripetersi e dopo il cancel arriva comunque `.cancelled`.
+        var esito: String?
+        func fallita(_ motivo: String) {
+            guard esito == nil else { return }
+            esito = motivo
+            Funnel.log(Funnel.connectionFailed, ["reason": motivo, "transport": "talky1"])
+        }
         connection.stateUpdateHandler = { [weak self] state in
-            if case .ready = state {
+            switch state {
+            case .ready:
+                esito = "ready"
                 self?.sendHello(on: connection)
                 self?.receiveFrame(on: connection)
-            } else if case .failed = state {
+            case .waiting(let error):
+                // Con Rete locale spenta NWConnection resta in attesa per sempre.
+                if Self.negatoDalPermesso(error) {
+                    fallita("permission")
+                    connection.cancel()
+                }
+            case .failed(let error):
+                fallita(Self.motivo(error))
                 self?.remove(connection: connection)
-            } else if case .cancelled = state {
+            case .cancelled:
                 self?.remove(connection: connection)
+            default:
+                break
             }
         }
         connection.start(queue: queue)
+        queue.asyncAfter(deadline: .now() + Self.connectTimeout) {
+            guard esito == nil else { return }
+            fallita("timeout")
+            connection.cancel()
+        }
+    }
+
+    private static func negatoDalPermesso(_ error: NWError) -> Bool {
+        if case .dns(let code) = error, code == policyDenied { return true }
+        return false
+    }
+
+    private static func motivo(_ error: NWError) -> String {
+        if negatoDalPermesso(error) { return "permission" }
+        if case .posix(let code) = error {
+            switch code {
+            case .ETIMEDOUT: return "timeout"
+            case .ECONNREFUSED: return "refused"
+            default: break
+            }
+        }
+        return "network"
     }
 
     private func sendHello(on connection: NWConnection) {
@@ -296,9 +369,37 @@ final class TalkyCrossPlatformManager: NSObject, ObservableObject {
             return
         }
 
+        let chiave = ObjectIdentifier(connection)
+        if inArrivo[chiave]?.doppione == true { return }
+
         let floatPCM = convertPCM16LEToFloat32(payload)
         guard !floatPCM.isEmpty else { return }
         audioManager.playReceivedAudio(floatPCM)
+
+        guard var corrente = inArrivo[chiave], corrente.trasmissione != nil else { return }
+        let spazio = Self.maxFrameBytes - corrente.pcm16.count
+        if spazio > 0 { corrente.pcm16.append(payload.prefix(spazio)) }
+        inArrivo[chiave] = corrente
+        if !corrente.flusso, corrente.pcm16.count >= corrente.attesi {
+            concludi(connection)
+        }
+    }
+
+    /// Chiude il messaggio in arrivo su questa connessione e, se ha ancora
+    /// tratte da fare, lo passa al ponte. Su `queue`.
+    private func concludi(_ connection: NWConnection) {
+        guard let finito = inArrivo.removeValue(forKey: ObjectIdentifier(connection)),
+              let trasmissione = finito.trasmissione,
+              !finito.doppione, trasmissione.ttl > 1, !finito.pcm16.isEmpty else { return }
+        let audio = convertPCM16LEToFloat32(finito.pcm16)
+        let da = finito.peerUID
+        DispatchQueue.main.async { [weak self] in
+            self?.daInoltrare?(trasmissione, audio, da)
+        }
+    }
+
+    private func peerUID(of connection: NWConnection) -> String? {
+        connections.first { $0.value.contains { $0 === connection } }?.key
     }
 
     private func handleMessage(_ message: (type: String, fields: [String: String]), from connection: NWConnection) {
@@ -316,11 +417,25 @@ final class TalkyCrossPlatformManager: NSObject, ObservableObject {
             connections[peer.id] = vive
             publishConnectionCount()
             upsert(peer)
+            Funnel.once(Funnel.connectionEstablished, ["transport": "talky1"])
             logger.logNetworkInfo("Cross-platform HELLO ricevuto da \(peer.name)")
         case "HEARTBEAT":
             break
         case "AUDIO_META":
-            logger.logAudioInfo("Cross-platform audio in arrivo")
+            // Un messaggio rimasto aperto (flusso senza AUDIO_END) si chiude qui.
+            if inArrivo[ObjectIdentifier(connection)] != nil { concludi(connection) }
+            let trasmissione = Trasmissione(campi: message.fields)
+            let doppione = trasmissione.map { !Ponte.shared.primaVolta($0.id) } ?? false
+            inArrivo[ObjectIdentifier(connection)] = InArrivo(
+                trasmissione: trasmissione,
+                peerUID: peerUID(of: connection),
+                flusso: message.fields[Trasmissione.Chiave.flusso] == "1",
+                attesi: message.fields["byteCount"].flatMap(Int.init) ?? 0,
+                doppione: doppione
+            )
+            logger.logAudioInfo(doppione ? "Cross-platform doppione scartato" : "Cross-platform audio in arrivo")
+        case "AUDIO_END":
+            concludi(connection)
         default:
             logger.logNetworkDebug("Cross-platform messaggio non gestito: \(message.type)")
         }
@@ -367,6 +482,7 @@ final class TalkyCrossPlatformManager: NSObject, ObservableObject {
     }
 
     private func remove(connection: NWConnection) {
+        inArrivo.removeValue(forKey: ObjectIdentifier(connection))
         var removedIDs: [String] = []
         for (id, vive) in connections where vive.contains(where: { $0 === connection }) {
             let rimaste = vive.filter { $0 !== connection }
@@ -469,6 +585,7 @@ extension TalkyCrossPlatformManager: NetServiceDelegate {
         )
         serviceNameToPeerID[sender.name] = peer.id
         upsert(peer)
+        Funnel.once(Funnel.peerFound, ["transport": "talky1"])
         queue.async { [weak self] in
             guard let self else { return }
             // Gia' collegati (magari e' stato lui a chiamare): niente doppione.

@@ -109,6 +109,26 @@ final class WalkieEngine: NSObject, ObservableObject {
     private var connecting: [String: (started: Date, connection: NWConnection)] = [:]
     private var reconnectTimer: DispatchSourceTimer?
 
+    // Ponte A-B-C (tutto su `queue`): il Mac ritrasmette agli altri peer quello
+    // che riceve, una tratta in meno, cosi' un Android e un iPhone che non si
+    // vedono si parlano passando da qui.
+    private let ponte = Ponte()
+    /// Il messaggio che sta arrivando su ogni connessione, fra AUDIO_META e la
+    /// sua fine: si ritrasmette solo intero.
+    private struct InArrivo {
+        /// nil = versione senza ponte: si suona e basta.
+        let trasmissione: Trasmissione?
+        let peerUID: String?
+        /// Android manda tanti frame fino ad AUDIO_END, iPhone e Mac uno solo.
+        let flusso: Bool
+        let attesi: Int
+        let doppione: Bool
+        var pcm16 = Data()
+    }
+    private var inArrivo: [ObjectIdentifier: InArrivo] = [:]
+    /// Tutti scartano i frame sopra 1 MB: oltre non si manda.
+    private static let maxFrameBytes = 1024 * 1024
+
     // Audio capture
     private var captureEngine: AVAudioEngine?
     private var captureConverter: AVAudioConverter?
@@ -181,6 +201,7 @@ final class WalkieEngine: NSObject, ObservableObject {
         browser = nil
         connections.values.forEach { $0.cancel() }
         connections.removeAll()
+        inArrivo.removeAll()
         discovered.removeAll()
         serviceNameToPeerID.removeAll()
         connecting.removeAll()
@@ -376,26 +397,51 @@ final class WalkieEngine: NSObject, ObservableObject {
             guard let self else { return }
             guard !self.connections.isEmpty else { return }
 
-            let pcm16 = self.convertFloat32ToPCM16LE(data)
+            var pcm16 = self.convertFloat32ToPCM16LE(data)
+            if pcm16.count > Self.maxFrameBytes { pcm16 = pcm16.prefix(Self.maxFrameBytes) }
             guard !pcm16.isEmpty else { return }
 
-            let meta = self.encodeLine(
-                type: "AUDIO_META",
-                fields: [
-                    "byteCount": "\(pcm16.count)",
-                    "sampleRate": "48000",
-                    "channels": "1",
-                    "encoding": "pcm_s16le"
-                ]
-            )
-
-            for connection in self.connections.values {
-                self.sendFrame(Data(meta.utf8), on: connection)
-                self.sendFrame(pcm16, on: connection)
-            }
+            let trasmissione = Trasmissione.nuova(origine: self.uid,
+                                                  nome: self.deviceName,
+                                                  destinatari: Array(self.connections.keys))
+            // Se ci torna indietro da un ponte non va suonato a chi l'ha detto.
+            _ = self.ponte.primaVolta(trasmissione.id)
+            self.manda(pcm16, trasmissione: trasmissione, a: Array(self.connections.values))
 
             self.logger.logAudioInfo("TALKY1 audio inviato: \(pcm16.count) bytes a \(self.connections.count) peer")
         }
+    }
+
+    /// AUDIO_META con i campi del ponte, poi il frame audio. Partono di seguito
+    /// sulla stessa coda, quindi un messaggio ritrasmesso non si infila mai in
+    /// mezzo a un altro. Su `queue`.
+    private func manda(_ pcm16: Data, trasmissione: Trasmissione, a destinatari: [NWConnection]) {
+        var fields = trasmissione.campi
+        fields["byteCount"] = "\(pcm16.count)"
+        fields["sampleRate"] = "48000"
+        fields["channels"] = "1"
+        fields["encoding"] = "pcm_s16le"
+        let meta = Data(encodeLine(type: "AUDIO_META", fields: fields).utf8)
+        for connection in destinatari {
+            sendFrame(meta, on: connection)
+            sendFrame(pcm16, on: connection)
+        }
+    }
+
+    /// Chiude il messaggio in arrivo su questa connessione e, se ha ancora
+    /// tratte da fare, lo ritrasmette a chi non l'ha gia' avuto. Su `queue`.
+    private func concludi(_ connection: NWConnection) {
+        guard let finito = inArrivo.removeValue(forKey: ObjectIdentifier(connection)),
+              let trasmissione = finito.trasmissione,
+              !finito.doppione, trasmissione.ttl > 1, !finito.pcm16.isEmpty else { return }
+        let da = finito.peerUID
+        let scelte = connections.filter { id, _ in
+            id != da && !trasmissione.raggiunti.contains(Ponte.idCorto(id))
+        }
+        guard !scelte.isEmpty else { return }
+        let uscita = trasmissione.perIlPonte(locale: uid, arrivataDa: da, destinatari: Array(scelte.keys))
+        manda(finito.pcm16, trasmissione: uscita, a: Array(scelte.values))
+        logger.logAudioInfo("Ponte: ritrasmesso a \(scelte.count) peer (ttl \(uscita.ttl))")
     }
 
     // MARK: - Listener / Bonjour
@@ -620,10 +666,21 @@ final class WalkieEngine: NSObject, ObservableObject {
             return
         }
 
+        let chiave = ObjectIdentifier(connection)
+        if inArrivo[chiave]?.doppione == true { return }
+
         let floatPCM = convertPCM16LEToFloat32(payload)
         guard !floatPCM.isEmpty else { return }
         DispatchQueue.main.async { [weak self] in
             self?.playReceivedAudio(floatPCM)
+        }
+
+        guard var corrente = inArrivo[chiave], corrente.trasmissione != nil else { return }
+        let spazio = Self.maxFrameBytes - corrente.pcm16.count
+        if spazio > 0 { corrente.pcm16.append(payload.prefix(spazio)) }
+        inArrivo[chiave] = corrente
+        if !corrente.flusso, corrente.pcm16.count >= corrente.attesi {
+            concludi(connection)
         }
     }
 
@@ -653,7 +710,20 @@ final class WalkieEngine: NSObject, ObservableObject {
         case "HEARTBEAT":
             break
         case "AUDIO_META":
-            logger.logAudioInfo("TALKY1 audio in arrivo")
+            // Un messaggio rimasto aperto (flusso senza AUDIO_END) si chiude qui.
+            if inArrivo[ObjectIdentifier(connection)] != nil { concludi(connection) }
+            let trasmissione = Trasmissione(campi: message.fields)
+            let doppione = trasmissione.map { !ponte.primaVolta($0.id) } ?? false
+            inArrivo[ObjectIdentifier(connection)] = InArrivo(
+                trasmissione: trasmissione,
+                peerUID: connections.first { $0.value === connection }?.key,
+                flusso: message.fields[Trasmissione.Chiave.flusso] == "1",
+                attesi: message.fields["byteCount"].flatMap(Int.init) ?? 0,
+                doppione: doppione
+            )
+            logger.logAudioInfo(doppione ? "TALKY1 doppione scartato" : "TALKY1 audio in arrivo")
+        case "AUDIO_END":
+            concludi(connection)
         default:
             logger.logNetworkDebug("TALKY1 messaggio non gestito: \(message.type)")
         }
@@ -838,6 +908,7 @@ final class WalkieEngine: NSObject, ObservableObject {
     }
 
     private func remove(connection: NWConnection) {
+        inArrivo.removeValue(forKey: ObjectIdentifier(connection))
         let removedIDs = connections.compactMap { id, storedConnection in
             storedConnection === connection ? id : nil
         }

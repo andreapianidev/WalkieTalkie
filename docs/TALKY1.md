@@ -158,8 +158,8 @@ story: add fields, ignore what you do not know.
 |---|---|---|
 | `HELLO` | `uid`, `name`, `channel` | Sent once, immediately on connect. Registers the peer. |
 | `HEARTBEAT` | none | Keep-alive. Accepted and ignored by every implementation; nothing requires you to send it. |
-| `AUDIO_META` | `byteCount`, `sampleRate`, `channels`, `encoding` | Announces the audio frames that follow. |
-| `AUDIO_END` | none | Marks the end of a streamed transmission. Sent by Android; ignored by iOS and macOS. |
+| `AUDIO_META` | `byteCount`, `sampleRate`, `channels`, `encoding`, optional relay fields (see *Relay*) | Announces the audio frames that follow. |
+| `AUDIO_END` | none | Marks the end of a streamed transmission. Sent by Android; since 4.0 iOS and macOS use it to close a streamed message before relaying it. |
 | `INVITE` / `ACCEPT` | none | **Reserved.** Declared in the Android enum, and Android answers an `INVITE` with an `ACCEPT`, but no implementation ever sends one. Do not rely on them. |
 
 A receiver must tolerate audio arriving without a preceding `AUDIO_META`, and
@@ -199,6 +199,41 @@ changing these values, or you break every shipped version.
 
 Senders should cap a transmission at **10 seconds** of audio (960000 bytes), which
 keeps a single-frame transmission under the 1 MiB limit with room to spare.
+
+---
+
+## 6b. Relay (bridge A-B-C, since iOS 4.0, macOS 4.0, Android versionCode 6)
+
+Every device that receives a transmission plays it and forwards it to its other
+peers, so A reaches C through B when A and C are out of range of each other.
+
+`AUDIO_META` gains five fields. Older versions ignore them (unknown fields) and
+play the audio as before.
+
+| Field | Meaning |
+|---|---|
+| `msgId` | Unique id of the transmission (UUID). Receivers remember the last 256 and drop duplicates: the same message arrives directly and through a bridge. |
+| `origin`, `originName` | `uid` and display name of who spoke, not of the bridge that forwarded it. |
+| `ttl` | Hops left. The speaker sends `2`. A receiver forwards only if `ttl > 1`, with `ttl - 1`. |
+| `reached` | Comma-separated short ids (first 8 characters of the `uid`, lowercase) of devices that already got the message from the sender. A bridge does not forward to them, and adds its own targets before forwarding. Without it, a group where everyone is connected to everyone would copy each message from everyone to everyone. |
+| `stream` | `1` when the audio comes as many frames closed by `AUDIO_END` (Android). Without it the message is complete after `byteCount` bytes. |
+
+Rules:
+
+- Forward only complete messages: one `AUDIO_META` and one audio frame, back to back
+  on the same connection, never interleaved with another message. Android, while its
+  own user is talking, keeps relays queued until its own `AUDIO_END`.
+- Never forward to the peer it came from.
+- Messages without `msgId` (older versions) are played but not forwarded: without an
+  id nobody can tell whether another bridge already delivered them.
+
+On iOS the same fields also travel over MultipeerConnectivity, so an iPhone bridges
+between iPhones (Multipeer) and Android/Mac (TALKY1). Older iOS versions play every
+Multipeer message as raw Float32, so the fields sit in a header made of Float32 words
+whose two high bytes are zero: `0x4B54`, `0x3152` ("TK" "R1"), the number of text
+words, then the `k=v|k=v` text two bytes per word, then the Float32 audio. Read as
+samples, each header word is a subnormal number below 1e-40, i.e. a couple of
+milliseconds of silence before the voice. See `WalkieTalkie/Ponte.swift`.
 
 ---
 
@@ -269,6 +304,7 @@ A new implementation is TALKY1-compliant when it:
 - [ ] caps a transmission at 10 s
 - [ ] sends once per peer UID, not per socket
 - [ ] queues received audio frames instead of restarting playback per frame
+- [ ] relay: drops duplicate `msgId`, forwards complete messages with `ttl - 1` only when `ttl > 1`, skips the source and `reached`
 
 ---
 

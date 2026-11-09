@@ -17,12 +17,14 @@ import androidx.core.content.ContextCompat
 import com.immaginet.talky.audio.AudioManager
 import com.immaginet.talky.audio.RemoteAudioPolicy
 import com.immaginet.talky.R
+import com.immaginet.talky.protocol.MemoriaPonte
 import com.immaginet.talky.protocol.PeerChannelPolicy
 import com.immaginet.talky.protocol.PeerConnectionPolicy
 import com.immaginet.talky.protocol.TalkyMessage
 import com.immaginet.talky.protocol.TalkyMessageType
 import com.immaginet.talky.protocol.TalkyFrameWriter
 import com.immaginet.talky.protocol.TalkyProtocol
+import com.immaginet.talky.protocol.Trasmissione
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineStart
@@ -36,6 +38,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
+import java.io.ByteArrayOutputStream
 import java.io.Closeable
 import java.io.DataInputStream
 import java.io.DataOutputStream
@@ -44,6 +47,7 @@ import java.net.InetSocketAddress
 import java.net.Socket
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
@@ -57,6 +61,22 @@ data class CrossPlatformPeer(
     val channel: String,
     val serviceName: String? = null
 )
+
+/**
+ * Il messaggio che sta arrivando su una connessione, fra AUDIO_META e la sua
+ * fine. Serve al ponte: un messaggio si ritrasmette solo intero.
+ */
+private class InArrivo(
+    /** null = versione senza ponte: si suona e basta. */
+    val trasmissione: Trasmissione?,
+    val peerUid: String,
+    /** Android manda tanti frame fino ad AUDIO_END, iPhone e Mac uno solo. */
+    val flusso: Boolean,
+    val attesi: Int,
+    val doppione: Boolean
+) {
+    val pcm = ByteArrayOutputStream()
+}
 
 private data class PeerConnection(
     val socket: Socket,
@@ -110,6 +130,16 @@ class CrossPlatformWalkieManager(
     private var heartbeatJob: Job? = null
     private var remoteAudioTimeoutJob: Job? = null
     private var remoteAudioPeerUid: String? = null
+
+    // Ponte A-B-C: si ritrasmette agli altri peer quello che si riceve, una
+    // tratta in meno, cosi' due telefoni che non si vedono si parlano passando da qui.
+    private val memoriaPonte = MemoriaPonte()
+    private val inArrivo = ConcurrentHashMap<Long, InArrivo>()
+    /**
+     * Ritrasmissioni pronte mentre si sta parlando: partono dopo il nostro
+     * AUDIO_END, altrimenti finirebbero in mezzo ai frame del nostro flusso.
+     */
+    private val ponteInAttesa = ConcurrentLinkedQueue<() -> Unit>()
 
     val audioManager = AudioManager(context)
     private var audioStreamingJob: Job? = null
@@ -209,11 +239,15 @@ class CrossPlatformWalkieManager(
             try {
                 addEvent("Inizio trasmissione audio")
 
+                val trasmissione = Trasmissione.nuova(uid, deviceName, peerConnections.keys)
+                // Se ci torna indietro da un ponte non va suonato a chi l'ha detto.
+                memoriaPonte.primaVolta(trasmissione.id)
                 val metaMsg = TalkyMessage.audioMeta(
                     byteCount = AudioManager.BUFFER_SIZE_FRAMES * 2,
                     sampleRate = AudioManager.SAMPLE_RATE,
                     channels = AudioManager.CHANNELS,
-                    encoding = TalkyProtocol.PCM_ENCODING
+                    encoding = TalkyProtocol.PCM_ENCODING,
+                    ponte = trasmissione.campi + (TalkyProtocol.Keys.STREAM to "1")
                 )
                 broadcastMessage(metaMsg)
                 audioAnnounced = true
@@ -230,6 +264,10 @@ class CrossPlatformWalkieManager(
                 audioManager.stopCapturing()
                 if (audioAnnounced) {
                     broadcastMessage(TalkyMessage.audioEnd())
+                }
+                while (true) {
+                    val ritrasmissione = ponteInAttesa.poll() ?: break
+                    ritrasmissione()
                 }
                 addEvent("Fine trasmissione audio")
                 onTransmissionStateChanged?.invoke(false)
@@ -653,7 +691,7 @@ class CrossPlatformWalkieManager(
                 if (message != null) {
                     handleProtocolMessage(peer, connectionGeneration, connectionId, message)
                 } else {
-                    handleAudioFrame(peer, connectionGeneration, frame)
+                    handleAudioFrame(peer, connectionGeneration, connectionId, frame)
                 }
             }
         } catch (e: Exception) {
@@ -661,6 +699,7 @@ class CrossPlatformWalkieManager(
                 addEvent("Peer ${peer.name} disconnesso: ${e.message}")
             }
         } finally {
+            inArrivo.remove(connectionId)
             disconnectPeer(peer.uid, connectionId, reconnect = true)
         }
     }
@@ -696,6 +735,21 @@ class CrossPlatformWalkieManager(
                 addEvent("ACCEPT da ${peer.name}")
             }
             TalkyMessageType.AUDIO_META -> {
+                // Un messaggio rimasto aperto (flusso senza AUDIO_END) si chiude qui.
+                concludi(connectionId)
+                val trasmissione = Trasmissione.daCampi(message.fields)
+                val doppione = trasmissione?.let { !memoriaPonte.primaVolta(it.id) } ?: false
+                inArrivo[connectionId] = InArrivo(
+                    trasmissione = trasmissione,
+                    peerUid = peer.uid,
+                    flusso = message.fields[TalkyProtocol.Keys.STREAM] == "1",
+                    attesi = message.fields[TalkyProtocol.Keys.BYTE_COUNT]?.toIntOrNull() ?: 0,
+                    doppione = doppione
+                )
+                if (doppione) {
+                    addEvent("Doppione scartato da ${peer.name}")
+                    return
+                }
                 audioPlaybackMutex.withLock {
                     if (!isConnectionCurrent(peer.channel, connectionGeneration)) return
                     addEvent("Audio in arrivo da ${peer.name}")
@@ -703,15 +757,21 @@ class CrossPlatformWalkieManager(
                     noteRemoteAudioActivityLocked(peer.uid)
                 }
             }
-            TalkyMessageType.AUDIO_END -> finishRemoteAudio(peer.uid)
+            TalkyMessageType.AUDIO_END -> {
+                concludi(connectionId)
+                finishRemoteAudio(peer.uid)
+            }
         }
     }
 
     private suspend fun handleAudioFrame(
         peer: CrossPlatformPeer,
         connectionGeneration: Long,
+        connectionId: Long,
         frame: ByteArray
     ) {
+        val corrente = inArrivo[connectionId]
+        if (corrente?.doppione == true) return
         audioPlaybackMutex.withLock {
             if (!isConnectionCurrent(peer.channel, connectionGeneration)) return
             audioManager.prepareTrack()
@@ -719,6 +779,57 @@ class CrossPlatformWalkieManager(
             audioManager.writeAudio(frame)
             noteRemoteAudioActivityLocked(peer.uid)
         }
+        if (corrente == null || corrente.trasmissione == null) return
+        val spazio = TalkyFrameWriter.MAX_PAYLOAD_BYTES - corrente.pcm.size()
+        if (spazio > 0) corrente.pcm.write(frame, 0, minOf(spazio, frame.size))
+        if (!corrente.flusso && corrente.pcm.size() >= corrente.attesi) concludi(connectionId)
+    }
+
+    /**
+     * Chiude il messaggio in arrivo su questa connessione e, se ha ancora
+     * tratte da fare, lo ritrasmette a chi non l'ha gia' avuto.
+     */
+    private fun concludi(connectionId: Long) {
+        val finito = inArrivo.remove(connectionId) ?: return
+        val trasmissione = finito.trasmissione ?: return
+        if (finito.doppione || trasmissione.ttl <= 1 || finito.pcm.size() == 0) return
+        val pcm = finito.pcm.toByteArray()
+        val ritrasmissione = { ritrasmetti(trasmissione, pcm, finito.peerUid) }
+        if (isTransmitting()) {
+            ponteInAttesa.add(ritrasmissione)
+        } else {
+            // Fuori dal lettore di questa connessione: mandare un messaggio
+            // intero a piu' peer richiede tempo e la lettura non deve fermarsi.
+            scope.launch { ritrasmissione() }
+        }
+    }
+
+    private fun ritrasmetti(trasmissione: Trasmissione, pcm: ByteArray, arrivataDa: String) {
+        val scelte = peerConnections.values
+            .filter(::isConnectionCurrent)
+            .filter { conn ->
+                conn.peer.uid != arrivataDa &&
+                    Trasmissione.idCorto(conn.peer.uid) !in trasmissione.raggiunti
+            }
+        if (scelte.isEmpty()) return
+        val uscita = trasmissione.perIlPonte(uid, arrivataDa, scelte.map { it.peer.uid })
+        val meta = TalkyProtocol.encodeLine(
+            TalkyMessage.audioMeta(
+                byteCount = pcm.size,
+                sampleRate = AudioManager.SAMPLE_RATE,
+                channels = AudioManager.CHANNELS,
+                encoding = TalkyProtocol.PCM_ENCODING,
+                ponte = uscita.campi
+            )
+        ).toByteArray()
+        scelte.forEach { conn ->
+            runCatching {
+                conn.writer.writeAll(meta, pcm)
+            }.onFailure {
+                disconnectPeer(conn.peer.uid, conn.connectionId, reconnect = true)
+            }
+        }
+        addEvent("Ponte: ritrasmesso a ${scelte.size} peer")
     }
 
     private fun noteRemoteAudioActivityLocked(peerUid: String) {

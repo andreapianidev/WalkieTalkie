@@ -252,6 +252,39 @@ def controlla_protocollo():
             err(f"protocollo {nome}: NetService/NetServiceBrowser senza schedule(in: .main), "
                 "su una coda GCD non arrivano mai le risposte")
 
+    # Ponte A-B-C: stessi campi di AUDIO_META e stesso numero di tratte sulle
+    # tre piattaforme, altrimenti un messaggio passa da un ponte e si perde
+    # (o torna indietro all'infinito).
+    ponte = {
+        "iOS": (ROOT / "WalkieTalkie/Ponte.swift"),
+        "Mac": (ROOT / "macTalky/Core/Ponte.swift"),
+        "Android": (kt / "protocol/Trasmissione.kt"),
+    }
+    for nome, f in ponte.items():
+        if not f.exists():
+            err(f"ponte {nome}: manca {f.relative_to(ROOT)}")
+            continue
+        t = f.read_text() + (andr if nome == "Android" else "")
+        for chiave in ("msgId", "origin", "originName", "ttl", "reached", "stream"):
+            if f'"{chiave}"' not in t:
+                err(f"ponte {nome}: manca il campo {chiave!r} di AUDIO_META")
+        if not re.search(r"(ttlIniziale|TTL_INIZIALE)\s*=\s*2\b", t):
+            err(f"ponte {nome}: le tratte iniziali non sono 2")
+        if "primaVolta" not in t:
+            err(f"ponte {nome}: nessuna memoria degli id, i doppioni suonerebbero due volte")
+    # Su Multipeer le versioni vecchie suonano tutto come Float32: l'intestazione
+    # deve restare nella forma "due byte alti a zero" che suona come silenzio.
+    ios_ponte = ponte["iOS"].read_text() if ponte["iOS"].exists() else ""
+    mp = (ROOT / "WalkieTalkie/MultipeerManager.swift").read_text()
+    if "0x4B54, 0x3152" not in ios_ponte or "UInt8(parola >> 8), 0, 0" not in ios_ponte:
+        err("ponte iOS: l'intestazione Multipeer non e' piu' silenziosa per le versioni vecchie")
+    if "IntestazioneMultipeer.impacchetta" not in mp or "IntestazioneMultipeer.spacchetta" not in mp:
+        err("ponte iOS: MultipeerManager non usa l'intestazione del ponte in invio e in ricezione")
+    # Il context dell'invito con l'uid va solo a chi ha il ponte: le versioni
+    # vecchie confrontano il context intero con il canale e rifiuterebbero.
+    if "peerConPonte.contains(peerID)" not in mp:
+        err("Multipeer: il context con l'uid deve partire solo verso i peer con il ponte")
+
 
 # ---------------------------------------------------------------- radio
 
