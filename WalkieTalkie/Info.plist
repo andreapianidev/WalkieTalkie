@@ -975,6 +975,7 @@
 	<array>
 		<string>remote-notification</string>
 		<string>audio</string>
+		<string>push-to-talk</string>
 	</array>
 </dict>
 </plist>
