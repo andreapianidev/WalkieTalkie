@@ -11,9 +11,11 @@ set -a; source ~/.secrets/talky-mumble.env; set +a
 DIR=$(cd "$(dirname "$0")" && pwd)
 
 scp -q "$DIR/talky_rooms.py" "$HOST:/tmp/talky_rooms.py"
+# Chiave APNs del team per le notifiche Push to Talk (vault: ~/.secrets/apns-AuthKey_RF29RR7SKM.p8).
+scp -q ~/.secrets/apns-AuthKey_RF29RR7SKM.p8 "$HOST:/tmp/talky-apns.p8"
 ssh "$HOST" "sudo bash -s" <<REMOTE
 set -e
-DEBIAN_FRONTEND=noninteractive apt-get install -y -q mumble-server >/dev/null
+DEBIAN_FRONTEND=noninteractive apt-get install -y -q mumble-server python3-jwt python3-cryptography curl >/dev/null
 ini=/etc/mumble/mumble-server.ini
 setkv() { if grep -qE "^;?\\s*\$1=" \$ini; then sed -i -E "s|^;?\\s*\$1=.*|\$1=\$2|" \$ini; else echo "\$1=\$2" >> \$ini; fi; }
 setkv port 64738
@@ -48,6 +50,9 @@ iptables-save > /etc/iptables/rules.v4
 
 install -d -m 755 /opt/talky-rooms
 install -m 644 /tmp/talky_rooms.py /opt/talky-rooms/talky_rooms.py
+install -d -m 700 /etc/talky-rooms
+install -m 600 /tmp/talky-apns.p8 /etc/talky-rooms/apns.p8
+rm -f /tmp/talky-apns.p8
 umask 077
 printf 'TALKY_MUMBLE_SUPERUSER_PASSWORD=%s\n' "$TALKY_MUMBLE_SUPERUSER_PASSWORD" > /etc/talky-rooms.env
 cat > /etc/systemd/system/talky-rooms.service <<UNIT
@@ -58,6 +63,10 @@ Requires=mumble-server.service
 
 [Service]
 EnvironmentFile=/etc/talky-rooms.env
+LoadCredential=apns.p8:/etc/talky-rooms/apns.p8
+Environment=APNS_KEY_PATH=%d/apns.p8
+Environment=APNS_KEY_ID=RF29RR7SKM
+Environment=APNS_TEAM_ID=ERAK83QBBM
 ExecStart=/usr/bin/python3 /opt/talky-rooms/talky_rooms.py
 DynamicUser=yes
 StateDirectory=talky-rooms

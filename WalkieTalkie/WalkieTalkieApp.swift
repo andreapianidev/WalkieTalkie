@@ -68,6 +68,9 @@ struct WalkieTalkieApp: App {
                 // SCAN e schermo spento, con Pro o con il pass di 24 ore.
                 if #available(iOS 16.0, *) {
                     LiveRadio.shared.proGate = { LivePassManager.shared.hasLiveExtras }
+                    // Push to Talk delle stanze: subito, anche quando iOS rilancia
+                    // Talky per una notifica, perche' il sistema le consegni la voce.
+                    RoomPushToTalk.shared.start()
                     // Segnalazioni dei canali POC: server e motivo, mai nomi di persone.
                     LiveRadio.shared.onReport = { server, reason in
                         Analytics.logEvent("mumble_report", parameters: ["server": server, "reason": reason])

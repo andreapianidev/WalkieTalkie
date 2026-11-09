@@ -162,15 +162,19 @@ nonisolated final class MumbleMic: @unchecked Sendable {
     }
 
     /// Accende il microfono; `packet` riceve un pacchetto Opus ogni 20 ms.
-    func start(_ packet: @escaping (Data) -> Void) -> Bool {
+    /// `systemSession`: la sessione audio l'ha gia' attivata Push to Talk,
+    /// che non vuole che l'app la tocchi.
+    func start(systemSession: Bool = false, _ packet: @escaping (Data) -> Void) -> Bool {
         queue.sync {
             #if os(iOS)
-            let session = AVAudioSession.sharedInstance()
-            if session.category != .playAndRecord {
-                try? session.setCategory(.playAndRecord, mode: .default,
-                                         options: [.defaultToSpeaker, .allowBluetooth, .allowBluetoothA2DP])
+            if !systemSession {
+                let session = AVAudioSession.sharedInstance()
+                if session.category != .playAndRecord {
+                    try? session.setCategory(.playAndRecord, mode: .default,
+                                             options: [.defaultToSpeaker, .allowBluetooth, .allowBluetoothA2DP])
+                }
+                try? session.setActive(true)
             }
-            try? session.setActive(true)
             #endif
             if encoder == nil { encoder = OpusEncoder() }
             guard encoder != nil else { return false }

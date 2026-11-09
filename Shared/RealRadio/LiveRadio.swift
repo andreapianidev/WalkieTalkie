@@ -167,6 +167,9 @@ final class LiveRadio: ObservableObject {
     private let mic = MumbleMic()
     private var micPump: Task<Void, Never>?
     private var micFeed: AsyncStream<Data>.Continuation?
+    /// Passaggio cominciato dal tasto di sistema di Push to Talk: il
+    /// microfono parte quando iOS attiva la sessione audio (micReady).
+    private var micWaiting = false
 
     private var scanTask: Task<Void, Never>?
     private var lastVoice = Date.distantPast
@@ -689,7 +692,8 @@ final class LiveRadio: ObservableObject {
     // MARK: parlare sul POC
 
     /// Premuto il tasto: microfono acceso, voce nel canale finche' non si rilascia.
-    func startTalking() {
+    /// Con `waitForSession` il microfono aspetta micReady(), come vuole Push to Talk.
+    func startTalking(waitForSession: Bool = false) {
         guard band == .poc, canTalk, !isTalking, let listener = mumble else { return }
         isTalking = true
         Task { [weak self] in
@@ -712,15 +716,35 @@ final class LiveRadio: ObservableObject {
                 await listener.endTalking()
             }
             self.player.setVolume(0)
-            if !self.mic.start({ sink.yield($0) }) {
+            if let room = self.room {
+                // Il custode avvisa con Push to Talk chi della stanza non e' collegato.
+                self.tellKeeper("talk \(room.channelName) \(room.token) \(self.username)")
+            }
+            if waitForSession {
+                self.micWaiting = true
+            } else if !self.mic.start({ sink.yield($0) }) {
                 self.stopTalking()
             }
         }
     }
 
+    /// iOS ha attivato la sessione audio di Push to Talk: ora il microfono.
+    func micReady() {
+        guard micWaiting, isTalking, let sink = micFeed else { return }
+        micWaiting = false
+        if !mic.start(systemSession: true, { sink.yield($0) }) { stopTalking() }
+    }
+
+    /// Messaggio privato al custode delle stanze, se si e' in una stanza.
+    func tellKeeper(_ text: String) {
+        guard room != nil, let listener = mumble else { return }
+        Task { await listener.tellKeeper(text) }
+    }
+
     func stopTalking() {
         guard isTalking else { return }
         isTalking = false
+        micWaiting = false
         mic.stop()
         micFeed?.finish()
         micFeed = nil

@@ -511,6 +511,13 @@ actor MumbleListener {
         link.send(MumbleControl.selfMute(session: session, on: true))
     }
 
+    /// Messaggio privato al custode del server delle stanze (scripts/server).
+    func tellKeeper(_ text: String) {
+        guard room != nil, synced, let link,
+              let keeper = users.values.first(where: { $0.name == "SuperUser" }) else { return }
+        link.send(MumbleControl.text(to: keeper.session, text))
+    }
+
     /// Chi parla adesso non si sente piu', qui e nei collegamenti futuri.
     func blockTalker() -> String? {
         guard let floor, let name = users[floor]?.name else { return nil }

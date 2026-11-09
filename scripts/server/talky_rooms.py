@@ -9,14 +9,21 @@
 #     non si scrive, non si creano canali) e del canale "Talky" dove sta lui;
 #   - Talky gli manda in privato "room <nome> <token>": se la stanza non c'e'
 #     la crea, con @all fuori e il gruppo #<token> dentro;
-#   - le stanze vuote da piu' di 24 ore le cancella.
+#   - le stanze vuote da piu' di 24 ore le cancella;
+#   - Push to Talk: un iPhone Pro gli lascia il gettone APNs della stanza
+#     ("ptt ..."), e quando qualcuno comincia a parlare ("talk ...") manda
+#     la notifica pushtotalk a chi della stanza non e' collegato adesso,
+#     cosi' iOS sveglia Talky anche chiusa e mostra chi parla.
 # Il token arriva solo a lui (messaggio a una sessione), mai in un canale.
 #
 # Solo libreria standard. La password di SuperUser arriva dall'ambiente
 # (TALKY_MUMBLE_SUPERUSER_PASSWORD), mai da questo file: il repo e' pubblico.
 
+import hashlib
 import json
 import os
+import subprocess
+import threading
 import re
 import socket
 import ssl
@@ -32,6 +39,69 @@ IDLE_SECONDS = 24 * 3600
 HOME = "Talky"
 ROOM_NAME = re.compile(r"^room-[0-9a-f]{16}$")
 TOKEN = re.compile(r"^[0-9a-f]{32}$")
+PUSH_TOKEN = re.compile(r"^[0-9a-f]{32,200}$")
+NICK = re.compile(r"^[\w-]{1,24}$")
+PTT_PER_ROOM = 30
+PTT_TTL = 7 * 24 * 3600
+PTT_GAP = 15
+
+# APNs: la chiave del team (RF29RR7SKM, in ~/.secrets), passata da systemd
+# con LoadCredential. Senza chiave le stanze funzionano lo stesso, senza notifiche.
+APNS_KEY = os.environ.get("APNS_KEY_PATH", "")
+APNS_KEY_ID = os.environ.get("APNS_KEY_ID", "")
+APNS_TEAM = os.environ.get("APNS_TEAM_ID", "")
+APNS_TOPIC = "com.Andrea-Piani.WalkieTalkie.voip-ptt"
+
+
+class Pusher:
+    """Notifiche pushtotalk, una richiesta HTTP/2 per gettone con curl."""
+
+    def __init__(self):
+        self.jwt = None
+        self.minted = 0
+        self.dead = []   # gettoni che APNs dice non validi, li toglie il ciclo principale
+        try:
+            import jwt  # python3-jwt
+            self.lib = jwt
+            self.key = open(APNS_KEY).read() if APNS_KEY else None
+        except (ImportError, OSError):
+            self.lib = None
+            self.key = None
+
+    @property
+    def ready(self):
+        return bool(self.lib and self.key and APNS_KEY_ID and APNS_TEAM)
+
+    def bearer(self):
+        # APNs vuole un gettone fra 20 e 60 minuti di vita: si rifa' ogni 40.
+        if not self.jwt or time.time() - self.minted > 2400:
+            self.minted = int(time.time())
+            self.jwt = self.lib.encode({"iss": APNS_TEAM, "iat": self.minted}, self.key,
+                                       algorithm="ES256", headers={"kid": APNS_KEY_ID})
+        return self.jwt
+
+    def send(self, token, env, speaker):
+        if not self.ready:
+            return
+        host = "api.sandbox.push.apple.com" if env == "sandbox" else "api.push.apple.com"
+        body = json.dumps({"aps": {}, "activeSpeaker": speaker})
+        cmd = ["curl", "-s", "-o", "/dev/null", "-w", "%{http_code}", "--http2", "-m", "10",
+               "-H", "authorization: bearer " + self.bearer(),
+               "-H", "apns-topic: " + APNS_TOPIC, "-H", "apns-push-type: pushtotalk",
+               "-H", "apns-priority: 10", "-H", "apns-expiration: 0",
+               "-d", body, "https://%s/3/device/%s" % (host, token)]
+
+        def run():
+            try:
+                code = subprocess.run(cmd, capture_output=True, text=True, timeout=15).stdout.strip()
+            except (OSError, subprocess.SubprocessError):
+                return
+            if code in ("400", "410"):
+                self.dead.append(token)
+            if code != "200":
+                log("apns", code, token[:8])
+
+        threading.Thread(target=run, daemon=True).start()
 
 # src/ACL.h
 WRITE, TRAVERSE, ENTER, SPEAK = 0x1, 0x2, 0x4, 0x8
@@ -118,9 +188,18 @@ class Rooms:
         self.buf = b""
         self.session = None
         self.channels = {}   # id -> {"name", "parent"}
-        self.users = {}      # session -> channel id
+        self.users = {}      # session -> {"ch": canale, "name": nome}
         self.home = None
-        self.last_seen = self.load()
+        data = self.load()
+        # Prima del 9/11 sera il file era solo {nome: ultimo uso}.
+        if "seen" in data:
+            self.last_seen = data.get("seen", {})
+            self.tokens = data.get("tok", {})
+            self.ptt = data.get("ptt", {})
+        else:
+            self.last_seen, self.tokens, self.ptt = data, {}, {}
+        self.pusher = Pusher()
+        self.pushed = {}     # gettone -> ultima notifica
         self.pending = {}    # nome -> token, in attesa del ChannelState
         self.synced = False
 
@@ -135,7 +214,7 @@ class Rooms:
         os.makedirs(os.path.dirname(STATE), exist_ok=True)
         tmp = STATE + ".tmp"
         with open(tmp, "w") as fh:
-            json.dump(self.last_seen, fh)
+            json.dump({"seen": self.last_seen, "tok": self.tokens, "ptt": self.ptt}, fh)
         os.replace(tmp, STATE)
 
     def send(self, kind, body):
@@ -231,6 +310,7 @@ class Rooms:
             token = self.pending.pop(c["name"], None)
             if token:
                 self.write_room_rules(cid, token)
+                self.tokens[c["name"]] = hashlib.sha256(token.encode()).hexdigest()
                 self.last_seen[c["name"]] = time.time()
                 self.save()
                 log("stanza creata", c["name"])
@@ -238,10 +318,12 @@ class Rooms:
             self.channels.pop(first(m, 1), None)
         elif kind == USER_STATE:
             s = first(m, 1)
-            if s is not None and 5 in m:
-                self.users[s] = first(m, 5)
-            elif s is not None:
-                self.users.setdefault(s, 0)
+            if s is not None:
+                u = self.users.setdefault(s, {"ch": 0, "name": ""})
+                if 5 in m:
+                    u["ch"] = first(m, 5)
+                if 3 in m:
+                    u["name"] = first(m, 3).decode(errors="replace")
         elif kind == USER_REMOVE:
             self.users.pop(first(m, 1), None)
         elif kind == TEXT_MSG:
@@ -253,7 +335,15 @@ class Rooms:
 
     def on_text(self, actor, text):
         parts = re.sub(r"<[^>]+>", "", text).strip().split()
-        if len(parts) != 3 or parts[0] != "room" or not ROOM_NAME.match(parts[1]) or not TOKEN.match(parts[2]):
+        if len(parts) < 3 or not ROOM_NAME.match(parts[1]) or not TOKEN.match(parts[2]):
+            return
+        if parts[0] == "ptt" and len(parts) == 6:
+            self.on_ptt(*parts[1:])
+            return
+        if parts[0] == "talk" and len(parts) == 4:
+            self.on_talk(*parts[1:])
+            return
+        if parts[0] != "room" or len(parts) != 3:
             return
         name, token = parts[1], parts[2]
         cid = self.by_name(name)
@@ -265,10 +355,49 @@ class Rooms:
         if actor is not None:
             self.send(TEXT_MSG, f_int(2, actor) + f_str(5, "ok " + name))
 
+    def token_ok(self, name, token):
+        if self.by_name(name) is None:
+            return False
+        sha = hashlib.sha256(token.encode()).hexdigest()
+        # Stanze nate prima che il custode tenesse l'impronta: vale la prima.
+        return self.tokens.setdefault(name, sha) == sha
+
+    def on_ptt(self, name, token, push, env, nick):
+        if not (PUSH_TOKEN.match(push) and env in ("sandbox", "production") and NICK.match(nick)):
+            return
+        if not self.token_ok(name, token):
+            return
+        room = self.ptt.setdefault(name, {})
+        room[push] = {"env": env, "nick": nick, "ts": time.time()}
+        if len(room) > PTT_PER_ROOM:
+            for old in sorted(room, key=lambda k: room[k]["ts"])[:len(room) - PTT_PER_ROOM]:
+                room.pop(old)
+        self.save()
+
+    def on_talk(self, name, token, nick):
+        if not NICK.match(nick) or not self.token_ok(name, token):
+            return
+        cid = self.by_name(name)
+        here = {u["name"] for u in self.users.values() if u["ch"] == cid}
+        now = time.time()
+        for push, info in list(self.ptt.get(name, {}).items()):
+            # A chi e' gia' nella stanza la voce arriva da Mumble.
+            if info["nick"] == nick or info["nick"] in here:
+                continue
+            if now - self.pushed.get(push, 0) < PTT_GAP:
+                continue
+            self.pushed[push] = now
+            self.pusher.send(push, info["env"], nick)
+
     def sweep(self):
         now = time.time()
-        occupied = set(self.users.values())
         changed = False
+        occupied = {u["ch"] for u in self.users.values()}
+        for room in self.ptt.values():
+            for push in [k for k, v in room.items() if now - v["ts"] > PTT_TTL or k in self.pusher.dead]:
+                room.pop(push)
+                changed = True
+        self.pusher.dead.clear()
         for cid, c in list(self.channels.items()):
             name = c["name"]
             if not ROOM_NAME.match(name) or c["parent"] != 0:
@@ -279,6 +408,8 @@ class Rooms:
             elif now - self.last_seen.setdefault(name, now) > IDLE_SECONDS:
                 self.send(CH_REMOVE, f_int(1, cid))
                 self.last_seen.pop(name, None)
+                self.tokens.pop(name, None)
+                self.ptt.pop(name, None)
                 changed = True
                 log("stanza tolta", name)
         if changed:

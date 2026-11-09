@@ -14,6 +14,9 @@ struct POCTalkControls: View {
     let compact: Bool
     @State private var showRules = false
     @State private var reported = false
+    /// Il dito e' sul tasto: con Push to Talk il passaggio comincia solo
+    /// quando risponde il sistema, e il gesto non deve chiederlo di continuo.
+    @State private var pressing = false
 
     var body: some View {
         VStack(spacing: compact ? 6 : 10) {
@@ -64,14 +67,25 @@ struct POCTalkControls: View {
         .gesture(
             DragGesture(minimumDistance: 0)
                 .onChanged { _ in
-                    guard !live.isTalking else { return }
+                    guard !pressing, !live.isTalking else { return }
                     guard MumbleManners.rulesAccepted else {
                         showRules = true
                         return
                     }
-                    live.startTalking()
+                    pressing = true
+                    if live.room != nil, RoomPushToTalk.shared.isJoined {
+                        RoomPushToTalk.shared.beginFromApp()
+                    } else {
+                        live.startTalking()
+                    }
                 }
-                .onEnded { _ in live.stopTalking() }
+                .onEnded { _ in
+                    pressing = false
+                    if live.room != nil, RoomPushToTalk.shared.isJoined {
+                        RoomPushToTalk.shared.endFromApp()
+                    }
+                    live.stopTalking()
+                }
         )
         .overlay(alignment: .bottom) {
             Text((live.isTalking ? "mumble_talking" : "mumble_hold_to_talk").localized)
