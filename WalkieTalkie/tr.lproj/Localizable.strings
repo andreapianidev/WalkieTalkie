@@ -260,10 +260,8 @@
 /* MARK: - Talky Pro features (added 2026-05) */
 
 // Paywall
-"paywall.close" = "Kapat";
 "paywall.title" = "Talky Pro'nun kilidini aç";
 "paywall.subtitle" = "Talky'nin tamamı, sınırsız";
-"paywall.error_title" = "Satın alma başarısız";
 "paywall.plan.weekly" = "Haftalık";
 "paywall.plan.weekly_suffix" = "/hafta";
 "paywall.plan.yearly" = "Yıllık";
@@ -275,12 +273,6 @@
 "paywall.cta.start" = "Talky Pro'yu başlat";
 "paywall.cta.trial" = "%d gün ücretsiz dene";
 "paywall.apple_footer" = "Abonelik otomatik yenilenir. Apple Kimliği ayarlarından istediğin zaman iptal edebilirsin. Ödeme, satın alma onaylandığında Apple Kimliğinden tahsil edilir.";
-"paywall.link.restore" = "Geri yükle";
-"paywall.link.terms" = "Koşullar";
-"paywall.link.privacy" = "Gizlilik";
-"paywall.error.purchase_failed" = "Satın alma tamamlanamadı. Bağlantını kontrol edip yeniden dene.";
-"paywall.error.no_purchases" = "Bu Apple Kimliğinde önceki bir satın alma bulunamadı.";
-"paywall.error.restore_failed" = "Satın alımların geri yüklenemedi. Lütfen daha sonra yeniden dene.";
 
 // Transmission history
 "history.title" = "Yayın geçmişi";

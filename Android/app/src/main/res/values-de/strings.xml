@@ -11,7 +11,7 @@
     <string name="ob_p1_title">Ein Funkgerät in deinem Handy</string>
     <string name="ob_p1_body">Auf dem Berg, auf dem Festival, auf einem vollen Platz: Sprich mit den Leuten neben dir, ganz ohne Internet.</string>
     <string name="ob_p2_title">Ein WLAN, keine Konten</string>
-    <string name="ob_p2_body">Talky findet die anderen Talky-Geräte von selbst — Android, iPhone, iPad, Mac. Kein Server, keine Anmeldung, keine Telefonnummer.</string>
+    <string name="ob_p2_body">Talky findet die anderen Talky-Geräte von selbst: Android, iPhone, iPad, Mac. Kein Server, keine Anmeldung, keine Telefonnummer.</string>
     <string name="ob_p2_wifi">Alle Geräte müssen im selben WLAN sein: Die Stimme läuft über das lokale Netzwerk, nie über das Internet.</string>
     <string name="ob_p3_title">Zum Sprechen halten</string>
     <string name="ob_p3_body">Wie bei einem echten Funkgerät: Halte die große Taste in der Mitte zum Sprechen, lass los zum Zuhören.</string>
@@ -20,7 +20,7 @@
     <string name="ob_p4_step1">Öffne Talky auf einem zweiten Gerät in der Nähe, im selben WLAN</string>
     <string name="ob_p4_step2">Warte ein paar Sekunden: Die Geräte koppeln sich von selbst und erscheinen unter „Geräte“. Es gibt nichts anzunehmen</string>
     <string name="ob_p4_step3">Halte die mittlere Taste zum Sprechen, lass los zum Zuhören</string>
-    <string name="ob_p4_channel_note">Alle starten auf dem öffentlichen Kanal. Damit das Gespräch in deiner Gruppe bleibt, öffne „Privat“ und nutze auf jedem Gerät dasselbe Passwort — das klappt auch mit iPhone und Mac.</string>
+    <string name="ob_p4_channel_note">Alle starten auf dem öffentlichen Kanal. Damit das Gespräch in deiner Gruppe bleibt, öffne „Privat“ und nutze auf jedem Gerät dasselbe Passwort, das klappt auch mit iPhone und Mac.</string>
     <string name="ob_continue">Weiter</string>
     <string name="ob_back">Zurück</string>
     <string name="ob_start">Los geht\'s</string>

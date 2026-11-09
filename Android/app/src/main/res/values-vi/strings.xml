@@ -11,7 +11,7 @@
     <string name="ob_p1_title">Một chiếc bộ đàm ngay trong điện thoại</string>
     <string name="ob_p1_body">Trên núi, ở lễ hội, giữa quảng trường đông người: nói chuyện với người bên cạnh mà không cần qua internet.</string>
     <string name="ob_p2_title">Một mạng Wi-Fi, không cần tài khoản</string>
-    <string name="ob_p2_body">Talky tự tìm các thiết bị Talky khác — Android, iPhone, iPad, Mac. Không máy chủ, không đăng ký, không số điện thoại.</string>
+    <string name="ob_p2_body">Talky tự tìm các thiết bị Talky khác: Android, iPhone, iPad, Mac. Không máy chủ, không đăng ký, không số điện thoại.</string>
     <string name="ob_p2_wifi">Tất cả thiết bị phải ở cùng một mạng Wi-Fi: giọng nói đi qua mạng nội bộ, không bao giờ qua internet.</string>
     <string name="ob_p3_title">Giữ để nói</string>
     <string name="ob_p3_body">Y như bộ đàm thật: giữ nút lớn ở giữa để nói, thả ra để nghe.</string>
@@ -20,7 +20,7 @@
     <string name="ob_p4_step1">Mở Talky trên một thiết bị thứ hai ở gần, trong cùng mạng Wi-Fi</string>
     <string name="ob_p4_step2">Đợi vài giây: các thiết bị tự ghép nối và hiện ra trong mục “Thiết bị”. Không có gì phải chấp nhận</string>
     <string name="ob_p4_step3">Giữ nút ở giữa để nói, thả ra để nghe</string>
-    <string name="ob_p4_channel_note">Mọi người đều bắt đầu ở kênh công khai. Để giữ cuộc trò chuyện trong nhóm của bạn, hãy mở “Riêng” và dùng cùng một mật khẩu trên mọi thiết bị — cách này cũng chạy với iPhone và Mac.</string>
+    <string name="ob_p4_channel_note">Mọi người đều bắt đầu ở kênh công khai. Để giữ cuộc trò chuyện trong nhóm của bạn, hãy mở “Riêng” và dùng cùng một mật khẩu trên mọi thiết bị, cách này cũng chạy với iPhone và Mac.</string>
     <string name="ob_continue">Tiếp tục</string>
     <string name="ob_back">Quay lại</string>
     <string name="ob_start">Bắt đầu nào</string>

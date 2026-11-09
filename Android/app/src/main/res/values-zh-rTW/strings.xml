@@ -11,7 +11,7 @@
     <string name="ob_p1_title">把對講機裝進手機</string>
     <string name="ob_p1_body">在山上、在音樂節、在擁擠的廣場：不經過網際網路，也能和身邊的人說話。</string>
     <string name="ob_p2_title">一個 Wi-Fi，不需要帳號</string>
-    <string name="ob_p2_body">Talky 會自己找到其他 Talky 裝置——Android、iPhone、iPad、Mac。不需要伺服器，不需要註冊，不需要手機號碼。</string>
+    <string name="ob_p2_body">Talky 會自己找到其他 Talky 裝置：Android、iPhone、iPad、Mac。不需要伺服器，不需要註冊，不需要手機號碼。</string>
     <string name="ob_p2_wifi">所有裝置必須連到同一個 Wi-Fi 網路：聲音只走區域網路，絕不經過網際網路。</string>
     <string name="ob_p3_title">按住說話</string>
     <string name="ob_p3_body">和真正的對講機一樣：按住中間的大按鈕說話，放開即可收聽。</string>
@@ -20,7 +20,7 @@
     <string name="ob_p4_step1">在同一個 Wi-Fi 網路下、附近的第二台裝置上開啟 Talky</string>
     <string name="ob_p4_step2">等幾秒鐘：裝置會自己配對，出現在「裝置」裡。沒有什麼需要接受</string>
     <string name="ob_p4_step3">按住中間的按鈕說話，放開即可收聽</string>
-    <string name="ob_p4_channel_note">所有人都從公開頻道開始。想把對話留在自己這群人裡，就開啟「私人」，在每台裝置上用同一個密碼——iPhone 和 Mac 也一樣能用。</string>
+    <string name="ob_p4_channel_note">所有人都從公開頻道開始。想把對話留在自己這群人裡，就開啟「私人」，在每台裝置上用同一個密碼，iPhone 和 Mac 也一樣能用。</string>
     <string name="ob_continue">繼續</string>
     <string name="ob_back">返回</string>
     <string name="ob_start">開始吧</string>

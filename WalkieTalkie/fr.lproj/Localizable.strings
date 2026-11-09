@@ -260,10 +260,8 @@
 /* MARK: - Talky Pro features (added 2026-05) */
 
 // Paywall
-"paywall.close" = "Fermer";
 "paywall.title" = "Débloquer Talky Pro";
 "paywall.subtitle" = "Tout Talky, sans limites";
-"paywall.error_title" = "Achat échoué";
 "paywall.plan.weekly" = "Hebdomadaire";
 "paywall.plan.weekly_suffix" = "/semaine";
 "paywall.plan.yearly" = "Annuel";
@@ -275,12 +273,6 @@
 "paywall.cta.start" = "Démarrer Talky Pro";
 "paywall.cta.trial" = "Essai gratuit de %d jours";
 "paywall.apple_footer" = "L'abonnement se renouvelle automatiquement. Vous pouvez l'annuler à tout moment dans les réglages de votre identifiant Apple. Le paiement sera débité de votre identifiant Apple à la confirmation de l'achat.";
-"paywall.link.restore" = "Restaurer";
-"paywall.link.terms" = "Conditions";
-"paywall.link.privacy" = "Confidentialité";
-"paywall.error.purchase_failed" = "Impossible de finaliser votre achat. Vérifiez votre connexion et réessayez.";
-"paywall.error.no_purchases" = "Aucun achat précédent trouvé sur cet identifiant Apple.";
-"paywall.error.restore_failed" = "Impossible de restaurer vos achats. Veuillez réessayer plus tard.";
 
 // Transmission history
 "history.title" = "Historique des transmissions";

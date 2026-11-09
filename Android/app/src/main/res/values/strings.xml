@@ -22,7 +22,7 @@
     <string name="ob_p1_body">On a mountain, at a festival, in a busy square: talk to the people next to you without going through the internet.</string>
 
     <string name="ob_p2_title">One Wi-Fi network, no accounts</string>
-    <string name="ob_p2_body">Talky finds the other Talky devices — Android, iPhone, iPad, Mac — on its own. No server, no sign-up, no phone number.</string>
+    <string name="ob_p2_body">Talky finds the other Talky devices on its own: Android, iPhone, iPad, Mac. No server, no sign-up, no phone number.</string>
     <string name="ob_p2_wifi">Every device must be on the same Wi-Fi network: the voice travels over the local network, never over the internet.</string>
 
     <string name="ob_p3_title">Hold to talk</string>
@@ -33,7 +33,7 @@
     <string name="ob_p4_step1">Open Talky on a second device nearby, on the same Wi-Fi network</string>
     <string name="ob_p4_step2">Wait a few seconds: the devices pair up on their own and appear under “Devices”. There is nothing to accept</string>
     <string name="ob_p4_step3">Hold the central button to talk, release to listen</string>
-    <string name="ob_p4_channel_note">Everyone starts on the public channel. To keep the conversation to your group, open “Private” and use the same password on every device — it works with iPhone and Mac too.</string>
+    <string name="ob_p4_channel_note">Everyone starts on the public channel. To keep the conversation to your group, open “Private” and use the same password on every device, it works with iPhone and Mac too.</string>
 
     <string name="ob_continue">Continue</string>
     <string name="ob_back">Back</string>

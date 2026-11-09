@@ -260,10 +260,8 @@
 /* MARK: - Talky Pro features (added 2026-05) */
 
 // Paywall
-"paywall.close" = "ปิด";
 "paywall.title" = "ปลดล็อก Talky Pro";
 "paywall.subtitle" = "Talky ทั้งหมด ไม่มีขีดจำกัด";
-"paywall.error_title" = "ซื้อไม่สำเร็จ";
 "paywall.plan.weekly" = "รายสัปดาห์";
 "paywall.plan.weekly_suffix" = "/สัปดาห์";
 "paywall.plan.yearly" = "รายปี";
@@ -275,12 +273,6 @@
 "paywall.cta.start" = "เริ่มใช้ Talky Pro";
 "paywall.cta.trial" = "ทดลองใช้ฟรี %d วัน";
 "paywall.apple_footer" = "การสมัครสมาชิกจะต่ออายุอัตโนมัติ คุณยกเลิกได้ทุกเมื่อจากการตั้งค่า Apple ID ระบบจะเรียกเก็บเงินผ่าน Apple ID เมื่อยืนยันการซื้อ";
-"paywall.link.restore" = "กู้คืน";
-"paywall.link.terms" = "ข้อกำหนด";
-"paywall.link.privacy" = "ความเป็นส่วนตัว";
-"paywall.error.purchase_failed" = "ทำรายการซื้อไม่สำเร็จ ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง";
-"paywall.error.no_purchases" = "ไม่พบการซื้อก่อนหน้านี้บน Apple ID นี้";
-"paywall.error.restore_failed" = "กู้คืนการซื้อไม่สำเร็จ กรุณาลองใหม่ภายหลัง";
 
 // Transmission history
 "history.title" = "ประวัติการส่งสัญญาณ";

@@ -260,10 +260,8 @@
 /* MARK: - Talky Pro features (added 2026-05) */
 
 // Paywall
-"paywall.close" = "閉じる";
 "paywall.title" = "Talky Proを解放";
 "paywall.subtitle" = "Talkyのすべてを、制限なしで";
-"paywall.error_title" = "購入できませんでした";
 "paywall.plan.weekly" = "週額";
 "paywall.plan.weekly_suffix" = "/週";
 "paywall.plan.yearly" = "年額";
@@ -275,12 +273,6 @@
 "paywall.cta.start" = "Talky Proをはじめる";
 "paywall.cta.trial" = "%d日間無料で試す";
 "paywall.apple_footer" = "サブスクリプションは自動更新されます。Apple IDの設定からいつでも解約できます。購入確定時にApple IDへ請求されます。";
-"paywall.link.restore" = "復元";
-"paywall.link.terms" = "利用規約";
-"paywall.link.privacy" = "プライバシー";
-"paywall.error.purchase_failed" = "購入を完了できませんでした。接続を確認してもう一度お試しください。";
-"paywall.error.no_purchases" = "このApple IDでの過去の購入は見つかりませんでした。";
-"paywall.error.restore_failed" = "購入を復元できませんでした。しばらくしてからお試しください。";
 
 // Transmission history
 "history.title" = "送受信履歴";

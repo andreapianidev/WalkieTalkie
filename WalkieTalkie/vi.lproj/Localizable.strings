@@ -260,10 +260,8 @@
 /* MARK: - Talky Pro features (added 2026-05) */
 
 // Paywall
-"paywall.close" = "Đóng";
 "paywall.title" = "Mở khoá Talky Pro";
 "paywall.subtitle" = "Trọn bộ Talky, không giới hạn";
-"paywall.error_title" = "Mua không thành công";
 "paywall.plan.weekly" = "Hằng tuần";
 "paywall.plan.weekly_suffix" = "/tuần";
 "paywall.plan.yearly" = "Hằng năm";
@@ -275,12 +273,6 @@
 "paywall.cta.start" = "Bắt đầu Talky Pro";
 "paywall.cta.trial" = "Dùng thử miễn phí %d ngày";
 "paywall.apple_footer" = "Gói đăng ký tự động gia hạn. Bạn có thể huỷ bất cứ lúc nào trong Cài đặt Apple ID. Khoản thanh toán sẽ được tính vào Apple ID khi bạn xác nhận mua.";
-"paywall.link.restore" = "Khôi phục";
-"paywall.link.terms" = "Điều khoản";
-"paywall.link.privacy" = "Quyền riêng tư";
-"paywall.error.purchase_failed" = "Không hoàn tất được giao dịch. Hãy kiểm tra kết nối và thử lại.";
-"paywall.error.no_purchases" = "Không tìm thấy giao dịch nào trước đây trên Apple ID này.";
-"paywall.error.restore_failed" = "Không khôi phục được giao dịch. Vui lòng thử lại sau.";
 
 // Transmission history
 "history.title" = "Lịch sử liên lạc";

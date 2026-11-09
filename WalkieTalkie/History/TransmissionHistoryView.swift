@@ -7,7 +7,7 @@
 import SwiftUI
 
 /// Schermata cronologia trasmissioni ricevute.
-/// Feature Pro-locked: controlla `UserDefaults.standard.bool(forKey: "fastboot_isProUser")`.
+/// Feature Pro-locked: legge il flag `fastboot_isProUser`.
 struct TransmissionHistoryView: View {
     @StateObject private var historyManager = TransmissionHistoryManager.shared
     @State private var showClearConfirmation = false
@@ -18,9 +18,9 @@ struct TransmissionHistoryView: View {
     // TODO: usare ThemeManager.shared.currentTheme.accentColor quando disponibile
     private let accent: Color = .yellow
 
-    private var isPro: Bool {
-        UserDefaults.standard.bool(forKey: "fastboot_isProUser")
-    }
+    // Osservato: chi sblocca il Pro dalla paywall aperta da qui deve vedere
+    // subito la cronologia, non alla prossima apertura.
+    @AppStorage("fastboot_isProUser") private var isPro = false
 
     init(onUnlockTap: @escaping () -> Void = {}) {
         self.onUnlockTap = onUnlockTap

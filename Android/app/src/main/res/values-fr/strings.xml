@@ -11,7 +11,7 @@
     <string name="ob_p1_title">Un talkie-walkie dans votre téléphone</string>
     <string name="ob_p1_body">En montagne, en festival, sur une place bondée : parlez à ceux qui sont à côté de vous sans passer par internet.</string>
     <string name="ob_p2_title">Un réseau Wi-Fi, aucun compte</string>
-    <string name="ob_p2_body">Talky trouve tout seul les autres appareils Talky — Android, iPhone, iPad, Mac. Pas de serveur, pas d\'inscription, pas de numéro de téléphone.</string>
+    <string name="ob_p2_body">Talky trouve tout seul les autres appareils Talky: Android, iPhone, iPad, Mac. Pas de serveur, pas d\'inscription, pas de numéro de téléphone.</string>
     <string name="ob_p2_wifi">Tous les appareils doivent être sur le même réseau Wi-Fi : la voix passe par le réseau local, jamais par internet.</string>
     <string name="ob_p3_title">Maintenez pour parler</string>
     <string name="ob_p3_body">Comme un vrai talkie-walkie : maintenez le grand bouton du centre pour parler, relâchez pour écouter.</string>
@@ -20,7 +20,7 @@
     <string name="ob_p4_step1">Ouvrez Talky sur un deuxième appareil à proximité, sur le même réseau Wi-Fi</string>
     <string name="ob_p4_step2">Patientez quelques secondes : les appareils s\'appairent tout seuls et apparaissent dans « Appareils ». Il n\'y a rien à accepter</string>
     <string name="ob_p4_step3">Maintenez le bouton central pour parler, relâchez pour écouter</string>
-    <string name="ob_p4_channel_note">Tout le monde démarre sur le canal public. Pour garder la conversation dans votre groupe, ouvrez « Privé » et utilisez le même mot de passe sur chaque appareil — ça marche aussi avec iPhone et Mac.</string>
+    <string name="ob_p4_channel_note">Tout le monde démarre sur le canal public. Pour garder la conversation dans votre groupe, ouvrez « Privé » et utilisez le même mot de passe sur chaque appareil, ça marche aussi avec iPhone et Mac.</string>
     <string name="ob_continue">Continuer</string>
     <string name="ob_back">Retour</string>
     <string name="ob_start">C\'est parti</string>

@@ -240,10 +240,8 @@
 /* MARK: - Talky Pro features (added 2026-05) */
 
 // Paywall
-"paywall.close" = "關閉";
 "paywall.title" = "解鎖 Talky Pro";
 "paywall.subtitle" = "完整 Talky，無任何限制";
-"paywall.error_title" = "購買失敗";
 "paywall.plan.weekly" = "每週";
 "paywall.plan.weekly_suffix" = "/週";
 "paywall.plan.yearly" = "每年";
@@ -255,12 +253,6 @@
 "paywall.cta.start" = "開始使用 Talky Pro";
 "paywall.cta.trial" = "免費試用 %d 天";
 "paywall.apple_footer" = "訂閱會自動續訂。您隨時可以從 Apple ID 設定中取消。確認購買後，款項將從您的 Apple ID 扣款。";
-"paywall.link.restore" = "還原";
-"paywall.link.terms" = "服務條款";
-"paywall.link.privacy" = "隱私權";
-"paywall.error.purchase_failed" = "我們無法完成您的購買。請檢查網路連線後再試一次。";
-"paywall.error.no_purchases" = "在此 Apple ID 上找不到先前的購買紀錄。";
-"paywall.error.restore_failed" = "我們無法還原您的購買。請稍後再試。";
 
 // Transmission history
 "history.title" = "傳輸歷史紀錄";

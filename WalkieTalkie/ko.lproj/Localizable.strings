@@ -260,10 +260,8 @@
 /* MARK: - Talky Pro features (added 2026-05) */
 
 // Paywall
-"paywall.close" = "닫기";
 "paywall.title" = "Talky Pro 잠금 해제";
 "paywall.subtitle" = "Talky의 모든 것을, 제한 없이";
-"paywall.error_title" = "구매 실패";
 "paywall.plan.weekly" = "주간";
 "paywall.plan.weekly_suffix" = "/주";
 "paywall.plan.yearly" = "연간";
@@ -275,12 +273,6 @@
 "paywall.cta.start" = "Talky Pro 시작하기";
 "paywall.cta.trial" = "%d일 무료 체험 시작";
 "paywall.apple_footer" = "구독은 자동으로 갱신됩니다. Apple ID 설정에서 언제든 해지할 수 있습니다. 구매 확인 시 Apple ID로 결제됩니다.";
-"paywall.link.restore" = "복원";
-"paywall.link.terms" = "이용약관";
-"paywall.link.privacy" = "개인정보";
-"paywall.error.purchase_failed" = "구매를 완료하지 못했습니다. 연결을 확인하고 다시 시도해 주세요.";
-"paywall.error.no_purchases" = "이 Apple ID에서 이전 구매를 찾지 못했습니다.";
-"paywall.error.restore_failed" = "구매를 복원하지 못했습니다. 잠시 후 다시 시도해 주세요.";
 
 // Transmission history
 "history.title" = "송수신 기록";

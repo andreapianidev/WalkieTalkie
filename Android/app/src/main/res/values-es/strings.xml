@@ -11,7 +11,7 @@
     <string name="ob_p1_title">Un walkie-talkie dentro del móvil</string>
     <string name="ob_p1_body">En la montaña, en un festival, en una plaza llena: habla con quien tienes al lado sin pasar por internet.</string>
     <string name="ob_p2_title">Una red Wi-Fi, ninguna cuenta</string>
-    <string name="ob_p2_body">Talky encuentra solo los demás dispositivos Talky — Android, iPhone, iPad, Mac. Sin servidor, sin registro, sin número de teléfono.</string>
+    <string name="ob_p2_body">Talky encuentra solo los demás dispositivos Talky: Android, iPhone, iPad, Mac. Sin servidor, sin registro, sin número de teléfono.</string>
     <string name="ob_p2_wifi">Todos los dispositivos deben estar en la misma red Wi-Fi: la voz viaja por la red local, nunca por internet.</string>
     <string name="ob_p3_title">Mantén pulsado para hablar</string>
     <string name="ob_p3_body">Como un walkie-talkie de verdad: mantén pulsado el botón grande del centro para hablar y suelta para escuchar.</string>
@@ -20,7 +20,7 @@
     <string name="ob_p4_step1">Abre Talky en un segundo dispositivo cercano, en la misma red Wi-Fi</string>
     <string name="ob_p4_step2">Espera unos segundos: los dispositivos se emparejan solos y aparecen en «Dispositivos». No hay nada que aceptar</string>
     <string name="ob_p4_step3">Mantén pulsado el botón central para hablar y suelta para escuchar</string>
-    <string name="ob_p4_channel_note">Todos empiezan en el canal público. Para que la conversación se quede en tu grupo, abre «Privado» y usa la misma contraseña en cada dispositivo — funciona también con iPhone y Mac.</string>
+    <string name="ob_p4_channel_note">Todos empiezan en el canal público. Para que la conversación se quede en tu grupo, abre «Privado» y usa la misma contraseña en cada dispositivo, funciona también con iPhone y Mac.</string>
     <string name="ob_continue">Continuar</string>
     <string name="ob_back">Atrás</string>
     <string name="ob_start">Empezamos</string>

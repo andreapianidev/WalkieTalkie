@@ -240,10 +240,8 @@
 /* MARK: - Talky Pro features (added 2026-05) */
 
 // Paywall
-"paywall.close" = "Tutup";
 "paywall.title" = "Buka Kunci Talky Pro";
 "paywall.subtitle" = "Semua Talky, tanpa had";
-"paywall.error_title" = "Pembelian gagal";
 "paywall.plan.weekly" = "Mingguan";
 "paywall.plan.weekly_suffix" = "/minggu";
 "paywall.plan.yearly" = "Tahunan";
@@ -255,12 +253,6 @@
 "paywall.cta.start" = "Mula Talky Pro";
 "paywall.cta.trial" = "Cuba percuma %d hari";
 "paywall.apple_footer" = "Langganan diperbaharui secara automatik. Anda boleh batal pada bila-bila masa daripada Tetapan Apple ID anda. Bayaran akan dikenakan kepada Apple ID anda apabila pembelian disahkan.";
-"paywall.link.restore" = "Pulihkan";
-"paywall.link.terms" = "Terma";
-"paywall.link.privacy" = "Privasi";
-"paywall.error.purchase_failed" = "Kami tidak dapat melengkapkan pembelian anda. Semak sambungan anda dan cuba lagi.";
-"paywall.error.no_purchases" = "Tiada pembelian sebelum ini ditemui pada Apple ID ini.";
-"paywall.error.restore_failed" = "Kami tidak dapat memulihkan pembelian anda. Sila cuba lagi kemudian.";
 
 // Transmission history
 "history.title" = "Sejarah penghantaran";

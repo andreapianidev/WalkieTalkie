@@ -45,8 +45,16 @@ final class TalkyCrossPlatformManager: NSObject, ObservableObject {
     private var netService: NetService?
     private var browser: NetServiceBrowser?
     private var resolvingServices: [NetService] = []
+    /// Nome Bonjour -> uid del peer. Il nome del servizio non e' il nome del
+    /// dispositivo, quindi senza questa mappa un peer sparito restava in elenco.
+    /// Toccata solo dai delegate NetService, sul main.
+    private var serviceNameToPeerID: [String: String] = [:]
     private var started = false
-    private var connections: [String: NWConnection] = [:]
+    /// Tutte le connessioni vive per peer, la piu' recente in fondo. Con il Mac
+    /// e Android ci si chiama a vicenda, quindi per un peer ce ne possono essere
+    /// due, e l'altro lato ne chiude una sola: tenerne una per peer voleva dire
+    /// restare, a volte, proprio con quella chiusa e smettere di trasmettere.
+    private var connections: [String: [NWConnection]] = [:]
 
     private override init() {
         super.init()
@@ -67,12 +75,17 @@ final class TalkyCrossPlatformManager: NSObject, ObservableObject {
             guard let self else { return }
             self.listener?.cancel()
             self.listener = nil
-            self.netService?.stop()
+            // NetService e browser vivono sul main run loop: si fermano li'.
+            let service = self.netService
+            let browser = self.browser
             self.netService = nil
-            self.browser?.stop()
             self.browser = nil
-            self.resolvingServices.removeAll()
-            self.connections.values.forEach { $0.cancel() }
+            DispatchQueue.main.async {
+                service?.stop()
+                browser?.stop()
+                self.resolvingServices.removeAll()
+            }
+            self.connections.values.joined().forEach { $0.cancel() }
             self.connections.removeAll()
             self.publishConnectionCount()
             self.started = false
@@ -98,7 +111,7 @@ final class TalkyCrossPlatformManager: NSObject, ObservableObject {
                 ]
             )
 
-            for connection in self.connections.values {
+            for connection in self.connections.values.compactMap(\.last) {
                 self.sendFrame(Data(meta.utf8), on: connection)
                 self.sendFrame(pcm16, on: connection)
             }
@@ -160,16 +173,28 @@ final class TalkyCrossPlatformManager: NSObject, ObservableObject {
         ]
         service.setTXTRecord(NetService.data(fromTXTRecord: txt))
         service.delegate = self
-        service.publish()
+        // NetService lavora sul run loop del thread che lo avvia, e questa coda
+        // GCD non ne ha uno che giri: va agganciato al main, come sul Mac.
+        DispatchQueue.main.async {
+            service.schedule(in: .main, forMode: .common)
+            service.publish()
+        }
         netService = service
         logger.logNetworkInfo("Cross-platform Bonjour pubblicato su porta \(port)")
     }
 
+    /// Creato su questa coda il browser non riceveva mai risposte: l'iPhone non
+    /// trovava ne' chiamava nessun Mac o Android, si collegava solo se era
+    /// l'altro a cercarlo (misurato con scripts/audit/talky1_prova.py).
     private func startBrowsing() {
-        let browser = NetServiceBrowser()
-        browser.delegate = self
-        browser.searchForServices(ofType: Constant.serviceType, inDomain: Constant.serviceDomain)
-        self.browser = browser
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            let browser = NetServiceBrowser()
+            browser.delegate = self
+            browser.schedule(in: .main, forMode: .common)
+            browser.searchForServices(ofType: Constant.serviceType, inDomain: Constant.serviceDomain)
+            self.queue.async { self.browser = browser }
+        }
     }
 
     private func handleIncoming(_ connection: NWConnection) {
@@ -286,7 +311,9 @@ final class TalkyCrossPlatformManager: NSObject, ObservableObject {
                 port: 0,
                 channel: message.fields["channel"] ?? Constant.defaultChannel
             )
-            connections[peer.id] = connection
+            var vive = connections[peer.id] ?? []
+            if !vive.contains(where: { $0 === connection }) { vive.append(connection) }
+            connections[peer.id] = vive
             publishConnectionCount()
             upsert(peer)
             logger.logNetworkInfo("Cross-platform HELLO ricevuto da \(peer.name)")
@@ -340,15 +367,18 @@ final class TalkyCrossPlatformManager: NSObject, ObservableObject {
     }
 
     private func remove(connection: NWConnection) {
-        let removedIDs = connections.compactMap { id, storedConnection in
-            storedConnection === connection ? id : nil
-        }
-        guard !removedIDs.isEmpty else { return }
-
-        for id in removedIDs {
-            connections.removeValue(forKey: id)
+        var removedIDs: [String] = []
+        for (id, vive) in connections where vive.contains(where: { $0 === connection }) {
+            let rimaste = vive.filter { $0 !== connection }
+            if rimaste.isEmpty {
+                connections.removeValue(forKey: id)
+                removedIDs.append(id)
+            } else {
+                connections[id] = rimaste
+            }
         }
         publishConnectionCount()
+        guard !removedIDs.isEmpty else { return }
 
         DispatchQueue.main.async {
             self.peers.removeAll { removedIDs.contains($0.id) }
@@ -415,6 +445,10 @@ extension TalkyCrossPlatformManager: NetServiceDelegate {
     func netServiceDidResolveAddress(_ sender: NetService) {
         defer { resolvingServices.removeAll { $0 === sender } }
         guard sender.name.hasPrefix("Talky iPhone") == false else { return }
+        // Mai chiamare se stessi o un peer gia' collegato con un altro nome.
+        let peerUID = sender.txtRecordData().flatMap(NetService.dictionary(fromTXTRecord:))?["uid"]
+            .flatMap { String(data: $0, encoding: .utf8) }
+        guard peerUID != uid else { return }
 
         let txtData = sender.txtRecordData().flatMap(NetService.dictionary(fromTXTRecord:))
         let proto = txtData?[Constant.txtProtocolKey].flatMap { String(data: $0, encoding: .utf8) }
@@ -433,8 +467,14 @@ extension TalkyCrossPlatformManager: NetServiceDelegate {
             port: sender.port,
             channel: peerChannel
         )
+        serviceNameToPeerID[sender.name] = peer.id
         upsert(peer)
-        connect(to: peer)
+        queue.async { [weak self] in
+            guard let self else { return }
+            // Gia' collegati (magari e' stato lui a chiamare): niente doppione.
+            guard self.connections[peer.id] == nil else { return }
+            self.connect(to: peer)
+        }
     }
 
     func netService(_ sender: NetService, didNotResolve errorDict: [String : NSNumber]) {
@@ -455,8 +495,9 @@ extension TalkyCrossPlatformManager: NetServiceBrowserDelegate {
     }
 
     func netServiceBrowser(_ browser: NetServiceBrowser, didRemove service: NetService, moreComing: Bool) {
+        guard let peerID = serviceNameToPeerID.removeValue(forKey: service.name) else { return }
         DispatchQueue.main.async {
-            self.peers.removeAll { $0.name == service.name }
+            self.peers.removeAll { $0.id == peerID }
         }
     }
 

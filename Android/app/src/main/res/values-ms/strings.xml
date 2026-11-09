@@ -11,7 +11,7 @@
     <string name="ob_p1_title">Walkie-talkie di dalam telefon anda</string>
     <string name="ob_p1_body">Di gunung, di festival, di dataran yang sesak: bercakap dengan orang di sebelah anda tanpa melalui internet.</string>
     <string name="ob_p2_title">Satu rangkaian Wi-Fi, tiada akaun</string>
-    <string name="ob_p2_body">Talky menemui peranti Talky yang lain dengan sendirinya — Android, iPhone, iPad, Mac. Tiada pelayan, tiada pendaftaran, tiada nombor telefon.</string>
+    <string name="ob_p2_body">Talky menemui peranti Talky yang lain dengan sendirinya: Android, iPhone, iPad, Mac. Tiada pelayan, tiada pendaftaran, tiada nombor telefon.</string>
     <string name="ob_p2_wifi">Semua peranti mesti berada pada rangkaian Wi-Fi yang sama: suara bergerak melalui rangkaian setempat, bukan melalui internet.</string>
     <string name="ob_p3_title">Tahan untuk bercakap</string>
     <string name="ob_p3_body">Seperti walkie-talkie sebenar: tahan butang besar di tengah untuk bercakap, lepaskan untuk mendengar.</string>
@@ -20,7 +20,7 @@
     <string name="ob_p4_step1">Buka Talky pada peranti kedua berdekatan, pada rangkaian Wi-Fi yang sama</string>
     <string name="ob_p4_step2">Tunggu beberapa saat: peranti akan bergandingan sendiri dan muncul di bawah “Peranti”. Tiada apa-apa untuk diterima</string>
     <string name="ob_p4_step3">Tahan butang tengah untuk bercakap, lepaskan untuk mendengar</string>
-    <string name="ob_p4_channel_note">Semua bermula pada saluran awam. Untuk mengekalkan perbualan dalam kumpulan anda, buka “Peribadi” dan gunakan kata laluan yang sama pada setiap peranti — ia berfungsi dengan iPhone dan Mac juga.</string>
+    <string name="ob_p4_channel_note">Semua bermula pada saluran awam. Untuk mengekalkan perbualan dalam kumpulan anda, buka “Peribadi” dan gunakan kata laluan yang sama pada setiap peranti, ia berfungsi dengan iPhone dan Mac juga.</string>
     <string name="ob_continue">Teruskan</string>
     <string name="ob_back">Kembali</string>
     <string name="ob_start">Mari mula</string>
