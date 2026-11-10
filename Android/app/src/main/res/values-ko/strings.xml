@@ -64,4 +64,17 @@
     <string name="radio_stations_count">방송국 (%1$d)</string>
     <string name="status_advertising">보이는 중 · 검색 중</string>
     <string name="status_stopped">정지됨</string>
+
+    <!-- Scrivimi e recensione -->
+    <string name="contact_title">저에게 연락하기</string>
+    <string name="contact_subtitle">Talky를 만드는 Andrea입니다. 모든 메시지를 읽고 직접 답장합니다.</string>
+    <string name="contact_bug">문제 신고</string>
+    <string name="contact_idea">기능 제안</string>
+    <string name="contact_chat">한마디 보내기</string>
+    <string name="contact_rate">Google Play에서 Talky 평가</string>
+    <string name="contact_subject_bug">문제</string>
+    <string name="contact_subject_idea">아이디어</string>
+    <string name="contact_subject_chat">메시지</string>
+    <string name="contact_no_mail_body">어떤 메일 앱에서든 %1$s 로 보내실 수 있습니다.</string>
+    <string name="contact_close">닫기</string>
 </resources>

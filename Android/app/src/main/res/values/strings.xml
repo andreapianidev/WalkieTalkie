@@ -92,4 +92,17 @@
     <!-- Connection status -->
     <string name="status_advertising">Visible · searching</string>
     <string name="status_stopped">Stopped</string>
+
+    <!-- Scrivimi e recensione -->
+    <string name="contact_title">Write to me</string>
+    <string name="contact_subtitle">I\'m Andrea and I make Talky. I read every message and reply myself.</string>
+    <string name="contact_bug">Report a problem</string>
+    <string name="contact_idea">Suggest a feature</string>
+    <string name="contact_chat">Just say hello</string>
+    <string name="contact_rate">Rate Talky on Google Play</string>
+    <string name="contact_subject_bug">problem</string>
+    <string name="contact_subject_idea">idea</string>
+    <string name="contact_subject_chat">message</string>
+    <string name="contact_no_mail_body">You can write to me at %1$s from any mail app.</string>
+    <string name="contact_close">Close</string>
 </resources>

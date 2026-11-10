@@ -64,4 +64,17 @@
     <string name="radio_stations_count">電台 (%1$d)</string>
     <string name="status_advertising">可被發現 · 搜尋中</string>
     <string name="status_stopped">已停止</string>
+
+    <!-- Scrivimi e recensione -->
+    <string name="contact_title">寫信給我</string>
+    <string name="contact_subtitle">我是 Andrea，Talky 是我做的。每則訊息我都會看，並親自回覆。</string>
+    <string name="contact_bug">回報問題</string>
+    <string name="contact_idea">建議新功能</string>
+    <string name="contact_chat">隨便聊兩句</string>
+    <string name="contact_rate">在 Google Play 為 Talky 評分</string>
+    <string name="contact_subject_bug">問題</string>
+    <string name="contact_subject_idea">建議</string>
+    <string name="contact_subject_chat">留言</string>
+    <string name="contact_no_mail_body">你可以用任何郵件 App 寫信到 %1$s。</string>
+    <string name="contact_close">關閉</string>
 </resources>

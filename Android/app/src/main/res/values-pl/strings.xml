@@ -76,4 +76,17 @@
 
     <string name="status_advertising">Widoczny · szukam</string>
     <string name="status_stopped">Zatrzymano</string>
+
+    <!-- Scrivimi e recensione -->
+    <string name="contact_title">Napisz do mnie</string>
+    <string name="contact_subtitle">Jestem Andrea i tworzę Talky. Czytam każdą wiadomość i odpisuję osobiście.</string>
+    <string name="contact_bug">Zgłoś problem</string>
+    <string name="contact_idea">Zaproponuj funkcję</string>
+    <string name="contact_chat">Po prostu się przywitaj</string>
+    <string name="contact_rate">Oceń Talky w Google Play</string>
+    <string name="contact_subject_bug">problem</string>
+    <string name="contact_subject_idea">pomysł</string>
+    <string name="contact_subject_chat">wiadomość</string>
+    <string name="contact_no_mail_body">Możesz napisać do mnie na %1$s z dowolnej aplikacji pocztowej.</string>
+    <string name="contact_close">Zamknij</string>
 </resources>

@@ -64,4 +64,17 @@
     <string name="radio_stations_count">สถานี (%1$d)</string>
     <string name="status_advertising">มองเห็นได้ · กำลังค้นหา</string>
     <string name="status_stopped">หยุดแล้ว</string>
+
+    <!-- Scrivimi e recensione -->
+    <string name="contact_title">เขียนถึงฉัน</string>
+    <string name="contact_subtitle">ผม Andrea ผู้สร้าง Talky ผมอ่านทุกข้อความและตอบเอง</string>
+    <string name="contact_bug">แจ้งปัญหา</string>
+    <string name="contact_idea">เสนอฟีเจอร์</string>
+    <string name="contact_chat">ทักทายกันสั้นๆ</string>
+    <string name="contact_rate">ให้คะแนน Talky ใน Google Play</string>
+    <string name="contact_subject_bug">ปัญหา</string>
+    <string name="contact_subject_idea">ไอเดีย</string>
+    <string name="contact_subject_chat">ข้อความ</string>
+    <string name="contact_no_mail_body">คุณเขียนถึงผมได้ที่ %1$s จากแอปอีเมลใดก็ได้</string>
+    <string name="contact_close">ปิด</string>
 </resources>

@@ -30,7 +30,7 @@ android {
         // comportamento moderno di rete e audio, senza rami di compatibilita'.
         minSdk = 33
         targetSdk = 36
-        versionCode = 9
+        versionCode = 10
         versionName = "1.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -87,6 +87,7 @@ dependencies {
     implementation(libs.firebase.crashlytics)
     implementation(libs.play.services.ads)
     implementation(libs.user.messaging.platform)
+    implementation(libs.play.review)
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

@@ -26,7 +26,13 @@ releases and from the git history, so they are less detailed than what follows.
 
 ### [1.3] — unreleased
 
-#### Added (versionCode 6 to 9, with iOS and Mac 4.0)
+#### Added (versionCode 6 to 10, with iOS and Mac 4.0)
+- **Write to me**, under the title: report a problem, suggest a feature or say
+  hello by email (version, Android and model at the bottom), and rate Talky on
+  Google Play. Same texts as the iPhone, in the 16 languages.
+- **Review request** with Google Play's in-app review, under the iPhone rules:
+  only after 3 transmissions with someone connected, or 3 radio listens of 90
+  seconds on 2 different days; once per version, at most every 120 days.
 - **Relay between nearby phones**: a transmission hops through a third device
   running Talky and reaches further; retransmissions no longer mix into the
   voice of whoever is talking.
@@ -101,7 +107,7 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
-### [4.0] (145), ready for review, not submitted yet
+### [4.0] (146), in review since 10 November 2026
 
 Same version number as the iPhone from now on: 2.1.1 was renamed 4.0 before it
 shipped, so the 2.1.1 entry below is part of 4.0 too.
@@ -233,7 +239,7 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [4.0] (145), ready for review, not submitted yet
+### [4.0] (146), in review since 10 November 2026
 
 One version number for iPhone and Mac from now on: 3.2.2 was renamed 4.0 before
 it shipped, so everything listed under 3.2.2 below is part of 4.0 too.

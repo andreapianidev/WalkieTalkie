@@ -64,4 +64,17 @@
     <string name="radio_stations_count">Đài (%1$d)</string>
     <string name="status_advertising">Đang hiển thị · đang tìm</string>
     <string name="status_stopped">Đã dừng</string>
+
+    <!-- Scrivimi e recensione -->
+    <string name="contact_title">Viết cho tôi</string>
+    <string name="contact_subtitle">Tôi là Andrea, người làm Talky. Tôi đọc mọi tin nhắn và tự trả lời.</string>
+    <string name="contact_bug">Báo lỗi</string>
+    <string name="contact_idea">Đề xuất tính năng</string>
+    <string name="contact_chat">Gửi đôi lời</string>
+    <string name="contact_rate">Đánh giá Talky trên Google Play</string>
+    <string name="contact_subject_bug">lỗi</string>
+    <string name="contact_subject_idea">ý tưởng</string>
+    <string name="contact_subject_chat">tin nhắn</string>
+    <string name="contact_no_mail_body">Bạn có thể viết cho tôi tại %1$s từ bất kỳ ứng dụng mail nào.</string>
+    <string name="contact_close">Đóng</string>
 </resources>

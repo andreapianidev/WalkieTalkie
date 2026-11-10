@@ -64,4 +64,17 @@
     <string name="radio_stations_count">İstasyonlar (%1$d)</string>
     <string name="status_advertising">Görünür · aranıyor</string>
     <string name="status_stopped">Durduruldu</string>
+
+    <!-- Scrivimi e recensione -->
+    <string name="contact_title">Bana yaz</string>
+    <string name="contact_subtitle">Ben Andrea, Talky\'yi ben yapıyorum. Her mesajı okur ve kendim yanıtlarım.</string>
+    <string name="contact_bug">Sorun bildir</string>
+    <string name="contact_idea">Özellik öner</string>
+    <string name="contact_chat">Birkaç satır yaz</string>
+    <string name="contact_rate">Google Play\'de Talky\'yi değerlendir</string>
+    <string name="contact_subject_bug">sorun</string>
+    <string name="contact_subject_idea">fikir</string>
+    <string name="contact_subject_chat">mesaj</string>
+    <string name="contact_no_mail_body">Herhangi bir e-posta uygulamasından %1$s adresine yazabilirsin.</string>
+    <string name="contact_close">Kapat</string>
 </resources>

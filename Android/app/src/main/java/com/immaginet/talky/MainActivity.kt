@@ -92,6 +92,9 @@ import com.immaginet.talky.net.CrossPlatformPeer
 import com.immaginet.talky.net.TransmissionStartResult
 import com.google.firebase.FirebaseApp
 import com.immaginet.talky.ads.AdBanner
+import com.immaginet.talky.contact.ContactDialog
+import com.immaginet.talky.review.ReviewPrompt
+import kotlinx.coroutines.delay
 import com.immaginet.talky.ads.AdManager
 import com.immaginet.talky.firebase.FirebaseManager
 import com.immaginet.talky.protocol.PrivateChannelId
@@ -277,6 +280,19 @@ private fun TalkyApp(
         listOf("public", "ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8")
     }
     val privateChannelLabel = stringResource(R.string.channel_private)
+    val activity = LocalContext.current as? Activity
+    var showContact by remember { mutableStateOf(false) }
+
+    // Un ascolto conta per la recensione se la stessa stazione suona di fila
+    // per ReviewPrompt.RADIO_LISTEN_MS: cambio stazione o stop azzerano.
+    LaunchedEffect(radioStatus.isPlaying, radioStatus.stationName) {
+        if (radioStatus.isPlaying && activity != null) {
+            delay(ReviewPrompt.RADIO_LISTEN_MS)
+            ReviewPrompt.recordRadioListen(activity)
+        }
+    }
+
+    if (showContact) ContactDialog(onDismiss = { showContact = false })
 
     Scaffold { innerPadding ->
         Column(
@@ -305,7 +321,8 @@ private fun TalkyApp(
                     onModeChange(
                         if (appMode == AppMode.WALKIE) AppMode.RADIO else AppMode.WALKIE
                     )
-                }
+                },
+                onContact = { showContact = true }
             )
 
             ModeToggle(appMode = appMode, onToggle = {
@@ -334,7 +351,11 @@ private fun TalkyApp(
                         }
                     },
                     onPTTRelease = {
+                        // Conta solo se dall'altra parte c'era qualcuno: premere
+                        // nel vuoto non dice che Talky funziona.
+                        val heard = walkieManager.isConnected
                         service.stopTransmitting()
+                        if (heard && activity != null) ReviewPrompt.recordTransmission(activity)
                     },
                     onRestart = service::restartWalkie
                 )
@@ -408,7 +429,8 @@ private fun Header(
     appMode: AppMode,
     radioStatus: RadioManager.RadioStatus,
     channel: String,
-    onModeToggle: () -> Unit
+    onModeToggle: () -> Unit,
+    onContact: () -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Row(
@@ -435,12 +457,27 @@ private fun Header(
                 )
             }
         }
-        if (appMode == AppMode.WALKIE && channel.isNotBlank()) {
-            Text(
-                text = stringResource(R.string.header_channel, channel),
-                color = Color(0xFF8FA889),
-                style = MaterialTheme.typography.bodySmall
-            )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (appMode == AppMode.WALKIE && channel.isNotBlank()) {
+                Text(
+                    text = stringResource(R.string.header_channel, channel),
+                    color = Color(0xFF8FA889),
+                    style = MaterialTheme.typography.bodySmall
+                )
+            } else {
+                Spacer(modifier = Modifier.width(1.dp))
+            }
+            TextButton(onClick = onContact, contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)) {
+                Text(
+                    text = stringResource(R.string.contact_title),
+                    color = Color(0xFF6CFF7A),
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
         }
     }
 }

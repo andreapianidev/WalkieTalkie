@@ -64,4 +64,17 @@
     <string name="radio_stations_count">局 (%1$d)</string>
     <string name="status_advertising">公開中 · 検索中</string>
     <string name="status_stopped">停止中</string>
+
+    <!-- Scrivimi e recensione -->
+    <string name="contact_title">メッセージを送る</string>
+    <string name="contact_subtitle">Talkyを作っているAndreaです。すべてのメッセージを読み、自分で返信しています。</string>
+    <string name="contact_bug">問題を報告</string>
+    <string name="contact_idea">機能を提案</string>
+    <string name="contact_chat">ひとこと送る</string>
+    <string name="contact_rate">Google PlayでTalkyを評価</string>
+    <string name="contact_subject_bug">問題</string>
+    <string name="contact_subject_idea">アイデア</string>
+    <string name="contact_subject_chat">メッセージ</string>
+    <string name="contact_no_mail_body">どのメールアプリからでも %1$s に送れます。</string>
+    <string name="contact_close">閉じる</string>
 </resources>

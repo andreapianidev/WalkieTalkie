@@ -76,4 +76,17 @@
 
     <string name="status_advertising">Terlihat · mencari</string>
     <string name="status_stopped">Berhenti</string>
+
+    <!-- Scrivimi e recensione -->
+    <string name="contact_title">Kirim pesan ke aku</string>
+    <string name="contact_subtitle">Aku Andrea, pembuat Talky. Aku baca setiap pesan dan membalasnya sendiri.</string>
+    <string name="contact_bug">Laporkan masalah</string>
+    <string name="contact_idea">Usulkan fitur</string>
+    <string name="contact_chat">Sekadar menyapa</string>
+    <string name="contact_rate">Beri nilai Talky di Google Play</string>
+    <string name="contact_subject_bug">masalah</string>
+    <string name="contact_subject_idea">ide</string>
+    <string name="contact_subject_chat">pesan</string>
+    <string name="contact_no_mail_body">Kamu bisa menulis ke %1$s dari aplikasi email apa pun.</string>
+    <string name="contact_close">Tutup</string>
 </resources>

@@ -64,4 +64,17 @@
     <string name="radio_stations_count">Stesen (%1$d)</string>
     <string name="status_advertising">Kelihatan · sedang mencari</string>
     <string name="status_stopped">Berhenti</string>
+
+    <!-- Scrivimi e recensione -->
+    <string name="contact_title">Tulis kepada saya</string>
+    <string name="contact_subtitle">Saya Andrea, pembuat Talky. Saya membaca setiap mesej dan membalas sendiri.</string>
+    <string name="contact_bug">Laporkan masalah</string>
+    <string name="contact_idea">Cadangkan ciri</string>
+    <string name="contact_chat">Sekadar bertegur sapa</string>
+    <string name="contact_rate">Nilai Talky di Google Play</string>
+    <string name="contact_subject_bug">masalah</string>
+    <string name="contact_subject_idea">idea</string>
+    <string name="contact_subject_chat">mesej</string>
+    <string name="contact_no_mail_body">Anda boleh menulis kepada saya di %1$s dari mana-mana aplikasi e-mel.</string>
+    <string name="contact_close">Tutup</string>
 </resources>

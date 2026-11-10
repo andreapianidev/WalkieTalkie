@@ -64,4 +64,17 @@
     <string name="radio_stations_count">Emisoras (%1$d)</string>
     <string name="status_advertising">Visible · buscando</string>
     <string name="status_stopped">Detenido</string>
+
+    <!-- Scrivimi e recensione -->
+    <string name="contact_title">Escríbeme</string>
+    <string name="contact_subtitle">Soy Andrea y hago Talky. Leo cada mensaje y respondo yo mismo.</string>
+    <string name="contact_bug">Informar de un problema</string>
+    <string name="contact_idea">Proponer una función</string>
+    <string name="contact_chat">Escríbeme unas líneas</string>
+    <string name="contact_rate">Valora Talky en Google Play</string>
+    <string name="contact_subject_bug">problema</string>
+    <string name="contact_subject_idea">idea</string>
+    <string name="contact_subject_chat">mensaje</string>
+    <string name="contact_no_mail_body">Puedes escribirme a %1$s desde cualquier app de correo.</string>
+    <string name="contact_close">Cerrar</string>
 </resources>

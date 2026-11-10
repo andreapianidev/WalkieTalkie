@@ -64,4 +64,17 @@
     <string name="radio_stations_count">Sender (%1$d)</string>
     <string name="status_advertising">Sichtbar · Suche läuft</string>
     <string name="status_stopped">Gestoppt</string>
+
+    <!-- Scrivimi e recensione -->
+    <string name="contact_title">Schreib mir</string>
+    <string name="contact_subtitle">Ich bin Andrea und entwickle Talky. Ich lese jede Nachricht und antworte selbst.</string>
+    <string name="contact_bug">Problem melden</string>
+    <string name="contact_idea">Funktion vorschlagen</string>
+    <string name="contact_chat">Einfach Hallo sagen</string>
+    <string name="contact_rate">Talky bei Google Play bewerten</string>
+    <string name="contact_subject_bug">Problem</string>
+    <string name="contact_subject_idea">Idee</string>
+    <string name="contact_subject_chat">Nachricht</string>
+    <string name="contact_no_mail_body">Du kannst mir mit jeder Mail-App an %1$s schreiben.</string>
+    <string name="contact_close">Schließen</string>
 </resources>
