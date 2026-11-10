@@ -472,7 +472,6 @@
 "live_hf_kind_digital" = "Segnali digitali FT8, attivi soprattutto di giorno";
 "live_receiver" = "Ricevitore";
 "live_server" = "Server";
-"live_listen_only_note" = "solo ascolto";
 "live_channels" = "Canali";
 "live_tune_down" = "Sintonia meno 1 kHz";
 "live_tune_up" = "Sintonia più 1 kHz";
@@ -484,7 +483,7 @@
 "live_scan_searching" = "Scansione in corso";
 "live_silence" = "Nessuno parla in questo momento";
 "live_hf_footer" = "Ascolti attraverso ricevitori KiwiSDR pubblici, messi a disposizione gratis da radioamatori di tutto il mondo. Talky sceglie un ricevitore vicino alla stazione.";
-"live_poc_footer" = "Canali pubblici Mumble con persone collegate adesso. Talky entra in muto e ascolta soltanto.";
+"live_poc_footer" = "Canali pubblici Mumble con persone collegate adesso. Tieni premuto il tasto per parlare con loro.";
 "live_pro_title" = "Funzione Talky Pro";
 "live_pro_scan_message" = "Lo SCAN automatico fa parte di Talky Pro. Puoi provarlo gratis per 24 ore guardando un breve video.";
 "live_pro_background_message" = "L'ascolto HF, CB e POC si è fermato quando sei uscito da Talky. Con Talky Pro continua anche a schermo spento. Puoi provarlo gratis per 24 ore guardando un breve video.";
@@ -514,7 +513,7 @@
 "onboarding.live.hf" = "Onde corte: meteo aeronautico, segnali orari e radioamatori.";
 "onboarding.live.cb" = "Tutti i 40 canali CB e la chiamata DX sulla 27.555, con squelch automatico e SCAN.";
 "onboarding.live.poc" = "Canali push-to-talk veri su server pubblici.";
-"onboarding.live.note" = "Solo ascolto. %d minuti gratis al giorno, senza limiti con Talky Pro.";
+"onboarding.live.note" = "Su POC puoi anche parlare. %d minuti gratis al giorno, senza limiti con Talky Pro.";
 "onboarding.widgets.title" = "Widget con la propagazione dal vivo";
 "onboarding.widgets.subtitle" = "Sulla schermata Home e su quella di blocco, si aggiornano da soli.";
 "onboarding.widgets.channel" = "Canale Talky: il tuo canale CB e lo stato delle bande. Gratis.";

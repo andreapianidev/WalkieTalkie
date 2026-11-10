@@ -473,7 +473,6 @@
 "live_hf_kind_digital" = "FT8 디지털 신호, 낮에 가장 활발";
 "live_receiver" = "수신기";
 "live_server" = "서버";
-"live_listen_only_note" = "수신 전용";
 "live_channels" = "채널";
 "live_tune_down" = "1 kHz 내리기";
 "live_tune_up" = "1 kHz 올리기";
@@ -485,7 +484,7 @@
 "live_scan_searching" = "스캔 중";
 "live_silence" = "지금은 아무도 말하지 않습니다";
 "live_hf_footer" = "전 세계 아마추어 무선사들이 무료로 공유하는 공개 KiwiSDR 수신기로 듣습니다. Talky가 방송국 가까운 수신기를 고릅니다.";
-"live_poc_footer" = "지금 사람이 접속해 있는 공개 Mumble 채널입니다. Talky는 음소거 상태로 들어가 듣기만 합니다.";
+"live_poc_footer" = "지금 사람이 접속해 있는 공개 Mumble 채널입니다. 버튼을 누르고 있으면 대화할 수 있습니다.";
 "live_pro_title" = "Talky Pro 기능";
 "live_pro_scan_message" = "자동 스캔은 Talky Pro 기능입니다. 짧은 동영상을 보면 24시간 무료로 써 볼 수 있습니다.";
 "live_pro_background_message" = "Talky를 나가자 HF, CB, POC 수신이 멈췄습니다. Talky Pro에서는 화면이 꺼져도 계속 들을 수 있습니다. 짧은 동영상을 보면 24시간 무료로 써 볼 수 있습니다.";
@@ -515,7 +514,7 @@
 "onboarding.live.hf" = "단파: 항공 기상, 시보, 아마추어 무선.";
 "onboarding.live.cb" = "CB 40개 채널 전체와 27.555 DX 호출, 자동 스퀠치와 스캔 포함.";
 "onboarding.live.poc" = "공개 서버의 실제 푸시투토크 채널.";
-"onboarding.live.note" = "청취 전용. 하루 %d분 무료, Talky Pro로 무제한.";
+"onboarding.live.note" = "POC에서는 말할 수도 있습니다. 하루 %d분 무료, Talky Pro로 무제한.";
 "onboarding.widgets.title" = "실시간 전파 상태 위젯";
 "onboarding.widgets.subtitle" = "홈 화면과 잠금 화면에서 스스로 업데이트됩니다.";
 "onboarding.widgets.channel" = "Talky 채널: CB 채널과 밴드 상태. 무료.";

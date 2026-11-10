@@ -474,7 +474,6 @@
 "live_hf_kind_digital" = "Isyarat digital FT8, paling aktif pada siang hari";
 "live_receiver" = "Penerima";
 "live_server" = "Pelayan";
-"live_listen_only_note" = "dengar sahaja";
 "live_channels" = "Saluran";
 "live_tune_down" = "Tala turun 1 kHz";
 "live_tune_up" = "Tala naik 1 kHz";
@@ -486,7 +485,7 @@
 "live_scan_searching" = "Mengimbas";
 "live_silence" = "Tiada sesiapa bercakap sekarang";
 "live_hf_footer" = "Anda mendengar melalui penerima KiwiSDR awam yang dikongsi secara percuma oleh radio amatur di seluruh dunia. Talky memilih penerima berhampiran stesen.";
-"live_poc_footer" = "Saluran Mumble awam yang ada orang sekarang. Talky masuk dalam keadaan senyap dan hanya mendengar.";
+"live_poc_footer" = "Saluran Mumble awam yang ada orang sekarang. Tekan dan tahan butang untuk bercakap dengan mereka.";
 "live_pro_title" = "Ciri Talky Pro";
 "live_pro_scan_message" = "Imbasan automatik ialah sebahagian daripada Talky Pro. Anda boleh mencubanya secara percuma selama 24 jam dengan menonton video pendek.";
 "live_pro_background_message" = "Pendengaran HF, CB dan POC berhenti apabila anda keluar dari Talky. Dengan Talky Pro ia terus berjalan walaupun skrin dimatikan. Anda boleh mencubanya secara percuma selama 24 jam dengan menonton video pendek.";
@@ -516,7 +515,7 @@
 "onboarding.live.hf" = "Gelombang pendek: cuaca penerbangan, isyarat masa dan radio amatur.";
 "onboarding.live.cb" = "Kesemua 40 saluran CB dan panggilan DX pada 27.555, dengan squelch automatik dan SCAN.";
 "onboarding.live.poc" = "Saluran tekan-untuk-bercakap sebenar pada pelayan awam.";
-"onboarding.live.note" = "Dengar sahaja. %d minit percuma sehari, tanpa had dengan Talky Pro.";
+"onboarding.live.note" = "Di POC anda juga boleh bercakap. %d minit percuma sehari, tanpa had dengan Talky Pro.";
 "onboarding.widgets.title" = "Widget dengan perambatan secara langsung";
 "onboarding.widgets.subtitle" = "Di Skrin Utama dan skrin kunci, dikemas kini sendiri.";
 "onboarding.widgets.channel" = "Saluran Talky: saluran CB anda dan keadaan jalur. Percuma.";

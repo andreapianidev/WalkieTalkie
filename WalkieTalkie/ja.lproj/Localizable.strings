@@ -473,7 +473,6 @@
 "live_hf_kind_digital" = "FT8デジタル信号、日中に多い";
 "live_receiver" = "受信機";
 "live_server" = "サーバー";
-"live_listen_only_note" = "受信のみ";
 "live_channels" = "チャンネル";
 "live_tune_down" = "1 kHz下げる";
 "live_tune_up" = "1 kHz上げる";
@@ -485,7 +484,7 @@
 "live_scan_searching" = "スキャン中";
 "live_silence" = "今は誰も話していません";
 "live_hf_footer" = "世界中のアマチュア無線家が無料で公開しているKiwiSDR受信機で受信します。Talkyは局の近くの受信機を選びます。";
-"live_poc_footer" = "今まさに人がいる公開Mumbleチャンネルです。Talkyはミュートで参加し、聞くだけです。";
+"live_poc_footer" = "今まさに人がいる公開Mumbleチャンネルです。ボタンを押し続けると話せます。";
 "live_pro_title" = "Talky Proの機能";
 "live_pro_scan_message" = "自動スキャンはTalky Proの機能です。短い動画を見ると24時間無料で試せます。";
 "live_pro_background_message" = "Talkyを離れたときにHF、CB、POCの受信が止まりました。Talky Proなら画面を消しても受信が続きます。短い動画を見ると24時間無料で試せます。";
@@ -515,7 +514,7 @@
 "onboarding.live.hf" = "短波：航空気象、時報、アマチュア無線。";
 "onboarding.live.cb" = "CB全40チャンネルと27.555のDX呼び出し。自動スケルチとスキャン付き。";
 "onboarding.live.poc" = "公開サーバー上の本物のプッシュトゥトークチャンネル。";
-"onboarding.live.note" = "受信のみ。1日%d分無料、Talky Proなら無制限。";
+"onboarding.live.note" = "POCでは話すこともできます。1日%d分無料、Talky Proなら無制限。";
 "onboarding.widgets.title" = "伝搬をライブで表示するウィジェット";
 "onboarding.widgets.subtitle" = "ホーム画面とロック画面に。自動で更新されます。";
 "onboarding.widgets.channel" = "Talkyチャンネル：CBチャンネルとバンドの状態。無料。";

@@ -352,8 +352,8 @@ struct LiveStatusCard: View {
         if live.band?.isKiwi == true {
             return (live.band == .cb ? HFChannel.Kind.citizens : live.currentHF.kind).subtitle
         }
-        let town = live.sourcePlace.isEmpty ? "" : live.sourcePlace + " · "
-        return town + "live_listen_only_note".localized
+        // Su POC dalla 4.0 si parla: qui resta solo il server.
+        return live.sourcePlace
     }
 }
 

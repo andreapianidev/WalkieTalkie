@@ -472,7 +472,6 @@
 "live_hf_kind_digital" = "Signaux numériques FT8, surtout actifs le jour";
 "live_receiver" = "Récepteur";
 "live_server" = "Serveur";
-"live_listen_only_note" = "écoute seule";
 "live_channels" = "Canaux";
 "live_tune_down" = "Accord moins 1 kHz";
 "live_tune_up" = "Accord plus 1 kHz";
@@ -484,7 +483,7 @@
 "live_scan_searching" = "Balayage en cours";
 "live_silence" = "Personne ne parle en ce moment";
 "live_hf_footer" = "Tu écoutes via des récepteurs KiwiSDR publics, partagés gratuitement par des radioamateurs du monde entier. Talky choisit un récepteur proche de la station.";
-"live_poc_footer" = "Canaux Mumble publics avec du monde connecté en ce moment. Talky entre en sourdine et écoute seulement.";
+"live_poc_footer" = "Canaux Mumble publics avec du monde connecté en ce moment. Maintenez le bouton enfoncé pour leur parler.";
 "live_pro_title" = "Fonction Talky Pro";
 "live_pro_scan_message" = "Le balayage automatique fait partie de Talky Pro. Tu peux l'essayer gratuitement pendant 24 heures en regardant une courte vidéo.";
 "live_pro_background_message" = "L'écoute HF, CB et POC s'est arrêtée quand tu as quitté Talky. Avec Talky Pro, elle continue même écran éteint. Tu peux l'essayer gratuitement pendant 24 heures en regardant une courte vidéo.";
@@ -514,7 +513,7 @@
 "onboarding.live.hf" = "Ondes courtes : météo aéronautique, signaux horaires et radioamateurs.";
 "onboarding.live.cb" = "Les 40 canaux CB et l'appel DX sur 27.555, avec squelch automatique et SCAN.";
 "onboarding.live.poc" = "De vrais canaux push-to-talk sur des serveurs publics.";
-"onboarding.live.note" = "Écoute seule. %d minutes gratuites par jour, sans limite avec Talky Pro.";
+"onboarding.live.note" = "Sur POC, vous pouvez aussi parler. %d minutes gratuites par jour, sans limite avec Talky Pro.";
 "onboarding.widgets.title" = "Des widgets avec la propagation en direct";
 "onboarding.widgets.subtitle" = "Sur l'écran d'accueil et l'écran verrouillé, mis à jour tout seuls.";
 "onboarding.widgets.channel" = "Canal Talky : votre canal CB et l'état des bandes. Gratuit.";

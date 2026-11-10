@@ -159,10 +159,12 @@ struct LiveView: View {
                         .foregroundStyle(live.isOn ? statusColor : Talky.dim)
                         .lineLimit(1)
                     Spacer()
-                    Text(MacString.listenOnly.text)
-                        .font(.vfd(9, weight: .bold))
-                        .kerning(1.4)
-                        .foregroundStyle(Talky.dim)
+                    if band != .poc {
+                        Text(MacString.listenOnly.text)
+                            .font(.vfd(9, weight: .bold))
+                            .kerning(1.4)
+                            .foregroundStyle(Talky.dim)
+                    }
                 }
 
                 if band == .cb {

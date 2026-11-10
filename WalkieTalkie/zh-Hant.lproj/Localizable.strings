@@ -474,7 +474,6 @@
 "live_hf_kind_digital" = "FT8數位訊號，白天最活躍";
 "live_receiver" = "接收機";
 "live_server" = "伺服器";
-"live_listen_only_note" = "僅收聽";
 "live_channels" = "頻道";
 "live_tune_down" = "調低1 kHz";
 "live_tune_up" = "調高1 kHz";
@@ -486,7 +485,7 @@
 "live_scan_searching" = "正在掃描";
 "live_silence" = "現在沒有人說話";
 "live_hf_footer" = "你透過公共KiwiSDR接收機收聽，這些接收機由世界各地的業餘無線電愛好者免費分享。Talky會選擇離電台較近的接收機。";
-"live_poc_footer" = "現在有人在線的公共Mumble頻道。Talky以靜音方式加入，只收聽。";
+"live_poc_footer" = "現在有人在線的公共Mumble頻道。按住按鈕即可和他們通話。";
 "live_pro_title" = "Talky Pro 功能";
 "live_pro_scan_message" = "自動掃描屬於 Talky Pro。觀看一段短片即可免費試用24小時。";
 "live_pro_background_message" = "離開 Talky 後，HF、CB 和 POC 收聽已停止。使用 Talky Pro，關閉螢幕後也能繼續收聽。觀看一段短片即可免費試用24小時。";
@@ -516,7 +515,7 @@
 "onboarding.live.hf" = "短波：航空氣象、標準時間訊號和業餘無線電。";
 "onboarding.live.cb" = "全部 40 個 CB 頻道和 27.555 DX 呼叫頻率，具備自動靜噪和掃描。";
 "onboarding.live.poc" = "公共伺服器上真實的一鍵通頻道。";
-"onboarding.live.note" = "僅收聽。每天免費 %d 分鐘，Talky Pro 無限制。";
+"onboarding.live.note" = "在 POC 上你也可以說話。每天免費 %d 分鐘，Talky Pro 無限制。";
 "onboarding.widgets.title" = "即時顯示傳播狀況的小工具";
 "onboarding.widgets.subtitle" = "放在主畫面和鎖定畫面，自動更新。";
 "onboarding.widgets.channel" = "Talky 頻道：你的 CB 頻道和波段狀況。免費。";

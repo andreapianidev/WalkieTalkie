@@ -472,7 +472,6 @@
 "live_hf_kind_digital" = "Sinyal digital FT8, paling ramai di siang hari";
 "live_receiver" = "Penerima";
 "live_server" = "Server";
-"live_listen_only_note" = "hanya mendengar";
 "live_channels" = "Saluran";
 "live_tune_down" = "Turunkan 1 kHz";
 "live_tune_up" = "Naikkan 1 kHz";
@@ -484,7 +483,7 @@
 "live_scan_searching" = "Memindai";
 "live_silence" = "Tidak ada yang bicara sekarang";
 "live_hf_footer" = "Kamu mendengar lewat penerima KiwiSDR publik, yang dibagikan gratis oleh amatir radio di seluruh dunia. Talky memilih penerima yang dekat dengan stasiun.";
-"live_poc_footer" = "Saluran Mumble publik yang sedang ada orangnya. Talky bergabung dalam mode bisu dan hanya mendengar.";
+"live_poc_footer" = "Saluran Mumble publik yang sedang ada orangnya. Tahan tombol untuk bicara dengan mereka.";
 "live_pro_title" = "Fitur Talky Pro";
 "live_pro_scan_message" = "Pindai otomatis adalah bagian dari Talky Pro. Kamu bisa mencobanya gratis selama 24 jam dengan menonton video singkat.";
 "live_pro_background_message" = "Siaran HF, CB, dan POC berhenti saat kamu keluar dari Talky. Dengan Talky Pro, siaran tetap jalan meski layar mati. Kamu bisa mencobanya gratis selama 24 jam dengan menonton video singkat.";
@@ -514,7 +513,7 @@
 "onboarding.live.hf" = "Gelombang pendek: cuaca penerbangan, sinyal waktu, dan amatir radio.";
 "onboarding.live.cb" = "Semua 40 saluran CB dan panggilan DX di 27.555, dengan squelch otomatis dan SCAN.";
 "onboarding.live.poc" = "Saluran push-to-talk sungguhan di server publik.";
-"onboarding.live.note" = "Hanya mendengar. %d menit gratis sehari, tanpa batas dengan Talky Pro.";
+"onboarding.live.note" = "Di POC kamu juga bisa bicara. %d menit gratis sehari, tanpa batas dengan Talky Pro.";
 "onboarding.widgets.title" = "Widget dengan propagasi langsung";
 "onboarding.widgets.subtitle" = "Di Layar Utama dan Layar Terkunci, diperbarui sendiri.";
 "onboarding.widgets.channel" = "Saluran Talky: saluran CB-mu dan kondisi pita. Gratis.";

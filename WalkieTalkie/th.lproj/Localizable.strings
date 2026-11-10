@@ -473,7 +473,6 @@
 "live_hf_kind_digital" = "สัญญาณดิจิทัล FT8 คึกคักที่สุดตอนกลางวัน";
 "live_receiver" = "เครื่องรับ";
 "live_server" = "เซิร์ฟเวอร์";
-"live_listen_only_note" = "ฟังอย่างเดียว";
 "live_channels" = "ช่อง";
 "live_tune_down" = "ลดคลื่น 1 kHz";
 "live_tune_up" = "เพิ่มคลื่น 1 kHz";
@@ -485,7 +484,7 @@
 "live_scan_searching" = "กำลังสแกน";
 "live_silence" = "ตอนนี้ไม่มีใครพูด";
 "live_hf_footer" = "คุณฟังผ่านเครื่องรับ KiwiSDR สาธารณะ ที่นักวิทยุสมัครเล่นทั่วโลกแบ่งปันให้ใช้ฟรี Talky จะเลือกเครื่องรับที่อยู่ใกล้สถานี";
-"live_poc_footer" = "ช่อง Mumble สาธารณะที่มีคนอยู่ตอนนี้ Talky เข้าแบบปิดเสียงและฟังอย่างเดียว";
+"live_poc_footer" = "ช่อง Mumble สาธารณะที่มีคนอยู่ตอนนี้ กดปุ่มค้างไว้เพื่อพูดคุยกับพวกเขา";
 "live_pro_title" = "ฟีเจอร์ Talky Pro";
 "live_pro_scan_message" = "การสแกนอัตโนมัติเป็นส่วนหนึ่งของ Talky Pro ลองใช้ฟรี 24 ชั่วโมงได้โดยดูวิดีโอสั้นๆ";
 "live_pro_background_message" = "การฟัง HF, CB และ POC หยุดเมื่อคุณออกจาก Talky ด้วย Talky Pro จะฟังต่อได้แม้ปิดหน้าจอ ลองใช้ฟรี 24 ชั่วโมงได้โดยดูวิดีโอสั้นๆ";
@@ -515,7 +514,7 @@
 "onboarding.live.hf" = "คลื่นสั้น: อุตุนิยมวิทยาการบิน สัญญาณเวลา และวิทยุสมัครเล่น";
 "onboarding.live.cb" = "CB ครบ 40 ช่องและการเรียก DX ที่ 27.555 พร้อมสเควลช์อัตโนมัติและ SCAN";
 "onboarding.live.poc" = "ช่องกดเพื่อพูดจริงบนเซิร์ฟเวอร์สาธารณะ";
-"onboarding.live.note" = "ฟังอย่างเดียว ฟรีวันละ %d นาที ไม่จำกัดกับ Talky Pro";
+"onboarding.live.note" = "บน POC คุณพูดได้ด้วย ฟรีวันละ %d นาที ไม่จำกัดกับ Talky Pro";
 "onboarding.widgets.title" = "วิดเจ็ตแสดงการแพร่กระจายคลื่นแบบสด";
 "onboarding.widgets.subtitle" = "บนหน้าจอโฮมและหน้าจอล็อก อัปเดตเอง";
 "onboarding.widgets.channel" = "ช่อง Talky: ช่อง CB ของคุณและสภาพย่านความถี่ ฟรี";

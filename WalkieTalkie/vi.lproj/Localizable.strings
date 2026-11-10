@@ -472,7 +472,6 @@
 "live_hf_kind_digital" = "Tín hiệu số FT8, sôi động nhất ban ngày";
 "live_receiver" = "Máy thu";
 "live_server" = "Máy chủ";
-"live_listen_only_note" = "chỉ nghe";
 "live_channels" = "Kênh";
 "live_tune_down" = "Giảm 1 kHz";
 "live_tune_up" = "Tăng 1 kHz";
@@ -484,7 +483,7 @@
 "live_scan_searching" = "Đang quét";
 "live_silence" = "Hiện không ai nói";
 "live_hf_footer" = "Bạn nghe qua các máy thu KiwiSDR công cộng do những người chơi vô tuyến nghiệp dư khắp thế giới chia sẻ miễn phí. Talky chọn máy thu gần trạm phát.";
-"live_poc_footer" = "Các kênh Mumble công cộng đang có người. Talky vào ở chế độ tắt tiếng và chỉ nghe.";
+"live_poc_footer" = "Các kênh Mumble công cộng đang có người. Giữ nút để nói chuyện với họ.";
 "live_pro_title" = "Tính năng Talky Pro";
 "live_pro_scan_message" = "Quét tự động là một phần của Talky Pro. Bạn có thể dùng thử miễn phí 24 giờ bằng cách xem một video ngắn.";
 "live_pro_background_message" = "Việc nghe HF, CB và POC đã dừng khi bạn rời Talky. Với Talky Pro, bạn vẫn nghe được khi tắt màn hình. Bạn có thể dùng thử miễn phí 24 giờ bằng cách xem một video ngắn.";
@@ -514,7 +513,7 @@
 "onboarding.live.hf" = "Sóng ngắn: thời tiết hàng không, tín hiệu giờ và vô tuyến nghiệp dư.";
 "onboarding.live.cb" = "Đủ 40 kênh CB và tần số gọi DX 27.555, có squelch tự động và SCAN.";
 "onboarding.live.poc" = "Các kênh bấm-để-nói thật trên máy chủ công cộng.";
-"onboarding.live.note" = "Chỉ nghe. %d phút miễn phí mỗi ngày, không giới hạn với Talky Pro.";
+"onboarding.live.note" = "Trên POC bạn cũng có thể nói. %d phút miễn phí mỗi ngày, không giới hạn với Talky Pro.";
 "onboarding.widgets.title" = "Widget hiển thị truyền sóng trực tiếp";
 "onboarding.widgets.subtitle" = "Trên Màn hình chính và màn hình khóa, tự cập nhật.";
 "onboarding.widgets.channel" = "Kênh Talky: kênh CB của bạn và tình trạng băng tần. Miễn phí.";
