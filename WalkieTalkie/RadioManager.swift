@@ -139,7 +139,7 @@ class RadioManager: NSObject, ObservableObject {
     let catalog: [RadioStation] = [
         // MARK: - Free (Italia + grandi broadcaster europei)
         // Italia
-        RadioStation(id: 1, name: "RTL 102.5", country: "Italia", frequency: "102.5", streamURL: "https://streamingv2.shoutcast.com/rtl-1025", genre: "Pop"),
+        RadioStation(id: 1, name: "RTL 102.5", country: "Italia", frequency: "102.5", streamURL: "https://dd782ed59e2a4e86aabf6fc508674b59.msvdn.net/audiostream/S97044836/tbbP8T1ZRPBL/playlist_audio.m3u8", genre: "Pop"),
         RadioStation(id: 2, name: "Radio Deejay", country: "Italia", frequency: "106.2", streamURL: "https://4c4b867c89244861ac216426883d1ad0.msvdn.net/radiodeejay/radiodeejay/master_ma.m3u8", genre: "Pop"),
         RadioStation(id: 3, name: "Rai Radio 1", country: "Italia", frequency: "89.7", streamURL: "http://icestreaming.rai.it/1.mp3", genre: "News"),
         RadioStation(id: 4, name: "Rai Radio 2", country: "Italia", frequency: "91.7", streamURL: "http://icestreaming.rai.it/2.mp3", genre: "Pop"),
@@ -1006,7 +1006,7 @@ class RadioManager: NSObject, ObservableObject {
         // di build con array vuoto), restituiamo una stazione stub invece di crashare.
         return pool.first
             ?? freeStations.first
-            ?? RadioStation(id: 1, name: "RTL 102.5", country: "Italia", frequency: "102.5", streamURL: "https://streamingv2.shoutcast.com/rtl-1025", genre: "Pop")
+            ?? RadioStation(id: 1, name: "RTL 102.5", country: "Italia", frequency: "102.5", streamURL: "https://dd782ed59e2a4e86aabf6fc508674b59.msvdn.net/audiostream/S97044836/tbbP8T1ZRPBL/playlist_audio.m3u8", genre: "Pop")
     }
 
     // MARK: - Locale-based grouping

@@ -26,7 +26,40 @@
 
 ---
 
-## 🆕 New in Talky 3.2: a real radio receiver in your pocket
+## 🆕 New in Talky 4.0: talk far away, not just nearby
+
+One version for iPhone and Mac. The walkie still works with no internet and no
+servers between phones that are close; 4.0 adds a way to talk when they are not.
+
+- **Private rooms**: open a room, share its 8-character code (`K7P2-QX9A`) or the
+  invite link, and talk with friends anywhere, over the internet. Only people
+  with the code can enter. Opening a room is Talky Pro, joining is free, and
+  minutes in a room never count against the free ones. Rooms run on our own
+  Mumble server, kept by a small custodian ([`scripts/server/talky_rooms.py`](scripts/server/talky_rooms.py)):
+  the channel name is random and handed only to whoever presents the room
+  token, and empty rooms disappear after 24 hours.
+- **Apple Push to Talk** in rooms (Pro, iOS 16+): the room becomes a system
+  channel with the blue pill and Lock Screen controls, and voice arrives even
+  with Talky closed ([`LiveBand/RoomPushToTalk.swift`](WalkieTalkie/LiveBand/RoomPushToTalk.swift)).
+- **Talk on POC**: public Mumble channels are no longer listen only. Opus at
+  20 ms over the TLS tunnel, only where the server grants Speak. Rules to accept
+  the first time, and a Safety menu to mute a person or report a channel.
+- **Relay between nearby phones**: a transmission hops through a third device
+  (iPhone, Mac or Android) and reaches further, with an id, the original sender
+  and a TTL of 2. Older versions ignore it. Spec in [TALKY1, section 6b](docs/TALKY1.md).
+- **Pairing help**: when nobody shows up on Explore, Talky says what to check,
+  spots a denied Local Network permission, and offers a QR code or a link to
+  install Talky on the other phone. Devices accepted once reconnect without asking.
+- **Widgets and controls**: My Radios with play and stop from the Home Screen,
+  Now Playing with the song title, and Control Center controls on iPhone and Mac.
+- **Talky Pro Forever**: pay once, shown next to weekly and yearly.
+- **16 languages**, now with Indonesian and Polish, on iPhone, Mac, widgets and
+  Live Activities.
+
+Full list in the [Changelog](CHANGELOG.md). Screenshots of 4.0 will replace the
+3.2 ones below once the App Store pages are updated.
+
+## Talky 3.2: a real radio receiver in your pocket
 
 **Live CB, HF shortwave and POC, with the receiver's real spectrum and waterfall.** Talky tunes public KiwiSDR receivers around the world, picks one near you, and draws what that antenna is hearing right now: carriers, voices, data bursts, the whole band moving down the screen. No fake audio, no recorded loops.
 
@@ -63,7 +96,7 @@ If you run a KiwiSDR and would rather Talky did not use it, open an issue and it
 - **Explore**: a radar of the devices around you, with estimated distance and signal strength. Tap one to connect.
 - **Connections**: advertising and browsing state, the list of connected devices, and the two buttons that fix most problems: disconnect all, restart discovery.
 - **Settings**: notifications, haptics, auto-connect, and the Pro features (history, sleep timer, equalizer, recordings, private channels).
-- **LOCAL / HF / CB / POC**: the band selector above the display. LOCAL is the walkie between nearby phones; the other three are real radio, listen only (see [Live Radio](#-live-radio-hf-cb-27-mhz-poc)).
+- **LOCAL / HF / CB / POC**: the band selector above the display. LOCAL is the walkie between nearby phones; HF and CB are real radio, listen only; on POC you listen and, since 4.0, talk, and the private rooms live there too (see [Live Radio](#-live-radio-hf-cb-27-mhz-poc)).
 
 ---
 
@@ -71,7 +104,7 @@ If you run a KiwiSDR and would rather Talky did not use it, open an issue and it
 
 **macTalky** is the native macOS 26+ companion app, living in the [`macTalky/`](macTalky/) folder as a third target of the same Xcode project. It speaks the same local **[TALKY1 protocol](docs/TALKY1.md)** (Bonjour `_walkie-talkie._tcp.` + TCP + PCM16 mono 48 kHz) as Talky iOS and Talky Android, so a Mac, an iPhone and an Android phone on the same Wi-Fi all talk to each other.
 
-> ⬇️ **Download**: grab `macTalky.zip` from [**GitHub Releases**](https://github.com/andreapianidev/WalkieTalkie/releases) (macOS 26+, Apple Silicon). First launch: right-click → Open (the GitHub build is not notarized). In-app purchases work only in the Mac App Store version, currently in review on the same App Store record as Talky iOS (universal purchase).
+> ⬇️ **Download**: grab `macTalky.zip` from [**GitHub Releases**](https://github.com/andreapianidev/WalkieTalkie/releases) (macOS 26+, Apple Silicon). First launch: right-click → Open (the GitHub build is not notarized). In-app purchases work only in the [Mac App Store version](https://apps.apple.com/app/id6748584483), on the same App Store record as Talky iOS (universal purchase).
 
 | Walkie: Night Ops backdrop | World-band radio: 330+ stations | Walkie: Olive Drab backdrop |
 |---|---|---|
@@ -80,7 +113,7 @@ If you run a KiwiSDR and would rather Talky did not use it, open an issue and it
 - **Design**: "tactical field console" UI, graphite panels, amber phosphor VFD typography, and a full Metal shader suite via SwiftUI `colorEffect`/`layerEffect`: **5 selectable tactical backdrops** (Carbon, Night Ops, Olive Drab, Desert Fox, Naval Grey, grid, radar sweep, canvas weave, TX/RX-reactive tinting), a phosphor **spectrum VU visualizer** with peak-hold, a **CRT effect** (chromatic aberration + scanlines) on the VFD displays and radio pulse rings around the PTT key.
 - **Push-to-talk**: giant TALK key, hold with the mouse **or hold the Space bar**. 10 s max per transmission (TALKY1 frame cap), segmented VU meter, TX/RX/NET lamps.
 - **Radio**: the full worldwide browser (330+ stations) with search, filters, favorites and recents, Media-key/Now Playing integration.
-- **Live receiver**: HF shortwave, **CB 27 MHz** (40 channels, DX 27.555, scan, squelch, typed frequency) and POC channels, on the same engine as the iPhone ([`Shared/RealRadio/`](Shared/RealRadio/)).
+- **Live receiver**: HF shortwave, **CB 27 MHz** (40 channels, DX 27.555, scan, squelch, typed frequency) and POC channels, on the same engine as the iPhone ([`Shared/RealRadio/`](Shared/RealRadio/)). Since 4.0 you talk on POC and in private rooms from the Mac too.
 - **Private channels**: same SHA256 password-derived channel IDs as iOS/Android (Pro).
 - **Universal purchases**: same bundle ID as the iOS app → the Talky Pro subscription and Themes Pack bought on iPhone unlock on the Mac and vice versa (StoreKit 2, no Firebase on macOS). Pro/Themes Pack also unlocks the three premium backdrops.
 - **Build**: `xcodebuild -project WalkieTalkie.xcodeproj -scheme macTalky -configuration Release build` (sandboxed, hardened runtime; network client/server + audio-input entitlements). The `macTalky` scheme is shared, ready for an **Xcode Cloud** "Archive - macOS" workflow.
@@ -115,16 +148,17 @@ If you run a KiwiSDR and would rather Talky did not use it, open an issue and it
 
 ## ✨ Highlights
 
-- 🎙️ **Push-to-Talk** over peer-to-peer (no internet, no servers), up to 8 simultaneous peers
+- 🎙️ **Push-to-Talk** over peer-to-peer (no internet, no servers), up to 8 simultaneous peers, with a relay through a third nearby phone
+- 🔐 **Private rooms** (4.0) to talk far away over the internet, with Apple Push to Talk for Pro
 - 📡 **Real radio, no fake audio**: HF shortwave and the **CB 27 MHz band** (all 40 channels plus the SSB DX area, calling on **27.555 USB**) from public KiwiSDR receivers, and public POC channels on Mumble. Auto and manual scan, automatic squelch, typed frequency
 - 📻 **330+ live radio stations** across **80+ countries**, with favorites, recents, nearby, search and grouping by country/genre
 - 🏝️ **Live Activities + Dynamic Island** (iOS 16.2+) for both radio and walkie modes, with iOS 17+ interactive controls (play/pause, next/previous from the lock screen and Dynamic Island)
 - 🎨 **16 themes** (5 free + 11 paid/Pro) including 2 fully-animated GPU backgrounds (Black Hole, Galaxy)
 - 🔊 **5-band EQ**, **sleep timer**, **session recording** and **transmission history**
-- 💎 **Talky Pro** subscription (weekly/yearly) with paywall, restore purchases and StoreKit 2
+- 💎 **Talky Pro** weekly, yearly or **Forever** (one purchase), with paywall, restore purchases and StoreKit 2
 - 📣 **Full AdMob stack** (App Open, Interstitial, Rewarded, **Native Advanced**) with UMP + ATT consent flow
 - 🌍 **16 localizations**: Italian, English, Spanish, French, German, Portuguese (Brazil), Japanese, Korean, Malay, Indonesian, Polish, Thai, Turkish, Vietnamese, Simplified and Traditional Chinese
-- 🔒 **Privacy-first**: walkie-talkie audio never leaves the device, no accounts, no cloud
+- 🔒 **Privacy-first**: the local walkie never leaves the phones, no accounts; only rooms and POC go through a server, and only while you use them
 - 🧱 **Clean MVVM + SwiftUI + Combine**, singleton managers, Swift 6 strict concurrency-ready
 - ⚖️ **Source-available** under PolyForm Noncommercial 1.0.0: fork it, study it, learn from it; commercial reuse requires a separate license
 
@@ -184,7 +218,10 @@ cp keystore.properties.sample keystore.properties   # then edit values, or remov
 | Capability | Free | Talky Pro |
 |---|:--:|:--:|
 | Push-to-talk over Multipeer (up to 8 peers) | ✅ | ✅ |
-| Live HF, CB 27 MHz and POC listening (real receivers, listen only) | 5 min a day | ✅ unlimited |
+| Live HF, CB 27 MHz and POC listening (real receivers) | 5 min a day | ✅ unlimited |
+| Talk on POC channels (where the server allows it) | ✅ | ✅ |
+| Private rooms: join with a code | ✅ | ✅ |
+| Private rooms: open one, Apple Push to Talk | ❌ | ✅ |
 | Spectrum and waterfall of the receiver | ✅ | ✅ |
 | Widgets: Channel | ✅ | ✅ |
 | Widgets: Propagation, Sun and bands, Lock Screen | ❌ | ✅ |
@@ -231,15 +268,16 @@ Backed by **`MultipeerManager`** and **`AudioManager`**:
 
 Since 3.0 (iOS) and 2.0 (Mac) there is **no recorded or simulated audio** in
 Talky: the old fake frequencies (`f1.mp3` … `f24.mp3`, the white noise) are
-gone. Next to LOCAL, the walkie has three bands that are real radio, listen
-only, from free public services with no keys and no accounts. The engine is
+gone. Next to LOCAL, the walkie has three bands that are real radio, from free
+public services with no keys and no accounts. HF and CB are listen only; on
+POC you can talk since 4.0. The engine is
 shared by iPhone and Mac in [`Shared/RealRadio/`](Shared/RealRadio/).
 
 | Band | Source | What you hear |
 |---|---|---|
 | **HF** | public [KiwiSDR](http://kiwisdr.com) receivers | aviation weather (VOLMET), time signals, radio amateurs on 80/40/20 m, FT8 |
 | **CB** (3.1 / 2.1) | public KiwiSDR receivers | the citizens band on 27 MHz, live |
-| **POC** | public [Mumble](https://www.mumble.info) servers | push-to-talk channels with people in them right now; Talky joins muted |
+| **POC** | public [Mumble](https://www.mumble.info) servers | push-to-talk channels with people in them right now; Talky joins muted, and you talk by holding the key where the server allows it (4.0) |
 
 ### CB 27 MHz (new in iOS 3.1 / Mac 2.1)
 
@@ -426,11 +464,12 @@ Backed by **StoreKit 2** in [`IAP/IAPManager.swift`](WalkieTalkie/WalkieTalkie/I
 ### Subscriptions (auto-renewing)
 | Product ID | Plan |
 |---|---|
-| `app.immaginet.talky.pro.weekly` | Weekly |
-| `app.immaginet.talky.pro.yearly` | Yearly (best value) |
+| `ProWeeklyWT` | Weekly |
+| `ProAnnualWT` | Yearly, with a free trial for new subscribers |
 
-### One-shot theme purchases (non-consumable)
-- `app.immaginet.talky.theme.<name>`: one per Identity / Animated theme
+### One-time purchases (non-consumable)
+- `app.immaginet.talky.pro.lifetime`: **Talky Pro Forever**, Pro and all themes, shown as the third plan in the paywall
+- `app.immaginet.talky.themes.allpack`: All Themes Pack
 
 ### Paywall: [`IAP/PaywallView.swift`](WalkieTalkie/WalkieTalkie/IAP/PaywallView.swift)
 - Trigger-aware (`station_browser`, `theme_locked`, `equalizer`, …) for analytics

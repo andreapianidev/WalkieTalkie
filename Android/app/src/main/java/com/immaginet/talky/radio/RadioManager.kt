@@ -37,7 +37,7 @@ class RadioManager(context: Context) : Closeable {
 
     companion object {
         val stations: List<RadioStation> = listOf(
-            RadioStation(1, "RTL 102.5", "Italia", "102.5", "https://streamingv2.shoutcast.com/rtl-1025", "Pop"),
+            RadioStation(1, "RTL 102.5", "Italia", "102.5", "https://dd782ed59e2a4e86aabf6fc508674b59.msvdn.net/audiostream/S97044836/tbbP8T1ZRPBL/playlist_audio.m3u8", "Pop"),
             RadioStation(2, "Radio Deejay", "Italia", "106.2", "https://4c4b867c89244861ac216426883d1ad0.msvdn.net/radiodeejay/radiodeejay/master_ma.m3u8", "Pop"),
             RadioStation(3, "Rai Radio 1", "Italia", "89.7", "http://icestreaming.rai.it/1.mp3", "News"),
             RadioStation(4, "Rai Radio 2", "Italia", "91.7", "http://icestreaming.rai.it/2.mp3", "Pop"),

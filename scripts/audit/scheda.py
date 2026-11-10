@@ -64,6 +64,13 @@ def controlla(piattaforma):
     print("scheda", tag)
     if a.get("releaseType") != "AFTER_APPROVAL" and a["appStoreState"] in MODIFICABILI:
         err(f"{tag}: rilascio {a.get('releaseType')}, deve essere AFTER_APPROVAL")
+    if a["appStoreState"] in MODIFICABILI:
+        # Le note restano quelle della versione da cui la nuova e' nata: il
+        # 10/11 la 4.0 iOS diceva ancora al revisore che sul POC non si
+        # trasmette, proprio nella versione in cui sul POC si parla.
+        note = (_get(f"/v1/appStoreVersions/{v['id']}/appStoreReviewDetail")["data"]["attributes"].get("notes") or "")
+        if a["versionString"] not in note:
+            err(f"{tag}: le note per il revisore non parlano della {a['versionString']}: {note[:70]!r}")
     locs = _get(f"/v1/appStoreVersions/{v['id']}/appStoreVersionLocalizations?limit=50")["data"]
     n_vere = stazioni_vere()
     link_visti = {}

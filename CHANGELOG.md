@@ -26,6 +26,13 @@ releases and from the git history, so they are less detailed than what follows.
 
 ### [1.3] — unreleased
 
+#### Added (versionCode 6 to 9, with iOS and Mac 4.0)
+- **Relay between nearby phones**: a transmission hops through a third device
+  running Talky and reaches further; retransmissions no longer mix into the
+  voice of whoever is talking.
+- Indonesian and Polish.
+- Four duplicate stations replaced (same ids), and RTL 102.5 plays again.
+
 #### Removed
 - 8 radio stations that no longer exist (same list as iOS 3.2 build 114). `versionCode` 4 → 5.
 
@@ -93,6 +100,30 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 ---
 
 ## macTalky (macOS)
+
+### [4.0] (145), ready for review, not submitted yet
+
+Same version number as the iPhone from now on: 2.1.1 was renamed 4.0 before it
+shipped, so the 2.1.1 entry below is part of 4.0 too.
+
+#### Added
+- **Private rooms** and **talking on POC** from the Mac, in the Live panel, with
+  the same rules, Safety menu and room codes as the iPhone. Reporting a channel
+  opens a prefilled email.
+- **Relay between nearby devices**, and the iPhone now finds the Mac by itself.
+- **Widgets and controls:** My Radios, Now Playing, CB channel 19 in Control
+  Center.
+- **The whole interface in 16 languages.** Outside onboarding the Mac was
+  English only; Indonesian and Polish added.
+- **Write to me** in Settings.
+
+#### Changed
+- Paywall with **Forever** as a third option, scrolling, with Terms and Privacy
+  always visible.
+
+#### Fixed
+- Radio errors were shown in Italian in every language.
+- RTL 102.5 plays again (build 145).
 
 ### [2.1.1] (125), unreleased
 
@@ -201,6 +232,64 @@ Sandboxed, no ads, no tracking.
 ---
 
 ## Talky iOS
+
+### [4.0] (145), ready for review, not submitted yet
+
+One version number for iPhone and Mac from now on: 3.2.2 was renamed 4.0 before
+it shipped, so everything listed under 3.2.2 below is part of 4.0 too.
+
+#### Added
+- **Private rooms.** Open a room, share its 8-character code (or the invite
+  link `talky://room/CODE`) and talk with friends far away, over the internet.
+  Opening a room is Talky Pro, joining with a code is free, and minutes spent in
+  a room do not count against the free daily minutes. Rooms live on our own
+  Mumble server; only people with the code can enter, and empty rooms are
+  removed after 24 hours.
+- **Apple Push to Talk in rooms (Pro).** The room becomes a system channel:
+  the blue pill, controls on the Lock Screen, and incoming voice even with Talky
+  closed.
+- **Talking on POC.** Public POC channels were listen only; now you can talk
+  where the server allows it. The first time you accept the rules and choose
+  the name others see. Safety, under the talk button, mutes a person or reports
+  the channel, and a reported server is no longer suggested.
+- **Relay between nearby phones.** A transmission hops through a third device
+  running Talky (iPhone, Mac or Android) and reaches further. Older versions
+  ignore the extra fields (see [TALKY1](docs/TALKY1.md), section 6b).
+- **Pairing help.** If nobody shows up on Explore after 20 seconds, Talky says
+  what to check (Wi-Fi and Bluetooth, same channel, distance, Local Network
+  permission), shows a red card when Local Network is denied, and offers an
+  invite QR code or link to install Talky on the other phone. Meanwhile it
+  suggests listening to live CB.
+- **Write to me** in Settings, and a review request from the radio as well.
+- **Widgets and controls:** My Radios with play and stop from the Home Screen,
+  Now Playing with the song title, Walkie on my channel and My favourite radio in
+  Control Center.
+- **Indonesian and Polish**, 16 languages in total. Live Activities now speak
+  all 16 (they had 5, and Simplified Chinese got Traditional).
+
+#### Changed
+- The paywall shows **Forever** (pay once) as a third option with the same
+  weight as weekly and yearly, with the comparison read from StoreKit. Whoever
+  owns it no longer sees the subscriptions.
+- Onboarding says up front that the walkie needs Talky on both phones, asks for
+  one permission (the microphone), then asks whether you have a friend nearby or
+  are on your own (that one starts live CB). Notifications are asked only after
+  something worked, not at launch.
+- People you accepted once reconnect without a new request; a declined device
+  stays quiet for 10 minutes; simultaneous invitations queue instead of getting
+  lost.
+- The bottom bar is measured instead of fixed: Settings and the talk button are
+  no longer covered on short screens.
+- "Open source" in Settings is now "Source code": the licence is not open
+  source in the OSI sense ([LICENSE](LICENSE), [TRADEMARK.md](TRADEMARK.md)).
+
+#### Fixed
+- The iPhone now calls Macs and Android phones by itself (TALKY1 discovery had
+  no run loop and found nobody).
+- A short tap or an interrupted gesture never leaves the microphone on.
+- RTL 102.5, the default station, plays again (its old stream stopped
+  answering, build 145). Four duplicate stations replaced, same ids so favourites
+  keep working.
 
 ### [3.2.2] (127), unreleased
 
