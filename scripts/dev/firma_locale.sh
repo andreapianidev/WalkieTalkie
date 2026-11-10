@@ -74,7 +74,10 @@ fi
 REPO=$(cd "$(dirname "$0")/../.." && pwd)
 
 # Prima le librerie, poi le estensioni, per ultima l'app: si firma dall'interno.
-find "$APP" -maxdepth 4 \( -name "*.dylib" -o -name "*.framework" \) | while read -r lib; do sign "$lib"; done
+# Sei livelli perche' sul Mac il __preview.dylib del widget sta in
+# PlugIns/*.appex/Contents/MacOS; -depth firma il contenuto di un framework
+# prima del framework, altrimenti il sigillo esterno non torna.
+find "$APP" -depth -maxdepth 6 \( -name "*.dylib" -o -name "*.framework" \) | while read -r lib; do sign "$lib"; done
 if [ -d "$PLUG" ]; then
   for appex in "$PLUG"/*.appex; do
     plist="$appex/Info.plist"; [ "$KIND" = mac ] && plist="$appex/Contents/Info.plist"
