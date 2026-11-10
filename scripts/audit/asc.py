@@ -39,7 +39,9 @@ def _send(metodo, path, corpo=None):
     dati = json.dumps(corpo).encode() if corpo is not None else None
     req = urllib.request.Request("https://api.appstoreconnect.apple.com" + path, data=dati, method=metodo,
                                  headers={"Authorization": "Bearer " + tok, "Content-Type": "application/json"})
-    return json.load(urllib.request.urlopen(req, timeout=30))
+    # PATCH sulle relazioni e DELETE rispondono 204 senza corpo.
+    corpo = urllib.request.urlopen(req, timeout=30).read()
+    return json.loads(corpo) if corpo else {}
 
 
 def versioni_in_vendita():
