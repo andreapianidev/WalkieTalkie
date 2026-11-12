@@ -107,7 +107,7 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
-### [4.0.1] (148), unreleased
+### [4.0.1] (Xcode Cloud build 221), in review since 12 November 2026
 
 #### Fixed
 - **Talky no longer logs in to public Mumble servers while searching for POC
@@ -125,7 +125,7 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 - **SCAN is CB only.** On POC it meant entering and leaving one public server
   after another.
 
-### [4.0] (146), in review since 10 November 2026
+### [4.0] (146), withdrawn from review on 12 November 2026 and shipped as 4.0.1
 
 Same version number as the iPhone from now on: 2.1.1 was renamed 4.0 before it
 shipped, so the 2.1.1 entry below is part of 4.0 too.
@@ -257,7 +257,7 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [4.0.1] (148), unreleased
+### [4.0.1] (Xcode Cloud build 222), in review since 12 November 2026
 
 #### Fixed
 - **Talky no longer logs in to public Mumble servers while searching for POC
@@ -275,7 +275,7 @@ Sandboxed, no ads, no tracking.
 - **SCAN is CB only.** On POC it meant entering and leaving one public server
   after another.
 
-### [4.0] (146), in review since 10 November 2026
+### [4.0] (146), on the App Store
 
 One version number for iPhone and Mac from now on: 3.2.2 was renamed 4.0 before
 it shipped, so everything listed under 3.2.2 below is part of 4.0 too.
