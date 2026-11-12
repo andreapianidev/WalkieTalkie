@@ -108,8 +108,9 @@ struct LiveView: View {
                             .padding(14)
                         }
                         ForEach(Array(live.pocChannels.enumerated()), id: \.element.id) { i, ch in
-                            row(title: ch.channel,
-                                subtitle: ch.server.name + " · " + MacString.inChannel.format(ch.users),
+                            row(title: ch.server.name,
+                                subtitle: [ch.server.country, MacString.peopleOnline.format(ch.users)]
+                                    .filter { !$0.isEmpty }.joined(separator: " · "),
                                 selected: live.band == .poc && i == live.pocIndex) {
                                 live.stopScan()
                                 live.selectPOC(i)
@@ -323,7 +324,9 @@ struct LiveView: View {
                     .buttonStyle(ChipButtonStyle(accent: Talky.teal))
                     .keyboardShortcut(.upArrow, modifiers: [])
             }
-            if band != .hf {
+            // Lo SCAN e' solo della CB: sul POC vorrebbe dire entrare e uscire
+            // da un server pubblico dopo l'altro (issue #12).
+            if band == .cb {
                 Button {
                     live.toggleScan()
                     if live.proPrompt != nil {
@@ -337,11 +340,11 @@ struct LiveView: View {
                     }
                 }
                 .buttonStyle(ChipButtonStyle(accent: Talky.teal, filled: live.isScanning))
-                if band == .poc {
-                    Button(MacString.refresh.text) { live.rescanPOC() }
-                        .buttonStyle(ChipButtonStyle(accent: Talky.teal))
-                        .disabled(live.isScouting)
-                }
+            }
+            if band == .poc {
+                Button(MacString.refresh.text) { live.rescanPOC() }
+                    .buttonStyle(ChipButtonStyle(accent: Talky.teal))
+                    .disabled(live.isScouting)
             }
             Spacer()
             Image(systemName: "speaker.wave.2.fill")
@@ -404,6 +407,9 @@ struct LiveView: View {
             return MacString.liveFree.format(left / 60, left % 60)
         }
         if live.band == .poc, live.isScouting, live.pocChannels.isEmpty { return MacString.searchingChannels.text }
+        if live.band == .poc, live.room == nil, live.currentPOC == nil, live.state == .idle || live.state == .connecting, !live.pocChannels.isEmpty {
+            return MacString.pickServer.text
+        }
         switch live.state {
         case .idle, .connecting: return MacString.connecting.text
         case .online: return MacString.live.text

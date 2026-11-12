@@ -69,7 +69,7 @@ Full list in the [Changelog](CHANGELOG.md). Screenshots of 4.0 will replace the
 
 - **CB 27 MHz**: all 40 channels plus the DX area (calling on 27.555 USB), AM, FM, LSB and USB, SCAN that stops when someone transmits, automatic squelch. The display shows the receiver, its distance from you, the S-meter and how many dB the signal sits above the noise.
 - **HF shortwave**: aviation weather (VOLMET), time signals, broadcasters and radio amateurs, tuned in 1 kHz steps or typed in.
-- **POC**: public Mumble voice channels where people are talking right now, with live level bars of what you hear.
+- **POC**: public Mumble servers with people on them right now, with live level bars of what you hear. Talky connects only to the server you choose.
 - **World radio**: 330+ stations from 80+ countries, now with their own screen and level bars that follow the audio, HLS streams included.
 - **Widgets** on the Home Screen and the Lock Screen (iOS 17+), and on the Mac desktop: your CB channel for free; with Talky Pro, band propagation with SFI, Kp, the 11/20/40/80 m bands and the Kp forecast, plus sunrise, sunset and the best band right now.
 - **"Your Talky Pro"**: after buying, a page lists everything Pro unlocks and where to find it, in 16 languages.
@@ -85,10 +85,12 @@ Talky can show you a live band only because other people share theirs:
 - **John Seamons**, who designed the KiwiSDR and keeps its software open.
 - **Pierre Ynard**, whose public list at [rx.linkfanel.net](http://rx.linkfanel.net) is how Talky finds a receiver near you.
 - **The people who run public Mumble servers**, which is where the POC channels come from.
+- **[@pilot51](https://github.com/pilot51)**, who runs one of those servers and reported in [#12](https://github.com/andreapianidev/WalkieTalkie/issues/12) that Talky's channel search was logging in and out of it several times a day. The report was right, and the search no longer connects to anything: Talky now reads how many people a server has with Mumble's connectionless ping, and logs in only to the server you pick.
 - **NOAA Space Weather Prediction Center**, for the free solar flux, Kp and forecast data behind the propagation widgets.
-- **[@Joaov41](https://github.com/Joaov41)**, for the pull request on keeping the walkie-talkie alive in the background, and everyone who opened an issue or wrote a review.
+- **[@Joaov41](https://github.com/Joaov41)**, for the pull request on keeping the walkie-talkie alive in the background.
+- **Everyone who reports a problem**, in an [issue](https://github.com/andreapianidev/WalkieTalkie/issues), an email or a review. Each report is a fault found by someone who took the time to describe it, and that is how Talky gets better. Thank you.
 
-If you run a KiwiSDR and would rather Talky did not use it, open an issue and it will be excluded.
+If you run a KiwiSDR or a Mumble server and would rather Talky did not use it, open an issue and it will be excluded.
 
 ### The other screens
 
@@ -226,7 +228,7 @@ cp keystore.properties.sample keystore.properties   # then edit values, or remov
 | Widgets: Channel | ✅ | ✅ |
 | Widgets: Propagation, Sun and bands, Lock Screen | ❌ | ✅ |
 | CB channel step, fine tuning, mode, squelch, typed frequency | ✅ | ✅ |
-| Auto SCAN (CB and POC) | 24 h with a rewarded video (iPhone) | ✅ |
+| Auto SCAN (CB) | 24 h with a rewarded video (iPhone) | ✅ |
 | Live listening with the screen off | ❌ | ✅ |
 | Radio stations available | free selection | **All 330+** |
 | Station browser (search / favorites / recents / nearby) | ✅ | ✅ |
@@ -277,7 +279,7 @@ shared by iPhone and Mac in [`Shared/RealRadio/`](Shared/RealRadio/).
 |---|---|---|
 | **HF** | public [KiwiSDR](http://kiwisdr.com) receivers | aviation weather (VOLMET), time signals, radio amateurs on 80/40/20 m, FT8 |
 | **CB** (3.1 / 2.1) | public KiwiSDR receivers | the citizens band on 27 MHz, live |
-| **POC** | public [Mumble](https://www.mumble.info) servers | push-to-talk channels with people in them right now; Talky joins muted, and you talk by holding the key where the server allows it (4.0) |
+| **POC** | public [Mumble](https://www.mumble.info) servers | servers with people on them right now, found with Mumble's connectionless ping, so nothing logs in while searching; Talky connects only to the server you choose, joins muted, and you talk by holding the key where the server allows it (4.0) |
 
 ### CB 27 MHz (new in iOS 3.1 / Mac 2.1)
 

@@ -241,6 +241,45 @@ nonisolated enum KiwiAddress {
     }
 }
 
+/// Quante persone ha collegate un server Mumble, chiesto con il ping UDP
+/// senza connessione: lo stesso che usa l'elenco dei server del client
+/// ufficiale. Nessun accesso e nessuna sessione, quindi sul server non
+/// compare nessuno che entra ed esce (issue #12). Un server che ha spento
+/// il ping non risponde, e resta fuori dalla lista.
+@available(iOS 16.0, macOS 13.0, *)
+nonisolated enum MumblePing {
+    /// Richiesta: 4 byte a zero e 8 di identificativo. Risposta: versione (4),
+    /// lo stesso identificativo (8), utenti (4), massimo (4), banda (4).
+    static func users(on server: MumbleServer, timeout: Duration = .seconds(3)) async -> Int? {
+        guard let port = NWEndpoint.Port(rawValue: server.port) else { return nil }
+        let connection = NWConnection(host: NWEndpoint.Host(server.host), port: port, using: .udp)
+        let queue = DispatchQueue(label: "mumble ping \(server.host)")
+        let ident = (0 ..< 8).map { _ in UInt8.random(in: 0 ... 255) }
+        let request = Data([0, 0, 0, 0] + ident)
+        let reply: Data? = await withCheckedContinuation { cont in
+            let once = OnceValue<Data?>(cont)
+            connection.stateUpdateHandler = { state in
+                switch state {
+                case .ready:
+                    connection.send(content: request, completion: .contentProcessed { _ in })
+                    connection.receiveMessage { data, _, _, _ in once.resume(data) }
+                case .failed, .waiting, .cancelled:
+                    once.resume(nil)
+                default: break
+                }
+            }
+            connection.start(queue: queue)
+            queue.asyncAfter(deadline: .now() + timeout.seconds) { once.resume(nil) }
+        }
+        connection.cancel()
+        guard let reply else { return nil }
+        let b = [UInt8](reply)
+        guard b.count >= 24, Array(b[4 ..< 12]) == ident else { return nil }
+        let users = b[12 ..< 16].reduce(0) { $0 << 8 | Int($1) }
+        return users <= 100_000 ? users : nil
+    }
+}
+
 /// Come Once, per una continuazione che restituisce un valore.
 nonisolated final class OnceValue<T: Sendable>: @unchecked Sendable {
     private var cont: CheckedContinuation<T, Never>?

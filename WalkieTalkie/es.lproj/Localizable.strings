@@ -485,6 +485,8 @@
 "live_refresh" = "Actualizar";
 "live_speaking" = "Habla: %@";
 "live_listeners" = "%d personas en el canal";
+"live_people_online" = "%d personas conectadas";
+"live_poc_pick" = "Elige un servidor de la lista para conectarte.";
 "live_scan_holding" = "Escaneo detenido, alguien habla";
 "live_scan_searching" = "Escaneando";
 "live_silence" = "Nadie habla ahora";

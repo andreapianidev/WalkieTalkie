@@ -107,6 +107,24 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
+### [4.0.1] (148), unreleased
+
+#### Fixed
+- **Talky no longer logs in to public Mumble servers while searching for POC
+  channels.** The search used to enter up to 48 servers of the public list and
+  leave at once, which their operators saw as a stream of connections
+  ([#12](https://github.com/andreapianidev/WalkieTalkie/issues/12), thanks to
+  @pilot51). It now asks each server how many people it has with Mumble's
+  connectionless ping, the one the official client uses for its server list,
+  and connects only to the server you choose.
+
+#### Changed
+- **The POC list shows servers**, with how many people are online. Pick one
+  and Talky enters its busiest channel. Nothing connects by itself any more:
+  not on opening POC, and not when a server fails.
+- **SCAN is CB only.** On POC it meant entering and leaving one public server
+  after another.
+
 ### [4.0] (146), in review since 10 November 2026
 
 Same version number as the iPhone from now on: 2.1.1 was renamed 4.0 before it
@@ -238,6 +256,24 @@ Sandboxed, no ads, no tracking.
 ---
 
 ## Talky iOS
+
+### [4.0.1] (148), unreleased
+
+#### Fixed
+- **Talky no longer logs in to public Mumble servers while searching for POC
+  channels.** The search used to enter up to 48 servers of the public list and
+  leave at once, which their operators saw as a stream of connections
+  ([#12](https://github.com/andreapianidev/WalkieTalkie/issues/12), thanks to
+  @pilot51). It now asks each server how many people it has with Mumble's
+  connectionless ping, the one the official client uses for its server list,
+  and connects only to the server you choose.
+
+#### Changed
+- **The POC list shows servers**, with how many people are online. Pick one
+  and Talky enters its busiest channel. Nothing connects by itself any more:
+  not on opening POC, and not when a server fails.
+- **SCAN is CB only.** On POC it meant entering and leaving one public server
+  after another.
 
 ### [4.0] (146), in review since 10 November 2026
 

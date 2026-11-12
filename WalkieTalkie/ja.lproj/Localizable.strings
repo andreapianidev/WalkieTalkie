@@ -480,6 +480,8 @@
 "live_refresh" = "更新";
 "live_speaking" = "発言中: %@";
 "live_listeners" = "チャンネルに%d人";
+"live_people_online" = "%d人が接続中";
+"live_poc_pick" = "リストからサーバーを選んで接続してください。";
 "live_scan_holding" = "誰かが話しているのでスキャン停止中";
 "live_scan_searching" = "スキャン中";
 "live_silence" = "今は誰も話していません";

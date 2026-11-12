@@ -479,6 +479,8 @@
 "live_refresh" = "Atualizar";
 "live_speaking" = "Falando: %@";
 "live_listeners" = "%d pessoas no canal";
+"live_people_online" = "%d pessoas conectadas";
+"live_poc_pick" = "Escolha um servidor da lista para conectar.";
 "live_scan_holding" = "Varredura parada, alguém está falando";
 "live_scan_searching" = "Varrendo";
 "live_silence" = "Ninguém está falando agora";

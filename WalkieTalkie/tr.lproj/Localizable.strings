@@ -479,6 +479,8 @@
 "live_refresh" = "Yenile";
 "live_speaking" = "Konuşan: %@";
 "live_listeners" = "Kanalda %d kişi";
+"live_people_online" = "%d kişi çevrimiçi";
+"live_poc_pick" = "Bağlanmak için listeden bir sunucu seç.";
 "live_scan_holding" = "Tarama durdu, biri konuşuyor";
 "live_scan_searching" = "Taranıyor";
 "live_silence" = "Şu an kimse konuşmuyor";

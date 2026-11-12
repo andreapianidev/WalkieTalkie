@@ -479,6 +479,8 @@
 "live_refresh" = "Segarkan";
 "live_speaking" = "Bicara: %@";
 "live_listeners" = "%d orang di saluran";
+"live_people_online" = "%d orang online";
+"live_poc_pick" = "Pilih server dari daftar untuk terhubung.";
 "live_scan_holding" = "Pemindaian berhenti, ada yang bicara";
 "live_scan_searching" = "Memindai";
 "live_silence" = "Tidak ada yang bicara sekarang";

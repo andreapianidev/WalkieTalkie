@@ -1,9 +1,10 @@
 //creato da Andrea Piani - 16/10/26 - https://www.andreapiani.com - MumbleListener.swift
 //  Talky
 //
-//  POC vero: canali pubblici Mumble, solo in ascolto. Accesso anonimo con
-//  un nome Talky, microfono mai aperto, noi stessi in muto. Portato da
-//  RadioKit di Etere.
+//  POC vero: canali pubblici Mumble. Accesso anonimo con un nome Talky,
+//  noi stessi in muto finche' non si parla, e solo sul server scelto da chi
+//  usa Talky: la lista si fa con il ping UDP, senza entrare (issue #12).
+//  Portato da RadioKit di Etere.
 
 import AVFoundation
 
@@ -77,70 +78,15 @@ nonisolated private final class ServerListReader: NSObject, XMLParserDelegate {
     }
 }
 
-/// Un canale con qualcuno dentro, trovato leggendo l'albero di un server.
+/// Un server pubblico con qualcuno collegato, come lo dice il suo ping.
+/// `channel` e' vuoto finche' non si entra: il canale si sa solo dopo che
+/// chi usa Talky ha scelto il server, e allora si va in quello con piu' persone.
 nonisolated struct MumbleLiveChannel: Sendable, Equatable, Hashable, Identifiable {
     var server: MumbleServer
     var channel: String
     var users: Int
 
     var id: String { "\(server.id)/\(channel)" }
-}
-
-/// Entra il tempo di leggere l'albero dei canali e chi c'e' dentro, poi esce.
-@available(iOS 16.0, macOS 13.0, *)
-nonisolated enum MumbleScout {
-    static func liveChannels(on server: MumbleServer, username: String) async throws -> [MumbleLiveChannel] {
-        let link = StreamLink(host: server.host, port: server.port)
-        try await link.open(timeout: .seconds(6))
-        defer { link.close() }
-        link.send(MumbleControl.version())
-        link.send(MumbleControl.authenticate(user: username, password: ""))
-
-        let reading = Task { () throws -> (channels: [UInt32: MumbleChannel], seats: [UInt32: UInt32], me: UInt32?)? in
-            var framer = MumbleFramer()
-            var channels: [UInt32: MumbleChannel] = [:]
-            var seats: [UInt32: UInt32] = [:]
-            for try await bytes in link.bytes {
-                for (type, body) in framer.push(bytes) {
-                    guard let kind = MumbleMessage(rawValue: type), let f = ProtoFields(body) else { continue }
-                    switch kind {
-                    case .channelState:
-                        guard let id = f.uint32(1) else { continue }
-                        var c = channels[id] ?? MumbleChannel(id: id, parent: nil, name: "")
-                        if let p = f.uint32(2) { c.parent = p }
-                        if let n = f.string(3) { c.name = n }
-                        channels[id] = c
-                    case .userState:
-                        if let s = f.uint32(1) { seats[s] = f.uint32(5) ?? seats[s] ?? 0 }
-                    case .serverSync:
-                        return (channels, seats, f.uint32(1))
-                    case .reject:
-                        throw LinkError.closed(MumbleControl.problem(f.int(1)))
-                    default:
-                        continue
-                    }
-                }
-            }
-            return nil
-        }
-        let timeout = Task {
-            try? await Task.sleep(for: .seconds(8))
-            reading.cancel()
-            link.close()
-        }
-        defer { timeout.cancel() }
-        guard let tree = try await reading.value else { throw LinkError.timeout }
-
-        var counts: [UInt32: Int] = [:]
-        for (session, channel) in tree.seats where session != tree.me {
-            counts[channel, default: 0] += 1
-        }
-        return counts.compactMap { id, users in
-            guard let name = tree.channels[id]?.name, !MumbleListener.isIdle(name) else { return nil }
-            return MumbleLiveChannel(server: server, channel: name, users: users)
-        }
-        .sorted { $0.users > $1.users }
-    }
 }
 
 /// Mumble sul canale di controllo TLS, voce nei messaggi UDPTunnel.

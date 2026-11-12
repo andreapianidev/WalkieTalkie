@@ -481,6 +481,8 @@
 "live_refresh" = "Muat semula";
 "live_speaking" = "Bercakap: %@";
 "live_listeners" = "%d orang dalam saluran";
+"live_people_online" = "%d orang dalam talian";
+"live_poc_pick" = "Pilih pelayan daripada senarai untuk bersambung.";
 "live_scan_holding" = "Imbasan berhenti, ada orang bercakap";
 "live_scan_searching" = "Mengimbas";
 "live_silence" = "Tiada sesiapa bercakap sekarang";
