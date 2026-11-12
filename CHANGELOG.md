@@ -264,7 +264,7 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [4.1] (Xcode Cloud build 228), TestFlight beta since 12 November 2026
+### [4.1] (Xcode Cloud build 237), in review since 12 November 2026
 
 #### Added
 - **Talky on the Apple Watch** (watchOS 10+), asked for by
@@ -281,7 +281,7 @@ Sandboxed, no ads, no tracking.
 - **Thank you**, in Settings next to "Write to me": the people who made Talky
   better and what they did, with a link to where they did it.
 
-### [4.0.1] (Xcode Cloud build 222), in review since 12 November 2026
+### [4.0.1] (Xcode Cloud build 222), withdrawn from review on 12 November 2026 and shipped as 4.1
 
 #### Fixed
 - **Talky no longer logs in to public Mumble servers while searching for POC
