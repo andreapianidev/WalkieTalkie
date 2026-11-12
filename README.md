@@ -1,6 +1,6 @@
-// Created by Andrea Piani - 22/05/26 - https://www.andreapiani.com - README.md
+<!-- Created by Andrea Piani - 22/05/26 - https://www.andreapiani.com - README.md -->
 
-# Talky: Walkie-Talkie & Internet Radio (Source-Available iOS + Android App)
+# Talky: Walkie-Talkie & Internet Radio (Source-Available iOS, macOS, watchOS + Android App)
 
 <img src="docs/screenshots/ios/app_icon.jpg" alt="Talky" width="120">
 
@@ -9,6 +9,7 @@
 [![iOS](https://img.shields.io/badge/iOS-15.6+-blue.svg)](https://developer.apple.com/ios/)
 [![Android APK](https://img.shields.io/badge/Android-Download%20APK-3ddc84.svg?logo=android&logoColor=white)](https://github.com/andreapianidev/WalkieTalkie/releases/download/android-v1.1/Talky-Android-v1.1.apk)
 [![macOS](https://img.shields.io/badge/macOS-26+%20(macTalky)-9aa0a6.svg?logo=apple&logoColor=white)](#-mactalky-macos)
+[![watchOS](https://img.shields.io/badge/watchOS-Talky%204.1%20beta-9aa0a6.svg?logo=apple&logoColor=white)](#-new-in-talky-41-beta-talky-on-the-apple-watch)
 [![Swift](https://img.shields.io/badge/Swift-5.9+-orange.svg)](https://swift.org/)
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.0+-7f52ff.svg?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
 [![Xcode](https://img.shields.io/badge/Xcode-16.0+-blue.svg)](https://developer.apple.com/xcode/)
@@ -16,7 +17,7 @@
 [![Commercial use: NOT permitted](https://img.shields.io/badge/Commercial%20use-NOT%20permitted-critical.svg)](#-license)
 [![Source available](https://img.shields.io/badge/Source-Available-brightgreen.svg)]()
 
-> **Talky** is a SwiftUI iOS app that combines **offline peer-to-peer push-to-talk** (Multipeer Connectivity), **real live radio** (HF shortwave and the **CB 27 MHz band** from public KiwiSDR receivers, public POC channels on Mumble, no fake audio anywhere), a **global internet radio browser** (330+ streaming stations across 80+ countries; the iPhone has no FM receiver, and as of 2.46 the app no longer implies it does), **Live Activities + Dynamic Island** controls (iOS 16.2+), a complete **Pro tier** (themes, animated backgrounds, equalizer, recording, sleep timer) and a production-grade **AdMob monetization stack** for the free tier.
+> **Talky** runs on **iPhone and iPad**, on the **Mac** ([macTalky](#-mactalky-macos), macOS 26+), on the **Apple Watch** ([4.1, beta](#-new-in-talky-41-beta-talky-on-the-apple-watch)) and on **Android**. iPhone, Mac and Android talk to each other on the same Wi-Fi; the Watch transmits through the iPhone. The SwiftUI app combines **offline peer-to-peer push-to-talk** (Multipeer Connectivity), **real live radio** (HF shortwave and the **CB 27 MHz band** from public KiwiSDR receivers, public POC channels on Mumble, no fake audio anywhere), a **global internet radio browser** (330+ streaming stations across 80+ countries; the iPhone has no FM receiver, and as of 2.46 the app no longer implies it does), **Live Activities + Dynamic Island** controls (iOS 16.2+), a complete **Pro tier** (themes, animated backgrounds, equalizer, recording, sleep timer) and a production-grade **AdMob monetization stack** for the free tier.
 
 > ⚠️ **This project is source-available, NOT MIT/Apache/BSD/GPL.** It is distributed under the **[PolyForm Noncommercial License 1.0.0](LICENSE)**: you may read, fork, modify and run it for personal/educational/non-profit purposes, but **commercial use (including shipping a derived app on any app store, paid services, ad-supported services and consulting deliverables) is strictly prohibited without a separate written commercial license.** See [License](#-license) for details and commercial-license contact.
 
