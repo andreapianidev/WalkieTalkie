@@ -479,6 +479,8 @@
 "live_refresh" = "Odśwież";
 "live_speaking" = "Mówi: %@";
 "live_listeners" = "Osoby na kanale: %d";
+"live_people_online" = "Osoby online: %d";
+"live_poc_pick" = "Wybierz serwer z listy, aby się połączyć.";
 "live_scan_holding" = "SCAN zatrzymany, ktoś mówi";
 "live_scan_searching" = "Skanowanie";
 "live_silence" = "Teraz nikt nie mówi";

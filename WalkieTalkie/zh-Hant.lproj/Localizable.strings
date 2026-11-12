@@ -481,6 +481,8 @@
 "live_refresh" = "重新整理";
 "live_speaking" = "正在說話：%@";
 "live_listeners" = "頻道內%d人";
+"live_people_online" = "%d 人在線";
+"live_poc_pick" = "從列表中選擇一個伺服器進行連線。";
 "live_scan_holding" = "有人在說話，掃描已暫停";
 "live_scan_searching" = "正在掃描";
 "live_silence" = "現在沒有人說話";

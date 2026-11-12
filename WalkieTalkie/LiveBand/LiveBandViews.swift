@@ -97,6 +97,9 @@ extension LiveRadio {
         if band == .poc, isScouting, pocChannels.isEmpty {
             return "live_scouting".localized
         }
+        if band == .poc, room == nil, currentPOC == nil, state == .idle || state == .connecting, !pocChannels.isEmpty {
+            return "live_poc_pick".localized
+        }
         switch state {
         case .idle, .connecting:
             return "live_connecting".localized
@@ -426,31 +429,33 @@ struct LiveSecondaryRow: View {
                     textButton("CH -", label: "live_cb_prev".localized, width: 60) { live.step(-1) }
                     Spacer()
                 }
-                Button(action: {
-                    HapticManager.shared.lightTap()
-                    live.toggleScan()
-                }) {
-                    HStack(spacing: 4) {
-                        Text("SCAN")
-                            .font(.system(size: 13, weight: .bold, design: .monospaced))
-                        if !live.proGate() {
-                            Text("PRO")
-                                .font(.system(size: 8, weight: .heavy))
-                                .foregroundColor(.black)
-                                .padding(.horizontal, 4)
-                                .padding(.vertical, 1)
-                                .background(Capsule().fill(Color.yellow))
-                        }
-                    }
-                    .foregroundColor(live.isScanning ? .black : .white)
-                    .frame(minWidth: 64, minHeight: 44)
-                    .padding(.horizontal, 6)
-                    .background(Capsule().fill(live.isScanning ? Color.yellow : Color.black))
-                }
-                .accessibilityLabel("live_scan".localized)
-                .accessibilityAddTraits(live.isScanning ? [.isSelected, .isButton] : .isButton)
-                Spacer()
+                // Lo SCAN e' solo della CB: sul POC vorrebbe dire entrare e
+                // uscire da un server pubblico dopo l'altro (issue #12).
                 if live.band == .cb {
+                    Button(action: {
+                        HapticManager.shared.lightTap()
+                        live.toggleScan()
+                    }) {
+                        HStack(spacing: 4) {
+                            Text("SCAN")
+                                .font(.system(size: 13, weight: .bold, design: .monospaced))
+                            if !live.proGate() {
+                                Text("PRO")
+                                    .font(.system(size: 8, weight: .heavy))
+                                    .foregroundColor(.black)
+                                    .padding(.horizontal, 4)
+                                    .padding(.vertical, 1)
+                                    .background(Capsule().fill(Color.yellow))
+                            }
+                        }
+                        .foregroundColor(live.isScanning ? .black : .white)
+                        .frame(minWidth: 64, minHeight: 44)
+                        .padding(.horizontal, 6)
+                        .background(Capsule().fill(live.isScanning ? Color.yellow : Color.black))
+                    }
+                    .accessibilityLabel("live_scan".localized)
+                    .accessibilityAddTraits(live.isScanning ? [.isSelected, .isButton] : .isButton)
+                    Spacer()
                     textButton("CH +", label: "live_cb_next".localized, width: 60) { live.step(1) }
                 } else {
                     circleButton("arrow.clockwise", label: "live_refresh".localized) { live.rescanPOC() }
@@ -820,8 +825,9 @@ struct LiveChannelsSheet: View {
                                 live.selectPOC(i)
                                 dismiss()
                             }) {
-                                row(title: ch.channel,
-                                    subtitle: "\(ch.server.name) · " + String(format: "live_listeners".localized, ch.users),
+                                row(title: ch.server.name,
+                                    subtitle: [ch.server.country, String(format: "live_people_online".localized, ch.users)]
+                                        .filter { !$0.isEmpty }.joined(separator: " · "),
                                     selected: i == live.pocIndex)
                             }
                         }

@@ -80,13 +80,16 @@ final class LiveRadio: ObservableObject {
     @Published private(set) var hfIndex = 0
     @Published private(set) var tuning: Tuning = HFChannel.all[0].tuning
     @Published private(set) var pocChannels: [MumbleLiveChannel] = []
-    @Published private(set) var pocIndex = 0
+    /// Il server POC scelto da chi usa Talky, nil finche' non ne sceglie uno:
+    /// a un server pubblico ci si collega solo dopo una scelta (issue #12).
+    @Published private(set) var pocIndex: Int?
     @Published private(set) var isScouting = false
     /// Squelch CB acceso: fra un passaggio e l'altro non si sente il fruscio.
     @Published private(set) var squelchOn: Bool
     /// C'e' un segnale sulla frequenza CB adesso.
     @Published private(set) var squelchOpen = false
-    /// Scansione POC e CB: salta da un canale all'altro e si ferma quando qualcuno parla.
+    /// Scansione CB: salta da un canale all'altro e si ferma quando qualcuno parla.
+    /// Sul POC non c'e': vorrebbe dire entrare e uscire da un server dopo l'altro.
     @Published private(set) var isScanning = false
     @Published private(set) var scanHolding = false
     @Published private(set) var state: LinkState = .idle
@@ -140,7 +143,7 @@ final class LiveRadio: ObservableObject {
 
     var hfChannels: [HFChannel] { HFChannel.all }
     var currentHF: HFChannel { HFChannel.all[hfIndex] }
-    var currentPOC: MumbleLiveChannel? { pocChannels.indices.contains(pocIndex) ? pocChannels[pocIndex] : nil }
+    var currentPOC: MumbleLiveChannel? { pocIndex.flatMap { pocChannels.indices.contains($0) ? pocChannels[$0] : nil } }
     var isOn: Bool { band != nil }
 
     private let player = LivePlayer()
@@ -246,12 +249,15 @@ final class LiveRadio: ObservableObject {
             sourceName = ""
             sourcePlace = ""
             receiverKm = nil
-            if room != nil {
+            // Si torna solo nella stanza o sul server scelto prima; la lista
+            // si rilegge con il ping, senza entrare da nessuna parte.
+            if room != nil || currentPOC != nil {
                 connectPOC()
-            } else if pocChannels.isEmpty || (scoutedAt.map { Date().timeIntervalSince($0) > 600 } ?? true) {
-                scoutPOC()
             } else {
-                connectPOC()
+                state = .idle
+            }
+            if room == nil, pocChannels.isEmpty || (scoutedAt.map { Date().timeIntervalSince($0) > 600 } ?? true) {
+                scoutPOC()
             }
         }
     }
@@ -279,7 +285,8 @@ final class LiveRadio: ObservableObject {
             stepCB(delta)
         case .poc:
             guard !pocChannels.isEmpty else { return }
-            selectPOC((pocIndex + delta + pocChannels.count) % pocChannels.count)
+            let from = pocIndex ?? (delta > 0 ? -1 : 0)
+            selectPOC((from + delta + pocChannels.count) % pocChannels.count)
         case nil:
             break
         }
@@ -414,27 +421,25 @@ final class LiveRadio: ObservableObject {
         connectPOC()
     }
 
-    /// Rilegge i server pubblici per trovare canali con persone dentro adesso.
+    /// Rilegge i server pubblici per trovare quelli con persone collegate adesso.
     func rescanPOC() {
         guard band == .poc else { return }
         room = nil
         disconnect()
         pocChannels = []
-        pocIndex = 0
+        pocIndex = nil
         badServers = []
         scoutPOC()
     }
 
-    // MARK: scansione POC
+    // MARK: scansione CB
 
-    /// Come lo scan dei preferiti di Etere: circa 7 secondi su un canale muto,
-    /// fermo finche' qualcuno parla, avanti 4 secondi dopo che ha finito.
     func toggleScan() {
         isScanning ? stopScan() : startScan()
     }
 
     func startScan() {
-        guard band == .poc || band == .cb, !isScanning else { return }
+        guard band == .cb, !isScanning else { return }
         guard proGate() else {
             proPrompt = .scan
             return
@@ -442,12 +447,11 @@ final class LiveRadio: ObservableObject {
         isScanning = true
         scanHolding = false
         scanSince = Date()
-        let scanning = band
         scanTask = Task { [weak self] in
             while !Task.isCancelled {
-                try? await Task.sleep(for: .milliseconds(scanning == .cb ? 100 : 250))
-                guard let self, self.isScanning, self.band == scanning else { return }
-                scanning == .cb ? self.cbScanTick() : self.scanTick()
+                try? await Task.sleep(for: .milliseconds(100))
+                guard let self, self.isScanning, self.band == .cb else { return }
+                self.cbScanTick()
             }
         }
     }
@@ -457,27 +461,6 @@ final class LiveRadio: ObservableObject {
         scanTask = nil
         isScanning = false
         scanHolding = false
-    }
-
-    private func scanTick() {
-        guard pocChannels.count > 1 else { return }
-        let now = Date()
-        if now.timeIntervalSince(lastVoice) < 0.8 {
-            scanHolding = true
-            return
-        }
-        if scanHolding {
-            guard now.timeIntervalSince(lastVoice) > 4 else { return }
-            scanHolding = false
-            scanSince = now
-            step(1)
-            return
-        }
-        let waited = now.timeIntervalSince(scanSince)
-        if waited > (state == .online ? 7 : 8) {
-            scanSince = now
-            step(1)
-        }
     }
 
     /// Come lo SCAN di un baracchino: un attimo su ogni canale, fermo finche'
@@ -530,7 +513,7 @@ final class LiveRadio: ObservableObject {
         player.start()
         switch band {
         case .hf, .cb: connectHF(fresh: true)
-        case .poc: pocChannels.isEmpty ? scoutPOC() : connectPOC()
+        case .poc: resumePOC()
         }
         proPrompt = .background
     }
@@ -598,7 +581,7 @@ final class LiveRadio: ObservableObject {
         player.start()
         switch band {
         case .hf, .cb: connectHF(fresh: true)
-        case .poc: pocChannels.isEmpty ? scoutPOC() : connectPOC()
+        case .poc: resumePOC()
         }
     }
 
@@ -823,13 +806,9 @@ final class LiveRadio: ObservableObject {
         onReport(channel.server.id, reason)
         MumbleManners.hide(server: channel.server.id)
         pocChannels.removeAll { $0.server == channel.server }
-        pocIndex = min(pocIndex, max(0, pocChannels.count - 1))
-        if pocChannels.isEmpty {
-            disconnect()
-            state = .refused(.down)
-        } else {
-            connectPOC()
-        }
+        pocIndex = nil
+        disconnect()
+        state = pocChannels.isEmpty ? .refused(.down) : .idle
     }
 
     // MARK: stanze private
@@ -877,16 +856,30 @@ final class LiveRadio: ObservableObject {
             proPrompt = .freeTime
             return
         }
-        if pocChannels.isEmpty { scoutPOC() } else { connectPOC() }
+        resumePOC()
     }
 
     // MARK: POC
 
+    /// Riprende il POC pubblico: sul server gia' scelto, se c'e'; altrimenti
+    /// resta in attesa di una scelta, e la lista si legge solo se e' vuota.
+    private func resumePOC() {
+        if room != nil || currentPOC != nil {
+            connectPOC()
+        } else if pocChannels.isEmpty {
+            scoutPOC()
+        } else {
+            state = .idle
+        }
+    }
+
+    /// Cerca i server pubblici con persone collegate, con il ping UDP senza
+    /// connessione (MumblePing). Qui non si entra in nessun server: ci si
+    /// collega solo a quello che sceglie chi usa Talky.
     private func scoutPOC() {
         scoutTask?.cancel()
         isScouting = true
-        state = .connecting
-        let name = username
+        if mumble == nil { state = .connecting }
         scoutTask = Task { [weak self] in
             var servers = MumbleDirectory.cached()
             if let fresh = try? await MumbleDirectory.fetch() { servers = fresh }
@@ -894,16 +887,21 @@ final class LiveRadio: ObservableObject {
             let ordered = Self.order(servers.filter { !hidden.contains($0.id) })
             var found: [MumbleLiveChannel] = []
             var offset = 0
-            let batch = 6, maxServers = 48, enough = 16
+            let batch = 12, maxServers = 96, enough = 20
             while offset < min(ordered.count, maxServers), found.count < enough, !Task.isCancelled {
                 let slice = Array(ordered[offset ..< min(offset + batch, ordered.count)])
                 offset += batch
-                let live = await withTaskGroup(of: [MumbleLiveChannel].self) { group in
+                let live = await withTaskGroup(of: MumbleLiveChannel?.self) { group in
                     for server in slice {
-                        group.addTask { (try? await MumbleScout.liveChannels(on: server, username: name + "s")) ?? [] }
+                        group.addTask {
+                            guard let users = await MumblePing.users(on: server), users > 0 else { return nil }
+                            return MumbleLiveChannel(server: server, channel: "", users: users)
+                        }
                     }
                     var all: [MumbleLiveChannel] = []
-                    for await list in group { all += list.prefix(2) }
+                    for await one in group {
+                        if let one { all.append(one) }
+                    }
                     return all
                 }
                 guard !Task.isCancelled, let self else { return }
@@ -913,19 +911,20 @@ final class LiveRadio: ObservableObject {
             guard !Task.isCancelled, let self else { return }
             self.isScouting = false
             self.scoutedAt = Date()
-            if found.isEmpty, self.band == .poc { self.state = .refused(.down) }
+            // Nessun collegamento da qui: si aspetta la scelta.
+            if self.band == .poc, self.room == nil, self.mumble == nil, self.currentPOC == nil {
+                self.state = self.pocChannels.isEmpty ? .refused(.down) : .idle
+            }
         }
     }
 
+    /// Il server scelto resta scelto anche se il ping non lo ritrova.
     private func publishScouted(_ found: [MumbleLiveChannel]) {
         let current = currentPOC
-        pocChannels = found.filter { !badServers.contains($0.server.id) }.sorted { $0.users > $1.users }
-        if let current, let i = pocChannels.firstIndex(of: current) {
-            pocIndex = i
-        } else if current == nil, !pocChannels.isEmpty, band == .poc {
-            pocIndex = 0
-            connectPOC()
-        }
+        var list = found.filter { !badServers.contains($0.server.id) }.sorted { $0.users > $1.users }
+        if let current, !list.contains(where: { $0.server == current.server }) { list.append(current) }
+        pocChannels = list
+        pocIndex = current.flatMap { c in list.firstIndex { $0.server == c.server } }
     }
 
     /// Prima i server che parlano di radio, poi quelli del paese di chi
@@ -945,7 +944,8 @@ final class LiveRadio: ObservableObject {
         sourceName = target.server.name
         sourcePlace = target.server.country
         channelName = room?.display ?? target.channel
-        audience = room == nil ? target.users : nil
+        // Quante persone ci sono nel canale lo dice il server, una volta dentro.
+        audience = nil
         wasOnline = false
         let listener = MumbleListener(target: target, username: username, room: room)
         mumble = listener
@@ -953,7 +953,7 @@ final class LiveRadio: ObservableObject {
         Task { await listener.connect() }
     }
 
-    private func pocFailed(refused: Bool) {
+    private func pocFailed(_ problem: LiveProblem, refused: Bool) {
         if room != nil {
             // La stanza non si sostituisce con un canale pubblico: si riprova
             // una volta, poi si dice che il server non risponde.
@@ -983,17 +983,14 @@ final class LiveRadio: ObservableObject {
             return
         }
         retried = false
-        // Canale non raggiungibile: si toglie dalla lista e si passa al prossimo.
+        // Server non raggiungibile: si toglie dalla lista e ci si ferma. Su un
+        // altro si va solo se lo sceglie chi usa Talky.
         guard let bad = currentPOC else { return }
         badServers.insert(bad.server.id)
         pocChannels.removeAll { $0.server == bad.server }
-        pocIndex = min(pocIndex, max(0, pocChannels.count - 1))
-        if pocChannels.isEmpty {
-            disconnect()
-            state = isScouting ? .connecting : .refused(.down)
-        } else {
-            connectPOC()
-        }
+        pocIndex = nil
+        disconnect()
+        state = refused ? .refused(problem) : .dropped(problem)
     }
 
     // MARK: flussi
@@ -1031,9 +1028,9 @@ final class LiveRadio: ObservableObject {
                 state = .online
                 startListeningClock()
             case .refused(let p):
-                band == .poc ? pocFailed(refused: true) : hfFailed(p, refused: true)
+                band == .poc ? pocFailed(p, refused: true) : hfFailed(p, refused: true)
             case .dropped(let p):
-                band == .poc ? pocFailed(refused: false) : hfFailed(p, refused: false)
+                band == .poc ? pocFailed(p, refused: false) : hfFailed(p, refused: false)
             case .idle, .connecting:
                 break
             }

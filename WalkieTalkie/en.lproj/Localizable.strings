@@ -479,6 +479,8 @@
 "live_refresh" = "Refresh";
 "live_speaking" = "Speaking: %@";
 "live_listeners" = "%d people in the channel";
+"live_people_online" = "%d people online";
+"live_poc_pick" = "Choose a server from the list to connect.";
 "live_scan_holding" = "Scan stopped, someone is talking";
 "live_scan_searching" = "Scanning";
 "live_silence" = "Nobody is talking right now";

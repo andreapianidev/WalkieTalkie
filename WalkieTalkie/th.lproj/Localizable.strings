@@ -480,6 +480,8 @@
 "live_refresh" = "รีเฟรช";
 "live_speaking" = "กำลังพูด: %@";
 "live_listeners" = "มี %d คนในช่อง";
+"live_people_online" = "ออนไลน์ %d คน";
+"live_poc_pick" = "เลือกเซิร์ฟเวอร์จากรายการเพื่อเชื่อมต่อ";
 "live_scan_holding" = "หยุดสแกน มีคนกำลังพูด";
 "live_scan_searching" = "กำลังสแกน";
 "live_silence" = "ตอนนี้ไม่มีใครพูด";
