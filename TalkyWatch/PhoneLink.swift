@@ -7,10 +7,12 @@
 //  anche con l'iPhone lontano.
 
 import Foundation
+import OSLog
 import WatchConnectivity
 
 final class PhoneLink: NSObject, ObservableObject {
     static let shared = PhoneLink()
+    private let log = os.Logger(subsystem: "com.Andrea-Piani.WalkieTalkie.watchkitapp", category: "phone")
 
     @Published private(set) var stations: [WristStation] = []
     @Published private(set) var favorites: [WristStation] = []
@@ -42,13 +44,15 @@ final class PhoneLink: NSObject, ObservableObject {
     func ptt(_ down: Bool) async -> Push {
         let session = WCSession.default
         guard session.activationState == .activated, session.isReachable else { return .phoneAway }
-        return await withCheckedContinuation { cont in
+        let result: Push = await withCheckedContinuation { cont in
             session.sendMessage([WristKey.ptt: down], replyHandler: { reply in
                 cont.resume(returning: .sent(peers: reply[WristKey.peers] as? Int ?? 0))
             }, errorHandler: { _ in
                 cont.resume(returning: .phoneAway)
             })
         }
+        log.notice("PTT \(down ? "premuto" : "lasciato"): \(String(describing: result))")
+        return result
     }
 
     private func apply(_ context: [String: Any]) {
@@ -61,6 +65,7 @@ final class PhoneLink: NSObject, ObservableObject {
         phonePro = context[WristKey.pro] as? Bool ?? false
         peers = context[WristKey.peers] as? Int ?? 0
         channel = context[WristKey.channel] as? String ?? ""
+        log.notice("dall'iPhone \(self.stations.count) stazioni, \(self.favorites.count) preferite, \(self.peers) collegati")
     }
 }
 

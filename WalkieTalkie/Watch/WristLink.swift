@@ -8,6 +8,7 @@
 
 import Combine
 import Foundation
+import OSLog
 import WatchConnectivity
 
 final class WristLink: NSObject {
@@ -17,9 +18,22 @@ final class WristLink: NSObject {
     /// La raccoglie ContentView, che ha il walkie e i suoi controlli.
     static let pttRequest = Notification.Name("talky.wrist.ptt")
 
+    private let log = os.Logger(subsystem: "com.Andrea-Piani.WalkieTalkie", category: "wrist")
     private var bag: Set<AnyCancellable> = []
     private var peers = 0
     private var channel = ""
+    /// L'ultimo contesto mandato: all'avvio push() arriva da piu' parti
+    /// (attivazione, stato del Watch, walkie, preferite, Pro) e senza questo
+    /// si rimandavano 19 KB uguali cinque volte in due secondi.
+    private var sent: Snapshot?
+
+    private struct Snapshot: Equatable {
+        let catalog: Data
+        let favorites: [Int]
+        let pro: Bool
+        let peers: Int
+        let channel: String
+    }
 
     private var session: WCSession? { WCSession.isSupported() ? WCSession.default : nil }
 
@@ -46,7 +60,10 @@ final class WristLink: NSObject {
     /// anche se in quel momento e' spento.
     private func push() {
         guard let session, session.activationState == .activated,
-              session.isPaired, session.isWatchAppInstalled else { return }
+              session.isPaired, session.isWatchAppInstalled else {
+            log.notice("Watch non pronto: niente contesto")
+            return
+        }
         let radio = RadioManager.shared
         let stations = radio.radioStations.map {
             WristStation(id: $0.id, name: $0.name, flag: $0.flagEmoji, place: $0.countryName,
@@ -54,13 +71,22 @@ final class WristLink: NSObject {
         }
         guard let catalog = try? JSONEncoder().encode(stations) else { return }
         let favorites = radio.radioStations.map(\.id).filter { radio.favoriteStationIds.contains($0) }
-        try? session.updateApplicationContext([
-            WristKey.catalog: catalog,
-            WristKey.favorites: favorites,
-            WristKey.pro: IAPManager.shared.isProUser,
-            WristKey.peers: peers,
-            WristKey.channel: channel,
-        ])
+        let now = Snapshot(catalog: catalog, favorites: favorites, pro: IAPManager.shared.isProUser,
+                           peers: peers, channel: channel)
+        guard now != sent else { return }
+        do {
+            try session.updateApplicationContext([
+                WristKey.catalog: now.catalog,
+                WristKey.favorites: now.favorites,
+                WristKey.pro: now.pro,
+                WristKey.peers: now.peers,
+                WristKey.channel: now.channel,
+            ])
+            sent = now
+            log.notice("al Watch \(stations.count) stazioni, \(favorites.count) preferite, \(now.peers) collegati")
+        } catch {
+            log.error("contesto al Watch non mandato: \(error.localizedDescription)")
+        }
     }
 }
 
@@ -87,6 +113,7 @@ extension WristLink: WCSessionDelegate {
             return
         }
         Task { @MainActor in
+            self.log.notice("PTT dal Watch: \(down ? "premuto" : "lasciato")")
             NotificationCenter.default.post(name: Self.pttRequest, object: down)
             replyHandler([WristKey.peers: self.peers])
         }

@@ -29,6 +29,7 @@ struct TalkyWatchApp: App {
                 phone.start()
                 #if DEBUG
                 if let station = phone.stations.first(where: { $0.id == ShotMode.play }) { await radio.play(station) }
+                if ShotMode.probe { await ShotMode.runProbe(phone) }
                 #endif
             }
         }
