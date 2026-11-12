@@ -262,6 +262,24 @@ struct SettingsPane: View {
                 Link(MacString.sayHello.text, destination: Self.mailURL(topic: "message"))
                 Link(MacString.rateTalky.text, destination: URL(string: "macappstore://apps.apple.com/app/id6748584483?action=write-review")!)
             }
+            Section {
+                ForEach(Thanks.all) { entry in
+                    VStack(alignment: .leading, spacing: 2) {
+                        if let link = entry.link {
+                            Link(entry.who, destination: link).fontWeight(.semibold)
+                        } else {
+                            Text(entry.who).fontWeight(.semibold)
+                        }
+                        Text(entry.why)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            } header: {
+                Text(Thanks.title)
+            } footer: {
+                Text(Thanks.intro)
+            }
             Section(MacString.links.text) {
                 Link(MacString.talkyIPhone.text, destination: URL(string: "https://apps.apple.com/app/id6748584483")!)
                 Link(MacString.talkyAndroid.text, destination: URL(string: "https://github.com/andreapianidev/WalkieTalkie/releases")!)

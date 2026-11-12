@@ -226,6 +226,10 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
             RoomPushToTalk.shared.start()
         }
 
+        // Anche qui e non in una vista: il PTT dal Watch puo' svegliare
+        // Talky in background, prima che esista una scena.
+        WristLink.shared.start()
+
         return true
     }
 

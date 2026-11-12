@@ -31,3 +31,16 @@
 "tour.yourpro.done" = "Faham";
 "tour.yourpro.open" = "Apa yang ada dalam Pro anda";
 "tour.where.settings" = "Tetapan › Pemperibadian";
+
+/* Grazie: chi ha reso Talky migliore, accanto a Scrivimi. */
+"thanks.title" = "Terima kasih";
+"thanks.intro" = "Talky bertambah baik kerana orang-orang ini.";
+"thanks.pilot51" = "Melaporkan bahawa carian POC log masuk dan keluar dari pelayan Mumble awam. Dibaiki dalam 4.0.1.";
+"thanks.yao89" = "Meminta Talky pada Apple Watch. Tiba dalam 4.1.";
+"thanks.joaov41" = "Menghantar pull request yang mengekalkan walkie-talkie hidup di latar belakang.";
+"thanks.kiwi" = "Mereka bentuk KiwiSDR. Setiap pemilik yang berkongsi penerima memberi Talky CB dan gelombang pendek.";
+"thanks.ynard" = "Senarai awam penerima yang membolehkan Talky mencari satu berhampiran anda.";
+"thanks.mumble" = "Mereka yang mengendalikan pelayan Mumble awam: saluran POC milik mereka.";
+"thanks.noaa" = "Data suria dan geomagnet percuma di sebalik jalur dan widget.";
+"thanks.you.title" = "Semua yang menulis";
+"thanks.you" = "Setiap e-mel, isu atau ulasan yang menerangkan masalah ialah kerosakan yang ditemui oleh seseorang yang meluangkan masa. Terima kasih.";

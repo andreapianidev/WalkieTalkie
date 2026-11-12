@@ -1159,6 +1159,16 @@ struct ContentView: View {
         .onReceive(multipeerManager.$receivedInvitation) { invitation in
             showingConnectionAlert = invitation != nil
         }
+        // PTT dal Watch: lo stesso tasto dello schermo, con gli stessi controlli.
+        .onReceive(NotificationCenter.default.publisher(for: WristLink.pttRequest)) { note in
+            if note.object as? Bool == true {
+                if !isTransmitting { startTransmitting() }
+            } else if isTransmitting {
+                stopTransmitting()
+            }
+        }
+        .onAppear { tellWrist() }
+        .onChange(of: connectedWalkiePeerCount) { _ in tellWrist() }
         .alert("error".localized, isPresented: $showingErrorAlert) {
             Button("ok".localized) {
                 multipeerManager.lastError = nil
@@ -1583,6 +1593,11 @@ struct ContentView: View {
         }
     }
     
+    private func tellWrist() {
+        WristLink.shared.walkie(peers: connectedWalkiePeerCount,
+                                channel: multipeerManager.liveActivityChannelDisplayNamePublic)
+    }
+
     private func startTransmitting() {
         FirstTimeEventTracker.shared.fireOnce(FirstTimeEventTracker.Events.pttPress)
 

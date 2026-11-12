@@ -1,0 +1,19 @@
+/* Talky sull'Apple Watch */
+"wr_radio" = "Radio";
+"wr_favorites" = "Favoriten";
+"wr_all" = "Alle Sender";
+"wr_no_catalog" = "Öffne Talky einmal auf dem iPhone: Von dort kommen die Sender.";
+"wr_pro_station" = "Dieser Sender braucht Talky Pro.";
+"wr_stop" = "Stopp";
+"wr_connecting" = "Verbinde…";
+"wr_cant_play" = "Dieser Sender antwortet nicht.";
+"wr_headphones" = "Verbinde Bluetooth-Kopfhörer oder einen Lautsprecher zum Hören.";
+"wr_hold" = "Halten zum Sprechen";
+"wr_talking" = "SENDEN";
+"wr_phone_mic" = "Deine Stimme geht über das iPhone-Mikrofon raus.";
+"wr_peers" = "%d verbunden";
+"wr_nobody" = "Niemand ist mit dem Walkie des iPhone verbunden.";
+"wr_phone_away" = "iPhone nicht erreichbar.";
+"wr_pro_bands" = "Bandbedingungen gehören zu Talky Pro.";
+"wr_best" = "Jetzt am besten";
+"wr_noaa" = "NOAA-Daten nicht verfügbar.";

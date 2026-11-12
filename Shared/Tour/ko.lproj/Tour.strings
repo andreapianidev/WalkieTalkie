@@ -31,3 +31,16 @@
 "tour.yourpro.done" = "확인";
 "tour.yourpro.open" = "Pro에 포함된 기능";
 "tour.where.settings" = "설정 › 개인화";
+
+/* Grazie: chi ha reso Talky migliore, accanto a Scrivimi. */
+"thanks.title" = "감사합니다";
+"thanks.intro" = "Talky는 이분들 덕분에 더 좋아지고 있습니다.";
+"thanks.pilot51" = "POC 검색이 공개 Mumble 서버에 접속했다 나가기를 반복한다고 알려 주었습니다. 4.0.1에서 고쳤습니다.";
+"thanks.yao89" = "Apple Watch용 Talky를 요청했습니다. 4.1에서 나왔습니다.";
+"thanks.joaov41" = "무전기가 백그라운드에서도 살아 있게 하는 풀 리퀘스트를 보내 주었습니다.";
+"thanks.kiwi" = "KiwiSDR를 설계했습니다. 수신기를 공유하는 모든 소유자가 Talky에 CB와 단파를 줍니다.";
+"thanks.ynard" = "Talky가 가까운 수신기를 찾게 해 주는 공개 수신기 목록입니다.";
+"thanks.mumble" = "공개 Mumble 서버를 운영하는 분들. POC 채널은 그분들의 것입니다.";
+"thanks.noaa" = "밴드와 위젯 뒤에 있는 무료 태양 및 지자기 데이터.";
+"thanks.you.title" = "글을 보내 주는 모든 분";
+"thanks.you" = "문제를 설명하는 메일, 이슈, 리뷰 하나하나가 시간을 내어 준 누군가가 찾은 결함입니다. 감사합니다.";

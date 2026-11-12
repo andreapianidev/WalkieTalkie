@@ -132,8 +132,11 @@ nonisolated enum RadioShelf {
     }
 
     private static func reloadControl(_ kind: String) {
+        // Il Watch legge solo appSaysPro: i controlli sono di iPhone e Mac.
+        #if !os(watchOS)
         if #available(iOS 18.0, macOS 26.0, *) {
             ControlCenter.shared.reloadControls(ofKind: kind)
         }
+        #endif
     }
 }

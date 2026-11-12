@@ -1,0 +1,19 @@
+/* Talky sull'Apple Watch */
+"wr_radio" = "Radio";
+"wr_favorites" = "Favourites";
+"wr_all" = "All stations";
+"wr_no_catalog" = "Open Talky on your iPhone once: the stations come from there.";
+"wr_pro_station" = "This station needs Talky Pro.";
+"wr_stop" = "Stop";
+"wr_connecting" = "Connecting…";
+"wr_cant_play" = "This station isn't answering.";
+"wr_headphones" = "Connect Bluetooth headphones or a speaker to listen.";
+"wr_hold" = "Hold to talk";
+"wr_talking" = "TALKING";
+"wr_phone_mic" = "Your voice goes out from the iPhone microphone.";
+"wr_peers" = "%d connected";
+"wr_nobody" = "Nobody connected to the iPhone walkie.";
+"wr_phone_away" = "iPhone out of reach.";
+"wr_pro_bands" = "Band conditions are part of Talky Pro.";
+"wr_best" = "Best now";
+"wr_noaa" = "NOAA data not available.";

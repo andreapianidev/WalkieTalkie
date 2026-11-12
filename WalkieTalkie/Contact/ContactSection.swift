@@ -76,6 +76,7 @@ enum Contact {
 struct ContactSection: View {
     @State private var composing: ContactTopic?
     @State private var showNoMail = false
+    @State private var showThanks = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
@@ -102,11 +103,14 @@ struct ContactSection: View {
                 row("contact_rate".localized, icon: "star.fill") {
                     UIApplication.shared.open(Contact.reviewURL)
                 }
+                Divider()
+                row(Thanks.title, icon: "heart.fill") { showThanks = true }
             }
             .background(RoundedRectangle(cornerRadius: 12).fill(Color("SurfaceColor")))
         }
         .padding()
         .background(RoundedRectangle(cornerRadius: 15).fill(Color("SurfaceColor")))
+        .sheet(isPresented: $showThanks) { ThanksSheet() }
         .sheet(item: $composing) { topic in
             MailComposer(subject: topic.subject, body: Contact.body)
                 .ignoresSafeArea()
@@ -150,6 +154,45 @@ struct ContactSection: View {
             }
             .padding()
         }
+    }
+}
+
+/// Chi ha reso Talky migliore (Thanks.swift): nome, perche', e il link a
+/// dove l'ha fatto.
+private struct ThanksSheet: View {
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationView {
+            List {
+                Section {
+                    ForEach(Thanks.all) { entry in
+                        VStack(alignment: .leading, spacing: 4) {
+                            if let link = entry.link {
+                                Link(entry.who, destination: link).font(.headline)
+                            } else {
+                                Text(entry.who).font(.headline)
+                            }
+                            Text(entry.why)
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .padding(.vertical, 4)
+                    }
+                } header: {
+                    Text(Thanks.intro)
+                }
+            }
+            .navigationTitle(Thanks.title)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("paywall.close".localized) { dismiss() }
+                }
+            }
+        }
+        .navigationViewStyle(.stack)
     }
 }
 

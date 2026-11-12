@@ -1,0 +1,19 @@
+/* Talky sull'Apple Watch */
+"wr_radio" = "ラジオ";
+"wr_favorites" = "お気に入り";
+"wr_all" = "すべての局";
+"wr_no_catalog" = "iPhoneでTalkyを一度開いてください。局はそこから届きます。";
+"wr_pro_station" = "この局にはTalky Proが必要です。";
+"wr_stop" = "停止";
+"wr_connecting" = "接続中…";
+"wr_cant_play" = "この局は応答しません。";
+"wr_headphones" = "聴くにはBluetoothヘッドフォンかスピーカーを接続してください。";
+"wr_hold" = "長押しで話す";
+"wr_talking" = "送信中";
+"wr_phone_mic" = "声はiPhoneのマイクから送られます。";
+"wr_peers" = "%d台接続中";
+"wr_nobody" = "iPhoneのトランシーバーに接続している人はいません。";
+"wr_phone_away" = "iPhoneが範囲外です。";
+"wr_pro_bands" = "バンド状況はTalky Proの機能です。";
+"wr_best" = "今のベスト";
+"wr_noaa" = "NOAAのデータがありません。";

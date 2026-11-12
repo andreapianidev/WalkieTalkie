@@ -1,0 +1,19 @@
+/* Talky sull'Apple Watch */
+"wr_radio" = "电台";
+"wr_favorites" = "收藏";
+"wr_all" = "所有电台";
+"wr_no_catalog" = "请在 iPhone 上打开一次 Talky：电台列表从那里传来。";
+"wr_pro_station" = "此电台需要 Talky Pro。";
+"wr_stop" = "停止";
+"wr_connecting" = "正在连接…";
+"wr_cant_play" = "此电台没有响应。";
+"wr_headphones" = "请连接蓝牙耳机或音箱来收听。";
+"wr_hold" = "按住说话";
+"wr_talking" = "发射中";
+"wr_phone_mic" = "你的声音通过 iPhone 麦克风发出。";
+"wr_peers" = "已连接 %d 台";
+"wr_nobody" = "没有人连接到 iPhone 对讲机。";
+"wr_phone_away" = "iPhone 不在范围内。";
+"wr_pro_bands" = "波段状况属于 Talky Pro。";
+"wr_best" = "当前最佳";
+"wr_noaa" = "没有 NOAA 数据。";

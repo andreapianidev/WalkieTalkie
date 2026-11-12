@@ -1,0 +1,19 @@
+/* Talky sull'Apple Watch */
+"wr_radio" = "Radio";
+"wr_favorites" = "Kegemaran";
+"wr_all" = "Semua stesen";
+"wr_no_catalog" = "Buka Talky di iPhone sekali: stesen datang dari sana.";
+"wr_pro_station" = "Stesen ini memerlukan Talky Pro.";
+"wr_stop" = "Henti";
+"wr_connecting" = "Menyambung…";
+"wr_cant_play" = "Stesen ini tidak menjawab.";
+"wr_headphones" = "Sambungkan fon kepala atau pembesar suara Bluetooth untuk mendengar.";
+"wr_hold" = "Tahan untuk bercakap";
+"wr_talking" = "BERCAKAP";
+"wr_phone_mic" = "Suara anda keluar dari mikrofon iPhone.";
+"wr_peers" = "%d bersambung";
+"wr_nobody" = "Tiada sesiapa bersambung ke walkie iPhone.";
+"wr_phone_away" = "iPhone di luar jangkauan.";
+"wr_pro_bands" = "Keadaan jalur adalah sebahagian Talky Pro.";
+"wr_best" = "Terbaik sekarang";
+"wr_noaa" = "Data NOAA tidak tersedia.";

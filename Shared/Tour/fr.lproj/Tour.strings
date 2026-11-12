@@ -31,3 +31,16 @@
 "tour.yourpro.done" = "Compris";
 "tour.yourpro.open" = "Ce que comprend votre Pro";
 "tour.where.settings" = "Réglages › Personnalisation";
+
+/* Grazie: chi ha reso Talky migliore, accanto a Scrivimi. */
+"thanks.title" = "Merci";
+"thanks.intro" = "Talky s'améliore grâce à ces personnes.";
+"thanks.pilot51" = "A signalé que la recherche POC se connectait et se déconnectait des serveurs Mumble publics. Corrigé dans la 4.0.1.";
+"thanks.yao89" = "A demandé Talky sur l'Apple Watch. Il est arrivé avec la 4.1.";
+"thanks.joaov41" = "A envoyé la pull request qui garde le talkie-walkie actif en arrière-plan.";
+"thanks.kiwi" = "A conçu le KiwiSDR. Chaque propriétaire qui partage un récepteur donne à Talky sa CB et ses ondes courtes.";
+"thanks.ynard" = "La liste publique des récepteurs qui permet à Talky d'en trouver un près de vous.";
+"thanks.mumble" = "Celles et ceux qui gèrent des serveurs Mumble publics : les canaux POC sont les leurs.";
+"thanks.noaa" = "Des données solaires et géomagnétiques gratuites derrière les bandes et les widgets.";
+"thanks.you.title" = "Celles et ceux qui écrivent";
+"thanks.you" = "Chaque e-mail, issue ou avis qui décrit un problème est un défaut trouvé par quelqu'un qui a pris le temps. Merci.";

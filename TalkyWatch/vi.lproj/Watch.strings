@@ -1,0 +1,19 @@
+/* Talky sull'Apple Watch */
+"wr_radio" = "Radio";
+"wr_favorites" = "Yêu thích";
+"wr_all" = "Tất cả đài";
+"wr_no_catalog" = "Mở Talky trên iPhone một lần: danh sách đài đến từ đó.";
+"wr_pro_station" = "Đài này cần Talky Pro.";
+"wr_stop" = "Dừng";
+"wr_connecting" = "Đang kết nối…";
+"wr_cant_play" = "Đài này không phản hồi.";
+"wr_headphones" = "Kết nối tai nghe hoặc loa Bluetooth để nghe.";
+"wr_hold" = "Giữ để nói";
+"wr_talking" = "ĐANG NÓI";
+"wr_phone_mic" = "Giọng bạn phát ra từ micro của iPhone.";
+"wr_peers" = "%d đã kết nối";
+"wr_nobody" = "Không ai kết nối với bộ đàm của iPhone.";
+"wr_phone_away" = "iPhone ngoài tầm.";
+"wr_pro_bands" = "Tình trạng băng tần thuộc Talky Pro.";
+"wr_best" = "Tốt nhất lúc này";
+"wr_noaa" = "Không có dữ liệu NOAA.";

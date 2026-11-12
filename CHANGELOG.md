@@ -107,6 +107,13 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
+### [4.1] (150), in development
+
+#### Added
+- **Thank you**, in Settings › About next to "Write to me": the people who made
+  Talky better and what they did, with a link to where they did it. Same list as
+  the README.
+
 ### [4.0.1] (Xcode Cloud build 221), in review since 12 November 2026
 
 #### Fixed
@@ -256,6 +263,23 @@ Sandboxed, no ads, no tracking.
 ---
 
 ## Talky iOS
+
+### [4.1] (150), in development
+
+#### Added
+- **Talky on the Apple Watch** (watchOS 10+), asked for by
+  [@yao89](https://github.com/yao89) in
+  [#11](https://github.com/andreapianidev/WalkieTalkie/issues/11). Three pages:
+  - **Radio**: the iPhone's stations play on the wrist with Bluetooth
+    headphones or a speaker, favourites first. Pro stations need Talky Pro.
+  - **Walkie**: hold the key on the Watch and the iPhone transmits with its
+    microphone, on the same channel and to the same devices.
+  - **Bands**: Kp, solar flux and which bands are open now, from NOAA data
+    (Talky Pro), plus a complication for the watch face.
+  The walkie-talkie without internet stays on the iPhone: watchOS has neither
+  Multipeer nor Bonjour.
+- **Thank you**, in Settings next to "Write to me": the people who made Talky
+  better and what they did, with a link to where they did it.
 
 ### [4.0.1] (Xcode Cloud build 222), in review since 12 November 2026
 

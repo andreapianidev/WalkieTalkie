@@ -31,3 +31,16 @@
 "tour.yourpro.done" = "知道了";
 "tour.yourpro.open" = "Pro 包含的内容";
 "tour.where.settings" = "设置 › 个性化";
+
+/* Grazie: chi ha reso Talky migliore, accanto a Scrivimi. */
+"thanks.title" = "致谢";
+"thanks.intro" = "Talky 因为这些人而变得更好。";
+"thanks.pilot51" = "报告了 POC 搜索会反复登录和退出公共 Mumble 服务器。已在 4.0.1 修复。";
+"thanks.yao89" = "提议在 Apple Watch 上推出 Talky。4.1 已经实现。";
+"thanks.joaov41" = "提交了让对讲机在后台保持运行的 pull request。";
+"thanks.kiwi" = "设计了 KiwiSDR。每位共享接收机的所有者都为 Talky 带来了 CB 和短波。";
+"thanks.ynard" = "公开的接收机列表，让 Talky 找到你附近的一台。";
+"thanks.mumble" = "运营公共 Mumble 服务器的人们：POC 频道属于他们。";
+"thanks.noaa" = "波段和小组件背后免费的太阳与地磁数据。";
+"thanks.you.title" = "所有写信的人";
+"thanks.you" = "每一封描述问题的邮件、issue 或评价，都是有人花时间找到的缺陷。谢谢。";

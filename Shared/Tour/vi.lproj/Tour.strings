@@ -31,3 +31,16 @@
 "tour.yourpro.done" = "Đã hiểu";
 "tour.yourpro.open" = "Pro của bạn gồm những gì";
 "tour.where.settings" = "Cài đặt › Cá nhân hoá";
+
+/* Grazie: chi ha reso Talky migliore, accanto a Scrivimi. */
+"thanks.title" = "Cảm ơn";
+"thanks.intro" = "Talky tốt hơn nhờ những người này.";
+"thanks.pilot51" = "Đã báo rằng tìm kiếm POC đăng nhập rồi thoát khỏi máy chủ Mumble công cộng. Đã sửa trong 4.0.1.";
+"thanks.yao89" = "Đã đề nghị Talky trên Apple Watch. Có từ bản 4.1.";
+"thanks.joaov41" = "Đã gửi pull request giúp bộ đàm chạy tiếp ở chế độ nền.";
+"thanks.kiwi" = "Đã thiết kế KiwiSDR. Mỗi chủ máy chia sẻ máy thu mang đến cho Talky băng CB và sóng ngắn.";
+"thanks.ynard" = "Danh sách máy thu công khai giúp Talky tìm một máy gần bạn.";
+"thanks.mumble" = "Những người vận hành máy chủ Mumble công cộng: các kênh POC là của họ.";
+"thanks.noaa" = "Dữ liệu mặt trời và địa từ miễn phí đứng sau các băng tần và widget.";
+"thanks.you.title" = "Mọi người đã viết";
+"thanks.you" = "Mỗi email, issue hay đánh giá mô tả một vấn đề là một lỗi được tìm ra bởi người đã dành thời gian. Cảm ơn.";

@@ -31,3 +31,16 @@
 "tour.yourpro.done" = "Anladım";
 "tour.yourpro.open" = "Pro'nda neler var";
 "tour.where.settings" = "Ayarlar › Kişiselleştirme";
+
+/* Grazie: chi ha reso Talky migliore, accanto a Scrivimi. */
+"thanks.title" = "Teşekkürler";
+"thanks.intro" = "Talky bu insanlar sayesinde daha iyi oluyor.";
+"thanks.pilot51" = "POC aramasının herkese açık Mumble sunucularına girip çıktığını bildirdi. 4.0.1'de düzeltildi.";
+"thanks.yao89" = "Apple Watch için Talky istedi. 4.1 ile geldi.";
+"thanks.joaov41" = "Telsizi arka planda canlı tutan pull request'i gönderdi.";
+"thanks.kiwi" = "KiwiSDR'ı tasarladı. Alıcısını paylaşan her sahip Talky'ye CB ve kısa dalgayı veriyor.";
+"thanks.ynard" = "Talky'nin yakınında bir alıcı bulmasını sağlayan herkese açık alıcı listesi.";
+"thanks.mumble" = "Herkese açık Mumble sunucularını işletenler: POC kanalları onların.";
+"thanks.noaa" = "Bantların ve widget'ların arkasındaki ücretsiz güneş ve jeomanyetik veriler.";
+"thanks.you.title" = "Yazan herkes";
+"thanks.you" = "Bir sorunu anlatan her e-posta, issue veya yorum, zaman ayıran birinin bulduğu bir hatadır. Teşekkürler.";

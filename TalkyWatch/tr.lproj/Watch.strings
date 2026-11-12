@@ -1,0 +1,19 @@
+/* Talky sull'Apple Watch */
+"wr_radio" = "Radyo";
+"wr_favorites" = "Favoriler";
+"wr_all" = "Tüm istasyonlar";
+"wr_no_catalog" = "Talky'yi iPhone'da bir kez aç: istasyonlar oradan gelir.";
+"wr_pro_station" = "Bu istasyon Talky Pro gerektirir.";
+"wr_stop" = "Durdur";
+"wr_connecting" = "Bağlanıyor…";
+"wr_cant_play" = "Bu istasyon yanıt vermiyor.";
+"wr_headphones" = "Dinlemek için Bluetooth kulaklık veya hoparlör bağla.";
+"wr_hold" = "Konuşmak için basılı tut";
+"wr_talking" = "YAYINDA";
+"wr_phone_mic" = "Sesin iPhone mikrofonundan çıkar.";
+"wr_peers" = "%d bağlı";
+"wr_nobody" = "iPhone telsizine bağlı kimse yok.";
+"wr_phone_away" = "iPhone menzil dışında.";
+"wr_pro_bands" = "Bant koşulları Talky Pro'nun parçasıdır.";
+"wr_best" = "Şu an en iyi";
+"wr_noaa" = "NOAA verisi yok.";
