@@ -24,7 +24,7 @@ releases and from the git history, so they are less detailed than what follows.
 
 ## Talky Android
 
-### [1.3] — unreleased
+### [1.3] · unreleased
 
 #### Added (versionCode 6 to 10, with iOS and Mac 4.0)
 - **Write to me**, under the title: report a problem, suggest a feature or say
@@ -68,7 +68,7 @@ releases and from the git history, so they are less detailed than what follows.
   Devices on Android 11 and 12 stay on 1.2, which is still downloadable.
 - `versionCode` 3 → 4.
 
-### [1.2] — 2026-08-20
+### [1.2] · 2026-08-20
 
 #### Removed
 
@@ -83,7 +83,7 @@ Nothing else was removed: local-network push-to-talk, 343 radio stations,
 password-protected private channels, and compatibility with iPhone, iPad and Mac
 all stayed.
 
-### [1.1] — 2026-08-02
+### [1.1] · 2026-08-02
 
 #### Fixed
 
@@ -97,7 +97,7 @@ all stayed.
 
 - Foreground service for background radio playback and peer connectivity.
 
-### [1.0] — 2026-06-17 (beta)
+### [1.0] · 2026-06-17 (beta)
 
 First public release of the Android port, Kotlin and Jetpack Compose: push-to-talk
 over the local network via NSD, the 343-station radio catalogue, Firebase
@@ -242,7 +242,7 @@ shipped, so the 2.1.1 entry below is part of 4.0 too.
 #### Removed
 - All recorded and simulated audio (fake frequencies, white noise).
 
-### [1.1.4] — current
+### [1.1.4] · current
 
 Version train opened after 1.1.3 went on sale.
 
@@ -252,7 +252,7 @@ Version train opened after 1.1.3 went on sale.
   not.
 - Streaming playback, half-duplex push-to-talk and link recovery reworked (1.1.0).
 
-### [1.0] — 2026-08-02
+### [1.0] · 2026-08-02
 
 First macOS release, native, macOS 26+. Push-to-talk with the TALK key or the
 space bar, auto-discovery of iPhone, Android and Mac peers over
@@ -601,7 +601,7 @@ it shipped, so everything listed under 3.2.2 below is part of 4.0 too.
   it, only with the yearly plan selected, and the button says "Try free for N
   days". The yearly trial is now 7 days (set on App Store Connect).
 
-### [2.46] — 2026-09-20
+### [2.46] · 2026-09-20
 
 - The paywall trigger is consumed only once the paywall has actually appeared,
   so a trigger is no longer burned on a screen nobody saw.
@@ -609,16 +609,16 @@ it shipped, so everything listed under 3.2.2 below is part of 4.0 too.
 - Copyright line corrected: it carried an old VAT number dressed up as a NIE and
   the wrong town.
 
-### [2.45] — 2026-08-19
+### [2.45] · 2026-08-19
 
 - The rewarded ad gives something worth having; the radio states it is internet
   radio rather than FM.
 
-### [2.44] — 2026-08-04
+### [2.44] · 2026-08-04
 
-### [2.42] — 2026-08-03
+### [2.42] · 2026-08-03
 
-### [2.41] — 2026-07-10
+### [2.41] · 2026-07-10
 
 ---
 
