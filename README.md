@@ -85,7 +85,7 @@ Talky can show you a live band only because other people share theirs:
 - **John Seamons**, who designed the KiwiSDR and keeps its software open.
 - **Pierre Ynard**, whose public list at [rx.linkfanel.net](http://rx.linkfanel.net) is how Talky finds a receiver near you.
 - **The people who run public Mumble servers**, which is where the POC channels come from.
-- **[@pilot51](https://github.com/pilot51)**, who runs one of those servers and reported in [#12](https://github.com/andreapianidev/WalkieTalkie/issues/12) that Talky's channel search was logging in and out of it several times a day. He was right, and the search no longer connects to anything: Talky now reads how many people a server has with Mumble's connectionless ping, and logs in only to the server you pick.
+- **[@pilot51](https://github.com/pilot51)**, who runs one of those servers and reported in [#12](https://github.com/andreapianidev/WalkieTalkie/issues/12) that Talky's channel search was logging in and out of it several times a day. The report was right, and the search no longer connects to anything: Talky now reads how many people a server has with Mumble's connectionless ping, and logs in only to the server you pick.
 - **NOAA Space Weather Prediction Center**, for the free solar flux, Kp and forecast data behind the propagation widgets.
 - **[@Joaov41](https://github.com/Joaov41)**, for the pull request on keeping the walkie-talkie alive in the background.
 - **Everyone who reports a problem**, in an [issue](https://github.com/andreapianidev/WalkieTalkie/issues), an email or a review. Each report is a fault found by someone who took the time to describe it, and that is how Talky gets better. Thank you.

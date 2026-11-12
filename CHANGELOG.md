@@ -107,7 +107,7 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
-### [4.0.1] (147), unreleased
+### [4.0.1] (148), unreleased
 
 #### Fixed
 - **Talky no longer logs in to public Mumble servers while searching for POC
@@ -257,7 +257,7 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [4.0.1] (147), unreleased
+### [4.0.1] (148), unreleased
 
 #### Fixed
 - **Talky no longer logs in to public Mumble servers while searching for POC
