@@ -107,7 +107,7 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
-### [4.1] (150), in development
+### [4.1] (Xcode Cloud build 229), in development
 
 #### Added
 - **Thank you**, in Settings › About next to "Write to me": the people who made
@@ -264,7 +264,7 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [4.1] (150), in development
+### [4.1] (Xcode Cloud build 228), TestFlight beta since 12 November 2026
 
 #### Added
 - **Talky on the Apple Watch** (watchOS 10+), asked for by

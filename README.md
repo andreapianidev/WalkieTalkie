@@ -26,6 +26,30 @@
 
 ---
 
+## ⌚ New in Talky 4.1 (beta): Talky on the Apple Watch
+
+Asked for by [@yao89](https://github.com/yao89) in
+[#11](https://github.com/andreapianidev/WalkieTalkie/issues/11). The first beta
+is on TestFlight: **[join the Talky beta](https://testflight.apple.com/join/qkJr51hV)**
+(the link opens as soon as Apple finishes the beta review).
+
+- **Radio on the wrist**: the iPhone's stations play on the Watch with
+  Bluetooth headphones or a speaker, favourites first, no iPhone needed while
+  listening. Pro stations need Talky Pro, as on the iPhone.
+- **Push-to-talk key**: hold the key on the Watch and the iPhone transmits
+  with its microphone, on the same channel and to the same devices. Handy with
+  the phone on the dashboard or in a backpack.
+- **Bands and a complication**: Kp, solar flux and which bands are open now,
+  from NOAA data, on a page and on the watch face (Talky Pro).
+
+The walkie-talkie without internet stays on the iPhone: watchOS has neither
+Multipeer Connectivity nor Bonjour. Code in [`TalkyWatch/`](TalkyWatch/) and
+[`TalkyWatchWidgets/`](TalkyWatchWidgets/); the iPhone side is
+[`WalkieTalkie/Watch/WristLink.swift`](WalkieTalkie/Watch/WristLink.swift).
+
+The same 4.1 adds a **Thank you** page inside the app, next to "Write to me" on
+iPhone and Mac: the people below, and what each of them did.
+
 ## 🆕 New in Talky 4.0: talk far away, not just nearby
 
 One version for iPhone and Mac. The walkie still works with no internet and no
@@ -88,6 +112,7 @@ Talky can show you a live band only because other people share theirs:
 - **[@pilot51](https://github.com/pilot51)**, who runs one of those servers and reported in [#12](https://github.com/andreapianidev/WalkieTalkie/issues/12) that Talky's channel search was logging in and out of it several times a day. The report was right, and the search no longer connects to anything: Talky now reads how many people a server has with Mumble's connectionless ping, and logs in only to the server you pick.
 - **NOAA Space Weather Prediction Center**, for the free solar flux, Kp and forecast data behind the propagation widgets.
 - **[@Joaov41](https://github.com/Joaov41)**, for the pull request on keeping the walkie-talkie alive in the background.
+- **[@yao89](https://github.com/yao89)**, who asked in [#11](https://github.com/andreapianidev/WalkieTalkie/issues/11) for Talky on the Apple Watch. It is in the 4.1 beta, thanks for the idea.
 - **Everyone who reports a problem**, in an [issue](https://github.com/andreapianidev/WalkieTalkie/issues), an email or a review. Each report is a fault found by someone who took the time to describe it, and that is how Talky gets better. Thank you.
 
 If you run a KiwiSDR or a Mumble server and would rather Talky did not use it, open an issue and it will be excluded.
@@ -860,7 +885,6 @@ By opening a pull request you agree that **your contribution is licensed under t
 - Add more radio stations (extend `RadioManager.radioStations`)
 - Add additional language translations (clone an existing `.lproj` folder)
 - New themes, add a new file under `Theme/` and register into `ThemeRegistry`
-- Apple Watch companion app
 - Home Screen / Lock Screen widgets for quick PTT (separate from the Live Activity)
 - StandBy mode large-radio widget (iOS 17+)
 
