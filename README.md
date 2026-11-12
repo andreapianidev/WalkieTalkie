@@ -42,6 +42,15 @@ is on TestFlight: **[join the Talky beta](https://testflight.apple.com/join/qkJr
 - **Bands and a complication**: Kp, solar flux and which bands are open now,
   from NOAA data, on a page and on the watch face (Talky Pro).
 
+<p>
+<img src="docs/screenshots/watch/en/01.png" alt="Talky on Apple Watch: a radio station playing on the wrist" width="180">
+<img src="docs/screenshots/watch/en/02.png" alt="Talky on Apple Watch: the push-to-talk key for the iPhone walkie" width="180">
+<img src="docs/screenshots/watch/en/03.png" alt="Talky on Apple Watch: Kp, solar flux and open bands from NOAA data" width="180">
+<img src="docs/screenshots/watch/en/04.png" alt="Talky on Apple Watch: the station list, favourites first" width="180">
+</p>
+
+Screenshots in all 16 languages are in [`docs/screenshots/watch/`](docs/screenshots/watch/).
+
 The walkie-talkie without internet stays on the iPhone: watchOS has neither
 Multipeer Connectivity nor Bonjour. Code in [`TalkyWatch/`](TalkyWatch/) and
 [`TalkyWatchWidgets/`](TalkyWatchWidgets/); the iPhone side is
