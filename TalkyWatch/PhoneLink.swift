@@ -24,6 +24,15 @@ final class PhoneLink: NSObject, ObservableObject {
     }
 
     func start() {
+        #if DEBUG
+        if ShotMode.on {
+            stations = ShotMode.stations
+            favorites = Array(stations.prefix(3))
+            phonePro = true
+            peers = 2
+            return
+        }
+        #endif
         guard WCSession.isSupported(), WCSession.default.delegate == nil else { return }
         WCSession.default.delegate = self
         WCSession.default.activate()

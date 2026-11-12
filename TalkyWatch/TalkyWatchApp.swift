@@ -12,20 +12,35 @@ import SwiftUI
 struct TalkyWatchApp: App {
     @StateObject private var phone = PhoneLink.shared
     @StateObject private var radio = WristRadio()
+    @State private var page = Self.firstPage
 
     var body: some Scene {
         WindowGroup {
-            TabView {
-                RadioPage()
-                WalkiePage()
-                BandsPage()
+            TabView(selection: $page) {
+                RadioPage().tag(0)
+                WalkiePage().tag(1)
+                BandsPage().tag(2)
             }
             .tabViewStyle(.verticalPage)
             .tint(TalkyDial.amber)
             .environmentObject(phone)
             .environmentObject(radio)
-            .task { phone.start() }
+            .task {
+                phone.start()
+                #if DEBUG
+                if let station = phone.stations.first(where: { $0.id == ShotMode.play }) { await radio.play(station) }
+                #endif
+            }
         }
+    }
+}
+
+extension TalkyWatchApp {
+    private static var firstPage: Int {
+        #if DEBUG
+        if ShotMode.on { return ShotMode.page }
+        #endif
+        return 0
     }
 }
 

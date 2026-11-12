@@ -38,6 +38,9 @@ struct BandsPage: View {
                     ProgressView()
                 }
             }
+            // A destra c'e' l'indicatore delle pagine: il sole non ci va sotto.
+            .padding(.leading, 6)
+            .padding(.trailing, 14)
         }
         .task(id: phone.phonePro) { await load() }
     }
@@ -54,9 +57,12 @@ struct BandsPage: View {
                     .font(.system(.footnote, design: .monospaced).weight(.semibold))
             }
             if let best = c.bestBand {
+                // Su una riga sola: andando a capo spingeva gli 80 m fuori schermo.
                 Text("\("wr_best".wrist): \(best.name)")
                     .font(.system(.footnote, design: .monospaced).weight(.bold))
                     .foregroundStyle(TalkyDial.color(.open))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
             }
             ForEach(ShortwaveBand.allCases, id: \.self) { band in
                 HStack(spacing: 6) {

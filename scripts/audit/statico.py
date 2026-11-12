@@ -97,6 +97,12 @@ def controlla_traduzioni():
     controlla_tabella(ROOT / "WalkieTalkie", "InfoPlist.strings")
     controlla_tabella(ROOT / "TalkyWidgets", "Localizable.strings")
     controlla_tabella(ROOT / "Shared" / "Tour", "Tour.strings")
+    en_watch = controlla_tabella(ROOT / "TalkyWatch", "Watch.strings")
+    controlla_tabella(ROOT / "TalkyWatchWidgets", "WatchWidgets.strings")
+    for f in (ROOT / "TalkyWatch").rglob("*.swift"):
+        for m in re.finditer(r'"([A-Za-z0-9_.]+)"\.wrist', f.read_text(encoding="utf-8")):
+            if m.group(1) not in en_watch:
+                err(f"{f.relative_to(ROOT)}: usa la chiave {m.group(1)!r} che non esiste in Watch.strings")
 
     # Chiavi usate nel codice ma assenti dal catalogo: a schermo esce la chiave.
     usate = {}
@@ -273,6 +279,12 @@ def controlla_permessi():
     for chiave in ("NSMicrophoneUsageDescription", "NSLocalNetworkUsageDescription"):
         if chiave not in info and f"INFOPLIST_KEY_{chiave}" not in pbx:
             err(f"iOS: manca {chiave}")
+    # Il Watch suona le stesse stazioni dell'iPhone: senza le stesse eccezioni
+    # ATS gli stream http non partono (errore -1022, provato il 12/11/2026).
+    watch = plistlib.loads((ROOT / "TalkyWatch-Info.plist").read_bytes())
+    if watch.get("NSAppTransportSecurity") != info.get("NSAppTransportSecurity"):
+        err("TalkyWatch-Info.plist: NSAppTransportSecurity diverso da WalkieTalkie/Info.plist, "
+            "sul Watch le stazioni http non suonano")
     mac_info = ROOT / "macTalky-Info.plist"
     if mac_info.exists():
         m = plistlib.loads(mac_info.read_bytes())
