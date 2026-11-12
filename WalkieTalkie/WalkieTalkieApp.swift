@@ -236,7 +236,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     // Gestisce le notifiche quando l'app è in primo piano
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         // Mostra la notifica anche quando l'app è in primo piano
-        completionHandler([.alert, .sound, .badge])
+        completionHandler([.banner, .list, .sound, .badge])
     }
 
     // Gestisce il tap sulle notifiche

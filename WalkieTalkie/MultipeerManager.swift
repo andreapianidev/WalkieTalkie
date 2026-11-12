@@ -702,7 +702,7 @@ class MultipeerManager: NSObject, ObservableObject {
             let audioSession = AVAudioSession.sharedInstance()
             
             // Configura categoria audio con parametri specifici
-            try audioSession.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker, .allowBluetooth])
+            try audioSession.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker, .allowBluetoothHFP])
             logger.logAudioDebug("Categoria audio configurata: playAndRecord")
             
             // Configura parametri audio specifici per assicurare compatibilità hardware

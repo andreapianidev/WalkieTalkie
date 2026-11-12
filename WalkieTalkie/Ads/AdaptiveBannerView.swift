@@ -29,7 +29,7 @@ private struct AdaptiveBannerRepresentable: UIViewRepresentable {
     let width: CGFloat
 
     func makeUIView(context: Context) -> BannerView {
-        let banner = BannerView(adSize: currentOrientationAnchoredAdaptiveBanner(width: width))
+        let banner = BannerView(adSize: largeAnchoredAdaptiveBanner(width: width))
         banner.adUnitID = adUnitID
         banner.rootViewController = AdRootViewController.current()
         banner.load(Request())

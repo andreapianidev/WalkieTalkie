@@ -60,10 +60,9 @@ final class SleepTimerManager: ObservableObject {
         logger.logInfo("SleepTimer: avviato per \(duration.displayName)")
 
         // Timer che decrementa il countdown ogni secondo.
+        // Il timer e' sul run loop principale: il blocco gira gia' sul main.
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-            Task { @MainActor in
-                self?.tick()
-            }
+            MainActor.assumeIsolated { self?.tick() }
         }
         return true
     }

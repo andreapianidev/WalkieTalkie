@@ -283,7 +283,7 @@ struct RecommendationsView: View {
                                 
                                 Spacer()
                                 
-                                Text("\(value)")
+                                Text(verbatim: "\(value)")
                                     .foregroundColor(.secondary)
                             }
                         }

@@ -11,8 +11,8 @@ import Foundation
 import ActivityKit
 
 @available(iOS 16.2, *)
-public struct RadioActivityAttributes: ActivityAttributes {
-    public struct ContentState: Codable, Hashable {
+nonisolated public struct RadioActivityAttributes: ActivityAttributes {
+    nonisolated public struct ContentState: Codable, Hashable {
         public var stationName: String
         public var stationCountry: String
         public var stationFlag: String
@@ -44,8 +44,8 @@ public struct RadioActivityAttributes: ActivityAttributes {
 }
 
 @available(iOS 16.2, *)
-public struct WalkieActivityAttributes: ActivityAttributes {
-    public struct ContentState: Codable, Hashable {
+nonisolated public struct WalkieActivityAttributes: ActivityAttributes {
+    nonisolated public struct ContentState: Codable, Hashable {
         public var connectedPeerCount: Int
         public var peerNames: [String]
         public var channelName: String

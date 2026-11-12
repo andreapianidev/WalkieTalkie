@@ -667,7 +667,7 @@ class RadioManager: NSObject, ObservableObject {
     private func restoreWalkieAudioSession() {
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker, .allowBluetooth])
+            try audioSession.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker, .allowBluetoothHFP])
             try audioSession.setActive(true)
             logger.logAudioInfo("Audio session ripristinata per walkie (.playAndRecord)")
         } catch {

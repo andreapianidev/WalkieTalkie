@@ -165,7 +165,7 @@ final class AdManager: ObservableObject {
         #endif
 
         // 3. SDK init
-        MobileAds.shared.start { _ in }
+        Task { _ = await MobileAds.shared.start() }
         isInitialized = true
 
         // 4. Preload con riuso

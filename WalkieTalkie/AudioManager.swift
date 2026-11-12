@@ -55,7 +55,7 @@ class AudioManager: ObservableObject {
             let audioSession = AVAudioSession.sharedInstance()
             try audioSession.setCategory(.playAndRecord, 
                                        mode: .default, 
-                                       options: [.defaultToSpeaker, .allowBluetooth])
+                                       options: [.defaultToSpeaker, .allowBluetoothHFP])
             try audioSession.setActive(true)
             logger.logAudioInfo("Audio session configurata correttamente")
         } catch {

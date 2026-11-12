@@ -54,7 +54,7 @@ struct PairingHelpCard: View {
                     step("5", "pairing_help_step_permission".localized)
                     HStack(spacing: 10) {
                         smallButton("pairing_search_again".localized, icon: "arrow.clockwise", action: onSearchAgain)
-                        smallButton("pairing_open_settings".localized, icon: "gearshape", action: LocalNetworkGuard.openAppSettings)
+                        smallButton("pairing_open_settings".localized, icon: "gearshape", action: { LocalNetworkGuard.openAppSettings() })
                     }
                     if let onListenCB {
                         Button {
@@ -121,7 +121,7 @@ struct PairingHelpCard: View {
                 .font(.body)
                 .foregroundColor(Color("PrimaryTextColor"))
                 .fixedSize(horizontal: false, vertical: true)
-            Button(action: LocalNetworkGuard.openAppSettings) {
+            Button(action: { LocalNetworkGuard.openAppSettings() }) {
                 Label("pairing_open_settings".localized, systemImage: "gearshape.fill")
                     .font(.body.weight(.semibold))
                     .foregroundColor(.white)

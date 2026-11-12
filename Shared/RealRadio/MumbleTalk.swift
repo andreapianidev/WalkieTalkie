@@ -174,7 +174,7 @@ nonisolated final class MumbleMic: @unchecked Sendable {
             let session = AVAudioSession.sharedInstance()
             if session.category != .playAndRecord {
                 try? session.setCategory(.playAndRecord, mode: .default,
-                                         options: [.defaultToSpeaker, .allowBluetooth, .allowBluetoothA2DP])
+                                         options: [.defaultToSpeaker, .allowBluetoothHFP, .allowBluetoothA2DP])
             }
             if !systemSession { try? session.setActive(true) }
             #endif
