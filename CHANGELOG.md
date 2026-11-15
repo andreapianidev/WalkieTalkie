@@ -107,7 +107,7 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
-### [4.1] (Xcode Cloud build 229), in development
+### [4.1.1] (was 4.1, Xcode Cloud build 229), in development
 
 #### Added
 - **Thank you**, in Settings › About next to "Write to me": the people who made
@@ -264,14 +264,17 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### Unreleased (158), after the 4.1 in review
+### [4.1.1] (159), sent for review on 15 November 2026
+
+Apple closed the 4.1 train when 4.1 went on sale (build 237), so the build with
+this change was refused as 4.1 and ships as 4.1.1.
 
 #### Changed
 - The link to another app of mine, in Settings and above the tab bar, now goes
   to **Etere.AI**, the shortwave receiver for iPhone and Mac, in place of the
   Peak altimeter. Texts in the 16 languages.
 
-### [4.1] (Xcode Cloud build 237), in review since 12 November 2026
+### [4.1] (Xcode Cloud build 237), on the App Store
 
 #### Added
 - **Talky on the Apple Watch** (watchOS 10+), asked for by
