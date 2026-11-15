@@ -264,6 +264,13 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
+### Unreleased (158), after the 4.1 in review
+
+#### Changed
+- The link to another app of mine, in Settings and above the tab bar, now goes
+  to **Etere.AI**, the shortwave receiver for iPhone and Mac, in place of the
+  Peak altimeter. Texts in the 16 languages.
+
 ### [4.1] (Xcode Cloud build 237), in review since 12 November 2026
 
 #### Added

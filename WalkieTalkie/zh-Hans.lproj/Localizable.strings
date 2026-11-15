@@ -23,10 +23,6 @@
 "view_on_github" = "在 GitHub 上查看";
 "license" = "许可协议";
 
-// MARK: - Peak App Promotion
-"download_peak" = "免费下载 Peak";
-"peak_app_subtitle" = "内置对讲功能的完整海拔测量 App";
-
 // MARK: - Notifications
 "new_device_detected" = "发现新设备";
 "device_detected_message" = "在附近发现 %@";
@@ -190,12 +186,11 @@
 "dark_mode" = "深色模式";
 "dark_mode_description" = "App 界面使用深色主题";
 
-// MARK: - Peak App
-"peak_app_title" = "Peak：徒步者的海拔表";
-"peak_app_description" = "面向徒步者的免费海拔表，带 AI 和内置对讲";
-"download_peak_app" = "下载 Peak App";
-"peak_altimeter_free" = "免费海拔表";
-"peak_walkie_ai_description" = "带对讲和 AI";
+// MARK: - Etere.AI
+"etere_app_title" = "Etere.AI：短波接收机";
+"etere_app_description" = "适用于 iPhone 和 Mac 的复古风格收音机。通过全球数百台接收机收听 0 至 30 MHz 短波：SSB 和 CW 业余无线电、国际广播电台、实时频谱和瀑布图。";
+"download_etere_app" = "下载 Etere.AI";
+"etere_banner_detail" = "收听全球短波";
 
 // MARK: - Alerts
 "connection_request" = "连接请求";

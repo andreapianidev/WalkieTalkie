@@ -59,7 +59,7 @@ struct ContentView: View {
     @State private var showingConnectionAlert = false
     @State private var showingErrorAlert = false
     @State private var isPoweredOn = true
-    /// Altezza vera della barra in basso, promozione di Peak e testo grande
+    /// Altezza vera della barra in basso, promozione di Etere.AI e testo grande
     /// compresi. Prima lo spazio riservato era fisso (80 o 100 pt) e con la
     /// promozione sopra la barra ne servivano circa 145: l'ultima parte della
     /// schermata finiva coperta ("setting option is cropped", iPhone 15 Pro).
@@ -1100,16 +1100,16 @@ struct ContentView: View {
 
     private var tabBarView: some View {
         VStack(spacing: 0) {
-            // Peak promotion button integrated with tab bar (nascosto sugli
+            // Promozione di Etere.AI sopra la tab bar (nascosta sugli
             // schermi compatti: ruba altezza alla tab bar su iPhone SE/8)
             // Nelle schermate per lo Store (`-screenshotMode`, solo Debug) la
             // promozione di un'altra app non c'entra.
-            // La promozione di Peak e' pubblicita' a tutti gli effetti: chi e'
+            // La promozione di Etere.AI e' pubblicita' a tutti gli effetti: chi e'
             // Pro o ha appena guardato il video per l'ora senza annunci non
             // deve vederla (recensione USA del 5/11/2026).
             if !isCompactHeight, !UserDefaults.standard.bool(forKey: "screenshotMode"),
                !iapManager.isProUser, !adManager.adsRemoved {
-                peakAppPromotionBanner
+                etereBanner
                     .padding(.horizontal, 20)
                     .padding(.bottom, 8)
             }
@@ -1282,26 +1282,33 @@ struct ContentView: View {
     }
 
 
-    // MARK: - Peak App Promotion Button
-    private var peakAppPromotionBanner: some View {
+    // MARK: - Etere.AI
+
+    /// Forma senza paese e senza slug: porta alla scheda nello Store di chi tocca.
+    static let etereStoreURL = URL(string: "https://apps.apple.com/app/id6829725463")!
+
+    private var etereBanner: some View {
         Button(action: {
-            openPeakApp()
+            UIApplication.shared.open(Self.etereStoreURL)
         }) {
             HStack(spacing: 8) {
-                Text("⛰️")
+                Image(systemName: "antenna.radiowaves.left.and.right")
                     .font(.caption)
+                    .foregroundColor(.gray)
 
-                Text("peak_altimeter_free".localized)
+                Text(verbatim: "Etere.AI")
                     .font(.caption2)
                     .foregroundColor(.gray)
 
-                Text("•")
+                Text(verbatim: "•")
                     .font(.caption2)
                     .foregroundColor(.gray)
 
-                Text("peak_walkie_ai_description".localized)
+                Text("etere_banner_detail".localized)
                     .font(.caption2)
                     .foregroundColor(.gray)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
 
                 Spacer()
 
@@ -1317,15 +1324,6 @@ struct ContentView: View {
             )
         }
         .buttonStyle(.plain)
-    }
-
-    private func openPeakApp() {
-        // Universal App Store link (works for all countries)
-        let peakAppURL = "https://apps.apple.com/us/app/peak-altimeter-gps-barometer/id6477742031"
-
-        if let url = URL(string: peakAppURL) {
-            UIApplication.shared.open(url)
-        }
     }
 
     // MARK: - Rewarded CTA Pill

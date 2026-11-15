@@ -76,8 +76,7 @@ struct SettingsView: View {
                     // Support Section
                     supportSection
 
-                    // Peak App Section
-                    peakAppSection
+                    etereSection
 
                     Spacer(minLength: 100)
                 }
@@ -1104,12 +1103,12 @@ struct SettingsView: View {
         )
     }
     
-    private var peakAppSection: some View {
+    private var etereSection: some View {
         VStack(alignment: .leading, spacing: 15) {
             HStack {
-                Image(systemName: "mountain.2.fill")
+                Image(systemName: "antenna.radiowaves.left.and.right")
                     .foregroundColor(Color("PrimaryTextColor"))
-                Text("peak_app_title".localized)
+                Text("etere_app_title".localized)
                     .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(Color("PrimaryTextColor"))
@@ -1119,7 +1118,7 @@ struct SettingsView: View {
             VStack(spacing: 12) {
                 HStack {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("peak_app_description".localized)
+                        Text("etere_app_description".localized)
                             .font(.body)
                             .foregroundColor(Color("PrimaryTextColor"))
                     }
@@ -1132,15 +1131,12 @@ struct SettingsView: View {
                 )
                 
                 Button(action: {
-                    // Universal App Store link (works for all countries)
-                    if let url = URL(string: "https://apps.apple.com/app/peak-altimetro-gps-barometro/id6477742031") {
-                        UIApplication.shared.open(url)
-                    }
+                    UIApplication.shared.open(ContentView.etereStoreURL)
                 }) {
                     HStack {
                         Image(systemName: "arrow.down.app.fill")
                             .foregroundColor(.white)
-                        Text("download_peak_app".localized)
+                        Text("download_etere_app".localized)
                             .font(.body)
                             .fontWeight(.medium)
                             .foregroundColor(.white)

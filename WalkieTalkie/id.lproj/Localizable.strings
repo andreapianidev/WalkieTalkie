@@ -23,10 +23,6 @@
 "view_on_github" = "Lihat di GitHub";
 "license" = "Lisensi";
 
-// MARK: - Peak App Promotion
-"download_peak" = "Unduh Peak Gratis";
-"peak_app_subtitle" = "Aplikasi altimeter lengkap dengan fitur walkie talkie bawaan";
-
 // MARK: - Notifications
 "new_device_detected" = "Perangkat Baru Terdeteksi";
 "device_detected_message" = "%@ terdeteksi di dekatmu";
@@ -190,12 +186,11 @@
 "dark_mode" = "Mode Gelap";
 "dark_mode_description" = "Pakai tema gelap untuk tampilan aplikasi";
 
-// MARK: - Peak App
-"peak_app_title" = "Peak: Altimeter untuk Pendaki";
-"peak_app_description" = "Altimeter gratis untuk pendaki dengan AI dan walkie talkie bawaan";
-"download_peak_app" = "Unduh Aplikasi Peak";
-"peak_altimeter_free" = "Altimeter Gratis";
-"peak_walkie_ai_description" = "dengan Walkie Talkie & AI";
+// MARK: - Etere.AI
+"etere_app_title" = "Etere.AI: penerima gelombang pendek";
+"etere_app_description" = "Penerima radio bergaya vintage untuk iPhone dan Mac. Dengarkan gelombang pendek 0 sampai 30 MHz lewat ratusan penerima di seluruh dunia: radio amatir di SSB dan CW, siaran internasional, spektrum dan waterfall langsung.";
+"download_etere_app" = "Unduh Etere.AI";
+"etere_banner_detail" = "gelombang pendek dari seluruh dunia";
 
 // MARK: - Alerts
 "connection_request" = "Permintaan Koneksi";

@@ -202,9 +202,9 @@ def controlla_pubblicita():
         err("AdaptiveBannerView: non controlla l'ora senza annunci")
 
     content = (ROOT / "WalkieTalkie/ContentView.swift").read_text()
-    m = re.search(r"if (.*?)\{\s*\n\s*peakAppPromotionBanner", content, re.S)
+    m = re.search(r"if (.*?)\{\s*\n\s*etereBanner", content, re.S)
     if not m or "isProUser" not in m.group(1) or "adsRemoved" not in m.group(1):
-        err("ContentView: la promozione di Peak non tace per i Pro o nell'ora senza annunci")
+        err("ContentView: la promozione di Etere.AI non tace per i Pro o nell'ora senza annunci")
 
     # Le funzioni di AdManager che mostrano interstitial e app-open.
     am = (ROOT / "WalkieTalkie/Ads/AdManager.swift").read_text()

@@ -23,10 +23,6 @@
 "view_on_github" = "View on GitHub";
 "license" = "License";
 
-// MARK: - Peak App Promotion
-"download_peak" = "Download Peak Free";
-"peak_app_subtitle" = "Complete altimetry app with integrated walkie-talkie features";
-
 // MARK: - Notifications
 "new_device_detected" = "New Device Detected";
 "device_detected_message" = "%@ detected nearby";
@@ -190,12 +186,11 @@
 "dark_mode" = "Dark Mode";
 "dark_mode_description" = "Use dark theme for the app interface";
 
-// MARK: - Peak App
-"peak_app_title" = "Peak: Altimeter for Hikers";
-"peak_app_description" = "Free altimeter for hikers with AI and integrated walkie talkie";
-"download_peak_app" = "Download Peak App";
-"peak_altimeter_free" = "Free Altimeter";
-"peak_walkie_ai_description" = "with Walkie Talkie & AI";
+// MARK: - Etere.AI
+"etere_app_title" = "Etere.AI: shortwave receiver";
+"etere_app_description" = "A vintage radio receiver for iPhone and Mac. Listen to shortwave from 0 to 30 MHz through hundreds of receivers around the world: radio amateurs on SSB and CW, international broadcasters, live spectrum and waterfall.";
+"download_etere_app" = "Download Etere.AI";
+"etere_banner_detail" = "shortwave from around the world";
 
 // MARK: - Alerts
 "connection_request" = "Connection Request";

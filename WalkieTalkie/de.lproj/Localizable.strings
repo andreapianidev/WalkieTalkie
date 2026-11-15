@@ -23,10 +23,6 @@
 "view_on_github" = "Auf GitHub ansehen";
 "license" = "Lizenz";
 
-// MARK: - Peak App Promotion
-"download_peak" = "Peak gratis laden";
-"peak_app_subtitle" = "Komplette Höhenmesser-App mit integriertem Funkgerät";
-
 // MARK: - Notifications
 "new_device_detected" = "Neues Gerät gefunden";
 "device_detected_message" = "%@ in der Nähe gefunden";
@@ -190,12 +186,11 @@
 "dark_mode" = "Dunkler Modus";
 "dark_mode_description" = "Dunkles Design für die App verwenden";
 
-// MARK: - Peak App
-"peak_app_title" = "Peak: Höhenmesser für Wanderer";
-"peak_app_description" = "Kostenloser Höhenmesser für Wanderer mit KI und integriertem Walkie-Talkie";
-"download_peak_app" = "Peak-App laden";
-"peak_altimeter_free" = "Kostenloser Höhenmesser";
-"peak_walkie_ai_description" = "mit Walkie-Talkie & KI";
+// MARK: - Etere.AI
+"etere_app_title" = "Etere.AI: Kurzwellenempfänger";
+"etere_app_description" = "Ein Radioempfänger im Vintage-Look für iPhone und Mac. Höre Kurzwelle von 0 bis 30 MHz über Hunderte Empfänger weltweit: Funkamateure in SSB und CW, internationale Sender, Spektrum und Wasserfall in Echtzeit.";
+"download_etere_app" = "Etere.AI laden";
+"etere_banner_detail" = "Kurzwelle aus aller Welt";
 
 // MARK: - Alerts
 "connection_request" = "Verbindungsanfrage";

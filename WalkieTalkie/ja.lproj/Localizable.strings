@@ -23,10 +23,6 @@
 "view_on_github" = "GitHubで見る";
 "license" = "ライセンス";
 
-// MARK: - Peak App Promotion
-"download_peak" = "Peakを無料でダウンロード";
-"peak_app_subtitle" = "トランシーバー機能を内蔵した本格的な高度計アプリ";
-
 // MARK: - Notifications
 "new_device_detected" = "新しいデバイスを検出";
 "device_detected_message" = "近くで%@を検出しました";
@@ -190,12 +186,11 @@
 "dark_mode" = "ダークモード";
 "dark_mode_description" = "アプリの画面にダークテーマを使う";
 
-// MARK: - Peak App
-"peak_app_title" = "Peak: ハイカーのための高度計";
-"peak_app_description" = "AIとトランシーバーを備えた、ハイカー向けの無料高度計";
-"download_peak_app" = "Peakアプリを入手";
-"peak_altimeter_free" = "無料の高度計";
-"peak_walkie_ai_description" = "トランシーバーとAI付き";
+// MARK: - Etere.AI
+"etere_app_title" = "Etere.AI: 短波受信機";
+"etere_app_description" = "iPhoneとMacで使えるビンテージ風のラジオ受信機。世界中の数百台の受信機を通じて0から30 MHzの短波を聴けます。SSBやCWのアマチュア無線、国際放送、リアルタイムのスペクトラムとウォーターフォール表示。";
+"download_etere_app" = "Etere.AIを入手";
+"etere_banner_detail" = "世界中の短波を受信";
 
 // MARK: - Alerts
 "connection_request" = "接続リクエスト";

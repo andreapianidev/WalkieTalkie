@@ -23,10 +23,6 @@
 "view_on_github" = "GitHub'da görüntüle";
 "license" = "Lisans";
 
-// MARK: - Peak App Promotion
-"download_peak" = "Peak'i ücretsiz indir";
-"peak_app_subtitle" = "Telsiz özelliği yerleşik, eksiksiz bir yükseklik ölçer uygulaması";
-
 // MARK: - Notifications
 "new_device_detected" = "Yeni cihaz bulundu";
 "device_detected_message" = "Yakınlarda %@ bulundu";
@@ -190,12 +186,11 @@
 "dark_mode" = "Koyu mod";
 "dark_mode_description" = "Uygulama arayüzünde koyu temayı kullan";
 
-// MARK: - Peak App
-"peak_app_title" = "Peak: yürüyüşçüler için yükseklik ölçer";
-"peak_app_description" = "Yapay zekâlı ve telsizli, yürüyüşçüler için ücretsiz yükseklik ölçer";
-"download_peak_app" = "Peak uygulamasını indir";
-"peak_altimeter_free" = "Ücretsiz yükseklik ölçer";
-"peak_walkie_ai_description" = "telsiz ve yapay zekâ ile";
+// MARK: - Etere.AI
+"etere_app_title" = "Etere.AI: kısa dalga alıcısı";
+"etere_app_description" = "iPhone ve Mac için nostaljik bir radyo alıcısı. Dünyanın dört bir yanındaki yüzlerce alıcı üzerinden 0 ile 30 MHz arasındaki kısa dalgayı dinle: SSB ve CW'de amatör telsizciler, uluslararası yayınlar, canlı spektrum ve şelale.";
+"download_etere_app" = "Etere.AI'yi indir";
+"etere_banner_detail" = "dünyanın her yerinden kısa dalga";
 
 // MARK: - Alerts
 "connection_request" = "Bağlantı isteği";

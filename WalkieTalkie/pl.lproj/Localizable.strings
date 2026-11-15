@@ -23,10 +23,6 @@
 "view_on_github" = "Zobacz na GitHubie";
 "license" = "Licencja";
 
-// MARK: - Peak App Promotion
-"download_peak" = "Pobierz Peak za darmo";
-"peak_app_subtitle" = "Kompletna aplikacja wysokościomierza z wbudowaną krótkofalówką";
-
 // MARK: - Notifications
 "new_device_detected" = "Wykryto nowe urządzenie";
 "device_detected_message" = "W pobliżu wykryto %@";
@@ -190,12 +186,11 @@
 "dark_mode" = "Tryb ciemny";
 "dark_mode_description" = "Używaj ciemnego motywu w aplikacji";
 
-// MARK: - Peak App
-"peak_app_title" = "Peak: wysokościomierz dla turystów";
-"peak_app_description" = "Darmowy wysokościomierz dla turystów z AI i wbudowaną krótkofalówką";
-"download_peak_app" = "Pobierz aplikację Peak";
-"peak_altimeter_free" = "Darmowy wysokościomierz";
-"peak_walkie_ai_description" = "z krótkofalówką i AI";
+// MARK: - Etere.AI
+"etere_app_title" = "Etere.AI: odbiornik krótkofalowy";
+"etere_app_description" = "Radioodbiornik w stylu vintage na iPhone'a i Maca. Słuchaj fal krótkich od 0 do 30 MHz przez setki odbiorników na całym świecie: krótkofalowcy na SSB i CW, stacje międzynarodowe, widmo i wodospad na żywo.";
+"download_etere_app" = "Pobierz Etere.AI";
+"etere_banner_detail" = "fale krótkie z całego świata";
 
 // MARK: - Alerts
 "connection_request" = "Prośba o połączenie";

@@ -23,10 +23,6 @@
 "view_on_github" = "在 GitHub 上檢視";
 "license" = "授權條款";
 
-// MARK: - Peak App Promotion
-"download_peak" = "免費下載Peak";
-"peak_app_subtitle" = "具有整合對講機功能的完整海拔測量應用程式";
-
 // MARK: - Notifications
 "new_device_detected" = "偵測到新裝置";
 "device_detected_message" = "偵測到附近的 %@";
@@ -175,10 +171,11 @@
 "dark_mode" = "深色模式";
 "dark_mode_description" = "為應用程式介面使用深色主題";
 
-// MARK: - Peak App
-"peak_app_title" = "Peak：登山者高度計";
-"peak_app_description" = "免費登山者高度計，具備AI和整合對講機功能";
-"download_peak_app" = "下載Peak應用程式";
+// MARK: - Etere.AI
+"etere_app_title" = "Etere.AI：短波接收機";
+"etere_app_description" = "適用於 iPhone 和 Mac 的復古風格收音機。透過全球數百台接收機收聽 0 至 30 MHz 短波：SSB 與 CW 業餘無線電、國際廣播電台、即時頻譜與瀑布圖。";
+"download_etere_app" = "下載 Etere.AI";
+"etere_banner_detail" = "收聽全球短波";
 
 // MARK: - Alerts
 "connection_request" = "連接請求";
@@ -367,8 +364,6 @@
 "current_recommendations" = "目前建議";
 "full_report" = "完整報告";
 "optimized_mode" = "最佳化模式";
-"peak_altimeter_free" = "免費高度計";
-"peak_walkie_ai_description" = "搭配對講機與 AI";
 "recommendations" = "建議";
 "updated_now" = "剛剛更新";
 

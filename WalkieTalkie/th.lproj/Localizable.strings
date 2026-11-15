@@ -23,10 +23,6 @@
 "view_on_github" = "ดูบน GitHub";
 "license" = "สัญญาอนุญาต";
 
-// MARK: - Peak App Promotion
-"download_peak" = "ดาวน์โหลด Peak ฟรี";
-"peak_app_subtitle" = "แอปวัดความสูงครบเครื่อง พร้อมวิทยุสื่อสารในตัว";
-
 // MARK: - Notifications
 "new_device_detected" = "พบอุปกรณ์ใหม่";
 "device_detected_message" = "พบ %@ อยู่ใกล้ ๆ";
@@ -190,12 +186,11 @@
 "dark_mode" = "โหมดมืด";
 "dark_mode_description" = "ใช้ธีมมืดกับหน้าตาแอป";
 
-// MARK: - Peak App
-"peak_app_title" = "Peak: เครื่องวัดความสูงสำหรับนักเดินป่า";
-"peak_app_description" = "เครื่องวัดความสูงฟรีสำหรับนักเดินป่า พร้อม AI และวิทยุสื่อสารในตัว";
-"download_peak_app" = "ดาวน์โหลดแอป Peak";
-"peak_altimeter_free" = "เครื่องวัดความสูงฟรี";
-"peak_walkie_ai_description" = "พร้อมวิทยุสื่อสารและ AI";
+// MARK: - Etere.AI
+"etere_app_title" = "Etere.AI: เครื่องรับวิทยุคลื่นสั้น";
+"etere_app_description" = "เครื่องรับวิทยุสไตล์วินเทจสำหรับ iPhone และ Mac ฟังคลื่นสั้น 0 ถึง 30 MHz ผ่านเครื่องรับหลายร้อยเครื่องทั่วโลก ทั้งนักวิทยุสมัครเล่นในโหมด SSB และ CW สถานีวิทยุนานาชาติ สเปกตรัมและวอเตอร์ฟอลแบบเรียลไทม์";
+"download_etere_app" = "ดาวน์โหลด Etere.AI";
+"etere_banner_detail" = "คลื่นสั้นจากทั่วโลก";
 
 // MARK: - Alerts
 "connection_request" = "คำขอเชื่อมต่อ";

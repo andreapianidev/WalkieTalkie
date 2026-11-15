@@ -23,10 +23,6 @@
 "view_on_github" = "Xem trên GitHub";
 "license" = "Giấy phép";
 
-// MARK: - Peak App Promotion
-"download_peak" = "Tải Peak miễn phí";
-"peak_app_subtitle" = "Ứng dụng đo độ cao đầy đủ, tích hợp sẵn bộ đàm";
-
 // MARK: - Notifications
 "new_device_detected" = "Phát hiện thiết bị mới";
 "device_detected_message" = "Đã thấy %@ ở gần";
@@ -190,12 +186,11 @@
 "dark_mode" = "Chế độ tối";
 "dark_mode_description" = "Dùng giao diện tối cho ứng dụng";
 
-// MARK: - Peak App
-"peak_app_title" = "Peak: máy đo độ cao cho người đi bộ đường dài";
-"peak_app_description" = "Máy đo độ cao miễn phí cho người đi bộ đường dài, có AI và bộ đàm tích hợp";
-"download_peak_app" = "Tải ứng dụng Peak";
-"peak_altimeter_free" = "Máy đo độ cao miễn phí";
-"peak_walkie_ai_description" = "kèm bộ đàm và AI";
+// MARK: - Etere.AI
+"etere_app_title" = "Etere.AI: máy thu sóng ngắn";
+"etere_app_description" = "Máy thu radio phong cách cổ điển cho iPhone và Mac. Nghe sóng ngắn từ 0 đến 30 MHz qua hàng trăm máy thu trên khắp thế giới: vô tuyến nghiệp dư SSB và CW, đài phát thanh quốc tế, phổ tần và thác nước theo thời gian thực.";
+"download_etere_app" = "Tải Etere.AI";
+"etere_banner_detail" = "sóng ngắn từ khắp thế giới";
 
 // MARK: - Alerts
 "connection_request" = "Yêu cầu kết nối";

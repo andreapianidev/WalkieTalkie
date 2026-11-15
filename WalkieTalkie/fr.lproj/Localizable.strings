@@ -23,10 +23,6 @@
 "view_on_github" = "Voir sur GitHub";
 "license" = "Licence";
 
-// MARK: - Peak App Promotion
-"download_peak" = "Télécharger Peak gratuitement";
-"peak_app_subtitle" = "Application d'altimétrie complète avec talkie-walkie intégré";
-
 // MARK: - Notifications
 "new_device_detected" = "Nouvel appareil détecté";
 "device_detected_message" = "%@ détecté à proximité";
@@ -190,12 +186,11 @@
 "dark_mode" = "Mode sombre";
 "dark_mode_description" = "Utiliser le thème sombre pour l'interface";
 
-// MARK: - Peak App
-"peak_app_title" = "Peak : altimètre pour randonneurs";
-"peak_app_description" = "Altimètre gratuit pour randonneurs avec IA et talkie-walkie intégré";
-"download_peak_app" = "Télécharger l'app Peak";
-"peak_altimeter_free" = "Altimètre gratuit";
-"peak_walkie_ai_description" = "avec talkie-walkie et IA";
+// MARK: - Etere.AI
+"etere_app_title" = "Etere.AI : récepteur ondes courtes";
+"etere_app_description" = "Un récepteur radio vintage pour iPhone et Mac. Écoutez les ondes courtes de 0 à 30 MHz via des centaines de récepteurs dans le monde : radioamateurs en SSB et CW, stations internationales, spectre et cascade en temps réel.";
+"download_etere_app" = "Télécharger Etere.AI";
+"etere_banner_detail" = "ondes courtes du monde entier";
 
 // MARK: - Alerts
 "connection_request" = "Demande de connexion";

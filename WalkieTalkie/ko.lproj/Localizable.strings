@@ -23,10 +23,6 @@
 "view_on_github" = "GitHub에서 보기";
 "license" = "라이선스";
 
-// MARK: - Peak App Promotion
-"download_peak" = "Peak 무료로 받기";
-"peak_app_subtitle" = "무전기 기능이 내장된 본격 고도계 앱";
-
 // MARK: - Notifications
 "new_device_detected" = "새 기기 발견";
 "device_detected_message" = "근처에서 %@을(를) 찾았습니다";
@@ -190,12 +186,11 @@
 "dark_mode" = "다크 모드";
 "dark_mode_description" = "앱 화면에 어두운 테마 사용";
 
-// MARK: - Peak App
-"peak_app_title" = "Peak: 하이커를 위한 고도계";
-"peak_app_description" = "AI와 무전기를 갖춘 하이커용 무료 고도계";
-"download_peak_app" = "Peak 앱 받기";
-"peak_altimeter_free" = "무료 고도계";
-"peak_walkie_ai_description" = "무전기와 AI 탑재";
+// MARK: - Etere.AI
+"etere_app_title" = "Etere.AI: 단파 수신기";
+"etere_app_description" = "iPhone과 Mac용 빈티지 라디오 수신기. 전 세계 수백 대의 수신기로 0에서 30 MHz까지의 단파를 들어 보세요. SSB와 CW 아마추어 무선, 국제 방송, 실시간 스펙트럼과 워터폴.";
+"download_etere_app" = "Etere.AI 받기";
+"etere_banner_detail" = "전 세계의 단파 수신";
 
 // MARK: - Alerts
 "connection_request" = "연결 요청";
