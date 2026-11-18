@@ -274,7 +274,9 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [4.2] (161), in development
+### [4.2] (Xcode Cloud build 251), sent for review on 18 November 2026
+
+Replaces 4.1.2 in the review queue, so it carries the 4.1.2 entry below too.
 
 #### Changed
 - **Etere.AI opens inside Talky.** The link in Settings and above the tab bar
@@ -284,7 +286,7 @@ Sandboxed, no ads, no tracking.
 - **The paywall remembers a no.** Whoever closed it twice without buying finds
   **Forever** selected the third time, in place of the yearly plan.
 
-### [4.1.2] (160), sent for review on 18 November 2026
+### [4.1.2] (Xcode Cloud build 248), withdrawn from review on 18 November 2026 and shipped as 4.2
 
 No change inside the app: the version exists to correct the store text.
 
