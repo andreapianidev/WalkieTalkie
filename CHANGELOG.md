@@ -107,7 +107,17 @@ Analytics and Crashlytics. No Pro tier, no Live Activities, one base theme.
 
 ## macTalky (macOS)
 
-### [4.1.1] (was 4.1, Xcode Cloud build 229), in development
+### [4.1.2] (160), sent for review on 18 November 2026
+
+First Mac release after 4.0.1: it carries the 4.1.1 entry below.
+
+#### Changed
+- **Talky Pro yearly costs less and has no free trial**: 9.99 USD (was 17.99),
+  bought directly. Set on App Store Connect on 18 November, in force from the
+  20th; whoever subscribed at the old 8.99 keeps that price. The store text no
+  longer mentions a trial.
+
+### [4.1.1] (was 4.1, Xcode Cloud build 229), never submitted, folded into 4.1.2
 
 #### Added
 - **Thank you**, in Settings › About next to "Write to me": the people who made
@@ -264,7 +274,18 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
-### [4.1.1] (159), sent for review on 15 November 2026
+### [4.1.2] (160), sent for review on 18 November 2026
+
+No change inside the app: the version exists to correct the store text.
+
+#### Changed
+- **Talky Pro yearly costs less and has no free trial**: 9.99 USD (was 17.99),
+  bought directly. Set on App Store Connect on 18 November, in force from the
+  20th; whoever subscribed at the old 8.99 keeps that price. The paywall reads
+  price and offer from StoreKit, so it follows by itself. The store text no
+  longer mentions a trial.
+
+### [4.1.1] (Xcode Cloud build 246), on the App Store
 
 Apple closed the 4.1 train when 4.1 went on sale (build 237), so the build with
 this change was refused as 4.1 and ships as 4.1.1.
