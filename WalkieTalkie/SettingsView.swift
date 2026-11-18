@@ -1131,7 +1131,7 @@ struct SettingsView: View {
                 )
                 
                 Button(action: {
-                    UIApplication.shared.open(ContentView.etereStoreURL)
+                    EtereStorePage.shared.open()
                 }) {
                     HStack {
                         Image(systemName: "arrow.down.app.fill")

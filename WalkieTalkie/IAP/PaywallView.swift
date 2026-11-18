@@ -245,6 +245,12 @@ struct PaywallView: View {
             // Conferma di comparsa: solo da qui un trigger proattivo si consuma.
             PaywallTriggerManager.shared.paywallDidAppear(trigger: trigger)
             Analytics.logEvent("paywall_shown", parameters: ["trigger": trigger])
+            // Chi ha gia' chiuso due volte senza comprare ha detto no
+            // all'abbonamento: alla terza trova selezionato il "per sempre",
+            // che da solo fa due terzi degli incassi pur stando in terza fila.
+            if PaywallTriggerManager.shared.metrics.dismissed >= 2 {
+                selectedProductID = ProductID.lifetimeID
+            }
             if iap.products.isEmpty {
                 Task { try? await iap.loadProducts() }
             }

@@ -1284,12 +1284,9 @@ struct ContentView: View {
 
     // MARK: - Etere.AI
 
-    /// Forma senza paese e senza slug: porta alla scheda nello Store di chi tocca.
-    static let etereStoreURL = URL(string: "https://apps.apple.com/app/id6829725463")!
-
     private var etereBanner: some View {
         Button(action: {
-            UIApplication.shared.open(Self.etereStoreURL)
+            EtereStorePage.shared.open()
         }) {
             HStack(spacing: 8) {
                 Image(systemName: "antenna.radiowaves.left.and.right")

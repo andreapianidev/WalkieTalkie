@@ -274,6 +274,16 @@ Sandboxed, no ads, no tracking.
 
 ## Talky iOS
 
+### [4.2] (161), in development
+
+#### Changed
+- **Etere.AI opens inside Talky.** The link in Settings and above the tab bar
+  now shows the App Store page without leaving the app, so you can download it
+  and go back to what you were listening to. Without a connection it falls back
+  to the App Store.
+- **The paywall remembers a no.** Whoever closed it twice without buying finds
+  **Forever** selected the third time, in place of the yearly plan.
+
 ### [4.1.2] (160), sent for review on 18 November 2026
 
 No change inside the app: the version exists to correct the store text.
