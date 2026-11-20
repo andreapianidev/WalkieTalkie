@@ -30,8 +30,8 @@ android {
         // comportamento moderno di rete e audio, senza rami di compatibilita'.
         minSdk = 33
         targetSdk = 36
-        versionCode = 10
-        versionName = "1.3"
+        versionCode = 11
+        versionName = "1.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

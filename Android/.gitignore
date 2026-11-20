@@ -14,3 +14,8 @@ local.properties
 keystore.properties
 *.keystore
 *.jks
+
+# Configurazione Firebase vera della build di rilascio (progetto talky-walkie-android).
+# Copia madre in ~/.secrets/talky-android-google-services.json. Il file tracciato
+# app/google-services.json resta un segnaposto e serve solo alle build di debug.
+app/src/release/google-services.json

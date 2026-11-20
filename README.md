@@ -219,7 +219,7 @@ Talky now ships an **Android port** too. It lives in [`Android/`](Android/) insi
 - 🎙️ **Push-to-talk** over the local network (`CrossPlatformWalkieManager`, Network Service Discovery / NSD) with an `AudioManager` PTT pipeline
 - 📻 **330+ radio stations**: the **same catalogue as iOS**, kept in sync from [`RadioManager.swift`](WalkieTalkie/RadioManager.swift) into [`Android/.../radio/RadioManager.kt`](Android/app/src/main/java/com/immaginet/talky/radio/RadioManager.kt)
 - 📣 **AdMob** stack (banner / interstitial / rewarded / app-open) with **UMP consent**: uses Google **test ad units** by default (see note below)
-- 🔥 **Firebase** Analytics + Crashlytics
+- 🔥 **Firebase** Analytics + Crashlytics. The `google-services.json` in this repo is a placeholder: an APK you build from source sends nothing. Only the released APK (from 1.4) is built with the real configuration.
 - 🎨 **Jetpack Compose** UI (Material 3), dark "hardware radio" aesthetic
 
 ### Tech stack

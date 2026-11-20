@@ -32,7 +32,7 @@ import java.util.Locale
  * ancora aiutare. In fondo alla mail ci sono versione, Android e modello,
  * visibili prima dell'invio, cosi' non serve chiederli dopo.
  */
-private enum class Topic(@StringRes val title: Int, @StringRes val subject: Int) {
+private enum class Topic(@param:StringRes val title: Int, @param:StringRes val subject: Int) {
     Bug(R.string.contact_bug, R.string.contact_subject_bug),
     Idea(R.string.contact_idea, R.string.contact_subject_idea),
     Chat(R.string.contact_chat, R.string.contact_subject_chat)
@@ -58,6 +58,12 @@ private fun writeMail(context: Context, topic: Topic) {
         Toast.makeText(context, context.getString(R.string.contact_no_mail_body, ADDRESS), Toast.LENGTH_LONG).show()
     }
 }
+
+// Fuori da Google Play la scheda non esiste e la voce porterebbe a una pagina
+// "elemento non trovato": la si mostra solo a chi ha installato dallo Store.
+private fun cameFromPlay(context: Context): Boolean =
+    runCatching { context.packageManager.getInstallSourceInfo(context.packageName).installingPackageName }
+        .getOrNull() == "com.android.vending"
 
 internal fun openStorePage(context: Context) {
     val id = context.packageName
@@ -85,8 +91,10 @@ fun ContactDialog(onDismiss: () -> Unit) {
                         Text(stringResource(topic.title), color = Color(0xFF6CFF7A))
                     }
                 }
-                TextButton(onClick = { openStorePage(context) }, modifier = Modifier.fillMaxWidth()) {
-                    Text(stringResource(R.string.contact_rate), color = Color(0xFF6CFF7A))
+                if (cameFromPlay(context)) {
+                    TextButton(onClick = { openStorePage(context) }, modifier = Modifier.fillMaxWidth()) {
+                        Text(stringResource(R.string.contact_rate), color = Color(0xFF6CFF7A))
+                    }
                 }
             }
         },

@@ -24,12 +24,20 @@ releases and from the git history, so they are less detailed than what follows.
 
 ## Talky Android
 
-### [1.3] · unreleased
+### [1.4] (11) · unreleased
 
-#### Added (versionCode 6 to 10, with iOS and Mac 4.0)
+#### Added (versionCode 6 to 11, with iOS and Mac 4.0)
+- **Usage statistics and crash reports now actually arrive.** Until 1.3 the
+  published APK was built with a placeholder Firebase configuration, so nothing
+  was ever sent and nobody knew whether the Android app was used at all. The
+  release APK is now built against a real Firebase project (Analytics and
+  Crashlytics, the same anonymous events as on iPhone). The file in the
+  repository stays a placeholder: a build from source sends nothing.
 - **Write to me**, under the title: report a problem, suggest a feature or say
-  hello by email (version, Android and model at the bottom), and rate Talky on
-  Google Play. Same texts as the iPhone, in the 16 languages.
+  hello by email (version, Android and model at the bottom). Same texts as the
+  iPhone, in the 16 languages. The "rate Talky on Google Play" entry only shows
+  up when the app was installed from Google Play: from the APK it led to a
+  store page that does not exist.
 - **Review request** with Google Play's in-app review, under the iPhone rules:
   only after 3 transmissions with someone connected, or 3 radio listens of 90
   seconds on 2 different days; once per version, at most every 120 days.
@@ -41,6 +49,8 @@ releases and from the git history, so they are less detailed than what follows.
 
 #### Removed
 - 8 radio stations that no longer exist (same list as iOS 3.2 build 114). `versionCode` 4 → 5.
+
+### [1.3] (4) · 2026-09-20
 
 #### Fixed
 
