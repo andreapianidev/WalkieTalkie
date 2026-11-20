@@ -7,7 +7,7 @@
 [![Website](https://img.shields.io/badge/Website-walkie--talky.vercel.app-7cf9de.svg?style=flat&logo=vercel&logoColor=white)](https://walkie-talky.vercel.app)
 [![App Store](https://img.shields.io/badge/App%20Store-Free%20Download-0a84ff.svg?style=flat&logo=appstore&logoColor=white)](https://apps.apple.com/app/id6748584483)
 [![iOS](https://img.shields.io/badge/iOS-15.6+-blue.svg)](https://developer.apple.com/ios/)
-[![Android APK](https://img.shields.io/badge/Android-Download%20APK-3ddc84.svg?logo=android&logoColor=white)](https://github.com/andreapianidev/WalkieTalkie/releases/download/android-v1.1/Talky-Android-v1.1.apk)
+[![Android APK](https://img.shields.io/badge/Android-Download%20APK-3ddc84.svg?logo=android&logoColor=white)](https://github.com/andreapianidev/WalkieTalkie/releases/latest/download/Talky-android.apk)
 [![macOS](https://img.shields.io/badge/macOS-26+%20(macTalky)-9aa0a6.svg?logo=apple&logoColor=white)](#-mactalky-macos)
 [![watchOS](https://img.shields.io/badge/watchOS-Talky%204.1%20beta-9aa0a6.svg?logo=apple&logoColor=white)](#-new-in-talky-41-beta-talky-on-the-apple-watch)
 [![Swift](https://img.shields.io/badge/Swift-5.9+-orange.svg)](https://swift.org/)
@@ -205,12 +205,13 @@ If you run a KiwiSDR or a Mumble server and would rather Talky did not use it, o
 
 Talky now ships an **Android port** too. It lives in [`Android/`](Android/) inside this same repo and is distributed under the **same [PolyForm Noncommercial License](LICENSE)** as the iOS app.
 
-> ⬇️ **[Download the latest Talky for Android (signed APK)](https://github.com/andreapianidev/WalkieTalkie/releases/latest)**: Android 13/API 33 or newer. Android may ask you to authorize installation from your browser or file manager.
+> ⬇️ **[Download the latest Talky for Android (signed APK)](https://github.com/andreapianidev/WalkieTalkie/releases/latest/download/Talky-android.apk)**: Android 13/API 33 or newer. Android may ask you to authorize installation from your browser or file manager.
 >
-> The link points at the releases page, not at one file, so it cannot go stale
-> the way the old hard-coded v1.1 link did. Devices still on Android 11 or 12 can
-> install `android-v1.2` from the same page. What changed in each version is in
-> [`CHANGELOG.md`](CHANGELOG.md).
+> Every Android release carries a copy of the APK named `Talky-android.apk`, so
+> this link always downloads the newest one and cannot go stale the way the old
+> hard-coded v1.1 link did. Devices still on Android 11 or 12 can install
+> `android-v1.2` from the [releases page](https://github.com/andreapianidev/WalkieTalkie/releases).
+> What changed in each version is in [`CHANGELOG.md`](CHANGELOG.md).
 
 > ⚠️ **Status: Beta.** The Android app is a younger, leaner port of the iOS original. The core experience (push-to-talk + radio) is functional and builds a **signed release APK**, but it does **not yet** have feature parity on the Pro tier (no IAP/paywall, no Live Activities, single base theme).
 
@@ -246,7 +247,7 @@ cp keystore.properties.sample keystore.properties   # then edit values, or remov
 
 > 📣 **Ad units note**: for the sideload APK built from this source, [`AdConfig.kt`](Android/app/src/main/java/com/immaginet/talky/ads/AdConfig.kt) intentionally uses Google's **test** ad units (and a test AdMob App ID in the manifest). This is the policy-compliant choice for an APK that is **not** distributed via the Play Store. Replace the `LIVE_*` IDs and the manifest App ID with your own real AdMob IDs before any Play Store release, the config switches to live IDs automatically once real (non-placeholder) values are present in a release build.
 
-> 🚫 **Not on Google Play (yet).** This repo ships the Android **source + a [signed APK](https://github.com/andreapianidev/WalkieTalkie/releases/download/android-v1.1/Talky-Android-v1.1.apk) via [GitHub Releases](https://github.com/andreapianidev/WalkieTalkie/releases)** for sideloading. A Play Store listing would additionally require real AdMob IDs and a Play Console upload.
+> 🚫 **Not on Google Play (yet).** This repo ships the Android **source + a [signed APK](https://github.com/andreapianidev/WalkieTalkie/releases/latest/download/Talky-android.apk) via [GitHub Releases](https://github.com/andreapianidev/WalkieTalkie/releases)** for sideloading. A Play Store listing would additionally require real AdMob IDs and a Play Console upload.
 
 ---
 
@@ -883,7 +884,10 @@ Contributions are welcome! Please:
    development, because debug builds are not minified and R8 was stripping a
    class Room looks up by name. A bug that only exists in the artifact you ship
    is the expensive kind.
-8. **Open a PR** with a clear description, screenshots for UI changes, and reference any related issue
+8. **Every Android release ships an asset named `Talky-android.apk`**, next to
+   the versioned file. The download links here and on the website point at
+   `releases/latest/download/Talky-android.apk`: without that asset they break.
+9. **Open a PR** with a clear description, screenshots for UI changes, and reference any related issue
 
 Conventional-commit prefixes are appreciated: `feat:`, `fix:`, `chore:`, `refactor:`, `docs:`, `style:`.
 
